@@ -1,3 +1,4 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
 import React, { useRef } from 'react'
@@ -8,11 +9,17 @@ import { useClickOutside } from '../hooks/use-click-outside'
 const ModalWrapperStyled = styled.div<{
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
+  padding?: string
+  dim: boolean
 }>`
   width: 100vw;
   height: 100vh;
 
-  background-color: ${({ theme }) => theme.backgroundTransparent};
+  ${({ dim, theme }) =>
+    dim &&
+    css`
+      background-color: ${theme.backgroundTransparent};
+    `};
 
   position: fixed;
   top: 0;
@@ -28,7 +35,7 @@ const ModalWrapperStyled = styled.div<{
       : 'center'};
   justify-content: ${({ side }) =>
     side === 'left' ? 'flex-start' : side === 'right' ? 'flex-end' : 'center'};
-  padding: 50px;
+  padding: ${({ padding }) => padding ?? ' 50px'};
 `
 
 const ModalContent = styled.div<{
@@ -90,6 +97,8 @@ export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   withoutHeader?: boolean
   disableClickOutside?: boolean
   onClose: () => void
+  dimBackground?: boolean
+  padding?: string
 }
 
 export const Modal = (props: ModalProps) => {
@@ -107,7 +116,12 @@ export const Modal = (props: ModalProps) => {
 
   return (
     <Portal>
-      <ModalWrapperStyled position={props.position} side={props.side}>
+      <ModalWrapperStyled
+        position={props.position}
+        side={props.side}
+        dim={props.dimBackground ?? true}
+        padding={props.padding}
+      >
         <FadeIn duration={250}>
           <ModalContent
             className="modal"

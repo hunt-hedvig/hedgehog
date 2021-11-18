@@ -1,4 +1,5 @@
 import { Button, Flex, Input, Label, MainHeadline, Spacing } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useGetMeQuery, useUpdateUserMutation } from 'types/generated/graphql'
@@ -46,6 +47,8 @@ const ProfilePage: React.FC = () => {
 
   useEffect(reset, [data])
 
+  useTitle('Profile')
+
   const changes =
     fullName !== data?.me.user.fullName ||
     phoneNumber !== data.me.user.phoneNumber
@@ -56,54 +59,56 @@ const ProfilePage: React.FC = () => {
 
   return (
     <>
-      <MainHeadline>Profile</MainHeadline>
-      <Spacing top />
-      <Flex direction="column">
-        <form
-          style={{ width: '100%', maxWidth: '350px' }}
-          onSubmit={(e) => {
-            e.preventDefault()
-            handleSaveChanges()
-          }}
-        >
-          <Label>Full name</Label>
-          <Input
-            placeholder="Your full name"
-            value={fullName}
-            onChange={(e) => setFullName(e.currentTarget.value)}
-          />
-          <Spacing top="small" />
-          <Label>Phone</Label>
-          <Input
-            placeholder="+46701234567"
-            value={phoneNumber ?? ''}
-            onChange={(e) => setPhoneNumber(e.currentTarget.value)}
-          />
-          <Spacing top="small" />
-          <Label>E-mail</Label>
-          <Input
-            disabled
-            muted={true}
-            value={data.me.user.email}
-            placeholder="example@hedvig.com"
-          />
-          <Spacing top="medium" />
-          <Flex direction="row">
-            <Button type="submit" disabled={!changes || !fullName}>
-              Save changes
-            </Button>
-            {changes && (
-              <Button
-                variant="tertiary"
-                style={{ marginLeft: '1em' }}
-                onClick={reset}
-              >
-                Reset
+      <div>
+        <MainHeadline>Profile</MainHeadline>
+        <Spacing top />
+        <Flex direction="column">
+          <form
+            style={{ width: '100%', maxWidth: '350px' }}
+            onSubmit={(e) => {
+              e.preventDefault()
+              handleSaveChanges()
+            }}
+          >
+            <Label>Full name</Label>
+            <Input
+              placeholder="Your full name"
+              value={fullName}
+              onChange={(e) => setFullName(e.currentTarget.value)}
+            />
+            <Spacing top="small" />
+            <Label>Phone</Label>
+            <Input
+              placeholder="+46701234567"
+              value={phoneNumber ?? ''}
+              onChange={(e) => setPhoneNumber(e.currentTarget.value)}
+            />
+            <Spacing top="small" />
+            <Label>E-mail</Label>
+            <Input
+              disabled
+              muted={true}
+              value={data.me.user.email}
+              placeholder="example@hedvig.com"
+            />
+            <Spacing top="medium" />
+            <Flex direction="row">
+              <Button type="submit" disabled={!changes || !fullName}>
+                Save changes
               </Button>
-            )}
-          </Flex>
-        </form>
-      </Flex>
+              {changes && (
+                <Button
+                  variant="tertiary"
+                  style={{ marginLeft: '1em' }}
+                  onClick={reset}
+                >
+                  Reset
+                </Button>
+              )}
+            </Flex>
+          </form>
+        </Flex>
+      </div>
     </>
   )
 }

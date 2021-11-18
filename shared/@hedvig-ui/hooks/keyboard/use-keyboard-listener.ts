@@ -28,4 +28,5 @@ export interface UseVerticalKeyboardNavigationProps {
   onPerformNavigation?: PerformNavigationHandler
   onNavigationStep?: NavigationStepHandler
   onExit?: () => void
+  isActive?: boolean
 }

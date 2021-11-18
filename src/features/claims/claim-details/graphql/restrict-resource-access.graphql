@@ -1,0 +1,19 @@
+mutation RestrictResourceAccess($resourceId: ID!) {
+  restrictResourceAccess(resourceId: $resourceId) {
+    resourceId
+    usersGranted {
+      id
+      email
+      fullName
+      role
+    }
+    usersRestricted {
+      id
+      email
+      fullName
+      role
+    }
+    rolesGranted
+    rolesRestricted
+  }
+}

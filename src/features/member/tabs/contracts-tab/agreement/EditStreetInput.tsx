@@ -24,11 +24,11 @@ export const EditStreetInput: React.FC<{
       value={newStreet}
       onChange={(e) => setNewStreet(e.currentTarget.value)}
       onKeyDown={(e) => {
-        if (e.keyCode === Keys.Escape.code) {
+        if (e.key === Keys.Escape.key) {
           closeEdit()
           return
         }
-        if (e.keyCode !== Keys.Enter.code) {
+        if (e.key !== Keys.Enter.key) {
           return
         }
         if (street.trim() === newStreet.trim()) {

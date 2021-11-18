@@ -4,11 +4,16 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { UsersOnPath } from 'features/navigation/topbar/components/UsersOnPath'
+import { useMe } from 'features/user/hooks/use-me'
+import { NotificationsModal } from 'features/user/notifications/NotificationsModal'
+import { ShareIcon } from 'features/user/share/components/ShareIcon'
+import { ShareModal } from 'features/user/share/ShareModal'
+import { VerboseNotificationListener } from 'features/user/share/VerboseNotificationListener'
 import { UserPanel } from 'features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
-import { GearFill, PeopleFill } from 'react-bootstrap-icons'
-import { useHistory } from 'react-router'
-import { Me } from 'types/generated/graphql'
+import { BellFill, PeopleFill } from 'react-bootstrap-icons'
+import UserMenu from './UserMenu'
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,30 +28,26 @@ const Wrapper = styled.div`
   margin-bottom: 2rem;
 `
 
-const Username = styled(Flex)`
-  background-color: transparent;
-  border-radius: 8px;
-  padding: 0.4em 0.8em;
-  cursor: pointer;
-`
-
-const CircleButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-
-  border: none;
-  outline: none;
-
-  border-radius: 50%;
+export const CircleButton = styled.div`
   width: 2.5rem;
   height: 2.5rem;
 
-  transition: all 200ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  :hover {
-    background-color: ${({ theme }) => theme.accentLighter};
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.accentLighter};
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.accentLight};
+  }
+
+  & svg {
+    height: 16px;
+    width: 16px;
   }
 `
 
@@ -55,10 +56,36 @@ const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
   margin-right: ${({ pushLeft }) => (pushLeft ? '300px' : '0')};
 `
 
-export const TopBar: React.FC<{ me?: Me }> = ({ me }) => {
-  const history = useHistory()
-  const [showUsers, setShowUsers] = useState(false)
+const NewNotificationsOrb = styled.div`
+  position: relative;
+  margin-top: -1.5rem;
+  margin-right: -1rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
 
+  background-color: rgb(255, 0, 77);
+`
+
+const NotificationsButton: React.FC<{ onClick: () => void }> = ({
+  onClick,
+}) => {
+  const { me } = useMe()
+
+  return (
+    <CircleButton onClick={onClick} style={{ marginLeft: '1rem' }}>
+      <BellFill />
+      {me.notifications.some((notification) => !notification.read) && (
+        <NewNotificationsOrb />
+      )}
+    </CircleButton>
+  )
+}
+
+export const TopBar = () => {
+  const [showUsers, setShowUsers] = useState(false)
+  const [showUserNotifications, setShowUserNotifications] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   useEffect(() => {
@@ -69,6 +96,19 @@ export const TopBar: React.FC<{ me?: Me }> = ({ me }) => {
 
   return (
     <Wrapper>
+      <VerboseNotificationListener />
+      {showUserNotifications && (
+        <NotificationsModal
+          onClose={() => {
+            setShowUserNotifications(false)
+          }}
+        />
+      )}
+
+      {showShareModal && (
+        <ShareModal onClose={() => setShowShareModal(false)} />
+      )}
+
       <UserPanel
         visible={showUsers}
         onClickOutside={() => setShowUsers(false)}
@@ -79,22 +119,22 @@ export const TopBar: React.FC<{ me?: Me }> = ({ me }) => {
         justify="flex-end"
         align="center"
       >
-        <div>
-          <Username
-            direction="row"
-            justify="flex-end"
-            align="center"
-            onClick={() => history.push('/profile')}
-          >
-            <span>{me?.user?.fullName}</span>
-            <CircleButton style={{ marginLeft: '2em' }}>
-              <GearFill />
-            </CircleButton>
-          </Username>
-        </div>
+        <UsersOnPath />
+
+        <UserMenu />
+
         <CircleButton
-          style={{ marginLeft: '0.25em' }}
-          onClick={() => setShowUsers(!showUsers)}
+          onClick={() => setShowShareModal(true)}
+          style={{ marginLeft: '1rem' }}
+        >
+          <ShareIcon />
+        </CircleButton>
+
+        <NotificationsButton onClick={() => setShowUserNotifications(true)} />
+
+        <CircleButton
+          onClick={() => setShowUsers(true)}
+          style={{ marginLeft: '1rem' }}
         >
           <PeopleFill />
         </CircleButton>

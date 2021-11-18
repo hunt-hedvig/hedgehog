@@ -7,6 +7,7 @@ import {
   SecondLevelHeadline,
   Spacing,
 } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { CreateOptionForm } from 'features/tools/claim-types/forms/CreateOptionForm'
 import { CreatePropertyForm } from 'features/tools/claim-types/forms/CreatePropertyForm'
 import { CreateRelationForm } from 'features/tools/claim-types/forms/CreateRelationForm'
@@ -41,6 +42,8 @@ const ClaimTypesPage: React.FC = () => {
     'types' | 'properties' | 'options' | 'relations'
   >('types')
   const [filter, setFilter] = useState('')
+
+  useTitle('Tools | Claim Types')
 
   return (
     <>

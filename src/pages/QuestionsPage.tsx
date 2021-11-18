@@ -8,6 +8,7 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+import { getNameFromEmail } from 'features/dashboard/Greeting'
 import {
   FilterSelect,
   FilterState,
@@ -17,7 +18,6 @@ import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
 import { useMe } from 'features/user/hooks/use-me'
-import { getLowercaseNameFromEmail } from 'pages/DashboardPage'
 import React from 'react'
 import { useHistory } from 'react-router'
 
@@ -73,8 +73,7 @@ const QuestionsPage: React.FC = () => {
             history.push('/conversations/onboarding')
           }}
         >
-          Hey there{' '}
-          <Capitalized>{getLowercaseNameFromEmail(me.email)}</Capitalized>
+          Hey there <Capitalized>{getNameFromEmail(me.email)}</Capitalized>
           !
           <br />
           <span style={{ fontSize: '0.9em' }}>
@@ -92,7 +91,7 @@ const QuestionsPage: React.FC = () => {
           </Spacing>
           <FilterSelect
             filters={selectedFilters}
-            pushLeft
+            push="left"
             animationDelay={0}
             animationItemDelay={20}
             onToggle={(filter) => {

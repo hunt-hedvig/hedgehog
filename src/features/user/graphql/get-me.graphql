@@ -6,7 +6,23 @@ query GetMe {
       id
       email
       fullName
+      signature
       phoneNumber
+      role
+      notifications {
+        id
+        message
+        url
+        createdAt
+        read
+        verbose
+        from {
+          id
+          signature
+          fullName
+          signature
+        }
+      }
     }
     settings {
       key

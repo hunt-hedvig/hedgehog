@@ -191,11 +191,7 @@ export const ChatPanel = ({ memberId }) => {
           onFocus={() => setTextFieldFocused(true)}
           onBlur={() => setTextFieldFocused(false)}
           onKeyDown={(e) => {
-            if (
-              isMetaKey(e) &&
-              e.keyCode === Keys.Enter.code &&
-              currentMessage
-            ) {
+            if (isMetaKey(e) && e.key === Keys.Enter.key && currentMessage) {
               handleSubmit()
             }
           }}

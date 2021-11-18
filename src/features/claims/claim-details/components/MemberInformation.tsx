@@ -13,6 +13,7 @@ import {
   Popover,
 } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { formatMoney } from '@hedvig-ui/utils/money'
 import {
   convertCamelcaseToTitle,
@@ -113,6 +114,19 @@ export const MemberInformation: React.FC<{
     },
   ])
 
+  const nameEndsOnS =
+    member?.firstName &&
+    member?.firstName[member?.firstName?.length - 1] === 's'
+
+  useTitle(
+    member && member.firstName
+      ? !nameEndsOnS
+        ? `${member?.firstName}’s claim`
+        : `${member?.firstName}' claim`
+      : `Claim Details`,
+    [member],
+  )
+
   return (
     <CardContent>
       <CardTitle
@@ -130,11 +144,14 @@ export const MemberInformation: React.FC<{
 
       <InfoContainer>
         <Loadable loading={memberContractsDataLoading}>
-          <MemberName>
-            {member?.firstName ?? '-'} {member?.lastName ?? '-'}{' '}
-            {member &&
-              getMemberFlag(member?.contractMarketInfo, member.pickedLocale)}
-          </MemberName>
+          {member && !!member?.firstName && !!member?.lastName && (
+            <MemberName>
+              {`${member.firstName} ${member.lastName} ${getMemberFlag(
+                member.contractMarketInfo,
+                member.pickedLocale,
+              )}`}
+            </MemberName>
+          )}
           <InfoRow>
             Member ID
             <InfoText>
@@ -162,21 +179,19 @@ export const MemberInformation: React.FC<{
               </InfoText>
             </InfoRow>
           )}
-          <InfoRow>
-            Personal number
-            <InfoText>
-              {member?.personalNumber ? (
+          {!!member?.personalNumber && (
+            <InfoRow>
+              Personal number
+              <InfoText>
                 <Copyable onClick={() => copy(member.personalNumber!)}>
                   <ClickableText>
                     {formatSsn(member.personalNumber)}
                   </ClickableText>
                 </Copyable>
-              ) : (
-                'No personal number'
-              )}
-            </InfoText>
-          </InfoRow>
-          {member?.sanctionStatus && (
+              </InfoText>
+            </InfoRow>
+          )}
+          {!!member?.sanctionStatus && (
             <InfoRow>
               Sanction status
               <InfoText>
@@ -301,26 +316,29 @@ export const MemberInformation: React.FC<{
               <InfoText>{lastTermination}</InfoText>
             </InfoRow>
           )}
-          <InfoRow>
-            Payments balance (min)
-            <InfoText>
-              {member?.account?.totalBalance &&
-                formatMoney(member.account.totalBalance)}
-            </InfoText>
-          </InfoRow>
-          <InfoRow>
-            Failed payments
-            <InfoText>
-              {member?.numberFailedCharges?.numberFailedCharges ?? '-'}
-              {(member?.numberFailedCharges?.numberFailedCharges ?? 0) > 1
-                ? ' in a row'
-                : ''}
-            </InfoText>
-          </InfoRow>
-          <InfoRow>
-            Total number of claims
-            <InfoText>{member?.totalNumberOfClaims ?? '-'}</InfoText>
-          </InfoRow>
+          {!!member?.account?.totalBalance && (
+            <InfoRow>
+              Payments balance
+              <InfoText>{formatMoney(member.account.totalBalance)}</InfoText>
+            </InfoRow>
+          )}
+          {member?.numberFailedCharges?.numberFailedCharges && (
+            <InfoRow>
+              Failed payments
+              <InfoText>
+                {member.numberFailedCharges.numberFailedCharges}
+                {member.numberFailedCharges.numberFailedCharges > 1
+                  ? ' in a row'
+                  : ''}
+              </InfoText>
+            </InfoRow>
+          )}
+          {!!member?.totalNumberOfClaims && (
+            <InfoRow>
+              Total number of claims
+              <InfoText>{member.totalNumberOfClaims}</InfoText>
+            </InfoRow>
+          )}
         </Loadable>
       </InfoContainer>
     </CardContent>

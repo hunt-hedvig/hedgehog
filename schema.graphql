@@ -9,6 +9,7 @@ type QueryType {
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
   me: Me!
   switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
+  ediSwitchers: [EdiSwitcher!]!
   messageHistory(memberId: ID!): [ChatMessage!]!
   questionGroups: [QuestionGroup!]!
   findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
@@ -16,6 +17,7 @@ type QueryType {
   availableCampaignCodeTypes: [String!]!
   dashboardNumbers: DashboardNumbers
   quoteSchemaForContractType(contractType: String!): JSON
+  quoteSchemaForInsuranceType(insuranceType: String!): JSON
   memberSearch(
     query: String!
     options: MemberSearchOptions!
@@ -35,6 +37,22 @@ type QueryType {
 
   user(email: String!): User
   users: [User!]!
+
+  usersOnPath(path: String!): [User!]!
+
+  resourceAccess(resourceId: String!): ResourceAccessInformation
+}
+
+type ResourceAccessInformation {
+  resourceId: ID!
+  restrictedBy: User!
+  restrictedByMe: Boolean!
+
+  usersGranted: [User!]!
+  usersRestricted: [User!]!
+
+  rolesGranted: [String!]!
+  rolesRestricted: [String!]!
 }
 
 type Me {
@@ -42,6 +60,10 @@ type Me {
   role: String!
   user: User!
   settings(filters: UserSettingsFilter): [UserSetting!]!
+}
+
+input UserSettingsFilter {
+  keys: [UserSettingKey!]!
 }
 
 enum UserSettingKey {
@@ -55,16 +77,32 @@ enum UserSettingKey {
   NUMBER_OF_CLAIMS_FILTER
 }
 
-input UserSettingsFilter {
-  keys: [UserSettingKey!]!
-}
-
 type User {
   id: ID!
   email: String!
+  role: String
   fullName: String!
+  signature: String!
   phoneNumber: String
   latestPresence: Instant
+  latestLocation: String
+  notifications(filters: UserNotificationsFilter): [UserNotification!]!
+}
+
+input UserNotificationsFilter {
+  before: Instant
+  after: Instant
+}
+
+type UserNotification {
+  id: ID!
+  message: String!
+  createdAt: Instant!
+  url: String!
+  read: Boolean!
+  user: User!
+  from: User
+  verbose: Boolean!
 }
 
 type UserSetting {
@@ -109,11 +147,6 @@ type MutationType {
     claimFileId: ID!
     category: String
   ): ClaimFileUpload
-  activateQuote(
-    id: ID!
-    activationDate: LocalDate!
-    terminationDate: LocalDate
-  ): Quote!
 
   addAgreementFromQuote(
     id: ID!
@@ -125,10 +158,16 @@ type MutationType {
 
   createQuoteFromAgreement(agreementId: ID!, memberId: ID!): Quote!
   markSwitchableSwitcherEmailAsReminded(id: ID!): SwitchableSwitcherEmail!
+
   updateSwitcherEmailInfo(
     id: ID!
-    request: UpdateSwitcherEmailInfoInput
+    request: UpdateSwitcherNoteInput
   ): SwitchableSwitcherEmail!
+  updateEdiSwitcherNote(
+    id: ID!
+    request: UpdateSwitcherNoteInput!
+  ): EdiSwitcher!
+
   terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
   activatePendingAgreement(
     contractId: ID!
@@ -167,6 +206,7 @@ type MutationType {
     request: AssignVoucherPercentageDiscount
   ): Boolean!
   assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
+  assignCampaignToPartnerNoDiscount(request: AssignVoucherNoDiscount): Boolean!
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
@@ -180,7 +220,7 @@ type MutationType {
     memberId: ID!
     request: ManualUnRedeemCampaignInput!
   ): Member!
-  unsignMember(ssn: String!): Boolean!
+  unsignMember(ssn: String, email: String): Boolean!
   editMemberInfo(request: EditMemberInfoInput!): Member!
   setFraudulentStatus(
     memberId: ID!
@@ -207,6 +247,24 @@ type MutationType {
 
   updateUser(input: UpdateUserInput!): User!
   upsertUserSettings(settings: [UpsertUserSettingInput!]!): [UserSetting!]!
+
+  restrictResourceAccess(resourceId: ID!): ResourceAccessInformation!
+  releaseResourceAccess(resourceId: ID!): Boolean!
+  grantResourceAccess(
+    resourceId: ID!
+    grantHolder: String!
+    grantHolderType: GrantHolderType!
+  ): ResourceAccessInformation!
+
+  markNotificationAsRead(notificationId: ID!): UserNotification!
+  markAllNotificationsAsRead: [UserNotification!]!
+
+  sharePath(path: String!, userId: ID!): Boolean!
+}
+
+enum GrantHolderType {
+  USER
+  ROLE
 }
 
 input UpsertCoInsuredInput {
@@ -287,6 +345,7 @@ type ListClaimsResult {
   claims: [Claim!]!
   totalPages: Int!
   page: Int!
+  totalClaims: Int!
 }
 
 input ListClaimsOptions {
@@ -471,6 +530,14 @@ input AssignVoucherPercentageDiscount {
 input AssignVoucherFreeMonths {
   partnerId: String!
   numberOfFreeMonths: Int!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+  codeType: String
+}
+
+input AssignVoucherNoDiscount {
+  partnerId: String!
   code: String!
   validFrom: Instant
   validUntil: Instant
@@ -894,6 +961,7 @@ type Claim {
   agreement: GenericAgreement
   propertySelections: [ClaimPropertySelection!]!
   coInsured: CoInsured
+  restriction: ResourceAccessInformation
 }
 
 type CoInsured {
@@ -985,7 +1053,16 @@ type SwitchableSwitcherEmail {
   note: String
 }
 
-input UpdateSwitcherEmailInfoInput {
+type EdiSwitcher {
+  id: ID!
+  memberId: String!
+  contractId: ID!
+  switcherCompany: String!
+  cancellationRequestedAt: Instant
+  note: String
+}
+
+input UpdateSwitcherNoteInput {
   note: String
 }
 

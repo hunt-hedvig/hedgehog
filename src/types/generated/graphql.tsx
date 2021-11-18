@@ -100,6 +100,14 @@ export type AssignVoucherFreeMonths = {
   codeType?: Maybe<Scalars['String']>
 }
 
+export type AssignVoucherNoDiscount = {
+  partnerId: Scalars['String']
+  code: Scalars['String']
+  validFrom?: Maybe<Scalars['Instant']>
+  validUntil?: Maybe<Scalars['Instant']>
+  codeType?: Maybe<Scalars['String']>
+}
+
 export type AssignVoucherPercentageDiscount = {
   partnerId: Scalars['String']
   numberOfMonths: Scalars['Int']
@@ -187,6 +195,7 @@ export type Claim = {
   agreement?: Maybe<GenericAgreement>
   propertySelections: Array<ClaimPropertySelection>
   coInsured?: Maybe<CoInsured>
+  restriction?: Maybe<ResourceAccessInformation>
 }
 
 export enum ClaimComplexity {
@@ -421,6 +430,16 @@ export type DirectDebitStatus = {
   activated?: Maybe<Scalars['Boolean']>
 }
 
+export type EdiSwitcher = {
+  __typename?: 'EdiSwitcher'
+  id: Scalars['ID']
+  memberId: Scalars['String']
+  contractId: Scalars['ID']
+  switcherCompany: Scalars['String']
+  cancellationRequestedAt?: Maybe<Scalars['Instant']>
+  note?: Maybe<Scalars['String']>
+}
+
 export type EditMemberInfoInput = {
   memberId: Scalars['String']
   firstName?: Maybe<Scalars['String']>
@@ -512,6 +531,11 @@ export type GenericAgreement = {
   createdAt: Scalars['Instant']
 }
 
+export enum GrantHolderType {
+  User = 'USER',
+  Role = 'ROLE',
+}
+
 export type Identity = {
   __typename?: 'Identity'
   nationalIdentification: NationalIdentification
@@ -553,6 +577,7 @@ export type ListClaimsResult = {
   claims: Array<Claim>
   totalPages: Scalars['Int']
   page: Scalars['Int']
+  totalClaims: Scalars['Int']
 }
 
 export type ManualRedeemCampaignInput = {
@@ -715,11 +740,11 @@ export type MutationType = {
   markClaimFileAsDeleted?: Maybe<Scalars['Boolean']>
   backfillSubscriptions: Member
   setClaimFileCategory?: Maybe<ClaimFileUpload>
-  activateQuote: Quote
   addAgreementFromQuote: Quote
   createQuoteFromAgreement: Quote
   markSwitchableSwitcherEmailAsReminded: SwitchableSwitcherEmail
   updateSwitcherEmailInfo: SwitchableSwitcherEmail
+  updateEdiSwitcherNote: EdiSwitcher
   terminateContract: Contract
   activatePendingAgreement: Contract
   changeTerminationDate: Contract
@@ -740,6 +765,7 @@ export type MutationType = {
   createCampaignPartner: Scalars['Boolean']
   assignCampaignToPartnerPercentageDiscount: Scalars['Boolean']
   assignCampaignToPartnerFreeMonths: Scalars['Boolean']
+  assignCampaignToPartnerNoDiscount: Scalars['Boolean']
   assignCampaignToPartnerVisibleNoDiscount: Scalars['Boolean']
   setCampaignCodeType?: Maybe<VoucherCampaign>
   setContractForClaim: Claim
@@ -764,6 +790,12 @@ export type MutationType = {
   deleteCoInsured: Scalars['Boolean']
   updateUser: User
   upsertUserSettings: Array<UserSetting>
+  restrictResourceAccess: ResourceAccessInformation
+  releaseResourceAccess: Scalars['Boolean']
+  grantResourceAccess: ResourceAccessInformation
+  markNotificationAsRead: UserNotification
+  markAllNotificationsAsRead: Array<UserNotification>
+  sharePath: Scalars['Boolean']
 }
 
 export type MutationTypeChargeMemberArgs = {
@@ -870,12 +902,6 @@ export type MutationTypeSetClaimFileCategoryArgs = {
   category?: Maybe<Scalars['String']>
 }
 
-export type MutationTypeActivateQuoteArgs = {
-  id: Scalars['ID']
-  activationDate: Scalars['LocalDate']
-  terminationDate?: Maybe<Scalars['LocalDate']>
-}
-
 export type MutationTypeAddAgreementFromQuoteArgs = {
   id: Scalars['ID']
   contractId: Scalars['ID']
@@ -895,7 +921,12 @@ export type MutationTypeMarkSwitchableSwitcherEmailAsRemindedArgs = {
 
 export type MutationTypeUpdateSwitcherEmailInfoArgs = {
   id: Scalars['ID']
-  request?: Maybe<UpdateSwitcherEmailInfoInput>
+  request?: Maybe<UpdateSwitcherNoteInput>
+}
+
+export type MutationTypeUpdateEdiSwitcherNoteArgs = {
+  id: Scalars['ID']
+  request: UpdateSwitcherNoteInput
 }
 
 export type MutationTypeTerminateContractArgs = {
@@ -991,6 +1022,10 @@ export type MutationTypeAssignCampaignToPartnerFreeMonthsArgs = {
   request?: Maybe<AssignVoucherFreeMonths>
 }
 
+export type MutationTypeAssignCampaignToPartnerNoDiscountArgs = {
+  request?: Maybe<AssignVoucherNoDiscount>
+}
+
 export type MutationTypeAssignCampaignToPartnerVisibleNoDiscountArgs = {
   request?: Maybe<AssignVoucherVisibleNoDiscount>
 }
@@ -1015,7 +1050,8 @@ export type MutationTypeManualUnRedeemCampaignArgs = {
 }
 
 export type MutationTypeUnsignMemberArgs = {
-  ssn: Scalars['String']
+  ssn?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
 }
 
 export type MutationTypeEditMemberInfoArgs = {
@@ -1095,6 +1131,29 @@ export type MutationTypeUpdateUserArgs = {
 
 export type MutationTypeUpsertUserSettingsArgs = {
   settings: Array<UpsertUserSettingInput>
+}
+
+export type MutationTypeRestrictResourceAccessArgs = {
+  resourceId: Scalars['ID']
+}
+
+export type MutationTypeReleaseResourceAccessArgs = {
+  resourceId: Scalars['ID']
+}
+
+export type MutationTypeGrantResourceAccessArgs = {
+  resourceId: Scalars['ID']
+  grantHolder: Scalars['String']
+  grantHolderType: GrantHolderType
+}
+
+export type MutationTypeMarkNotificationAsReadArgs = {
+  notificationId: Scalars['ID']
+}
+
+export type MutationTypeSharePathArgs = {
+  path: Scalars['String']
+  userId: Scalars['ID']
 }
 
 export type NationalIdentification = {
@@ -1192,6 +1251,7 @@ export type QueryType = {
   paymentSchedule?: Maybe<Array<Maybe<SchedulerState>>>
   me: Me
   switchableSwitcherEmails: Array<SwitchableSwitcherEmail>
+  ediSwitchers: Array<EdiSwitcher>
   messageHistory: Array<ChatMessage>
   questionGroups: Array<QuestionGroup>
   findPartnerCampaigns: Array<VoucherCampaign>
@@ -1199,6 +1259,7 @@ export type QueryType = {
   availableCampaignCodeTypes: Array<Scalars['String']>
   dashboardNumbers?: Maybe<DashboardNumbers>
   quoteSchemaForContractType?: Maybe<Scalars['JSON']>
+  quoteSchemaForInsuranceType?: Maybe<Scalars['JSON']>
   memberSearch: MemberSearchResult
   listClaims: ListClaimsResult
   employees: Array<Employee>
@@ -1213,6 +1274,8 @@ export type QueryType = {
   claimPropertyOption: ClaimPropertyOption
   user?: Maybe<User>
   users: Array<User>
+  usersOnPath: Array<User>
+  resourceAccess?: Maybe<ResourceAccessInformation>
 }
 
 export type QueryTypeMemberArgs = {
@@ -1239,6 +1302,10 @@ export type QueryTypeQuoteSchemaForContractTypeArgs = {
   contractType: Scalars['String']
 }
 
+export type QueryTypeQuoteSchemaForInsuranceTypeArgs = {
+  insuranceType: Scalars['String']
+}
+
 export type QueryTypeMemberSearchArgs = {
   query: Scalars['String']
   options: MemberSearchOptions
@@ -1262,6 +1329,14 @@ export type QueryTypeClaimPropertyOptionArgs = {
 
 export type QueryTypeUserArgs = {
   email: Scalars['String']
+}
+
+export type QueryTypeUsersOnPathArgs = {
+  path: Scalars['String']
+}
+
+export type QueryTypeResourceAccessArgs = {
+  resourceId: Scalars['String']
 }
 
 export type Question = {
@@ -1340,6 +1415,17 @@ export type Renewal = {
   renewalDate: Scalars['LocalDate']
   draftCertificateUrl?: Maybe<Scalars['String']>
   draftOfAgreementId?: Maybe<Scalars['ID']>
+}
+
+export type ResourceAccessInformation = {
+  __typename?: 'ResourceAccessInformation'
+  resourceId: Scalars['ID']
+  restrictedBy: User
+  restrictedByMe: Scalars['Boolean']
+  usersGranted: Array<User>
+  usersRestricted: Array<User>
+  rolesGranted: Array<Scalars['String']>
+  rolesRestricted: Array<Scalars['String']>
 }
 
 export type SafelyEditAgreementInput = {
@@ -1454,7 +1540,7 @@ export type UnknownIncentive = {
   _?: Maybe<Scalars['Boolean']>
 }
 
-export type UpdateSwitcherEmailInfoInput = {
+export type UpdateSwitcherNoteInput = {
   note?: Maybe<Scalars['String']>
 }
 
@@ -1479,9 +1565,34 @@ export type User = {
   __typename?: 'User'
   id: Scalars['ID']
   email: Scalars['String']
+  role?: Maybe<Scalars['String']>
   fullName: Scalars['String']
+  signature: Scalars['String']
   phoneNumber?: Maybe<Scalars['String']>
   latestPresence?: Maybe<Scalars['Instant']>
+  latestLocation?: Maybe<Scalars['String']>
+  notifications: Array<UserNotification>
+}
+
+export type UserNotificationsArgs = {
+  filters?: Maybe<UserNotificationsFilter>
+}
+
+export type UserNotification = {
+  __typename?: 'UserNotification'
+  id: Scalars['ID']
+  message: Scalars['String']
+  createdAt: Scalars['Instant']
+  url: Scalars['String']
+  read: Scalars['Boolean']
+  user: User
+  from?: Maybe<User>
+  verbose: Scalars['Boolean']
+}
+
+export type UserNotificationsFilter = {
+  before?: Maybe<Scalars['Instant']>
+  after?: Maybe<Scalars['Instant']>
 }
 
 export type UserSetting = {
@@ -1792,6 +1903,29 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
       | 'outcome'
       | 'reserves'
     > & {
+        restriction?: Maybe<
+          { __typename?: 'ResourceAccessInformation' } & Pick<
+            ResourceAccessInformation,
+            'resourceId' | 'restrictedByMe' | 'rolesGranted' | 'rolesRestricted'
+          > & {
+              restrictedBy: { __typename?: 'User' } & Pick<
+                User,
+                'id' | 'email' | 'fullName' | 'role'
+              >
+              usersGranted: Array<
+                { __typename?: 'User' } & Pick<
+                  User,
+                  'id' | 'email' | 'fullName' | 'role'
+                >
+              >
+              usersRestricted: Array<
+                { __typename?: 'User' } & Pick<
+                  User,
+                  'id' | 'email' | 'fullName' | 'role'
+                >
+              >
+            }
+        >
         propertySelections: Array<
           { __typename?: 'ClaimPropertySelection' } & Pick<
             ClaimPropertySelection,
@@ -2040,6 +2174,30 @@ export type MarkClaimFileAsDeletedMutationVariables = Exact<{
 export type MarkClaimFileAsDeletedMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'markClaimFileAsDeleted'>
+
+export type RestrictResourceAccessMutationVariables = Exact<{
+  resourceId: Scalars['ID']
+}>
+
+export type RestrictResourceAccessMutation = { __typename?: 'MutationType' } & {
+  restrictResourceAccess: { __typename?: 'ResourceAccessInformation' } & Pick<
+    ResourceAccessInformation,
+    'resourceId' | 'rolesGranted' | 'rolesRestricted'
+  > & {
+      usersGranted: Array<
+        { __typename?: 'User' } & Pick<
+          User,
+          'id' | 'email' | 'fullName' | 'role'
+        >
+      >
+      usersRestricted: Array<
+        { __typename?: 'User' } & Pick<
+          User,
+          'id' | 'email' | 'fullName' | 'role'
+        >
+      >
+    }
+}
 
 export type SetClaimFileCategoryMutationVariables = Exact<{
   claimId: Scalars['ID']
@@ -2963,14 +3121,13 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
   >
 }
 
-export type GetSchemaForContractTypeQueryVariables = Exact<{
-  contractType: Scalars['String']
+export type GetSchemaForInsuranceTypeQueryVariables = Exact<{
+  insuranceType: Scalars['String']
 }>
 
-export type GetSchemaForContractTypeQuery = { __typename?: 'QueryType' } & Pick<
-  QueryType,
-  'quoteSchemaForContractType'
->
+export type GetSchemaForInsuranceTypeQuery = {
+  __typename?: 'QueryType'
+} & Pick<QueryType, 'quoteSchemaForInsuranceType'>
 
 export type OverrideQuotePriceMutationVariables = Exact<{
   input: OverrideQuotePriceInput
@@ -3126,6 +3283,70 @@ export type SendMessageMutation = { __typename?: 'MutationType' } & {
       >)
 }
 
+export type GrantResourceAccessMutationVariables = Exact<{
+  resourceId: Scalars['ID']
+  grantHolder: Scalars['String']
+  grantHolderType: GrantHolderType
+}>
+
+export type GrantResourceAccessMutation = { __typename?: 'MutationType' } & {
+  grantResourceAccess: { __typename?: 'ResourceAccessInformation' } & Pick<
+    ResourceAccessInformation,
+    'resourceId' | 'rolesGranted' | 'rolesRestricted'
+  > & {
+      usersGranted: Array<
+        { __typename?: 'User' } & Pick<
+          User,
+          'id' | 'email' | 'fullName' | 'role'
+        >
+      >
+      usersRestricted: Array<
+        { __typename?: 'User' } & Pick<
+          User,
+          'id' | 'email' | 'fullName' | 'role'
+        >
+      >
+    }
+}
+
+export type ReleaseResourceAccessMutationVariables = Exact<{
+  resourceId: Scalars['ID']
+}>
+
+export type ReleaseResourceAccessMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'releaseResourceAccess'>
+
+export type ResourceAccessInformationQueryVariables = Exact<{
+  resourceId: Scalars['String']
+}>
+
+export type ResourceAccessInformationQuery = { __typename?: 'QueryType' } & {
+  resourceAccess?: Maybe<
+    { __typename?: 'ResourceAccessInformation' } & Pick<
+      ResourceAccessInformation,
+      'resourceId' | 'restrictedByMe' | 'rolesGranted' | 'rolesRestricted'
+    > & {
+        restrictedBy: { __typename?: 'User' } & Pick<
+          User,
+          'id' | 'email' | 'fullName' | 'role'
+        >
+        usersGranted: Array<
+          { __typename?: 'User' } & Pick<
+            User,
+            'id' | 'email' | 'fullName' | 'role'
+          >
+        >
+        usersRestricted: Array<
+          { __typename?: 'User' } & Pick<
+            User,
+            'id' | 'email' | 'fullName' | 'role'
+          >
+        >
+      }
+  >
+}
+
 export type AssignCampaignToPartnerFreeMonthsMutationVariables = Exact<{
   request?: Maybe<AssignVoucherFreeMonths>
 }>
@@ -3133,6 +3354,14 @@ export type AssignCampaignToPartnerFreeMonthsMutationVariables = Exact<{
 export type AssignCampaignToPartnerFreeMonthsMutation = {
   __typename?: 'MutationType'
 } & Pick<MutationType, 'assignCampaignToPartnerFreeMonths'>
+
+export type AssignCampaignToPartnerNoDiscountMutationVariables = Exact<{
+  request?: Maybe<AssignVoucherNoDiscount>
+}>
+
+export type AssignCampaignToPartnerNoDiscountMutation = {
+  __typename?: 'MutationType'
+} & Pick<MutationType, 'assignCampaignToPartnerNoDiscount'>
 
 export type AssignCampaignToPartnerPercentageDiscountMutationVariables = Exact<{
   request?: Maybe<AssignVoucherPercentageDiscount>
@@ -3617,8 +3846,22 @@ export type GetMeQuery = { __typename?: 'QueryType' } & {
   me: { __typename?: 'Me' } & Pick<Me, 'scopes' | 'role'> & {
       user: { __typename?: 'User' } & Pick<
         User,
-        'id' | 'email' | 'fullName' | 'phoneNumber'
-      >
+        'id' | 'email' | 'fullName' | 'signature' | 'phoneNumber' | 'role'
+      > & {
+          notifications: Array<
+            { __typename?: 'UserNotification' } & Pick<
+              UserNotification,
+              'id' | 'message' | 'url' | 'createdAt' | 'read' | 'verbose'
+            > & {
+                from?: Maybe<
+                  { __typename?: 'User' } & Pick<
+                    User,
+                    'id' | 'signature' | 'fullName'
+                  >
+                >
+              }
+          >
+        }
       settings: Array<
         { __typename?: 'UserSetting' } & Pick<UserSetting, 'key' | 'value'>
       >
@@ -3646,16 +3889,62 @@ export type UpdateUserMutation = { __typename?: 'MutationType' } & {
   >
 }
 
+export type UsersOnPathQueryVariables = Exact<{
+  path: Scalars['String']
+}>
+
+export type UsersOnPathQuery = { __typename?: 'QueryType' } & {
+  usersOnPath: Array<
+    { __typename?: 'User' } & Pick<
+      User,
+      'id' | 'fullName' | 'email' | 'latestPresence' | 'signature'
+    >
+  >
+}
+
 export type UsersQueryVariables = Exact<{ [key: string]: never }>
 
 export type UsersQuery = { __typename?: 'QueryType' } & {
   users: Array<
     { __typename?: 'User' } & Pick<
       User,
-      'id' | 'fullName' | 'email' | 'latestPresence'
+      'id' | 'fullName' | 'role' | 'email' | 'latestPresence' | 'latestLocation'
     >
   >
 }
+
+export type MarkAllNotificationsAsReadMutationVariables = Exact<{
+  [key: string]: never
+}>
+
+export type MarkAllNotificationsAsReadMutation = {
+  __typename?: 'MutationType'
+} & {
+  markAllNotificationsAsRead: Array<
+    { __typename?: 'UserNotification' } & Pick<UserNotification, 'id' | 'read'>
+  >
+}
+
+export type MarkNotificationAsReadMutationVariables = Exact<{
+  notificationId: Scalars['ID']
+}>
+
+export type MarkNotificationAsReadMutation = { __typename?: 'MutationType' } & {
+  markNotificationAsRead: { __typename?: 'UserNotification' } & Pick<
+    UserNotification,
+    'id' | 'read'
+  >
+}
+
+export type SharePathMutationVariables = Exact<{
+  path: Scalars['String']
+  userId: Scalars['ID']
+}>
+
+export type SharePathMutation = { __typename?: 'MutationType' } & Pick<
+  MutationType,
+  'sharePath'
+>
 
 export const SetClaimDateDocument = gql`
   mutation SetClaimDate($id: ID!, $date: LocalDate!) {
@@ -4180,6 +4469,30 @@ export const ClaimPageDocument = gql`
       claimType
       dateOfOccurrence
       outcome
+      restriction {
+        resourceId
+        restrictedByMe
+        restrictedBy {
+          id
+          email
+          fullName
+          role
+        }
+        usersGranted {
+          id
+          email
+          fullName
+          role
+        }
+        usersRestricted {
+          id
+          email
+          fullName
+          role
+        }
+        rolesGranted
+        rolesRestricted
+      }
       propertySelections {
         claimType
         property {
@@ -4705,6 +5018,71 @@ export type MarkClaimFileAsDeletedMutationResult = ApolloReactCommon.MutationRes
 export type MarkClaimFileAsDeletedMutationOptions = ApolloReactCommon.BaseMutationOptions<
   MarkClaimFileAsDeletedMutation,
   MarkClaimFileAsDeletedMutationVariables
+>
+export const RestrictResourceAccessDocument = gql`
+  mutation RestrictResourceAccess($resourceId: ID!) {
+    restrictResourceAccess(resourceId: $resourceId) {
+      resourceId
+      usersGranted {
+        id
+        email
+        fullName
+        role
+      }
+      usersRestricted {
+        id
+        email
+        fullName
+        role
+      }
+      rolesGranted
+      rolesRestricted
+    }
+  }
+`
+export type RestrictResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
+  RestrictResourceAccessMutation,
+  RestrictResourceAccessMutationVariables
+>
+
+/**
+ * __useRestrictResourceAccessMutation__
+ *
+ * To run a mutation, you first call `useRestrictResourceAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRestrictResourceAccessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [restrictResourceAccessMutation, { data, loading, error }] = useRestrictResourceAccessMutation({
+ *   variables: {
+ *      resourceId: // value for 'resourceId'
+ *   },
+ * });
+ */
+export function useRestrictResourceAccessMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    RestrictResourceAccessMutation,
+    RestrictResourceAccessMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    RestrictResourceAccessMutation,
+    RestrictResourceAccessMutationVariables
+  >(RestrictResourceAccessDocument, options)
+}
+export type RestrictResourceAccessMutationHookResult = ReturnType<
+  typeof useRestrictResourceAccessMutation
+>
+export type RestrictResourceAccessMutationResult = ApolloReactCommon.MutationResult<
+  RestrictResourceAccessMutation
+>
+export type RestrictResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  RestrictResourceAccessMutation,
+  RestrictResourceAccessMutationVariables
 >
 export const SetClaimFileCategoryDocument = gql`
   mutation SetClaimFileCategory(
@@ -7403,61 +7781,61 @@ export type GetQuotesQueryResult = ApolloReactCommon.QueryResult<
   GetQuotesQuery,
   GetQuotesQueryVariables
 >
-export const GetSchemaForContractTypeDocument = gql`
-  query GetSchemaForContractType($contractType: String!) {
-    quoteSchemaForContractType(contractType: $contractType)
+export const GetSchemaForInsuranceTypeDocument = gql`
+  query GetSchemaForInsuranceType($insuranceType: String!) {
+    quoteSchemaForInsuranceType(insuranceType: $insuranceType)
   }
 `
 
 /**
- * __useGetSchemaForContractTypeQuery__
+ * __useGetSchemaForInsuranceTypeQuery__
  *
- * To run a query within a React component, call `useGetSchemaForContractTypeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetSchemaForContractTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetSchemaForInsuranceTypeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSchemaForInsuranceTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetSchemaForContractTypeQuery({
+ * const { data, loading, error } = useGetSchemaForInsuranceTypeQuery({
  *   variables: {
- *      contractType: // value for 'contractType'
+ *      insuranceType: // value for 'insuranceType'
  *   },
  * });
  */
-export function useGetSchemaForContractTypeQuery(
+export function useGetSchemaForInsuranceTypeQuery(
   baseOptions: ApolloReactHooks.QueryHookOptions<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
+    GetSchemaForInsuranceTypeQuery,
+    GetSchemaForInsuranceTypeQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useQuery<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
-  >(GetSchemaForContractTypeDocument, options)
+    GetSchemaForInsuranceTypeQuery,
+    GetSchemaForInsuranceTypeQueryVariables
+  >(GetSchemaForInsuranceTypeDocument, options)
 }
-export function useGetSchemaForContractTypeLazyQuery(
+export function useGetSchemaForInsuranceTypeLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
+    GetSchemaForInsuranceTypeQuery,
+    GetSchemaForInsuranceTypeQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return ApolloReactHooks.useLazyQuery<
-    GetSchemaForContractTypeQuery,
-    GetSchemaForContractTypeQueryVariables
-  >(GetSchemaForContractTypeDocument, options)
+    GetSchemaForInsuranceTypeQuery,
+    GetSchemaForInsuranceTypeQueryVariables
+  >(GetSchemaForInsuranceTypeDocument, options)
 }
-export type GetSchemaForContractTypeQueryHookResult = ReturnType<
-  typeof useGetSchemaForContractTypeQuery
+export type GetSchemaForInsuranceTypeQueryHookResult = ReturnType<
+  typeof useGetSchemaForInsuranceTypeQuery
 >
-export type GetSchemaForContractTypeLazyQueryHookResult = ReturnType<
-  typeof useGetSchemaForContractTypeLazyQuery
+export type GetSchemaForInsuranceTypeLazyQueryHookResult = ReturnType<
+  typeof useGetSchemaForInsuranceTypeLazyQuery
 >
-export type GetSchemaForContractTypeQueryResult = ApolloReactCommon.QueryResult<
-  GetSchemaForContractTypeQuery,
-  GetSchemaForContractTypeQueryVariables
+export type GetSchemaForInsuranceTypeQueryResult = ApolloReactCommon.QueryResult<
+  GetSchemaForInsuranceTypeQuery,
+  GetSchemaForInsuranceTypeQueryVariables
 >
 export const OverrideQuotePriceDocument = gql`
   mutation OverrideQuotePrice($input: OverrideQuotePriceInput!) {
@@ -7999,6 +8377,209 @@ export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SendMessageMutation,
   SendMessageMutationVariables
 >
+export const GrantResourceAccessDocument = gql`
+  mutation GrantResourceAccess(
+    $resourceId: ID!
+    $grantHolder: String!
+    $grantHolderType: GrantHolderType!
+  ) {
+    grantResourceAccess(
+      resourceId: $resourceId
+      grantHolder: $grantHolder
+      grantHolderType: $grantHolderType
+    ) {
+      resourceId
+      usersGranted {
+        id
+        email
+        fullName
+        role
+      }
+      usersRestricted {
+        id
+        email
+        fullName
+        role
+      }
+      rolesGranted
+      rolesRestricted
+    }
+  }
+`
+export type GrantResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
+  GrantResourceAccessMutation,
+  GrantResourceAccessMutationVariables
+>
+
+/**
+ * __useGrantResourceAccessMutation__
+ *
+ * To run a mutation, you first call `useGrantResourceAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGrantResourceAccessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [grantResourceAccessMutation, { data, loading, error }] = useGrantResourceAccessMutation({
+ *   variables: {
+ *      resourceId: // value for 'resourceId'
+ *      grantHolder: // value for 'grantHolder'
+ *      grantHolderType: // value for 'grantHolderType'
+ *   },
+ * });
+ */
+export function useGrantResourceAccessMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    GrantResourceAccessMutation,
+    GrantResourceAccessMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    GrantResourceAccessMutation,
+    GrantResourceAccessMutationVariables
+  >(GrantResourceAccessDocument, options)
+}
+export type GrantResourceAccessMutationHookResult = ReturnType<
+  typeof useGrantResourceAccessMutation
+>
+export type GrantResourceAccessMutationResult = ApolloReactCommon.MutationResult<
+  GrantResourceAccessMutation
+>
+export type GrantResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  GrantResourceAccessMutation,
+  GrantResourceAccessMutationVariables
+>
+export const ReleaseResourceAccessDocument = gql`
+  mutation ReleaseResourceAccess($resourceId: ID!) {
+    releaseResourceAccess(resourceId: $resourceId)
+  }
+`
+export type ReleaseResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
+  ReleaseResourceAccessMutation,
+  ReleaseResourceAccessMutationVariables
+>
+
+/**
+ * __useReleaseResourceAccessMutation__
+ *
+ * To run a mutation, you first call `useReleaseResourceAccessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReleaseResourceAccessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [releaseResourceAccessMutation, { data, loading, error }] = useReleaseResourceAccessMutation({
+ *   variables: {
+ *      resourceId: // value for 'resourceId'
+ *   },
+ * });
+ */
+export function useReleaseResourceAccessMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    ReleaseResourceAccessMutation,
+    ReleaseResourceAccessMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    ReleaseResourceAccessMutation,
+    ReleaseResourceAccessMutationVariables
+  >(ReleaseResourceAccessDocument, options)
+}
+export type ReleaseResourceAccessMutationHookResult = ReturnType<
+  typeof useReleaseResourceAccessMutation
+>
+export type ReleaseResourceAccessMutationResult = ApolloReactCommon.MutationResult<
+  ReleaseResourceAccessMutation
+>
+export type ReleaseResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  ReleaseResourceAccessMutation,
+  ReleaseResourceAccessMutationVariables
+>
+export const ResourceAccessInformationDocument = gql`
+  query ResourceAccessInformation($resourceId: String!) {
+    resourceAccess(resourceId: $resourceId) {
+      resourceId
+      restrictedByMe
+      restrictedBy {
+        id
+        email
+        fullName
+        role
+      }
+      usersGranted {
+        id
+        email
+        fullName
+        role
+      }
+      usersRestricted {
+        id
+        email
+        fullName
+        role
+      }
+      rolesGranted
+      rolesRestricted
+    }
+  }
+`
+
+/**
+ * __useResourceAccessInformationQuery__
+ *
+ * To run a query within a React component, call `useResourceAccessInformationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useResourceAccessInformationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useResourceAccessInformationQuery({
+ *   variables: {
+ *      resourceId: // value for 'resourceId'
+ *   },
+ * });
+ */
+export function useResourceAccessInformationQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    ResourceAccessInformationQuery,
+    ResourceAccessInformationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    ResourceAccessInformationQuery,
+    ResourceAccessInformationQueryVariables
+  >(ResourceAccessInformationDocument, options)
+}
+export function useResourceAccessInformationLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    ResourceAccessInformationQuery,
+    ResourceAccessInformationQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    ResourceAccessInformationQuery,
+    ResourceAccessInformationQueryVariables
+  >(ResourceAccessInformationDocument, options)
+}
+export type ResourceAccessInformationQueryHookResult = ReturnType<
+  typeof useResourceAccessInformationQuery
+>
+export type ResourceAccessInformationLazyQueryHookResult = ReturnType<
+  typeof useResourceAccessInformationLazyQuery
+>
+export type ResourceAccessInformationQueryResult = ApolloReactCommon.QueryResult<
+  ResourceAccessInformationQuery,
+  ResourceAccessInformationQueryVariables
+>
 export const AssignCampaignToPartnerFreeMonthsDocument = gql`
   mutation AssignCampaignToPartnerFreeMonths(
     $request: AssignVoucherFreeMonths
@@ -8049,6 +8630,57 @@ export type AssignCampaignToPartnerFreeMonthsMutationResult = ApolloReactCommon.
 export type AssignCampaignToPartnerFreeMonthsMutationOptions = ApolloReactCommon.BaseMutationOptions<
   AssignCampaignToPartnerFreeMonthsMutation,
   AssignCampaignToPartnerFreeMonthsMutationVariables
+>
+export const AssignCampaignToPartnerNoDiscountDocument = gql`
+  mutation AssignCampaignToPartnerNoDiscount(
+    $request: AssignVoucherNoDiscount
+  ) {
+    assignCampaignToPartnerNoDiscount(request: $request)
+  }
+`
+export type AssignCampaignToPartnerNoDiscountMutationFn = ApolloReactCommon.MutationFunction<
+  AssignCampaignToPartnerNoDiscountMutation,
+  AssignCampaignToPartnerNoDiscountMutationVariables
+>
+
+/**
+ * __useAssignCampaignToPartnerNoDiscountMutation__
+ *
+ * To run a mutation, you first call `useAssignCampaignToPartnerNoDiscountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignCampaignToPartnerNoDiscountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignCampaignToPartnerNoDiscountMutation, { data, loading, error }] = useAssignCampaignToPartnerNoDiscountMutation({
+ *   variables: {
+ *      request: // value for 'request'
+ *   },
+ * });
+ */
+export function useAssignCampaignToPartnerNoDiscountMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    AssignCampaignToPartnerNoDiscountMutation,
+    AssignCampaignToPartnerNoDiscountMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    AssignCampaignToPartnerNoDiscountMutation,
+    AssignCampaignToPartnerNoDiscountMutationVariables
+  >(AssignCampaignToPartnerNoDiscountDocument, options)
+}
+export type AssignCampaignToPartnerNoDiscountMutationHookResult = ReturnType<
+  typeof useAssignCampaignToPartnerNoDiscountMutation
+>
+export type AssignCampaignToPartnerNoDiscountMutationResult = ApolloReactCommon.MutationResult<
+  AssignCampaignToPartnerNoDiscountMutation
+>
+export type AssignCampaignToPartnerNoDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  AssignCampaignToPartnerNoDiscountMutation,
+  AssignCampaignToPartnerNoDiscountMutationVariables
 >
 export const AssignCampaignToPartnerPercentageDiscountDocument = gql`
   mutation AssignCampaignToPartnerPercentageDiscount(
@@ -9861,7 +10493,23 @@ export const GetMeDocument = gql`
         id
         email
         fullName
+        signature
         phoneNumber
+        role
+        notifications {
+          id
+          message
+          url
+          createdAt
+          read
+          verbose
+          from {
+            id
+            signature
+            fullName
+            signature
+          }
+        }
       }
       settings {
         key
@@ -10022,13 +10670,75 @@ export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
 >
+export const UsersOnPathDocument = gql`
+  query UsersOnPath($path: String!) {
+    usersOnPath(path: $path) {
+      id
+      fullName
+      email
+      latestPresence
+      signature
+    }
+  }
+`
+
+/**
+ * __useUsersOnPathQuery__
+ *
+ * To run a query within a React component, call `useUsersOnPathQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersOnPathQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersOnPathQuery({
+ *   variables: {
+ *      path: // value for 'path'
+ *   },
+ * });
+ */
+export function useUsersOnPathQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    UsersOnPathQuery,
+    UsersOnPathQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<UsersOnPathQuery, UsersOnPathQueryVariables>(
+    UsersOnPathDocument,
+    options,
+  )
+}
+export function useUsersOnPathLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    UsersOnPathQuery,
+    UsersOnPathQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    UsersOnPathQuery,
+    UsersOnPathQueryVariables
+  >(UsersOnPathDocument, options)
+}
+export type UsersOnPathQueryHookResult = ReturnType<typeof useUsersOnPathQuery>
+export type UsersOnPathLazyQueryHookResult = ReturnType<
+  typeof useUsersOnPathLazyQuery
+>
+export type UsersOnPathQueryResult = ApolloReactCommon.QueryResult<
+  UsersOnPathQuery,
+  UsersOnPathQueryVariables
+>
 export const UsersDocument = gql`
   query Users {
     users {
       id
       fullName
+      role
       email
       latestPresence
+      latestLocation
     }
   }
 `
@@ -10077,6 +10787,159 @@ export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>
 export type UsersQueryResult = ApolloReactCommon.QueryResult<
   UsersQuery,
   UsersQueryVariables
+>
+export const MarkAllNotificationsAsReadDocument = gql`
+  mutation MarkAllNotificationsAsRead {
+    markAllNotificationsAsRead {
+      id
+      read
+    }
+  }
+`
+export type MarkAllNotificationsAsReadMutationFn = ApolloReactCommon.MutationFunction<
+  MarkAllNotificationsAsReadMutation,
+  MarkAllNotificationsAsReadMutationVariables
+>
+
+/**
+ * __useMarkAllNotificationsAsReadMutation__
+ *
+ * To run a mutation, you first call `useMarkAllNotificationsAsReadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkAllNotificationsAsReadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markAllNotificationsAsReadMutation, { data, loading, error }] = useMarkAllNotificationsAsReadMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMarkAllNotificationsAsReadMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    MarkAllNotificationsAsReadMutation,
+    MarkAllNotificationsAsReadMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    MarkAllNotificationsAsReadMutation,
+    MarkAllNotificationsAsReadMutationVariables
+  >(MarkAllNotificationsAsReadDocument, options)
+}
+export type MarkAllNotificationsAsReadMutationHookResult = ReturnType<
+  typeof useMarkAllNotificationsAsReadMutation
+>
+export type MarkAllNotificationsAsReadMutationResult = ApolloReactCommon.MutationResult<
+  MarkAllNotificationsAsReadMutation
+>
+export type MarkAllNotificationsAsReadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  MarkAllNotificationsAsReadMutation,
+  MarkAllNotificationsAsReadMutationVariables
+>
+export const MarkNotificationAsReadDocument = gql`
+  mutation MarkNotificationAsRead($notificationId: ID!) {
+    markNotificationAsRead(notificationId: $notificationId) {
+      id
+      read
+    }
+  }
+`
+export type MarkNotificationAsReadMutationFn = ApolloReactCommon.MutationFunction<
+  MarkNotificationAsReadMutation,
+  MarkNotificationAsReadMutationVariables
+>
+
+/**
+ * __useMarkNotificationAsReadMutation__
+ *
+ * To run a mutation, you first call `useMarkNotificationAsReadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkNotificationAsReadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markNotificationAsReadMutation, { data, loading, error }] = useMarkNotificationAsReadMutation({
+ *   variables: {
+ *      notificationId: // value for 'notificationId'
+ *   },
+ * });
+ */
+export function useMarkNotificationAsReadMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    MarkNotificationAsReadMutation,
+    MarkNotificationAsReadMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    MarkNotificationAsReadMutation,
+    MarkNotificationAsReadMutationVariables
+  >(MarkNotificationAsReadDocument, options)
+}
+export type MarkNotificationAsReadMutationHookResult = ReturnType<
+  typeof useMarkNotificationAsReadMutation
+>
+export type MarkNotificationAsReadMutationResult = ApolloReactCommon.MutationResult<
+  MarkNotificationAsReadMutation
+>
+export type MarkNotificationAsReadMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  MarkNotificationAsReadMutation,
+  MarkNotificationAsReadMutationVariables
+>
+export const SharePathDocument = gql`
+  mutation SharePath($path: String!, $userId: ID!) {
+    sharePath(path: $path, userId: $userId)
+  }
+`
+export type SharePathMutationFn = ApolloReactCommon.MutationFunction<
+  SharePathMutation,
+  SharePathMutationVariables
+>
+
+/**
+ * __useSharePathMutation__
+ *
+ * To run a mutation, you first call `useSharePathMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSharePathMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sharePathMutation, { data, loading, error }] = useSharePathMutation({
+ *   variables: {
+ *      path: // value for 'path'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useSharePathMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    SharePathMutation,
+    SharePathMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useMutation<
+    SharePathMutation,
+    SharePathMutationVariables
+  >(SharePathDocument, options)
+}
+export type SharePathMutationHookResult = ReturnType<
+  typeof useSharePathMutation
+>
+export type SharePathMutationResult = ApolloReactCommon.MutationResult<
+  SharePathMutation
+>
+export type SharePathMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  SharePathMutation,
+  SharePathMutationVariables
 >
 
 export interface PossibleTypesResultData {

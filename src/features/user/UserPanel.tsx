@@ -1,10 +1,17 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { colorsV3 } from '@hedviginsurance/brand'
 import chroma from 'chroma-js'
-import { differenceInMinutes, parseISO } from 'date-fns'
+import {
+  differenceInSeconds,
+  formatDistanceToNowStrict,
+  parseISO,
+} from 'date-fns'
+import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useRef } from 'react'
+import { useHistory } from 'react-router'
 import { useUsersQuery } from 'types/generated/graphql'
 
 const Container = styled.div<{ visible: boolean }>`
@@ -47,7 +54,7 @@ const UserItemContainer = styled.div`
   }
 `
 
-const UserItem = styled.div`
+const UserItem = styled.div<{ active?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -60,6 +67,39 @@ const UserItem = styled.div`
   background-color: ${({ theme }) =>
     theme.type === 'dark' ? colorsV3.gray900 : colorsV3.gray800};
   padding: 0.7rem 1rem;
+
+  * > .navigate-label {
+    display: none;
+  }
+
+  * > .time-label {
+    display: inline-block;
+  }
+
+  ${({ active, theme }) =>
+    active &&
+    css`
+      cursor: pointer;
+      transition: background-color 200ms;
+
+      :hover {
+        * > .navigate-label {
+          display: inline-block;
+        }
+
+        * > .time-label {
+          display: none;
+        }
+
+        background-color: ${theme.type === 'dark'
+          ? chroma(colorsV3.gray900)
+              .brighten(0.5)
+              .hex()
+          : chroma(colorsV3.gray800)
+              .brighten(0.5)
+              .hex()};
+      }
+    `};
 `
 
 const UserName = styled.div`
@@ -93,8 +133,11 @@ export const UserPanel: React.FC<{
   visible: boolean
   onClickOutside: () => void
 }> = ({ visible, onClickOutside }) => {
+  const history = useHistory()
   const panelRef = useRef<HTMLDivElement>(null)
   const { data, startPolling, stopPolling } = useUsersQuery()
+
+  const { me } = useMe()
 
   useClickOutside(panelRef, onClickOutside)
 
@@ -112,37 +155,58 @@ export const UserPanel: React.FC<{
   const usersOnline = users
     .filter((user) =>
       user.latestPresence
-        ? differenceInMinutes(now, parseISO(user.latestPresence)) <= 30
+        ? differenceInSeconds(now, parseISO(user.latestPresence)) <= 10
         : false,
     )
     .sort((u1, u2) =>
       u1.fullName.toLowerCase() > u2.fullName.toLowerCase() ? 1 : -1,
     )
 
-  const usersOffline = users.filter((user) =>
-    user.latestPresence
-      ? differenceInMinutes(now, parseISO(user.latestPresence)) > 30
-      : true,
-  )
+  const usersOffline = users
+    .filter((user) =>
+      user.latestPresence
+        ? differenceInSeconds(now, parseISO(user.latestPresence)) > 10
+        : true,
+    )
+    .sort((u1, u2) => {
+      if (!u1.latestPresence && u2.latestPresence) {
+        return 1
+      }
+
+      if (u1.latestPresence && !u2.latestPresence) {
+        return -1
+      }
+
+      if (!u1.latestPresence && !u2.latestPresence) {
+        return 0
+      }
+
+      return u1.latestPresence < u2.latestPresence ? 1 : -1
+    })
 
   return (
     <Container visible={visible} ref={panelRef}>
       <Label>Users online</Label>
       <UserItemContainer>
         {usersOnline.map((user) => {
-          const differenceLatestPresence = differenceInMinutes(
-            now,
-            parseISO(user.latestPresence),
-          )
+          const hasCurrentLocation =
+            !!user.latestLocation && user.email !== me.email
 
           return (
-            <UserItem key={user.id}>
+            <UserItem
+              onClick={() =>
+                hasCurrentLocation &&
+                user.latestLocation &&
+                history.push(user.latestLocation)
+              }
+              active={hasCurrentLocation}
+              key={user.id}
+            >
               <Flex direction="column">
                 <UserName>{user.fullName}</UserName>
                 <LatestSeenLabel>
-                  {user.latestPresence && differenceLatestPresence > 0
-                    ? `${differenceLatestPresence} min ago`
-                    : 'Active now'}
+                  <span className="navigate-label">Go to location</span>
+                  <span className="time-label">Active now</span>
                 </LatestSeenLabel>
               </Flex>
               <div>
@@ -158,7 +222,19 @@ export const UserPanel: React.FC<{
           <UserItemContainer>
             {usersOffline.map((user) => (
               <UserItem key={user.id}>
-                <UserName>{user.fullName}</UserName>
+                <Flex direction="column">
+                  <UserName>{user.fullName}</UserName>
+                  <LatestSeenLabel>
+                    {user.latestPresence
+                      ? formatDistanceToNowStrict(
+                          parseISO(user.latestPresence),
+                          {
+                            addSuffix: true,
+                          },
+                        )
+                      : 'Has never signed in'}
+                  </LatestSeenLabel>
+                </Flex>
                 <div>
                   <UserStatusOrb status="offline" />
                 </div>

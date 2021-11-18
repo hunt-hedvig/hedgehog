@@ -5,6 +5,7 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { NoDiscountForm } from 'features/tools/campaign-codes/forms/NoDiscountForm'
 import { VisibleNoDiscountForm } from 'features/tools/campaign-codes/forms/VisibleNoDiscountForm'
 import { CreatableIncentiveTypes } from 'features/tools/campaign-codes/utils'
 import React from 'react'
@@ -17,6 +18,8 @@ const getIncentiveTypeForm = (incentiveType: CreatableIncentiveTypes) => {
       return <MonthlyPercentageForm />
     case CreatableIncentiveTypes.FreeMonths:
       return <FreeMonthsForm />
+    case CreatableIncentiveTypes.NoDiscount:
+      return <NoDiscountForm />
     case CreatableIncentiveTypes.VisibleNoDiscount:
       return <VisibleNoDiscountForm />
     default:
