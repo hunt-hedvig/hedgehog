@@ -15,10 +15,12 @@ query GetMe {
         url
         createdAt
         read
+        verbose
         from {
           id
           signature
           fullName
+          signature
         }
       }
     }

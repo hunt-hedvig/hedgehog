@@ -247,19 +247,25 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const actions = useRef<CommandLineAction[]>([])
   const actionKeyCodes = useRef<number[][]>([])
 
-  const isOptionPressed = useKeyIsPressed(Keys.Option)
-  const isSpacePressed = useKeyIsPressed(Keys.Space)
   const isControlPressed = useKeyIsPressed(Keys.Control)
+  const isOptionPressed = useKeyIsPressed(Keys.Option)
 
-  useEffect(() => {
-    if (showCommandLine) {
+  const onKeyDownShowCommandLine = (e: KeyboardEvent) => {
+    if (e.code !== 'Space') {
       return
     }
-
-    if (isSpacePressed && isOptionPressed) {
+    if (e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
       setShowCommandLine(true)
     }
-  }, [isOptionPressed, isSpacePressed])
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', onKeyDownShowCommandLine)
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDownShowCommandLine)
+    }
+  }, [])
 
   useKeyIsPressed(Keys.Escape, () => {
     setShowCommandLine(false)
