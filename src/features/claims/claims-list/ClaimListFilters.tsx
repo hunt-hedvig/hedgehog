@@ -104,7 +104,9 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   const { numberMemberGroups } = useNumberMemberGroups()
 
   const settingExist = (field: UserSettingKey, value) =>
-    !!settings[field].claims ? settings[field].claims.includes(value) : false
+    !!settings[field] && !!settings[field].claims
+      ? settings[field].claims.includes(value)
+      : false
 
   const setEmptyFilter = (field) => {
     if (!settings[field].claims) {
