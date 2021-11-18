@@ -13,7 +13,6 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Search as SearchIcon } from 'react-bootstrap-icons'
 
 const CommandLineWindow = styled.div`
   position: absolute;
@@ -199,7 +198,6 @@ export const CommandLineComponent: React.FC<{
 
             setSearchValue(inputValue)
           }}
-          icon={<SearchIcon name="search" />}
           placeholder="What can I help you with?"
         />
       </SearchWrapper>
