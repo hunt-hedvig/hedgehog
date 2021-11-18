@@ -222,7 +222,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
                   2
                 </HotkeyStyled>
               )}
-              <ClaimType claimId={claimId} />
+              <ClaimType focus={focus === 'type'} claimId={claimId} />
             </Card>
           </CardsWrapper>
           <CardsWrapper contentWrap="noWrap">

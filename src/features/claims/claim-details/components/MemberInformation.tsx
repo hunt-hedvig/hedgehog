@@ -322,7 +322,7 @@ export const MemberInformation: React.FC<{
               <InfoText>{formatMoney(member.account.totalBalance)}</InfoText>
             </InfoRow>
           )}
-          {member?.numberFailedCharges?.numberFailedCharges && (
+          {!!member?.numberFailedCharges?.numberFailedCharges && (
             <InfoRow>
               Failed payments
               <InfoText>
