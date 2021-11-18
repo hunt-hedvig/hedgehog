@@ -39,6 +39,7 @@ type QueryType {
   users: [User!]!
 
   usersOnPath(path: String!): [User!]!
+
   resourceAccess(resourceId: String!): ResourceAccessInformation
 }
 
@@ -101,6 +102,7 @@ type UserNotification {
   read: Boolean!
   user: User!
   from: User
+  verbose: Boolean!
 }
 
 type UserSetting {
@@ -254,7 +256,10 @@ type MutationType {
     grantHolderType: GrantHolderType!
   ): ResourceAccessInformation!
 
-  markNotificationsAsRead: Boolean!
+  markNotificationAsRead(notificationId: ID!): UserNotification!
+  markAllNotificationsAsRead: [UserNotification!]!
+
+  sharePath(path: String!, userId: ID!): Boolean!
 }
 
 enum GrantHolderType {

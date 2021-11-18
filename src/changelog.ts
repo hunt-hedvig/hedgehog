@@ -12,6 +12,12 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-11-17',
+    change:
+      "Share your current page with anyone. It's the airplane button in the top-menu, try it out!",
+    authorGithubHandle: 'rasmusguterstam',
+  },
+  {
     date: '2021-11-08',
     change:
       'Claims can be marked as restricted, limiting access to others in Hope 🔒',
