@@ -1,321 +1,263 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export interface Key {
-  key: string
-  code: number
+  code: string
+  codeAlternative?: string
   hint: string
 }
 
 export const Keys: { [name: string]: Key } = {
   Escape: {
-    key: 'Escape',
-    code: 27,
+    code: 'Escape',
     hint: 'Esc',
   },
   Backspace: {
-    key: 'Backspace',
-    code: 8,
+    code: 'Backspace',
     hint: 'Backspace ⌫',
   },
   Tab: {
-    key: 'Tab',
-    code: 9,
+    code: 'Tab',
     hint: 'Tab ⇥',
   },
   Enter: {
-    key: 'Enter',
-    code: 13,
+    code: 'Enter',
     hint: 'Enter ↩',
   },
   Shift: {
-    key: 'Shift',
-    code: 16,
+    code: 'ShiftLeft',
+    codeAlternative: 'ShiftRight',
     hint: 'Shift ⇧',
   },
   Control: {
-    key: 'Control',
-    code: 17,
+    code: 'ControlLeft',
+    codeAlternative: 'ControlRight',
     hint: 'Control ⌃',
   },
   Option: {
-    key: 'Alt',
-    code: 18,
+    code: 'AltLeft',
+    codeAlternative: 'AltRight',
     hint: 'Option ⌥',
   },
   CapsLock: {
-    key: 'CapsLock',
-    code: 20,
+    code: 'CapsLock',
     hint: 'Caps ⇪',
   },
   Command: {
-    key: 'Command',
-    code: 91,
+    code: 'MetaLeft',
+    codeAlternative: 'MetaRight',
     hint: 'Command ⌘',
   },
   Space: {
-    key: ' ',
-    code: 32,
+    code: 'Space',
     hint: 'Space ␣',
   },
   Left: {
-    key: 'ArrowLeft',
-    code: 37,
+    code: 'ArrowLeft',
     hint: 'Left ←',
   },
   Up: {
-    key: 'ArrowUp',
-    code: 38,
+    code: 'ArrowUp',
     hint: 'Up ↑',
   },
   Right: {
-    key: 'ArrowRight',
-    code: 39,
+    code: 'ArrowRight',
     hint: 'Right →',
   },
   Down: {
-    key: 'ArrowDown',
-    code: 40,
+    code: 'ArrowDown',
     hint: 'Down ↓',
   },
   Zero: {
-    code: 48,
+    code: 'Digit0',
     hint: '0',
-    key: '0',
   },
   One: {
-    code: 49,
+    code: 'Digit1',
     hint: '1',
-    key: '1',
   },
   Two: {
-    code: 50,
+    code: 'Digit2',
     hint: '2',
-    key: '2',
   },
   Three: {
-    code: 51,
+    code: 'Digit3',
     hint: '3',
-    key: '3',
   },
   Four: {
-    code: 52,
+    code: 'Digit4',
     hint: '4',
-    key: '4',
   },
   Five: {
-    code: 53,
+    code: 'Digit5',
     hint: '5',
-    key: '5',
   },
   Six: {
-    code: 54,
+    code: 'Digit6',
     hint: '6',
-    key: '6',
   },
   Seven: {
-    code: 55,
+    code: 'Digit7',
     hint: '7',
-    key: '7',
   },
   Eight: {
-    code: 56,
+    code: 'Digit8',
     hint: '8',
-    key: '8',
   },
   Nine: {
-    code: 57,
+    code: 'Digit9',
     hint: '9',
-    key: '9',
   },
   A: {
-    code: 65,
+    code: 'KeyA',
     hint: 'A',
-    key: 'A',
   },
   B: {
-    code: 66,
+    code: 'KeyB',
     hint: 'B',
-    key: 'B',
   },
   C: {
-    code: 67,
+    code: 'KeyC',
     hint: 'C',
-    key: 'C',
   },
   D: {
-    code: 68,
+    code: 'KeyD',
     hint: 'D',
-    key: 'D',
   },
   E: {
-    code: 69,
+    code: 'KeyE',
     hint: 'E',
-    key: 'E',
   },
   F: {
-    code: 70,
+    code: 'KeyF',
     hint: 'F',
-    key: 'F',
   },
   G: {
-    code: 71,
+    code: 'KeyG',
     hint: 'G',
-    key: 'G',
   },
   H: {
-    code: 72,
+    code: 'KeyH',
     hint: 'H',
-    key: 'H',
   },
   I: {
-    code: 73,
+    code: 'KeyI',
     hint: 'I',
-    key: 'I',
   },
   J: {
-    code: 74,
+    code: 'KeyJ',
     hint: 'J',
-    key: 'J',
   },
   K: {
-    code: 75,
+    code: 'KeyK',
     hint: 'K',
-    key: 'K',
   },
   L: {
-    code: 76,
+    code: 'KeyL',
     hint: 'L',
-    key: 'L',
   },
   M: {
-    code: 77,
+    code: 'KeyM',
     hint: 'M',
-    key: 'M',
   },
   N: {
-    code: 78,
+    code: 'KeyN',
     hint: 'N',
-    key: 'N',
   },
   O: {
-    code: 79,
+    code: 'KeyO',
     hint: 'O',
-    key: 'O',
   },
   P: {
-    code: 80,
+    code: 'KeyP',
     hint: 'P',
-    key: 'P',
   },
   Q: {
-    code: 81,
+    code: 'KeyQ',
     hint: 'Q',
-    key: 'Q',
   },
   R: {
-    code: 82,
+    code: 'KeyR',
     hint: 'R',
-    key: 'R',
   },
   S: {
-    code: 83,
+    code: 'KeyS',
     hint: 'S',
-    key: 'S',
   },
   T: {
-    code: 84,
+    code: 'KeyT',
     hint: 'T',
-    key: 'T',
   },
   U: {
-    code: 85,
+    code: 'KeyU',
     hint: 'U',
-    key: 'U',
   },
   V: {
-    code: 86,
+    code: 'KeyV',
     hint: 'V',
-    key: 'V',
   },
   W: {
-    code: 87,
+    code: 'KeyW',
     hint: 'W',
-    key: 'W',
   },
   X: {
-    code: 88,
+    code: 'KeyX',
     hint: 'X',
-    key: 'X',
   },
   Y: {
-    code: 89,
+    code: 'KeyY',
     hint: 'Y',
-    key: 'Y',
   },
   Z: {
-    code: 90,
+    code: 'KeyZ',
     hint: 'Z',
-    key: 'Z',
   },
   F1: {
-    code: 112,
+    code: 'F1',
     hint: 'F1',
-    key: 'F1',
   },
   F2: {
-    code: 113,
+    code: 'F2',
     hint: 'F2',
-    key: 'F2',
   },
   F3: {
-    code: 114,
+    code: 'F3',
     hint: 'F3',
-    key: 'F3',
   },
   F4: {
-    code: 115,
+    code: 'F4',
     hint: 'F4',
-    key: 'F4',
   },
   F5: {
-    code: 116,
+    code: 'F5',
     hint: 'F5',
-    key: 'F5',
   },
   F6: {
-    code: 117,
+    code: 'F6',
     hint: 'F6',
-    key: 'F6',
   },
   F7: {
-    code: 118,
+    code: 'F7',
     hint: 'F7',
-    key: 'F7',
   },
   F8: {
-    code: 119,
+    code: 'F8',
     hint: 'F8',
-    key: 'F8',
   },
   F9: {
-    code: 120,
+    code: 'F9',
     hint: 'F9',
-    key: 'F9',
   },
   F10: {
-    code: 121,
+    code: 'F10',
     hint: 'F10',
-    key: 'F10',
   },
   F11: {
-    code: 122,
+    code: 'F11',
     hint: 'F11',
-    key: 'F11',
   },
   F12: {
-    code: 123,
+    code: 'F12',
     hint: 'F12',
-    key: 'F12',
   },
 }
 
@@ -364,18 +306,23 @@ const IllegalCharacters = new Set([
 
 export const shouldIgnoreInput = (key: string) => IllegalCharacters.has(key)
 
+export const isKeyPressed = (
+  e: KeyboardEvent | React.KeyboardEvent<any>,
+  key: Key,
+): boolean => e.code === key.code || e.code === key.codeAlternative
+
 export const useKeyIsPressed = (key: Key, callback?: (e) => void): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
-  const handleKeydown = (e) => {
-    if (e.key === key.key) {
+  const handleKeydown = (e: KeyboardEvent) => {
+    if (isKeyPressed(e, key)) {
       callback?.(e)
       setKeyPressed(true)
     }
   }
 
-  const handleKeyup = (e) => {
-    if (e.key === key.key) {
+  const handleKeyup = (e: KeyboardEvent) => {
+    if (isKeyPressed(e, key)) {
       setKeyPressed(false)
     }
   }

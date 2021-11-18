@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { HotkeyStyled } from '@hedvig-ui'
 import React, { useEffect } from 'react'
 import {
+  isKeyPressed,
   Key,
   Keys,
   useKeyIsPressed,
@@ -80,21 +81,21 @@ export const Tab: React.FC<TabProps> = ({
   hotkey,
   ...props
 }) => {
-  const isKeyPressed = hotkey ? useKeyIsPressed(hotkey.key) : false
+  const keyIsPressed = hotkey ? useKeyIsPressed(hotkey.key) : false // TODO: Rename back
   const isControlPressed = useKeyIsPressed(Keys.Control)
 
   useEffect(() => {
-    if (isKeyPressed && isControlPressed) {
+    if (keyIsPressed && isControlPressed) {
       action()
     }
-  }, [isKeyPressed, isControlPressed])
+  }, [keyIsPressed, isControlPressed])
 
   return (
     <TabStyled
       active={active}
       tabIndex={0}
       onClick={action}
-      onKeyDown={(e) => e.key === Keys.Enter.key && action()}
+      onKeyDown={(e) => isKeyPressed(e, Keys.Enter) && action()}
       {...props}
     >
       {title}{' '}

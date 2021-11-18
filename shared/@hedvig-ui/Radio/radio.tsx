@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import React, { InputHTMLAttributes } from 'react'
-import { Keys } from '../hooks/keyboard/use-key-is-pressed'
+import { isKeyPressed, Keys } from '../hooks/keyboard/use-key-is-pressed'
 
 const RadioLabel = styled.div<{ checked?: boolean; disabled?: boolean }>`
   display: flex;
@@ -129,7 +129,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
         disabled={opt.disabled || false}
         onChange={() => onChange && onChange(opt.value)}
         onKeyDown={(e) => {
-          if (e.key === Keys.Enter.key) {
+          if (isKeyPressed(e, Keys.Enter)) {
             onChange(opt.value)
             return
           }

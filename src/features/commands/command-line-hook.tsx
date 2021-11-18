@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FadeIn, FourthLevelHeadline, Input, Paragraph } from '@hedvig-ui'
 import {
+  isKeyPressed,
   Key,
   Keys,
   useKeyIsPressed,
@@ -184,7 +185,7 @@ export const CommandLineComponent: React.FC<{
           value={searchValue}
           size="large"
           onKeyDown={(e) => {
-            if (e.keyCode === Keys.Down.code || e.keyCode === Keys.Up.code) {
+            if (isKeyPressed(e, Keys.Down) || isKeyPressed(e, Keys.Up)) {
               e.preventDefault()
             }
           }}
@@ -245,13 +246,14 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const commandLine = useRef<HTMLInputElement>(null)
   const [showCommandLine, setShowCommandLine] = useState(false)
   const actions = useRef<CommandLineAction[]>([])
-  const actionKeyCodes = useRef<number[][]>([])
+  const actionKeyCodes = useRef<string[][]>([])
 
   const isControlPressed = useKeyIsPressed(Keys.Control)
   const isOptionPressed = useKeyIsPressed(Keys.Option)
 
   const onKeyDownShowCommandLine = (e: KeyboardEvent) => {
-    if (e.code !== 'Space') {
+    console.log(e)
+    if (!isKeyPressed(e, Keys.Space)) {
       return
     }
     if (e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
@@ -311,15 +313,15 @@ export const CommandLineProvider: React.FC = ({ children }) => {
 
   // tslint:disable:no-unused-expression
   const handleKeyDown = (e: KeyboardEvent) => {
-    const modifiers: number[] = []
+    const modifiers: string[] = []
     e.shiftKey && modifiers.push(Keys.Shift.code)
     e.ctrlKey && modifiers.push(Keys.Control.code)
     e.altKey && modifiers.push(Keys.Option.code)
     e.metaKey && modifiers.push(Keys.Command.code)
-    if (modifiers.includes(e.keyCode) || modifiers.length === 0) {
+    if (modifiers.includes(e.code) || modifiers.length === 0) {
       return
     }
-    const keys = modifiers.concat(e.keyCode)
+    const keys = modifiers.concat(e.code)
 
     const matchIndex = actionKeyCodes.current.findIndex((keyCodes) => {
       return keyCodes.every((keyCode, index) => keyCode === keys[index])

@@ -10,7 +10,7 @@ describe('CommandLineProvider', () => {
       window.dispatchEvent(
         // Using the recommended "key" attribute doesn't trigger the event, but "keyCode" does
         // @ts-ignore
-        new KeyboardEvent('keydown', { key: Keys.Option.key }),
+        new KeyboardEvent('keydown', { key: Keys.Option.code }),
       )
     })
 
@@ -18,7 +18,7 @@ describe('CommandLineProvider', () => {
       window.dispatchEvent(
         // Using the recommended "key" attribute doesn't trigger the event, but "keyCode" does
         // @ts-ignore
-        new KeyboardEvent('keydown', { key: Keys.Space.key }),
+        new KeyboardEvent('keydown', { key: Keys.Space.code }),
       )
     })
   }
@@ -40,7 +40,7 @@ describe('CommandLineProvider', () => {
       window.dispatchEvent(
         // Using the recommended "key" attribute doesn't trigger the event, but "keyCode" does
         // @ts-ignore
-        new KeyboardEvent('keydown', { key: Keys.Option.key }),
+        new KeyboardEvent('keydown', { key: Keys.Option.code }),
       )
     })
 
@@ -72,7 +72,7 @@ describe('CommandLineProvider', () => {
       window.dispatchEvent(
         // Using the recommended "key" attribute doesn't trigger the event, but "keyCode" does
         // @ts-ignore
-        new KeyboardEvent('keydown', { key: Keys.Escape.key }),
+        new KeyboardEvent('keydown', { key: Keys.Escape.code }),
       )
     })
 
