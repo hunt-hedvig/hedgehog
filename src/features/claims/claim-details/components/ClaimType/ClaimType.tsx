@@ -16,8 +16,9 @@ import {
 } from 'types/generated/graphql'
 
 export const ClaimType: React.FC<{
+  focus?: boolean
   claimId: string
-}> = ({ claimId }) => {
+}> = ({ claimId, focus }) => {
   const { data: claimTypeData } = useClaimPageQuery({
     variables: { claimId },
   })
