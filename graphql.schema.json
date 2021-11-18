@@ -2797,7 +2797,7 @@
             "deprecationReason": null
           },
           {
-            "name": "allowSignWithoutActiveContract",
+            "name": "allowOverrideSignFromHope",
             "description": null,
             "args": [],
             "type": {

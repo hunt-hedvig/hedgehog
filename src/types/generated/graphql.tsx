@@ -1300,7 +1300,7 @@ export type Quote = {
   signedProductId?: Maybe<Scalars['ID']>
   originatingProductId?: Maybe<Scalars['ID']>
   isReadyToSign?: Maybe<Scalars['Boolean']>
-  allowSignWithoutActiveContract?: Maybe<Scalars['Boolean']>
+  allowOverrideSignFromHope?: Maybe<Scalars['Boolean']>
 }
 
 export type RedeemedCampaign = {
@@ -2956,6 +2956,7 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
             | 'isReadyToSign'
             | 'schema'
             | 'schemaData'
+            | 'allowOverrideSignFromHope'
           >
         >
       }
@@ -7348,6 +7349,7 @@ export const GetQuotesDocument = gql`
         isReadyToSign
         schema
         schemaData
+        allowOverrideSignFromHope
       }
     }
   }

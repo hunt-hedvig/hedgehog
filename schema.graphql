@@ -724,7 +724,7 @@ type Quote {
   signedProductId: ID
   originatingProductId: ID
   isReadyToSign: Boolean
-  allowSignWithoutActiveContract: Boolean
+  allowOverrideSignFromHope: Boolean
 }
 
 input CampaignFilter {

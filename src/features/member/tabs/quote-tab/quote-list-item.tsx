@@ -89,7 +89,6 @@ export const QuoteListItem: React.FC<{
 }> = ({ contracts, quote, inactionable, memberId }) => {
   const [action, setAction] = useState<Action | null>(null)
   const [isWip, setIsWip] = useState(false)
-  const [allowSignOverride, setAllowSignOverride] = useState<boolean>(false)
 
   const toggleState = (targetAction: Action) => () => {
     const isTransitionToOpen = action === null
@@ -125,9 +124,6 @@ export const QuoteListItem: React.FC<{
     )
   }
 
-  const showOverrideCheckbox =
-    !contracts.length && !!quote.allowSignWithoutActiveContract
-
   return (
     <OuterWrapper>
       <QuoteWrapper>
@@ -141,26 +137,10 @@ export const QuoteListItem: React.FC<{
               <BottomSpacerWrapper>
                 <Button onClick={toggleState(Action.ACTIVATE)}>Activate</Button>
               </BottomSpacerWrapper>
-            ) : contracts.length || quote.allowSignWithoutActiveContract ? (
-              <>
-                <BottomSpacerWrapper>
-                  <Button
-                    disabled={showOverrideCheckbox && !allowSignOverride}
-                    onClick={toggleState(Action.SIGN)}
-                  >
-                    Sign
-                  </Button>
-                </BottomSpacerWrapper>
-                {showOverrideCheckbox && (
-                  <BottomSpacerWrapper>
-                    <Checkbox
-                      label="Sign without active contract"
-                      checked={allowSignOverride}
-                      onChange={() => setAllowSignOverride(!allowSignOverride)}
-                    />
-                  </BottomSpacerWrapper>
-                )}
-              </>
+            ) : contracts.length || quote.allowOverrideSignFromHope ? (
+              <BottomSpacerWrapper>
+                <Button onClick={toggleState(Action.SIGN)}>Sign</Button>
+              </BottomSpacerWrapper>
             ) : (
               <ErrorText>Member has to sign first contract</ErrorText>
             )}
