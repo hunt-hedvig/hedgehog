@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client'
-import { Mutation } from '@apollo/client/react/components'
 import styled from '@emotion/styled'
 import {
   Button,
@@ -153,7 +152,7 @@ export const PaymentsTab: React.FC<{
 
   const [chargeMemberMutation] = useMutation(CHARGE_MEMBER_MUTATION)
 
-  const useManualInput = useMemo(
+  const allowManualCharge = useMemo(
     () =>
       memberData?.member?.contractMarketInfo?.market === Market.Norway &&
       quotesData?.member?.quotes.some(
@@ -171,7 +170,7 @@ export const PaymentsTab: React.FC<{
   const { confirm } = useConfirmDialog()
 
   const handleChargeSubmit = () => {
-    const chargeBalance = manualAmount
+    const chargeBalance = allowManualCharge
       ? {
           ...account?.currentBalance!,
           amount: manualAmount,
@@ -187,6 +186,7 @@ export const PaymentsTab: React.FC<{
             variables: {
               id: memberId,
               amount: chargeBalance.amount,
+              allowManualCharge,
             },
           }),
           {
@@ -279,7 +279,7 @@ export const PaymentsTab: React.FC<{
 
         {memberData.member?.directDebitStatus?.activated && (
           <Card>
-            {useManualInput ? (
+            {allowManualCharge ? (
               <form
                 onSubmit={(e) => {
                   e.preventDefault()

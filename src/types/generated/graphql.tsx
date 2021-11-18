@@ -801,6 +801,7 @@ export type MutationType = {
 export type MutationTypeChargeMemberArgs = {
   id: Scalars['ID']
   amount: Scalars['MonetaryAmount']
+  allowManualCharge?: Maybe<Scalars['Boolean']>
 }
 
 export type MutationTypeAddAccountEntryToMemberArgs = {

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, Checkbox, ErrorText, ThirdLevelHeadline } from '@hedvig-ui'
+import { Button, ErrorText, ThirdLevelHeadline } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format, parseISO } from 'date-fns'
 import { UpdateQuoteForm } from 'features/member/tabs/quote-tab/update-quote-form'
