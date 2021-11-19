@@ -43,11 +43,14 @@ const QuestionsPage: React.FC = () => {
   const history = useHistory()
   const { me, settings, updateSetting } = useMe()
 
+  const getQuestionsFilter = (field) =>
+    (settings[field] && settings[field].questions) || []
+
   const [selectedFilters, setSelectedFilters] = useState<number[]>([
-    ...(settings[UserSettingKey.ClaimStatesFilter].questions || []),
-    ...(settings[UserSettingKey.MemberGroupsFilter].questions || []),
-    ...(settings[UserSettingKey.ClaimComplexityFilter].questions || []),
-    ...(settings[UserSettingKey.MarketFilter].questions || []),
+    ...getQuestionsFilter(UserSettingKey.ClaimStatesFilter),
+    ...getQuestionsFilter(UserSettingKey.MemberGroupsFilter),
+    ...getQuestionsFilter(UserSettingKey.ClaimComplexityFilter),
+    ...getQuestionsFilter(UserSettingKey.MarketFilter),
   ])
 
   const [questionGroups, { loading }] = useQuestionGroups()

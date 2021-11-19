@@ -26,29 +26,21 @@ const ConversationsOnboardingPage: React.FC = () => {
 
   const history = useHistory()
 
+  const getQuestionsFilter = (field) =>
+    (settings[field] && settings[field].questions) || []
+
   const [selectedFilters, setSelectedFilters] = useState<number[]>([
-    ...settings[UserSettingKey.ClaimStatesFilter].questions,
-    ...settings[UserSettingKey.MemberGroupsFilter].questions,
-    ...settings[UserSettingKey.ClaimComplexityFilter].questions,
-    ...settings[UserSettingKey.MarketFilter].questions,
+    ...getQuestionsFilter(UserSettingKey.ClaimStatesFilter),
+    ...getQuestionsFilter(UserSettingKey.MemberGroupsFilter),
+    ...getQuestionsFilter(UserSettingKey.ClaimComplexityFilter),
+    ...getQuestionsFilter(UserSettingKey.MarketFilter),
   ])
 
-  const setEmptyFilter = (field) => {
-    if (!settings[field].questions) {
-      updateSetting(field, {
-        ...settings[field],
-        questions: [],
-      })
-    }
-  }
-
   useEffect(() => {
-    setEmptyFilter(UserSettingKey.ClaimStatesFilter)
-    setEmptyFilter(UserSettingKey.MemberGroupsFilter)
-    setEmptyFilter(UserSettingKey.ClaimComplexityFilter)
-    setEmptyFilter(UserSettingKey.MarketFilter)
-
-    if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
+    if (
+      !settings[UserSettingKey.FeatureFlags] ||
+      !settings[UserSettingKey.FeatureFlags]?.conversations
+    ) {
       updateSetting(UserSettingKey.FeatureFlags, {
         ...settings[UserSettingKey.FeatureFlags],
         conversations: true,
@@ -63,7 +55,10 @@ const ConversationsOnboardingPage: React.FC = () => {
     })
   }, [])
 
-  if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
+  if (
+    !settings[UserSettingKey.FeatureFlags] ||
+    !settings[UserSettingKey.FeatureFlags]?.conversations
+  ) {
     return null
   }
 
@@ -72,14 +67,21 @@ const ConversationsOnboardingPage: React.FC = () => {
     settingField?: UserSettingKey,
   ) => {
     if (settingField) {
-      updateSetting(settingField, {
-        ...settings[settingField],
-        questions: settings[settingField].questions.includes(filter)
-          ? settings[settingField].questions.filter(
-              (prevFilter) => filter !== prevFilter,
-            )
-          : [...settings[settingField].questions, filter],
-      })
+      if (settings[settingField] && settings[settingField].questions) {
+        updateSetting(settingField, {
+          ...settings[settingField],
+          questions: settings[settingField].questions.includes(filter)
+            ? settings[settingField].questions.filter(
+                (prevFilter) => filter !== prevFilter,
+              )
+            : [...settings[settingField].questions, filter],
+        })
+      } else {
+        updateSetting(settingField, {
+          ...settings[settingField],
+          questions: [filter],
+        })
+      }
     }
 
     if (selectedFilters.includes(filter)) {

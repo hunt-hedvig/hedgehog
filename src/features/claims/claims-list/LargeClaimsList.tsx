@@ -95,30 +95,25 @@ export const LargeClaimsList: React.FC<{
     { loading },
   ] = useListClaims()
 
+  const getClaimFilter = (field: UserSettingKey, isClaims: boolean = true) =>
+    (settings[field] &&
+      (isClaims ? settings[field].claims : settings[field].value)) ||
+    null
+
   useEffect(() => {
     listClaims({
       page: page - 1 ?? 0,
       filterCreatedBeforeOrOnDate: date,
-      filterClaimStates:
-        (settings[UserSettingKey.ClaimStatesFilter] &&
-          settings[UserSettingKey.ClaimStatesFilter].claims) ||
-        null,
-      filterComplexities:
-        (settings[UserSettingKey.ClaimComplexityFilter] &&
-          settings[UserSettingKey.ClaimComplexityFilter].claims) ||
-        null,
-      filterNumberOfMemberGroups:
-        (settings[UserSettingKey.NumberOfMemberGroups] &&
-          settings[UserSettingKey.NumberOfMemberGroups].value) ||
-        null,
-      filterSelectedMemberGroups:
-        (settings[UserSettingKey.MemberGroupsFilter] &&
-          settings[UserSettingKey.MemberGroupsFilter].claims) ||
-        null,
-      filterMarkets:
-        (settings[UserSettingKey.MarketFilter] &&
-          settings[UserSettingKey.MarketFilter].claims) ||
-        null,
+      filterClaimStates: getClaimFilter(UserSettingKey.ClaimStatesFilter),
+      filterComplexities: getClaimFilter(UserSettingKey.ClaimComplexityFilter),
+      filterNumberOfMemberGroups: getClaimFilter(
+        UserSettingKey.NumberOfMemberGroups,
+        false,
+      ),
+      filterSelectedMemberGroups: getClaimFilter(
+        UserSettingKey.MemberGroupsFilter,
+      ),
+      filterMarkets: getClaimFilter(UserSettingKey.MarketFilter),
       filterTypesOfContract: null,
     })
   }, [page, date, settings])

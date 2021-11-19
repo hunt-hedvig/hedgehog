@@ -48,7 +48,10 @@ export const ConversationsOverview: React.FC<{
     [filteredGroups],
   )
   useEffect(() => {
-    if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
+    if (
+      !settings[UserSettingKey.FeatureFlags] ||
+      !settings[UserSettingKey.FeatureFlags]?.conversations
+    ) {
       updateSetting(UserSettingKey.FeatureFlags, {
         ...settings[UserSettingKey.FeatureFlags],
         conversations: true,

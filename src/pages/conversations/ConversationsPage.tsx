@@ -54,11 +54,14 @@ const ConversationsPage: React.FC<RouteComponentProps<{
   const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
   const { settings, updateSetting } = useMe()
 
+  const getQuestionsFilter = (field) =>
+    (settings[field] && settings[field].questions) || []
+
   const [filters, setFilters] = useState<number[]>([
-    ...(settings[UserSettingKey.ClaimStatesFilter].questions || []),
-    ...(settings[UserSettingKey.MemberGroupsFilter].questions || []),
-    ...(settings[UserSettingKey.ClaimComplexityFilter].questions || []),
-    ...(settings[UserSettingKey.MarketFilter].questions || []),
+    ...getQuestionsFilter(UserSettingKey.ClaimStatesFilter),
+    ...getQuestionsFilter(UserSettingKey.MemberGroupsFilter),
+    ...getQuestionsFilter(UserSettingKey.ClaimComplexityFilter),
+    ...getQuestionsFilter(UserSettingKey.MarketFilter),
   ])
 
   const toggleFilterHandler = (
