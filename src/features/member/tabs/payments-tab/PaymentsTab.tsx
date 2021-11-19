@@ -1,15 +1,18 @@
-import { Mutation } from '@apollo/client/react/components'
+import { useMutation } from '@apollo/client'
 import styled from '@emotion/styled'
 import {
   Button,
   Card,
   CardsWrapper,
+  Flex,
   InfoRow,
   InfoTag,
   InfoText,
+  Input,
   LoadingMessage,
   MainHeadline,
   Shadowed,
+  Spacing,
   StandaloneMessage,
   Table,
   TableBody,
@@ -26,14 +29,17 @@ import { format, parseISO } from 'date-fns'
 import { Market } from 'features/config/constants'
 import { useGetAccount } from 'features/member/tabs/account-tab/hooks/use-get-account'
 import gql from 'graphql-tag'
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   Transaction,
   useCreatePaymentCompletionLinkMutation,
   useGetMemberTransactionsQuery,
+  useGetQuotesQuery,
 } from 'types/generated/graphql'
 import { PayoutDetails } from './PayoutDetails'
+
+const numberRegex = /^\d+$/
 
 const transactionDateSorter = (a, b) => {
   const aDate = new Date(a.timestamp)
@@ -49,8 +55,16 @@ const transactionDateSorter = (a, b) => {
 }
 
 const CHARGE_MEMBER_MUTATION = gql`
-  mutation ChargeMember($id: ID!, $amount: MonetaryAmount!) {
-    chargeMember(id: $id, amount: $amount) {
+  mutation ChargeMember(
+    $id: ID!
+    $amount: MonetaryAmount!
+    $allowManualCharge: Boolean
+  ) {
+    chargeMember(
+      id: $id
+      amount: $amount
+      allowManualCharge: $allowManualCharge
+    ) {
       memberId
       transactions {
         id
@@ -129,9 +143,33 @@ const MemberTransactionsTable: React.FC<{
 export const PaymentsTab: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
-  const { data, loading, error, refetch } = useGetMemberTransactionsQuery({
+  const {
+    data: memberData,
+    loading,
+    error,
+    refetch,
+  } = useGetMemberTransactionsQuery({
     variables: { id: memberId },
   })
+
+  const [manualAmount, setManualAmount] = useState('0')
+
+  const { data: quotesData } = useGetQuotesQuery({
+    variables: {
+      memberId,
+    },
+  })
+
+  const [chargeMemberMutation] = useMutation(CHARGE_MEMBER_MUTATION)
+
+  const allowManualCharge = useMemo(
+    () =>
+      memberData?.member?.contractMarketInfo?.market === Market.Norway &&
+      quotesData?.member?.quotes.some(
+        (quote) => quote.allowOverrideSignFromHope,
+      ),
+    [memberData, quotesData],
+  )
 
   const [createPaymentCompletionLink] = useCreatePaymentCompletionLinkMutation({
     variables: { memberId },
@@ -141,22 +179,32 @@ export const PaymentsTab: React.FC<{
 
   const { confirm } = useConfirmDialog()
 
-  const handleChargeSubmit = (mutation) => {
+  const handleChargeSubmit = () => {
+    const chargeAmount = allowManualCharge
+      ? {
+          ...account?.currentBalance!,
+          amount: manualAmount,
+        }
+      : account?.currentBalance!
     const confirmMessage = `Are you sure you want to charge ${formatMoney(
-      account?.currentBalance!,
+      chargeAmount,
     )}?`
     confirm(confirmMessage).then(() => {
       toast
         .promise(
-          mutation({
+          chargeMemberMutation({
             variables: {
               id: memberId,
-              amount: account?.currentBalance,
+              amount: chargeAmount,
+              allowManualCharge,
             },
           }),
           {
             loading: 'Charging member',
-            success: 'Member charged',
+            success: () => {
+              setManualAmount('0')
+              return 'Member charged'
+            },
             error: 'Could not charge member',
           },
         )
@@ -172,7 +220,7 @@ export const PaymentsTab: React.FC<{
     )
   }
 
-  if (loading || !data?.member || !account) {
+  if (loading || !memberData?.member || !account) {
     return <LoadingMessage paddingTop="10vh" />
   }
 
@@ -187,12 +235,12 @@ export const PaymentsTab: React.FC<{
               <InfoTag
                 style={{ fontWeight: 'bold', padding: '0.2em 0.7em' }}
                 status={
-                  data?.member?.directDebitStatus?.activated
+                  memberData?.member?.directDebitStatus?.activated
                     ? 'success'
                     : 'danger'
                 }
               >
-                {data?.member?.directDebitStatus?.activated
+                {memberData?.member?.directDebitStatus?.activated
                   ? 'Activated'
                   : 'Not Activated'}
               </InfoTag>
@@ -204,12 +252,12 @@ export const PaymentsTab: React.FC<{
               <InfoTag
                 style={{ fontWeight: 'bold', padding: '0.2em 0.7em' }}
                 status={
-                  data?.member?.directDebitStatus?.activated
+                  memberData?.member?.directDebitStatus?.activated
                     ? 'success'
                     : 'danger'
                 }
               >
-                {data?.member?.directDebitStatus?.activated
+                {memberData?.member?.directDebitStatus?.activated
                   ? 'Activated'
                   : 'Not Activated'}
               </InfoTag>
@@ -242,31 +290,70 @@ export const PaymentsTab: React.FC<{
           </Button>
         </Card>
 
-        {data.member?.directDebitStatus?.activated && (
+        {memberData.member?.directDebitStatus?.activated && (
           <Card>
-            <ThirdLevelHeadline>Charge current balance</ThirdLevelHeadline>
-            {Number(account.currentBalance.amount) > 0.0 ? (
-              <Mutation mutation={CHARGE_MEMBER_MUTATION}>
-                {(chargeMember) => (
-                  <>
-                    <Button onClick={() => handleChargeSubmit(chargeMember)}>
-                      Charge {formatMoney(account.currentBalance!)}
+            {allowManualCharge ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  handleChargeSubmit()
+                }}
+              >
+                <ThirdLevelHeadline>Charge member</ThirdLevelHeadline>
+                <Flex align="center" fullWidth={false}>
+                  <Input
+                    name="manualAmount"
+                    placeholder="Amount"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    onFocus={() => manualAmount === '0' && setManualAmount('')}
+                    onBlur={() => !manualAmount && setManualAmount('0')}
+                    value={manualAmount}
+                    title="Only numbers are allowed"
+                    onChange={(e) => {
+                      if (
+                        e.target.value.match(numberRegex) ||
+                        !e.target.value
+                      ) {
+                        setManualAmount(e.currentTarget.value)
+                      }
+                    }}
+                  />
+                  <Spacing left="small" width="auto">
+                    <Button
+                      disabled={!manualAmount || manualAmount === '0'}
+                      type="submit"
+                    >
+                      Charge{' '}
+                      {formatMoney({
+                        ...account.currentBalance,
+                        amount: manualAmount || '0',
+                      })}
                     </Button>
-                  </>
-                )}
-              </Mutation>
+                  </Spacing>
+                </Flex>
+              </form>
             ) : (
-              <ChargeNotAvailableMessage opacity={0.6}>
-                Not available since the balance is{' '}
-                <Shadowed style={{ fontWeight: 'bold' }}>
-                  {formatMoney(account.currentBalance!)}
-                </Shadowed>
-              </ChargeNotAvailableMessage>
+              <>
+                <ThirdLevelHeadline>Charge current balance</ThirdLevelHeadline>
+                {Number(account.currentBalance.amount) > 0.0 ? (
+                  <Button onClick={() => handleChargeSubmit()}>
+                    Charge {formatMoney(account.currentBalance!)}
+                  </Button>
+                ) : (
+                  <ChargeNotAvailableMessage opacity={0.6}>
+                    Not available since the balance is{' '}
+                    <Shadowed style={{ fontWeight: 'bold' }}>
+                      {formatMoney(account.currentBalance!)}
+                    </Shadowed>
+                  </ChargeNotAvailableMessage>
+                )}
+              </>
             )}
           </Card>
         )}
-        {data.member.payoutMethodStatus?.activated &&
-          data.member.contractMarketInfo?.market === Market.Sweden && (
+        {memberData.member.payoutMethodStatus?.activated &&
+          memberData.member.contractMarketInfo?.market === Market.Sweden && (
             <Card>
               <ThirdLevelHeadline>Payout</ThirdLevelHeadline>
               <PayoutDetails memberId={memberId} />
@@ -276,7 +363,7 @@ export const PaymentsTab: React.FC<{
           <ThirdLevelHeadline>Transactions</ThirdLevelHeadline>
           <MemberTransactionsTable
             transactions={
-              data.member
+              memberData.member
                 .transactions!.slice()
                 .sort(transactionDateSorter)
                 .reverse() as Transaction[]

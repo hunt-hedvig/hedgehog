@@ -111,7 +111,11 @@ type UserSetting {
 }
 
 type MutationType {
-  chargeMember(id: ID!, amount: MonetaryAmount!): Member
+  chargeMember(
+    id: ID!
+    amount: MonetaryAmount!
+    allowManualCharge: Boolean
+  ): Member
   addAccountEntryToMember(
     memberId: ID!
     accountEntry: AccountEntryInput!
