@@ -12,6 +12,12 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import { toast } from 'react-hot-toast'
+import {
+  User,
+  useSharePathMutation,
+  useUsersQuery,
+} from 'types/generated/graphql'
 
 const CommandLineWindow = styled.div`
   position: absolute;
@@ -83,13 +89,14 @@ const ResultItem: React.FC<{
     >
       <FourthLevelHeadline>{action.label}</FourthLevelHeadline>
       <ResultItemContent>
-        {action.keys.map(({ hint }) => (
-          <CharacterBadge key={hint}>
-            <Paragraph style={{ fontSize: '0.8em', fontWeight: 'bold' }}>
-              {hint}
-            </Paragraph>
-          </CharacterBadge>
-        ))}
+        {action.keys &&
+          action.keys.map(({ hint }) => (
+            <CharacterBadge key={hint}>
+              <Paragraph style={{ fontSize: '0.8em', fontWeight: 'bold' }}>
+                {hint}
+              </Paragraph>
+            </CharacterBadge>
+          ))}
       </ResultItemContent>
     </ResultItemWrapper>
   )
@@ -97,7 +104,7 @@ const ResultItem: React.FC<{
 
 export interface CommandLineAction {
   label: string
-  keys: Key[]
+  keys?: Key[]
   onResolve: () => void
 }
 
@@ -116,12 +123,55 @@ export const CommandLineComponent: React.FC<{
   const [selectedActionIndex, setSelectedActionIndex] = useState(0)
   const [firstActionIndex, setFirstActionIndex] = useState(0)
 
-  useEffect(() => {
-    setSearchResult(
-      actions.filter((item) => {
-        return item.label.toLowerCase().includes(searchValue.toLowerCase())
-      }),
+  const { data } = useUsersQuery()
+  const [sharePath] = useSharePathMutation()
+
+  const handleShare = (user: Omit<User, 'notifications' | 'signature'>) => {
+    toast.promise(
+      sharePath({ variables: { path: location.pathname, userId: user.id } }),
+      {
+        loading: 'Sharing page',
+        success: `Page shared with ${user.fullName.split(' ')[0]}`,
+        error: 'Could not share page',
+      },
     )
+  }
+
+  const advancedActions: CommandLineAction[] = [
+    {
+      label: 'Share path',
+      onResolve: () => setSearchValue('/share @'),
+    },
+  ]
+
+  const setUsersAsResult = () => {
+    const name = searchValue.split('@')[searchValue.split('@').length - 1]
+    const users = data?.users?.filter((user) =>
+      user.fullName.toLowerCase().includes(name.toLowerCase()),
+    )
+    setSearchResult(
+      users?.map((user) => ({
+        label: user.fullName,
+        onResolve: () => {
+          handleShare(user)
+          setSearchValue(`/share @${user.fullName}`)
+        },
+      })) || [],
+    )
+  }
+
+  useEffect(() => {
+    if (searchValue === '/') {
+      setSearchResult(advancedActions)
+    } else if (searchValue.includes('/share') && searchValue.includes('@')) {
+      setUsersAsResult()
+    } else {
+      setSearchResult(
+        actions.filter((item) => {
+          return item.label.toLowerCase().includes(searchValue.toLowerCase())
+        }),
+      )
+    }
     setFirstActionIndex(0)
     setSelectedActionIndex(0)
   }, [searchValue])
@@ -171,7 +221,9 @@ export const CommandLineComponent: React.FC<{
     if (searchResult.length === 0) {
       return
     }
-    hide()
+    if (!searchValue.includes('/')) {
+      hide()
+    }
     searchResult[selectedActionIndex].onResolve()
   }, [isEnterPressed])
 
@@ -302,8 +354,8 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   }
 
   const updateActionKeyCodes = () => {
-    actionKeyCodes.current = actions.current.map((action) =>
-      action.keys.map((key) => key.code),
+    actionKeyCodes.current = actions.current.map(
+      (action) => (action.keys && action.keys.map((key) => key.code)) || [],
     )
   }
 
