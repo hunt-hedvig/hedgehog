@@ -8,7 +8,7 @@ import formatDate from 'date-fns/format'
 import React from 'react'
 import { Calendar } from 'react-bootstrap-icons'
 import DatePicker from 'react-datepicker'
-import { Keys } from '../hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '../hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '../hooks/use-click-outside'
 
 const Wrapper = styled.div`
@@ -150,7 +150,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
         value={textValue || ''}
         onChange={(e) => setTextValue(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === Keys.Enter.key && textValue) {
+          if (isPressing(e, Keys.Enter) && textValue) {
             setDateHandler()
           }
         }}
