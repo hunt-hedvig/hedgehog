@@ -27,7 +27,7 @@ export const ConversationsOverview: React.FC<{
   currentMemberId?: string
   currentQuestionOrder: number
   filters: ReadonlyArray<FilterStateType>
-  setFilters: (filter: ReadonlyArray<FilterStateType>) => void
+  setFilters: (filter: FilterStateType, settingField?: UserSettingKey) => void
 }> = ({
   filteredGroups,
   currentMemberId,
@@ -48,8 +48,12 @@ export const ConversationsOverview: React.FC<{
     [filteredGroups],
   )
   useEffect(() => {
-    if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
+    if (
+      !settings[UserSettingKey.FeatureFlags] ||
+      !settings[UserSettingKey.FeatureFlags]?.conversations
+    ) {
       updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
         conversations: true,
       })
       history.go(0)
@@ -65,13 +69,7 @@ export const ConversationsOverview: React.FC<{
           filters={filters}
           animationDelay={200}
           animationItemDelay={20}
-          onToggle={(filter) => {
-            if (filters.includes(filter)) {
-              setFilters(filters.filter((prevFilter) => filter !== prevFilter))
-            } else {
-              setFilters([...filters, filter])
-            }
-          }}
+          onToggle={setFilters}
         />
       </Flex>
       <ConversationsRemaining count={filteredGroups.length} />
@@ -90,6 +88,7 @@ export const ConversationsOverview: React.FC<{
               confirm('Do you want to go back to the questions tab?').then(
                 () => {
                   updateSetting(UserSettingKey.FeatureFlags, {
+                    ...settings[UserSettingKey.FeatureFlags],
                     conversations: false,
                   })
                   history.replace('/questions')

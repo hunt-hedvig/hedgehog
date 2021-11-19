@@ -11,7 +11,6 @@ export const useAuthenticate = (): UseAuthenticateResult => {
 
   const [refetchAttempt, setRefetchAttempt] = useState(0)
   const { data, loading } = useGetMeQuery({
-    fetchPolicy: 'no-cache',
     pollInterval: 3000,
   })
 
