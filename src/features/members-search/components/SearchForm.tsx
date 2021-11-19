@@ -1,5 +1,6 @@
 import { Checkbox, FadeIn, Input, Shadowed } from '@hedvig-ui'
 import {
+  isPressing,
   Keys,
   shouldIgnoreInput,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
@@ -84,7 +85,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             onKeyDown={(e) => {
               if (
                 isMetaKey(e) &&
-                e.key === Keys.Enter.key &&
+                isPressing(e, Keys.Enter) &&
                 (query || (stagingToolsAvailable() && !query))
               ) {
                 setLuckySearch(true)
