@@ -69,7 +69,7 @@ const QuestionsPage: React.FC = () => {
     settingField?: UserSettingKey,
   ) => {
     if (settingField) {
-      if (settings[settingField].questions) {
+      if (settings[settingField] && settings[settingField].questions) {
         updateSetting(settingField, {
           ...settings[settingField],
           questions: settings[settingField].questions.includes(filter)

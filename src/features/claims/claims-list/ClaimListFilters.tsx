@@ -112,7 +112,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
     field: UserSettingKey,
     value: string | number,
   ) => {
-    if (!settings[field].claims) {
+    if (!settings[field] || !settings[field].claims) {
       updateSetting(field, {
         ...settings[field],
         claims: [value],
