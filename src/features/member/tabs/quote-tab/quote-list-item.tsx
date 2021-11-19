@@ -4,7 +4,7 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format, parseISO } from 'date-fns'
 import { UpdateQuoteForm } from 'features/member/tabs/quote-tab/update-quote-form'
 import { getSchemaDataInfo } from 'features/member/tabs/quote-tab/utils'
-import React from 'react'
+import React, { useState } from 'react'
 import { Contract, Quote } from 'types/generated/graphql'
 import { ActionsWrapper, BottomSpacerWrapper, Muted } from './common'
 import { QuoteActivation } from './quote-activation'
@@ -87,8 +87,8 @@ export const QuoteListItem: React.FC<{
   inactionable?: boolean
   memberId: string
 }> = ({ contracts, quote, inactionable, memberId }) => {
-  const [action, setAction] = React.useState<Action | null>(null)
-  const [isWip, setIsWip] = React.useState(false)
+  const [action, setAction] = useState<Action | null>(null)
+  const [isWip, setIsWip] = useState(false)
 
   const toggleState = (targetAction: Action) => () => {
     const isTransitionToOpen = action === null
@@ -133,17 +133,15 @@ export const QuoteListItem: React.FC<{
             <BottomSpacerWrapper>
               <Button onClick={toggleState(Action.MODIFY)}>Modify</Button>
             </BottomSpacerWrapper>
-            {!quote.isReadyToSign && (
+            {!quote.isReadyToSign ? (
               <BottomSpacerWrapper>
                 <Button onClick={toggleState(Action.ACTIVATE)}>Activate</Button>
               </BottomSpacerWrapper>
-            )}
-            {quote.isReadyToSign && contracts.length > 0 && (
+            ) : contracts.length || quote.allowOverrideSignFromHope ? (
               <BottomSpacerWrapper>
                 <Button onClick={toggleState(Action.SIGN)}>Sign</Button>
               </BottomSpacerWrapper>
-            )}
-            {quote.isReadyToSign && contracts.length === 0 && (
+            ) : (
               <ErrorText>Member has to sign first contract</ErrorText>
             )}
           </ActionsButtonsWrapper>

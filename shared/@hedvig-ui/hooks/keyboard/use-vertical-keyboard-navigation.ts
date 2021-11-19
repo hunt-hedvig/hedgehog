@@ -1,3 +1,4 @@
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import {
   useKeyboardListener,
   UseVerticalKeyboardNavigationProps,
@@ -31,13 +32,17 @@ export const useVerticalKeyboardNavigation = ({
   }
 
   useKeyboardListener(isActive, (e) => {
-    if (navigationIndex !== -1 && e.key === 'Enter' && onPerformNavigation) {
+    if (
+      navigationIndex !== -1 &&
+      isPressing(e, Keys.Enter) &&
+      onPerformNavigation
+    ) {
       e.preventDefault()
       onPerformNavigation(navigationIndex)
       return
     }
 
-    if (e.key === 'ArrowUp') {
+    if (isPressing(e, Keys.Up)) {
       e.preventDefault()
       if (navigationIndex === 0 && onExit) {
         onExit()
@@ -46,7 +51,7 @@ export const useVerticalKeyboardNavigation = ({
       return
     }
 
-    if (e.key === 'ArrowDown') {
+    if (isPressing(e, Keys.Down)) {
       e.preventDefault()
       handleStepChange(setNavigationIndex, (i) => i < maxStep, 1)
       return

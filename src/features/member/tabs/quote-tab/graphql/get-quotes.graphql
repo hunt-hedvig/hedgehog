@@ -23,6 +23,7 @@ query GetQuotes($memberId: ID!) {
       isReadyToSign
       schema
       schemaData
+      allowOverrideSignFromHope
     }
   }
 }

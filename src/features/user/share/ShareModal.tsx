@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Button, Input, Modal, Spacing, ThirdLevelHeadline } from '@hedvig-ui'
 import {
+  isPressing,
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
@@ -118,7 +119,7 @@ export const ShareModal: React.FC<{
             <UserListItem
               key={user.id}
               tabIndex={0}
-              onKeyDown={(e) => e.key === Keys.Enter.key && handleShare(user)}
+              onKeyDown={(e) => isPressing(e, Keys.Enter) && handleShare(user)}
             >
               <div>{user.fullName}</div>
               {sharedWith.includes(user.id) ? (

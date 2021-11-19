@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { FadeIn, FourthLevelHeadline, Input, Paragraph } from '@hedvig-ui'
 import {
+  isPressing,
   Key,
   Keys,
   useKeyIsPressed,
@@ -183,7 +184,7 @@ export const CommandLineComponent: React.FC<{
           value={searchValue}
           size="large"
           onKeyDown={(e) => {
-            if (e.keyCode === Keys.Down.code || e.keyCode === Keys.Up.code) {
+            if (isPressing(e, Keys.Down) || isPressing(e, Keys.Up)) {
               e.preventDefault()
             }
           }}
@@ -243,13 +244,13 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const commandLine = useRef<HTMLInputElement>(null)
   const [showCommandLine, setShowCommandLine] = useState(false)
   const actions = useRef<CommandLineAction[]>([])
-  const actionKeyCodes = useRef<number[][]>([])
+  const actionKeyCodes = useRef<string[][]>([])
 
   const isControlPressed = useKeyIsPressed(Keys.Control)
   const isOptionPressed = useKeyIsPressed(Keys.Option)
 
   const onKeyDownShowCommandLine = (e: KeyboardEvent) => {
-    if (e.code !== 'Space') {
+    if (!isPressing(e, Keys.Space)) {
       return
     }
     if (e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
@@ -308,19 +309,16 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   }
 
   // tslint:disable:no-unused-expression
-  const handleKeyDown = (e: KeyboardEvent) => {
-    const modifiers: number[] = []
-    e.shiftKey && modifiers.push(Keys.Shift.code)
-    e.ctrlKey && modifiers.push(Keys.Control.code)
-    e.altKey && modifiers.push(Keys.Option.code)
-    e.metaKey && modifiers.push(Keys.Command.code)
-    if (modifiers.includes(e.keyCode) || modifiers.length === 0) {
+  const handleKeyDown = async (e: KeyboardEvent) => {
+    if (e.getModifierState(e.key)) {
       return
     }
-    const keys = modifiers.concat(e.keyCode)
+    if (!(e.shiftKey || e.ctrlKey || e.altKey || e.metaKey)) {
+      return
+    }
 
     const matchIndex = actionKeyCodes.current.findIndex((keyCodes) => {
-      return keyCodes.every((keyCode, index) => keyCode === keys[index])
+      return isPressing(e, keyCodes)
     })
 
     if (matchIndex > -1) {
