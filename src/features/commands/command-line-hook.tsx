@@ -5,6 +5,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useMe } from 'features/user/hooks/use-me'
 import React, {
   createContext,
   useContext,
@@ -123,6 +124,9 @@ export const CommandLineComponent: React.FC<{
   const [selectedActionIndex, setSelectedActionIndex] = useState(0)
   const [firstActionIndex, setFirstActionIndex] = useState(0)
 
+  const {
+    me: { email: myEmail },
+  } = useMe()
   const { data } = useUsersQuery()
   const [sharePath] = useSharePathMutation()
 
@@ -146,9 +150,13 @@ export const CommandLineComponent: React.FC<{
 
   const setUsersAsResult = () => {
     const name = searchValue.split('@')[searchValue.split('@').length - 1]
-    const users = data?.users?.filter((user) =>
-      user.fullName.toLowerCase().includes(name.toLowerCase()),
-    )
+    const users =
+      data?.users?.filter(
+        (user) =>
+          user.email !== myEmail &&
+          user.fullName.toLowerCase().includes(name.toLowerCase()),
+      ) ?? []
+
     setSearchResult(
       users?.map((user) => ({
         label: user.fullName,

@@ -139,10 +139,10 @@ const App: React.FC = () => {
           <MemberHistoryProvider>
             <NumberMemberGroupsProvider>
               <Router history={history}>
-                <CommandLineProvider>
-                  <ConfirmDialogProvider>
-                    <Layout>
-                      <MeProvider me={me}>
+                <MeProvider me={me}>
+                  <CommandLineProvider>
+                    <ConfirmDialogProvider>
+                      <Layout>
                         <Tracker />
                         {!history.location.pathname.startsWith('/login') && (
                           <VerticalMenu history={history} />
@@ -165,10 +165,10 @@ const App: React.FC = () => {
                             />
                           </MainContent>
                         </Main>
-                      </MeProvider>
-                    </Layout>
-                  </ConfirmDialogProvider>
-                </CommandLineProvider>
+                      </Layout>
+                    </ConfirmDialogProvider>
+                  </CommandLineProvider>
+                </MeProvider>
               </Router>
             </NumberMemberGroupsProvider>
           </MemberHistoryProvider>
