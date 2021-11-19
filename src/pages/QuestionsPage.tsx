@@ -7,19 +7,14 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { getNameFromEmail } from 'features/dashboard/Greeting'
-import {
-  FilterSelect,
-  FilterState,
-  FilterStateType,
-} from 'features/questions/FilterSelect'
+import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'features/questions/questions-list/QuestionGroups'
 import { useMe } from 'features/user/hooks/use-me'
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router'
+import { UserSettingKey } from 'types/generated/graphql'
 
 const ListPage = styled.div`
   display: flex;
@@ -46,12 +41,19 @@ const ConversationsMessage = styled.div`
 
 const QuestionsPage: React.FC = () => {
   const history = useHistory()
-  const [selectedFilters, setSelectedFilters] = useInsecurePersistentState<
-    ReadonlyArray<FilterStateType>
-  >('questions:filters', [FilterState.HasOpenClaim, FilterState.NoOpenClaim])
+  const { me, settings, updateSetting } = useMe()
+
+  const getQuestionsFilter = (field) =>
+    (settings[field] && settings[field].questions) || []
+
+  const [selectedFilters, setSelectedFilters] = useState<number[]>([
+    ...getQuestionsFilter(UserSettingKey.ClaimStatesFilter),
+    ...getQuestionsFilter(UserSettingKey.MemberGroupsFilter),
+    ...getQuestionsFilter(UserSettingKey.ClaimComplexityFilter),
+    ...getQuestionsFilter(UserSettingKey.MarketFilter),
+  ])
 
   const [questionGroups, { loading }] = useQuestionGroups()
-  const { me } = useMe()
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
@@ -65,22 +67,51 @@ const QuestionsPage: React.FC = () => {
     )
   }
 
+  const toggleFilterHandler = (
+    filter: FilterStateType,
+    settingField?: UserSettingKey,
+  ) => {
+    if (settingField) {
+      if (settings[settingField] && settings[settingField].questions) {
+        updateSetting(settingField, {
+          ...settings[settingField],
+          questions: settings[settingField].questions.includes(filter)
+            ? settings[settingField].questions.filter(
+                (prevFilter) => filter !== prevFilter,
+              )
+            : [...settings[settingField].questions, filter],
+        })
+      } else {
+        updateSetting(settingField, {
+          ...settings[settingField],
+          questions: [filter],
+        })
+      }
+    }
+
+    if (selectedFilters.includes(filter)) {
+      setSelectedFilters(
+        selectedFilters.filter((prevFilter) => filter !== prevFilter),
+      )
+    } else {
+      setSelectedFilters([...selectedFilters, filter])
+    }
+  }
+
   return (
     <ListPage>
-      {me && (
-        <ConversationsMessage
-          onClick={() => {
-            history.push('/conversations/onboarding')
-          }}
-        >
-          Hey there <Capitalized>{getNameFromEmail(me.email)}</Capitalized>
-          !
-          <br />
-          <span style={{ fontSize: '0.9em' }}>
-            We're testing a new version of the question page, want to try it?
-          </span>
-        </ConversationsMessage>
-      )}
+      <ConversationsMessage
+        onClick={() => {
+          history.push('/conversations/onboarding')
+        }}
+      >
+        Hey there <Capitalized>{me.fullName.split(' ')[0]}</Capitalized>
+        !
+        <br />
+        <span style={{ fontSize: '0.9em' }}>
+          We're testing a new version of the question page, want to try it?
+        </span>
+      </ConversationsMessage>
       <Spacing bottom="large" top="large">
         <FadeIn>
           <Spacing bottom>
@@ -94,15 +125,7 @@ const QuestionsPage: React.FC = () => {
             push="left"
             animationDelay={0}
             animationItemDelay={20}
-            onToggle={(filter) => {
-              if (selectedFilters.includes(filter)) {
-                setSelectedFilters(
-                  selectedFilters.filter((prevFilter) => filter !== prevFilter),
-                )
-              } else {
-                setSelectedFilters([...selectedFilters, filter])
-              }
-            }}
+            onToggle={toggleFilterHandler}
           />
         </FadeIn>
       </Spacing>

@@ -17,7 +17,7 @@ import {
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
-import { QuestionGroup } from 'types/generated/graphql'
+import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
 
 export const FilterState = {
   ...Object.keys(MemberGroups).reduce((acc, group, index) => {
@@ -84,7 +84,7 @@ const CountBadge = styled.div<{ selected: boolean }>`
 
 export const FilterSelect: React.FC<{
   filters: ReadonlyArray<FilterStateType>
-  onToggle: (filter: FilterStateType) => void
+  onToggle: (filter: FilterStateType, settingField?: UserSettingKey) => void
   animationDelay?: number
   animationItemDelay?: number
   push?: 'left' | 'right'
@@ -121,7 +121,9 @@ export const FilterSelect: React.FC<{
             >
               <FilterButton
                 small={small}
-                onClick={() => onToggle(memberGroup)}
+                onClick={() =>
+                  onToggle(memberGroup, UserSettingKey.MemberGroupsFilter)
+                }
                 selected={filters.includes(memberGroup)}
               >
                 {Object.keys(FilterState).find((filter) => {
@@ -161,7 +163,9 @@ export const FilterSelect: React.FC<{
               <FilterButton
                 small={small}
                 selected={filters.includes(FilterState[market])}
-                onClick={() => onToggle(FilterState[market])}
+                onClick={() =>
+                  onToggle(FilterState[market], UserSettingKey.MarketFilter)
+                }
               >
                 {convertEnumToTitle(market)}{' '}
                 <span style={{ marginLeft: !small ? '0.5em' : '0.3em' }}>
@@ -190,7 +194,12 @@ export const FilterSelect: React.FC<{
           <FilterButton
             small={small}
             selected={filters.includes(FilterState.HasOpenClaim)}
-            onClick={() => onToggle(FilterState.HasOpenClaim)}
+            onClick={() =>
+              onToggle(
+                FilterState.HasOpenClaim,
+                UserSettingKey.ClaimStatesFilter,
+              )
+            }
           >
             Open claims{' '}
             <ShieldShaded style={{ marginLeft: !small ? '0.5em' : '0.3em' }} />
@@ -208,7 +217,12 @@ export const FilterSelect: React.FC<{
           <FilterButton
             small={small}
             selected={filters.includes(FilterState.NoOpenClaim)}
-            onClick={() => onToggle(FilterState.NoOpenClaim)}
+            onClick={() =>
+              onToggle(
+                FilterState.NoOpenClaim,
+                UserSettingKey.ClaimStatesFilter,
+              )
+            }
           >
             No claims{' '}
             <Shield style={{ marginLeft: !small ? '0.5em' : '0.3em' }} />

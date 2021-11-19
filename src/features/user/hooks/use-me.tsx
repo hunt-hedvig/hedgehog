@@ -61,6 +61,12 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
 
     return upsertUserSettings({
       variables: { settings: [{ key, value: payload }] },
+      optimisticResponse: {
+        upsertUserSettings: [
+          ...me.settings.filter((setting) => setting.key !== key),
+          { __typename: 'UserSetting', key, value: payload },
+        ],
+      },
       update: (cache, { data: response }) => {
         if (!response?.upsertUserSettings) {
           return
