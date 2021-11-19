@@ -1,4 +1,4 @@
-import { css } from '@emotion/react'
+import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
@@ -14,12 +14,32 @@ import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router'
 import { useUsersQuery } from 'types/generated/graphql'
 
-const Container = styled.div<{ visible: boolean }>`
+const show = keyframes`
+  from {
+    right: -300px;
+  }
+
+  to {
+    right: 0;
+  }
+`
+
+const hide = keyframes`
+  from {
+    right: 0;
+  }
+
+  to {
+    right: -300px;
+  }
+`
+
+const Container = styled.div<{ closing: boolean }>`
   transition: right 400ms;
 
   position: fixed;
   top: 0;
-  right: ${({ visible }) => (visible ? '0' : '-300px')};
+  right: 0;
 
   width: 300px;
   height: 100%;
@@ -30,6 +50,8 @@ const Container = styled.div<{ visible: boolean }>`
 
   padding: 0 1.5em 2em;
   overflow-y: scroll;
+
+  animation: ${({ closing }) => (closing ? hide : show)} 400ms;
 `
 
 const Label = styled.div`
@@ -130,9 +152,9 @@ const LatestSeenLabel = styled.span`
 `
 
 export const UserPanel: React.FC<{
-  visible: boolean
   onClickOutside: () => void
-}> = ({ visible, onClickOutside }) => {
+  closing: boolean
+}> = ({ closing, onClickOutside }) => {
   const history = useHistory()
   const panelRef = useRef<HTMLDivElement>(null)
   const { data, startPolling, stopPolling } = useUsersQuery()
@@ -141,13 +163,12 @@ export const UserPanel: React.FC<{
 
   useClickOutside(panelRef, onClickOutside)
 
+  console.log(data)
+
   useEffect(() => {
-    if (visible) {
-      startPolling(1000)
-    } else {
-      stopPolling()
-    }
-  }, [visible])
+    startPolling(1000)
+    return () => stopPolling()
+  }, [])
 
   const users = data?.users ?? []
   const now = new Date()
@@ -185,7 +206,7 @@ export const UserPanel: React.FC<{
     })
 
   return (
-    <Container visible={visible} ref={panelRef}>
+    <Container closing={closing} ref={panelRef}>
       <Label>Users online</Label>
       <UserItemContainer>
         {usersOnline.map((user) => {
