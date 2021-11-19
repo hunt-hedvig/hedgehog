@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import chroma from 'chroma-js'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import React from 'react'
@@ -81,7 +81,7 @@ export const NotificationItem: React.FC<{ notification: UserNotification }> = ({
       onClick={() => history.push(notification.url)}
       tabIndex={0}
       onKeyDown={(e) =>
-        e.key === Keys.Enter.key && history.push(notification.url)
+        isPressing(e, Keys.Enter) && history.push(notification.url)
       }
     >
       {notification.from ? (

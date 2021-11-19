@@ -13,7 +13,7 @@ import {
   TableRow,
   TextDatePicker,
 } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format, parseISO } from 'date-fns'
@@ -181,14 +181,14 @@ export const SwitcherEmailRow: React.FC<Pick<
               value={newNote}
               onChange={(e) => setNewNote(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === Keys.Escape.key) {
+                if (isPressing(e, Keys.Escape)) {
                   if (note) {
                     setEditNote(false)
                     setNewNote(note || '')
                   }
                   return
                 }
-                if (e.key !== Keys.Enter.key) {
+                if (isPressing(e, Keys.Enter)) {
                   return
                 }
                 if (!newNote) {
