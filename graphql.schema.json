@@ -8253,6 +8253,16 @@
                   }
                 },
                 "defaultValue": null
+              },
+              {
+                "name": "allowManualCharge",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null
               }
             ],
             "type": {
