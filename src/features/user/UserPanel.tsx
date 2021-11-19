@@ -163,8 +163,6 @@ export const UserPanel: React.FC<{
 
   useClickOutside(panelRef, onClickOutside)
 
-  console.log(data)
-
   useEffect(() => {
     startPolling(1000)
     return () => stopPolling()
