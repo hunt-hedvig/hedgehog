@@ -103,10 +103,14 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   const { settings, updateSetting } = useMe()
   const { numberMemberGroups } = useNumberMemberGroups()
 
-  const settingExist = (field: UserSettingKey, value) =>
-    !!settings[field] && !!settings[field].claims
+  const settingExist = (field: UserSettingKey, value) => {
+    if (!!!settings[field]) {
+      return false
+    }
+    return !!settings[field].claims
       ? settings[field].claims.includes(value)
       : false
+  }
 
   const updateFilterHandler = (
     field: UserSettingKey,

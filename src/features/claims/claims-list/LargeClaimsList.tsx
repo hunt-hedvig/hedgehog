@@ -100,14 +100,25 @@ export const LargeClaimsList: React.FC<{
       page: page - 1 ?? 0,
       filterCreatedBeforeOrOnDate: date,
       filterClaimStates:
-        settings[UserSettingKey.ClaimStatesFilter].claims || null,
+        (settings[UserSettingKey.ClaimStatesFilter] &&
+          settings[UserSettingKey.ClaimStatesFilter].claims) ||
+        null,
       filterComplexities:
-        settings[UserSettingKey.ClaimComplexityFilter].claims || null,
+        (settings[UserSettingKey.ClaimComplexityFilter] &&
+          settings[UserSettingKey.ClaimComplexityFilter].claims) ||
+        null,
       filterNumberOfMemberGroups:
-        settings[UserSettingKey.NumberOfMemberGroups].value || null,
+        (settings[UserSettingKey.NumberOfMemberGroups] &&
+          settings[UserSettingKey.NumberOfMemberGroups].value) ||
+        null,
       filterSelectedMemberGroups:
-        settings[UserSettingKey.MemberGroupsFilter].claims || null,
-      filterMarkets: settings[UserSettingKey.MarketFilter].claims || null,
+        (settings[UserSettingKey.MemberGroupsFilter] &&
+          settings[UserSettingKey.MemberGroupsFilter].claims) ||
+        null,
+      filterMarkets:
+        (settings[UserSettingKey.MarketFilter] &&
+          settings[UserSettingKey.MarketFilter].claims) ||
+        null,
       filterTypesOfContract: null,
     })
   }, [page, date, settings])
