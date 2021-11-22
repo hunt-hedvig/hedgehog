@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useListClaims } from 'features/claims/claims-list/graphql/use-list-claims'
 import {
   ClaimsFiltersTypeWithName,
@@ -68,7 +68,7 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
       onMouseLeave={() => setHover(false)}
       onClick={clickHandler}
       onKeyDown={(e) => {
-        if (e.keyCode === Keys.Enter.code) {
+        if (isPressing(e, Keys.Enter)) {
           clickHandler(e)
         }
       }}
