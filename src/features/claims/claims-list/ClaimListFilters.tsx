@@ -13,6 +13,7 @@ import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
+import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
 import { InfoCircle } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
@@ -88,13 +89,19 @@ export enum FilterGroupState {
   Third,
 }
 
-interface FiltersProps {
-  date: string | null
-  setDate: (date: string) => void
+interface FiltersProps extends React.HTMLAttributes<HTMLDivElement> {
+  templated?: boolean
+  filters?: ClaimsFiltersType
+  setFilters?: (filters: any) => void
+  date?: string | null
+  setDate?: (date: string) => void
   page?: string
 }
 
 export const ClaimListFilters: React.FC<FiltersProps> = ({
+  templated,
+  filters,
+  setFilters,
   date,
   setDate,
   page,
@@ -104,6 +111,11 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   const { settings, updateSetting } = useMe()
   const { numberMemberGroups } = useNumberMemberGroups()
 
+  const isFilterExist = (state, field) =>
+    filters &&
+    filters[field] &&
+    !!filters[field].filter((st) => st === state).length
+
   const settingExist = (field: UserSettingKey, value) => {
     if (!settings[field]) {
       return false
@@ -111,6 +123,32 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
     return !!settings[field].claims
       ? settings[field].claims.includes(value)
       : false
+  }
+
+  const setFilterHandler = (state: string | number, field) => {
+    if (setFilters) {
+      if (isFilterExist(state, field)) {
+        setFilters((prev) => ({
+          ...prev,
+          [field]: prev[field].filter((st) => st !== state),
+        }))
+
+        if (page && page !== '1') {
+          history.push(`/claims/list/1`)
+        }
+
+        return
+      }
+
+      setFilters((prev) => ({
+        ...prev,
+        [field]: prev[field] ? [...prev[field], state] : [state],
+      }))
+    }
+
+    if (page && page !== '1') {
+      history.push(`/claims/list/1`)
+    }
   }
 
   const updateFilterHandler = (
@@ -149,7 +187,14 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       .toISOString()
       .split('T')[0]
 
-    setDate(dateString)
+    if (!templated && setDate) {
+      setDate(dateString)
+    } else if (setFilters) {
+      setFilters((prev) => ({
+        ...prev,
+        filterCreatedBeforeOrOnDate: dateString,
+      }))
+    }
   }
 
   return (
@@ -160,15 +205,21 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={settingExist(
-                UserSettingKey.ClaimStatesFilter,
-                ClaimState[key],
-              )}
+              checked={
+                !templated
+                  ? settingExist(
+                      UserSettingKey.ClaimStatesFilter,
+                      ClaimState[key],
+                    )
+                  : isFilterExist(ClaimState[key], 'filterClaimStates') || false
+              }
               onChange={() => {
-                updateFilterHandler(
-                  UserSettingKey.ClaimStatesFilter,
-                  ClaimState[key],
-                )
+                !templated
+                  ? updateFilterHandler(
+                      UserSettingKey.ClaimStatesFilter,
+                      ClaimState[key],
+                    )
+                  : setFilterHandler(ClaimState[key], 'filterClaimStates')
               }}
             />
             <MemberGroupColorBadge
@@ -191,15 +242,22 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={settingExist(
-                UserSettingKey.ClaimComplexityFilter,
-                ClaimComplexity[key],
-              )}
+              checked={
+                !templated
+                  ? settingExist(
+                      UserSettingKey.ClaimComplexityFilter,
+                      ClaimComplexity[key],
+                    )
+                  : isFilterExist(ClaimComplexity[key], 'filterComplexities') ||
+                    false
+              }
               onChange={() => {
-                updateFilterHandler(
-                  UserSettingKey.ClaimComplexityFilter,
-                  ClaimComplexity[key],
-                )
+                !templated
+                  ? updateFilterHandler(
+                      UserSettingKey.ClaimComplexityFilter,
+                      ClaimComplexity[key],
+                    )
+                  : setFilterHandler(ClaimComplexity[key], 'filterComplexities')
               }}
             />
             <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
@@ -220,15 +278,22 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={filterNumber} direction="row" align="center">
             <Checkbox
               label={FilterGroupState[filterNumber]}
-              checked={settingExist(
-                UserSettingKey.MemberGroupsFilter,
-                filterNumber,
-              )}
+              checked={
+                !templated
+                  ? settingExist(
+                      UserSettingKey.MemberGroupsFilter,
+                      filterNumber,
+                    )
+                  : isFilterExist(filterNumber, 'filterSelectedMemberGroups') ||
+                    false
+              }
               onChange={() => {
-                updateFilterHandler(
-                  UserSettingKey.MemberGroupsFilter,
-                  filterNumber,
-                )
+                !templated
+                  ? updateFilterHandler(
+                      UserSettingKey.MemberGroupsFilter,
+                      filterNumber,
+                    )
+                  : setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
               }}
             />
             <MemberGroupColorBadge
@@ -245,9 +310,18 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={settingExist(UserSettingKey.MarketFilter, Market[key])}
+              checked={
+                !templated
+                  ? settingExist(UserSettingKey.MarketFilter, Market[key])
+                  : isFilterExist(Market[key], 'filterMarkets') || false
+              }
               onChange={() => {
-                updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
+                !templated
+                  ? updateFilterHandler(
+                      UserSettingKey.MarketFilter,
+                      Market[key],
+                    )
+                  : setFilterHandler(Market[key], 'filterMarkets')
               }}
             />
             <span style={{ marginLeft: '0.5rem' }}>
@@ -263,7 +337,13 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           popover="The claim was registered either before or on this date."
         />
         <TextDatePicker
-          value={date ? new Date(date) : new Date()}
+          value={
+            !templated && date
+              ? new Date(date)
+              : templated && filters && filters.filterCreatedBeforeOrOnDate
+              ? new Date(filters.filterCreatedBeforeOrOnDate)
+              : new Date()
+          }
           onChange={setDateHandler}
         />
       </FilterElement>

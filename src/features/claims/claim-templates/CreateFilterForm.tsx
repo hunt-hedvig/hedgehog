@@ -85,6 +85,7 @@ const CreateFilterForm: React.FC<CreateFilterProps> = ({
           }}
         />
         <ClaimListFilters
+          templated
           filters={filters}
           setFilters={setFilters}
           style={filtersStyle}

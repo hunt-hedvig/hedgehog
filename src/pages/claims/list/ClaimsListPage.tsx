@@ -40,6 +40,17 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   const filterQuery = useQuery().get('filter')
   const location = useLocation()
 
+  const [templated, setTemplated] = useState(false)
+  const [filters, setFilters] = useState({
+    filterClaimStates: null,
+    filterCreatedBeforeOrOnDate: null,
+    filterComplexities: null,
+    filterNumberOfMemberGroups: null,
+    filterSelectedMemberGroups: null,
+    filterMarkets: null,
+    filterTypesOfContract: null,
+  })
+
   const [date, setDate] = useState<string | null>(null)
 
   useEffect(() => {
@@ -52,7 +63,10 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
       if (filter) {
         delete filter.name
         setFilters(filter)
+        setTemplated(true)
       }
+    } else {
+      setTemplated(false)
     }
   }, [filterQuery])
 
@@ -74,7 +88,14 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
         <MainHeadline>Claims</MainHeadline>
       </FadeIn>
 
-      <ClaimListFilters date={date} setDate={setDate} page={page} />
+      <ClaimListFilters
+        templated={templated}
+        date={!templated ? date : undefined}
+        setDate={!templated ? setDate : undefined}
+        page={page}
+        filters={templated ? filters : undefined}
+        setFilters={templated ? setFilters : undefined}
+      />
 
       <LargeClaimsList page={selectedPage} date={date} />
     </ListPage>
