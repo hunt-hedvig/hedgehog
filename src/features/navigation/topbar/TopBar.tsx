@@ -83,6 +83,7 @@ const NotificationsButton: React.FC<{ onClick: () => void }> = ({
 
 export const TopBar = () => {
   const [showUsers, setShowUsers] = useState(false)
+  const [closingUsers, setClosingUsers] = useState(false)
   const [showUserNotifications, setShowUserNotifications] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
@@ -92,6 +93,14 @@ export const TopBar = () => {
       setShowUsers(false)
     }
   }, [isEscapePressed])
+
+  const closeUsersHandler = () => {
+    setClosingUsers(true)
+    setTimeout(() => {
+      setShowUsers(false)
+      setClosingUsers(false)
+    }, 350)
+  }
 
   return (
     <Wrapper>
@@ -108,12 +117,11 @@ export const TopBar = () => {
         <ShareModal onClose={() => setShowShareModal(false)} />
       )}
 
-      <UserPanel
-        visible={showUsers}
-        onClickOutside={() => setShowUsers(false)}
-      />
+      {showUsers && (
+        <UserPanel closing={closingUsers} onClickOutside={closeUsersHandler} />
+      )}
       <TopBarContainer
-        pushLeft={showUsers}
+        pushLeft={showUsers && !closingUsers}
         direction="row"
         justify="flex-end"
         align="center"

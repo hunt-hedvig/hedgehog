@@ -8,7 +8,6 @@ import {
   Paragraph,
   useFadeAnimation,
 } from '@hedvig-ui'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
@@ -27,13 +26,23 @@ const ConversationsOnboardingPage: React.FC = () => {
 
   const history = useHistory()
 
-  const [filters, setFilters] = useInsecurePersistentState<
-    ReadonlyArray<FilterStateType>
-  >('questions:filters', [])
+  const getQuestionsFilter = (field) =>
+    (settings[field] && settings[field].questions) || []
+
+  const [selectedFilters, setSelectedFilters] = useState<number[]>([
+    ...getQuestionsFilter(UserSettingKey.ClaimStatesFilter),
+    ...getQuestionsFilter(UserSettingKey.MemberGroupsFilter),
+    ...getQuestionsFilter(UserSettingKey.ClaimComplexityFilter),
+    ...getQuestionsFilter(UserSettingKey.MarketFilter),
+  ])
 
   useEffect(() => {
-    if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
+    if (
+      !settings[UserSettingKey.FeatureFlags] ||
+      !settings[UserSettingKey.FeatureFlags]?.conversations
+    ) {
       updateSetting(UserSettingKey.FeatureFlags, {
+        ...settings[UserSettingKey.FeatureFlags],
         conversations: true,
       })
       history.go(0)
@@ -46,8 +55,42 @@ const ConversationsOnboardingPage: React.FC = () => {
     })
   }, [])
 
-  if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
+  if (
+    !settings[UserSettingKey.FeatureFlags] ||
+    !settings[UserSettingKey.FeatureFlags]?.conversations
+  ) {
     return null
+  }
+
+  const toggleFilterHandler = (
+    filter: FilterStateType,
+    settingField?: UserSettingKey,
+  ) => {
+    if (settingField) {
+      if (settings[settingField] && settings[settingField].questions) {
+        updateSetting(settingField, {
+          ...settings[settingField],
+          questions: settings[settingField].questions.includes(filter)
+            ? settings[settingField].questions.filter(
+                (prevFilter) => filter !== prevFilter,
+              )
+            : [...settings[settingField].questions, filter],
+        })
+      } else {
+        updateSetting(settingField, {
+          ...settings[settingField],
+          questions: [filter],
+        })
+      }
+    }
+
+    if (selectedFilters.includes(filter)) {
+      setSelectedFilters(
+        selectedFilters.filter((prevFilter) => filter !== prevFilter),
+      )
+    } else {
+      setSelectedFilters([...selectedFilters, filter])
+    }
   }
 
   if (onboardingStep === 0) {
@@ -105,17 +148,8 @@ const ConversationsOnboardingPage: React.FC = () => {
           </Paragraph>
         </FadeIn>
       </Flex>
-      <FilterSelect
-        filters={filters}
-        onToggle={(filter) => {
-          if (filters.includes(filter)) {
-            setFilters(filters.filter((prevFilter) => filter !== prevFilter))
-          } else {
-            setFilters([...filters, filter])
-          }
-        }}
-      />
-      {!!filters.length && (
+      <FilterSelect filters={selectedFilters} onToggle={toggleFilterHandler} />
+      {!!selectedFilters.length && (
         <FadeIn style={{ width: '100%' }}>
           <Flex
             direction="column"

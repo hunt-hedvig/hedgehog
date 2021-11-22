@@ -10,20 +10,21 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
-import { FilterState, FilterStateType } from 'features/questions/FilterSelect'
+import { FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import {
   doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
 } from 'features/questions/utils'
+import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
+import { UserSettingKey } from 'types/generated/graphql'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -50,11 +51,47 @@ const ConversationsPage: React.FC<RouteComponentProps<{
   const { numberMemberGroups } = useNumberMemberGroups()
   const [questionGroups] = useQuestionGroups(3000)
   const [chatFocused, setChatFocused] = useState(false)
-  const { fade, props: fadeProps } = useFadeAnimation({ duration: 150 })
+  const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
+  const { settings, updateSetting } = useMe()
 
-  const [filters, setFilters] = useInsecurePersistentState<
-    ReadonlyArray<FilterStateType>
-  >('questions:filters', [FilterState.HasOpenClaim, FilterState.NoOpenClaim])
+  const getQuestionsFilter = (field) =>
+    (settings[field] && settings[field].questions) || []
+
+  const [filters, setFilters] = useState<number[]>([
+    ...getQuestionsFilter(UserSettingKey.ClaimStatesFilter),
+    ...getQuestionsFilter(UserSettingKey.MemberGroupsFilter),
+    ...getQuestionsFilter(UserSettingKey.ClaimComplexityFilter),
+    ...getQuestionsFilter(UserSettingKey.MarketFilter),
+  ])
+
+  const toggleFilterHandler = (
+    filter: FilterStateType,
+    settingField?: UserSettingKey,
+  ) => {
+    if (settingField) {
+      if (settings[settingField] && settings[settingField].questions) {
+        updateSetting(settingField, {
+          ...settings[settingField],
+          questions: settings[settingField].questions.includes(filter)
+            ? settings[settingField].questions.filter(
+                (prevFilter) => filter !== prevFilter,
+              )
+            : [...settings[settingField].questions, filter],
+        })
+      } else {
+        updateSetting(settingField, {
+          ...settings[settingField],
+          questions: [filter],
+        })
+      }
+    }
+
+    if (filters.includes(filter)) {
+      setFilters(filters.filter((prevFilter) => filter !== prevFilter))
+    } else {
+      setFilters([...filters, filter])
+    }
+  }
 
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
@@ -173,7 +210,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
             filteredGroups={filteredGroups}
             currentMemberId={memberId}
             filters={filters}
-            setFilters={setFilters}
+            setFilters={toggleFilterHandler}
           />
         </Wrapper>
       ) : (
@@ -187,7 +224,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
             filteredGroups={filteredGroups}
             currentMemberId={memberId}
             filters={filters}
-            setFilters={setFilters}
+            setFilters={toggleFilterHandler}
           />
         </div>
       )}

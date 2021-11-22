@@ -2,8 +2,10 @@ import styled from '@emotion/styled'
 import { RadioGroup } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
 import { MemberGroups } from 'features/config/constants'
+import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React from 'react'
+import { UserSettingKey } from 'types/generated/graphql'
 
 const Group = styled.div`
   display: flex;
@@ -24,13 +26,17 @@ const numberMemberGroupsOptions = range(
 })
 
 export const NumberMemberGroupsRadioButtons: React.FC = () => {
+  const { updateSetting } = useMe()
   const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
 
   return (
     <Group>
       <RadioGroup
         value={numberMemberGroups}
-        onChange={setNumberMemberGroups}
+        onChange={(e: number) => {
+          setNumberMemberGroups(e)
+          updateSetting(UserSettingKey.NumberOfMemberGroups, { value: e })
+        }}
         options={numberMemberGroupsOptions}
       />
     </Group>

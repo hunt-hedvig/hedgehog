@@ -96,7 +96,8 @@ const DashboardPage: React.FC = () => {
               </MetricNumber>
               <MetricName>claims</MetricName>
             </Metric>
-            {settings[UserSettingKey.FeatureFlags]?.conversations ? (
+            {settings[UserSettingKey.FeatureFlags] &&
+            settings[UserSettingKey.FeatureFlags]?.conversations ? (
               <Metric to="/conversations">
                 <MetricNumber>
                   {dashboardNumbers?.numberOfQuestions || 0}
