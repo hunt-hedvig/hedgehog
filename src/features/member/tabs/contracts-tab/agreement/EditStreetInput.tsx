@@ -28,7 +28,7 @@ export const EditStreetInput: React.FC<{
           closeEdit()
           return
         }
-        if (!isPressing(e, Keys.Escape)) {
+        if (!isPressing(e, Keys.Enter)) {
           return
         }
         if (street.trim() === newStreet.trim()) {
