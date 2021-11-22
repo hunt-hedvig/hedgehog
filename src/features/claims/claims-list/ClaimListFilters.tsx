@@ -11,12 +11,16 @@ import { range } from '@hedvig-ui/utils/range'
 import { Market, MarketFlags } from 'features/config/constants'
 import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
+import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
-import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
 import { InfoCircle } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
-import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
+import {
+  ClaimComplexity,
+  ClaimState,
+  UserSettingKey,
+} from 'types/generated/graphql'
 
 const FilterWrapper = styled.div`
   width: 100%;
@@ -55,6 +59,17 @@ const StyledLabel = styled(Label)`
   }
 `
 
+const complexityIcons = {
+  Simple: '📱',
+  Complex: '🌊',
+}
+
+const stateColors = {
+  Open: lightTheme.accent,
+  Closed: lightTheme.activeInsuranceBackground,
+  Reopened: lightTheme.accentLight,
+}
+
 const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
   label,
   popover,
@@ -73,88 +88,68 @@ export enum FilterGroupState {
   Third,
 }
 
-interface FiltersProps extends React.HTMLAttributes<HTMLDivElement> {
-  filters: ClaimsFiltersType
-  setFilters: any
+interface FiltersProps {
+  date: string | null
+  setDate: (date: string) => void
   page?: string
 }
 
 export const ClaimListFilters: React.FC<FiltersProps> = ({
-  filters,
-  setFilters,
+  date,
+  setDate,
   page,
   ...props
 }) => {
   const history = useHistory()
+  const { settings, updateSetting } = useMe()
   const { numberMemberGroups } = useNumberMemberGroups()
 
-  const isFilterExist = (state, field) =>
-    filters[field] && !!filters[field].filter((st) => st === state).length
+  const settingExist = (field: UserSettingKey, value) => {
+    if (!settings[field]) {
+      return false
+    }
+    return !!settings[field].claims
+      ? settings[field].claims.includes(value)
+      : false
+  }
 
-  const setFilterHandler = (state: string | number, field) => {
-    if (isFilterExist(state, field)) {
-      setFilters((prev) => ({
-        ...prev,
-        [field]: prev[field].filter((st) => st !== state),
-      }))
-
-      if (page && page !== '1') {
-        history.push(`/claims/list/1`)
-      }
+  const updateFilterHandler = (
+    field: UserSettingKey,
+    value: string | number,
+  ) => {
+    if (!settings[field] || !settings[field].claims) {
+      updateSetting(field, {
+        ...settings[field],
+        claims: [value],
+      })
 
       return
     }
 
-    setFilters((prev) => ({
-      ...prev,
-      [field]: prev[field] ? [...prev[field], state] : [state],
-    }))
+    updateSetting(field, {
+      ...settings[field],
+      claims: settings[field].claims.includes(value)
+        ? settings[field].claims.filter(
+            (currentValue) => currentValue !== value,
+          )
+        : [...settings[field].claims, value],
+    })
 
     if (page && page !== '1') {
       history.push(`/claims/list/1`)
     }
   }
 
-  React.useEffect(() => {
-    if (
-      numberMemberGroups === 2 &&
-      filters.filterSelectedMemberGroups &&
-      filters.filterSelectedMemberGroups.length > 2
-    ) {
-      setFilters((prev) => ({
-        ...prev,
-        filterNumberOfMemberGroups: numberMemberGroups,
-        filterSelectedMemberGroups: [0, 1],
-      }))
-    } else {
-      setFilters((prev) => ({
-        ...prev,
-        filterNumberOfMemberGroups: numberMemberGroups,
-      }))
-    }
-  }, [numberMemberGroups])
-
-  const setDateHandler = (date: Date | null) => {
-    if (!date) {
+  const setDateHandler = (newDate: Date | null) => {
+    if (!newDate) {
       return
     }
 
-    const dateString = new Date(date.setHours(date.getHours() + 2))
+    const dateString = new Date(newDate.setHours(newDate.getHours() + 2))
       .toISOString()
       .split('T')[0]
 
-    setFilters((prev) => ({ ...prev, filterCreatedBeforeOrOnDate: dateString }))
-  }
-
-  const complexityIcons = {
-    Simple: '📱',
-    Complex: '🌊',
-  }
-
-  const stateColors = {
-    Open: lightTheme.accent,
-    Closed: lightTheme.activeInsuranceBackground,
-    Reopened: lightTheme.accentLight,
+    setDate(dateString)
   }
 
   return (
@@ -165,12 +160,16 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={
-                isFilterExist(ClaimState[key], 'filterClaimStates') || false
-              }
-              onChange={() =>
-                setFilterHandler(ClaimState[key], 'filterClaimStates')
-              }
+              checked={settingExist(
+                UserSettingKey.ClaimStatesFilter,
+                ClaimState[key],
+              )}
+              onChange={() => {
+                updateFilterHandler(
+                  UserSettingKey.ClaimStatesFilter,
+                  ClaimState[key],
+                )
+              }}
             />
             <MemberGroupColorBadge
               style={{
@@ -192,13 +191,16 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={
-                isFilterExist(ClaimComplexity[key], 'filterComplexities') ||
-                false
-              }
-              onChange={() =>
-                setFilterHandler(ClaimComplexity[key], 'filterComplexities')
-              }
+              checked={settingExist(
+                UserSettingKey.ClaimComplexityFilter,
+                ClaimComplexity[key],
+              )}
+              onChange={() => {
+                updateFilterHandler(
+                  UserSettingKey.ClaimComplexityFilter,
+                  ClaimComplexity[key],
+                )
+              }}
             />
             <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
           </Flex>
@@ -218,13 +220,16 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={filterNumber} direction="row" align="center">
             <Checkbox
               label={FilterGroupState[filterNumber]}
-              checked={
-                isFilterExist(filterNumber, 'filterSelectedMemberGroups') ||
-                false
-              }
-              onChange={() =>
-                setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
-              }
+              checked={settingExist(
+                UserSettingKey.MemberGroupsFilter,
+                filterNumber,
+              )}
+              onChange={() => {
+                updateFilterHandler(
+                  UserSettingKey.MemberGroupsFilter,
+                  filterNumber,
+                )
+              }}
             />
             <MemberGroupColorBadge
               filter={filterNumber}
@@ -240,8 +245,10 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={isFilterExist(Market[key], 'filterMarkets') || false}
-              onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
+              checked={settingExist(UserSettingKey.MarketFilter, Market[key])}
+              onChange={() => {
+                updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
+              }}
             />
             <span style={{ marginLeft: '0.5rem' }}>
               {MarketFlags[key.toUpperCase()]}
@@ -256,11 +263,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           popover="The claim was registered either before or on this date."
         />
         <TextDatePicker
-          value={
-            filters.filterCreatedBeforeOrOnDate
-              ? new Date(filters.filterCreatedBeforeOrOnDate)
-              : new Date()
-          }
+          value={date ? new Date(date) : new Date()}
           onChange={setDateHandler}
         />
       </FilterElement>

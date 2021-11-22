@@ -7,7 +7,7 @@ import React, {
   useRef,
 } from 'react'
 import { TriangleFill } from 'react-bootstrap-icons'
-import { Keys } from '../hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '../hooks/keyboard/use-key-is-pressed'
 import { useVerticalKeyboardNavigation } from '../hooks/keyboard/use-vertical-keyboard-navigation'
 import { useClickOutside } from '../hooks/use-click-outside'
 
@@ -197,18 +197,18 @@ export const Dropdown: React.FC<DropdownProps> = ({
       ref={dropdownRef}
       isActive={active}
       onKeyDown={(e) => {
-        if (e.key === Keys.Enter.key) {
+        if (isPressing(e, Keys.Enter)) {
           toggleDropdown()
           return
         }
-        if (e.key === Keys.Escape.key) {
+        if (isPressing(e, Keys.Enter)) {
           closeDropdown()
           return
         }
       }}
       {...props}
     >
-      {!selectedIdx ? (
+      {!selectedIdx || !children[selectedIdx - 1] ? (
         <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
           <Placeholder>{placeholder || 'Dropdown'}</Placeholder>
         </OptionStyled>
@@ -217,6 +217,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
           ...children[selectedIdx - 1],
           props: {
             ...children[selectedIdx - 1].props,
+            tabIndex: -1,
             selected: false,
             onClick: () => {
               toggleDropdown()
@@ -260,7 +261,7 @@ export const Option: React.FC<OptionProps> = ({
   <OptionStyled
     tabIndex={0}
     onKeyDown={(e) => {
-      if (e.key === Keys.Enter.key) {
+      if (isPressing(e, Keys.Enter)) {
         onClick()
         return
       }

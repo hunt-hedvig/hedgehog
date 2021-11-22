@@ -801,6 +801,7 @@ export type MutationType = {
 export type MutationTypeChargeMemberArgs = {
   id: Scalars['ID']
   amount: Scalars['MonetaryAmount']
+  allowManualCharge?: Maybe<Scalars['Boolean']>
 }
 
 export type MutationTypeAddAccountEntryToMemberArgs = {
@@ -3114,6 +3115,7 @@ export type GetQuotesQuery = { __typename?: 'QueryType' } & {
             | 'isReadyToSign'
             | 'schema'
             | 'schemaData'
+            | 'allowOverrideSignFromHope'
           >
         >
       }
@@ -7727,6 +7729,7 @@ export const GetQuotesDocument = gql`
         isReadyToSign
         schema
         schemaData
+        allowOverrideSignFromHope
       }
     }
   }

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, ButtonsGroup, Input, Modal, Paragraph } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { Market } from 'features/config/constants'
 import React, { useState } from 'react'
 
@@ -50,7 +50,7 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
         value={confirmAmount}
         onChange={(e) => setConfirmAmount(e.currentTarget.value)}
         onKeyDown={(e) => {
-          if (e.key === Keys.Enter.key && confirmAmount === amount) {
+          if (isPressing(e, Keys.Enter) && confirmAmount === amount) {
             e.preventDefault()
             confirmHandler()
           }

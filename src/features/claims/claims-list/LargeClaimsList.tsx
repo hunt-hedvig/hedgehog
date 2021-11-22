@@ -14,6 +14,7 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import {
+  isPressing,
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
@@ -23,11 +24,11 @@ import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useListClaims } from 'features/claims/claims-list/graphql/use-list-claims'
 import { getMemberIdColor } from 'features/member/utils'
+import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
-import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
-import { ClaimState } from 'types/generated/graphql'
+import { ClaimState, UserSettingKey } from 'types/generated/graphql'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;
@@ -79,8 +80,9 @@ const EmptyWrapper = styled.div`
 
 export const LargeClaimsList: React.FC<{
   page: number
-  filters: ClaimsFiltersType
-}> = ({ page, filters }) => {
+  date: string | null
+}> = ({ page, date }) => {
+  const { settings } = useMe()
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const isCommandPressed = useKeyIsPressed(Keys.Command)
@@ -94,12 +96,28 @@ export const LargeClaimsList: React.FC<{
     { loading },
   ] = useListClaims()
 
+  const getClaimFilter = (field: UserSettingKey, isClaims: boolean = true) =>
+    (settings[field] &&
+      (isClaims ? settings[field].claims : settings[field].value)) ||
+    null
+
   useEffect(() => {
     listClaims({
       page: page - 1 ?? 0,
-      ...filters,
+      filterCreatedBeforeOrOnDate: date,
+      filterClaimStates: getClaimFilter(UserSettingKey.ClaimStatesFilter),
+      filterComplexities: getClaimFilter(UserSettingKey.ClaimComplexityFilter),
+      filterNumberOfMemberGroups: getClaimFilter(
+        UserSettingKey.NumberOfMemberGroups,
+        false,
+      ),
+      filterSelectedMemberGroups: getClaimFilter(
+        UserSettingKey.MemberGroupsFilter,
+      ),
+      filterMarkets: getClaimFilter(UserSettingKey.MarketFilter),
+      filterTypesOfContract: null,
     })
-  }, [page, filters])
+  }, [page, date, settings])
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
@@ -171,7 +189,7 @@ export const LargeClaimsList: React.FC<{
                 key={claim.id}
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (e.key === Keys.Enter.key) {
+                  if (isPressing(e, Keys.Enter)) {
                     e.preventDefault()
                     history.push(`/claims/${claim.id}`)
                   }

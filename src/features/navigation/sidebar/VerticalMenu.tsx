@@ -168,7 +168,9 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   )
   const [locations, setLocations] = useState<string[]>([])
   const [conversationsEnabled] = useState<boolean>(
-    settings[UserSettingKey.FeatureFlags]?.conversations || false,
+    (settings[UserSettingKey.FeatureFlags] &&
+      settings[UserSettingKey.FeatureFlags]?.conversations) ||
+      false,
   )
 
   React.useEffect(() => {
