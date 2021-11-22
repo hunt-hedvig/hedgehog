@@ -163,17 +163,17 @@ export const CommandLineComponent: React.FC<{
         label: user.fullName,
         onResolve: () => {
           handleShare(user)
-          setSearchValue(`/share @${user.fullName}`)
+          hide()
         },
       })) || [],
     )
   }
 
   useEffect(() => {
-    if (searchValue === '/') {
-      setSearchResult(advancedActions)
-    } else if (searchValue.includes('/share') && searchValue.includes('@')) {
+    if (searchValue.includes('/share') && searchValue.includes('@')) {
       setUsersAsResult()
+    } else if (searchValue[0] === '/') {
+      setSearchResult(advancedActions)
     } else {
       setSearchResult(
         actions.filter((item) => {
