@@ -12,6 +12,10 @@ const MessagesListContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column-reverse;
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
 `
 
 const MessagesListPlaceholder = styled.div`
