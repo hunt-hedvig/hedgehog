@@ -6,7 +6,6 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useMe } from 'features/user/hooks/use-me'
 import React, {
   createContext,
   useContext,
@@ -14,12 +13,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { toast } from 'react-hot-toast'
-import {
-  User,
-  useSharePathMutation,
-  useUsersQuery,
-} from 'types/generated/graphql'
+import { useAdvancedActions } from './use-advanced-actions'
 
 const CommandLineWindow = styled.div`
   position: absolute;
@@ -125,55 +119,15 @@ export const CommandLineComponent: React.FC<{
   const [selectedActionIndex, setSelectedActionIndex] = useState(0)
   const [firstActionIndex, setFirstActionIndex] = useState(0)
 
-  const {
-    me: { email: myEmail },
-  } = useMe()
-  const { data } = useUsersQuery()
-  const [sharePath] = useSharePathMutation()
-
-  const handleShare = (user: Omit<User, 'notifications' | 'signature'>) => {
-    toast.promise(
-      sharePath({ variables: { path: location.pathname, userId: user.id } }),
-      {
-        loading: 'Sharing page',
-        success: `Page shared with ${user.fullName.split(' ')[0]}`,
-        error: 'Could not share page',
-      },
-    )
-  }
-
-  const advancedActions: CommandLineAction[] = [
-    {
-      label: 'Share path',
-      onResolve: () => setSearchValue('/share @'),
-    },
-  ]
-
-  const setUsersAsResult = () => {
-    const name = searchValue.split('@')[searchValue.split('@').length - 1]
-    const users =
-      data?.users?.filter(
-        (user) =>
-          user.email !== myEmail &&
-          user.fullName.toLowerCase().includes(name.toLowerCase()),
-      ) ?? []
-
-    setSearchResult(
-      users?.map((user) => ({
-        label: user.fullName,
-        onResolve: () => {
-          handleShare(user)
-          hide()
-        },
-      })) || [],
-    )
-  }
+  const { advanced, options } = useAdvancedActions(
+    searchValue,
+    setSearchValue,
+    hide,
+  )
 
   useEffect(() => {
-    if (searchValue.includes('/share') && searchValue.includes('@')) {
-      setUsersAsResult()
-    } else if (searchValue[0] === '/') {
-      setSearchResult(advancedActions)
+    if (advanced) {
+      setSearchResult(options)
     } else {
       setSearchResult(
         actions.filter((item) => {
@@ -181,9 +135,10 @@ export const CommandLineComponent: React.FC<{
         }),
       )
     }
+
     setFirstActionIndex(0)
     setSelectedActionIndex(0)
-  }, [searchValue])
+  }, [searchValue, advanced])
 
   useEffect(() => {
     if (!isUpPressed) {
