@@ -96,6 +96,7 @@ interface FiltersProps extends React.HTMLAttributes<HTMLDivElement> {
   date?: string | null
   setDate?: (date: string) => void
   page?: string
+  withDate?: boolean
 }
 
 export const ClaimListFilters: React.FC<FiltersProps> = ({
@@ -105,6 +106,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   date,
   setDate,
   page,
+  withDate = true,
   ...props
 }) => {
   const history = useHistory()
@@ -187,13 +189,8 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       .toISOString()
       .split('T')[0]
 
-    if (!templated && setDate) {
+    if (setDate) {
       setDate(dateString)
-    } else if (setFilters) {
-      setFilters((prev) => ({
-        ...prev,
-        filterCreatedBeforeOrOnDate: dateString,
-      }))
     }
   }
 
@@ -331,22 +328,18 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         ))}
       </FilterElement>
 
-      <FilterElement>
-        <LabelWithPopover
-          label="Date up until"
-          popover="The claim was registered either before or on this date."
-        />
-        <TextDatePicker
-          value={
-            !templated && date
-              ? new Date(date)
-              : templated && filters && filters.filterCreatedBeforeOrOnDate
-              ? new Date(filters.filterCreatedBeforeOrOnDate)
-              : new Date()
-          }
-          onChange={setDateHandler}
-        />
-      </FilterElement>
+      {withDate && (
+        <FilterElement>
+          <LabelWithPopover
+            label="Date up until"
+            popover="The claim was registered either before or on this date."
+          />
+          <TextDatePicker
+            value={date ? new Date(date) : new Date()}
+            onChange={setDateHandler}
+          />
+        </FilterElement>
+      )}
     </FilterWrapper>
   )
 }
