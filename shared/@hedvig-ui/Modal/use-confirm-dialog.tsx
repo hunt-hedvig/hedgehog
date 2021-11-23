@@ -58,10 +58,7 @@ export const ConfirmDialogComponent: React.FC<{
       onClose={close}
     >
       <div>
-        <Content>
-          {content}a
-          dshfkjadfhkljadhflkjhadflkjahdfhkadfhlksadhlkjadhflkhsadfkhasdfhlsadhflksadfhlksadfh
-        </Content>
+        <Content>{content}</Content>
         <ConfirmButtons>
           <Button size="small" status="success" onClick={confirm} autoFocus>
             Confirm
