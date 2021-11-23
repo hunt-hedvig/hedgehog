@@ -1,9 +1,13 @@
 import styled from '@emotion/styled'
 import { Button, Input, Modal } from '@hedvig-ui'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ClaimListFilters } from 'features/claims/claims-list/ClaimListFilters'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import { ClaimsFiltersTypeWithName } from 'pages/DashboardPage'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const filtersStyle: React.CSSProperties = {
   display: 'grid',
@@ -33,6 +37,8 @@ const CreateFilterForm: React.FC<CreateFilterProps> = ({
   id,
   close,
 }) => {
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
+
   const [name, setName] = useState<string>(
     (editFilter && editFilter.name) || '',
   )
@@ -52,6 +58,12 @@ const CreateFilterForm: React.FC<CreateFilterProps> = ({
     createFilter(id, { ...filters, name })
     close()
   }
+
+  useEffect(() => {
+    if (isEnterPressed) {
+      createFilterHandler()
+    }
+  }, [isEnterPressed])
 
   return (
     <Modal

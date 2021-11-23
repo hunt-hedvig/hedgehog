@@ -10,6 +10,7 @@ import {
   SecondLevelHeadline,
   Spacing,
 } from '@hedvig-ui'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { changelog } from 'changelog'
@@ -46,7 +47,8 @@ export const metricStyles = (theme: Theme) => css`
   min-width: 200px;
 
   &:hover,
-  &focus {
+  &:focus {
+    opacity: 0.8;
     color: ${theme.accentContrast}!important;
   }
 `
@@ -56,28 +58,37 @@ const Metric = styled(Link)`
 `
 
 const AddMetric = styled.div`
-  ${({ theme }) => metricStyles(theme)}
-  transition: all 0.3s;
-  background-color: transparent;
-  border: 2px dotted ${({ theme }) => theme.border};
+  width: 200px;
+
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  cursor: pointer;
+  justify-content: flex-end;
+
   outline: none;
-  max-width: 200px;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  padding: 15px 0;
+
+  border: 2px dotted ${({ theme }) => theme.border};
 
   & svg {
     width: 2em;
     height: 2em;
     color: ${({ theme }) => theme.border};
+    margin-bottom: 0.5rem;
     transition: none;
   }
 
   & span {
+    font-size: 14px;
     color: ${({ theme }) => theme.accentLight};
   }
 
   &:hover,
   &:focus {
+    cursor: pointer;
     border-color: ${({ theme }) => theme.accent};
 
     & svg,
@@ -223,9 +234,17 @@ const DashboardPage: React.FC = () => {
               />
             ))}
 
-            <AddMetric tabIndex={0} onClick={() => setCreateFilter(true)}>
+            <AddMetric
+              tabIndex={0}
+              onClick={() => setCreateFilter(true)}
+              onKeyDown={(e) => {
+                if (isPressing(e, Keys.Enter)) {
+                  setCreateFilter(true)
+                }
+              }}
+            >
               <Plus />
-              <MetricName>Filtered Claim Template</MetricName>
+              <span>Filtered Claim Template</span>
             </AddMetric>
           </MetricsWrapper>
         </FadeIn>
