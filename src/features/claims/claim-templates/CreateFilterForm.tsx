@@ -20,17 +20,9 @@ const Body = styled.div`
   justify-content: space-between;
 `
 
-const ButtonsWrapper = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 1em;
-`
-
 interface CreateFilterProps {
   close: () => void
   editFilter?: ClaimsFiltersTypeWithName
-  removeFilter?: (id: number) => void
   createFilter: (id: number, filters: ClaimsFiltersTypeWithName) => void
   id: number
 }
@@ -38,7 +30,6 @@ interface CreateFilterProps {
 const CreateFilterForm: React.FC<CreateFilterProps> = ({
   editFilter,
   createFilter,
-  removeFilter,
   id,
   close,
 }) => {
@@ -59,13 +50,6 @@ const CreateFilterForm: React.FC<CreateFilterProps> = ({
 
   const createFilterHandler = () => {
     createFilter(id, { ...filters, name })
-    close()
-  }
-
-  const removeFilterHandler = () => {
-    if (removeFilter) {
-      removeFilter(id)
-    }
     close()
   }
 
@@ -91,16 +75,9 @@ const CreateFilterForm: React.FC<CreateFilterProps> = ({
           setFilters={setFilters}
           style={filtersStyle}
         />
-        <ButtonsWrapper>
-          <Button onClick={createFilterHandler}>
-            {!editFilter ? 'Create' : 'Edit'}
-          </Button>
-          {editFilter ? (
-            <Button status="danger" onClick={removeFilterHandler}>
-              Remove
-            </Button>
-          ) : null}
-        </ButtonsWrapper>
+        <Button onClick={createFilterHandler}>
+          {!editFilter ? 'Create' : 'Edit'}
+        </Button>
       </Body>
     </Modal>
   )

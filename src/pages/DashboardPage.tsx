@@ -29,9 +29,10 @@ const Wrapper = styled.div`
   flex-direction: column;
 `
 
-const MetricsWrapper = styled.div({
-  display: 'flex',
-})
+const MetricsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
 
 export const metricStyles = (theme: Theme) => css`
   display: flex;
@@ -41,6 +42,7 @@ export const metricStyles = (theme: Theme) => css`
   padding: 1.5rem;
   border-radius: 0.5rem;
   margin-right: 1rem;
+  margin-bottom: 1rem;
   min-width: 200px;
 
   &:hover,
@@ -61,6 +63,7 @@ const AddMetric = styled.div`
   align-items: center;
   cursor: pointer;
   outline: none;
+  max-width: 200px;
 
   & svg {
     width: 2em;
@@ -90,6 +93,10 @@ export const MetricNumber = styled.span`
   padding-bottom: 0.25rem;
 `
 export const MetricName = styled.span`
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   opacity: 0.66;
 `
 
@@ -207,6 +214,7 @@ const DashboardPage: React.FC = () => {
 
             {templateFilters.filters.map((filter, index) => (
               <FilteredMetric
+                createHandler={setTemplateFilterHandler}
                 removeFilter={removeTemplateFilterHandler}
                 key={index + templateFilters.filters.length}
                 id={index}
