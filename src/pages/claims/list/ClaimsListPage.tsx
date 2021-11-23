@@ -1,9 +1,15 @@
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { ClaimListFilters } from 'features/claims/claims-list/ClaimListFilters'
+import { ClaimsTemplates } from 'features/claims/claims-list/ClaimsTemplates'
 import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
+import {
+  ClaimsFiltersTypeWithName,
+  TemplateFiltersType,
+} from 'pages/DashboardPage'
 import React, { useEffect, useState } from 'react'
-import { RouteComponentProps, useLocation } from 'react-router'
+import { RouteComponentProps, useHistory, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 
 const ListPage = styled.div`
@@ -39,8 +45,12 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
 }) => {
   const filterQuery = useQuery().get('filter')
   const location = useLocation()
+  const history = useHistory()
 
   const [templated, setTemplated] = useState(false)
+  const [selectedTemplateId, setSelectedTemplateId] = useState<
+    number | undefined
+  >()
   const [filters, setFilters] = useState({
     filterClaimStates: null,
     filterCreatedBeforeOrOnDate: null,
@@ -49,6 +59,11 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
     filterSelectedMemberGroups: null,
     filterMarkets: null,
     filterTypesOfContract: null,
+  })
+  const [templateFilters, setTemplateFilters] = useInsecurePersistentState<
+    TemplateFiltersType
+  >('claims:template-filters', {
+    filters: [],
   })
 
   const [date, setDate] = useState<string | null>(null)
@@ -64,6 +79,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
         delete filter.name
         setFilters(filter)
         setTemplated(true)
+        setSelectedTemplateId(+filterQuery)
       }
     } else {
       setTemplated(false)
@@ -82,11 +98,43 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
 
   const selectedPage = parseInt(page, 10)
 
+  const selectTemplatedHandler = (id: number) => {
+    if (id === selectedTemplateId) {
+      setSelectedTemplateId(undefined)
+      history.push(`/claims/list/1`)
+      return
+    }
+
+    history.push(`/claims/list/1?filter=${id}`)
+  }
+
+  const createTemplateHandler = (
+    id: number,
+    filter: ClaimsFiltersTypeWithName,
+  ) => {
+    setTemplateFilters((prev) => ({
+      filters: [
+        ...prev.filters,
+        {
+          ...filter,
+          name: filter.name ? filter.name : `Claims Template ${id + 1}`,
+        },
+      ],
+    }))
+  }
+
   return (
     <ListPage>
       <FadeIn>
         <MainHeadline>Claims</MainHeadline>
       </FadeIn>
+
+      <ClaimsTemplates
+        activeId={selectedTemplateId}
+        templates={templateFilters}
+        selectHandler={selectTemplatedHandler}
+        createHandler={createTemplateHandler}
+      />
 
       <ClaimListFilters
         templated={templated}
@@ -97,7 +145,12 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
         setFilters={templated ? setFilters : undefined}
       />
 
-      <LargeClaimsList page={selectedPage} date={date} />
+      <LargeClaimsList
+        page={selectedPage}
+        date={date}
+        templated={templated}
+        filters={templated ? filters : undefined}
+      />
     </ListPage>
   )
 }

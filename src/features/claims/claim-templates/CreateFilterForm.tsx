@@ -58,7 +58,7 @@ const CreateFilterForm: React.FC<CreateFilterProps> = ({
       onClose={close}
       width="700px"
       height="500px"
-      title={name ? name : 'Set Claims filters'}
+      title={name ? name : 'Set Claim Filters'}
     >
       <Body>
         <Input

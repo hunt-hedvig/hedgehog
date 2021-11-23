@@ -123,7 +123,7 @@ export interface ClaimsFiltersTypeWithName extends ClaimsFiltersType {
   name?: string
 }
 
-interface TemplateFiltersType {
+export interface TemplateFiltersType {
   filters: ClaimsFiltersTypeWithName[] | []
 }
 
