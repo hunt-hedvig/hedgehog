@@ -88,7 +88,7 @@ const CreateFilterForm: React.FC<CreateFilterProps> = ({
           style={filtersStyle}
         />
         <Button onClick={createFilterHandler}>
-          {!editFilter ? 'Create' : 'Edit'}
+          {!editFilter ? 'Create' : 'Save'}
         </Button>
       </Body>
     </Modal>

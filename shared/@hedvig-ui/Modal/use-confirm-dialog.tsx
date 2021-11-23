@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import { Button, Modal } from '@hedvig-ui'
+import { Button as DefaultButton, Modal } from '@hedvig-ui'
 import {
+  isPressing,
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
@@ -12,10 +13,18 @@ import React, {
   useState,
 } from 'react'
 
+const Content = styled.h3`
+  word-wrap: break-word;
+`
+
 const ConfirmButtons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 15px;
+`
+
+const Button = styled(DefaultButton)`
+  font-size: 14px;
 `
 
 export const ConfirmDialogComponent: React.FC<{
@@ -43,18 +52,31 @@ export const ConfirmDialogComponent: React.FC<{
       withoutHeader={true}
       disableClickOutside={true}
       height="auto"
-      width="400px"
+      width="500px"
       position="top"
       side="center"
       onClose={close}
     >
       <div>
-        <h3>{content}</h3>
+        <Content>
+          {content}a
+          dshfkjadfhkljadhflkjhadflkjahdfhkadfhlksadhlkjadhflkhsadfkhasdfhlsadhflksadfhlksadfh
+        </Content>
         <ConfirmButtons>
-          <Button status="success" onClick={confirm} autoFocus>
+          <Button size="small" status="success" onClick={confirm} autoFocus>
             Confirm
           </Button>
-          <Button variant="tertiary" onClick={close}>
+          <Button
+            size="small"
+            variant="tertiary"
+            onClick={close}
+            onKeyDown={(e) => {
+              if (isPressing(e, Keys.Enter)) {
+                e.preventDefault()
+                close()
+              }
+            }}
+          >
             Cancel
           </Button>
         </ConfirmButtons>
