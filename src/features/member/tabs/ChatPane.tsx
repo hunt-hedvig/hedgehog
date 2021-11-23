@@ -18,7 +18,7 @@ const ChatContainer = styled.div`
   flex-direction: column;
   position: fixed;
   top: 100px;
-  right: 10px;
+  right: 1.5rem;
   border: 1px solid ${({ theme }) => theme.borderStrong};
   box-shadow: 0 5px 40px rgba(0, 0, 0, 0.16);
   border-radius: 8px;
