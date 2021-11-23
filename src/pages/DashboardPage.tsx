@@ -137,9 +137,18 @@ const DashboardPage: React.FC = () => {
     | DashboardNumbers
     | undefined
 
-  const setTemplateFilterHandler = (_: number, filter: ClaimsFiltersType) => {
+  const setTemplateFilterHandler = (
+    id: number,
+    filter: ClaimsFiltersTypeWithName,
+  ) => {
     setTemplateFilters((prev) => ({
-      filters: [...prev.filters, { ...filter }],
+      filters: [
+        ...prev.filters,
+        {
+          ...filter,
+          name: filter.name ? filter.name : `Claims Template ${id + 1}`,
+        },
+      ],
     }))
   }
 
@@ -208,7 +217,7 @@ const DashboardPage: React.FC = () => {
 
             <AddMetric tabIndex={0} onClick={() => setCreateFilter(true)}>
               <Plus />
-              <MetricName>Add Filtered Claims</MetricName>
+              <MetricName>Filtered Claim Template</MetricName>
             </AddMetric>
           </MetricsWrapper>
         </FadeIn>
