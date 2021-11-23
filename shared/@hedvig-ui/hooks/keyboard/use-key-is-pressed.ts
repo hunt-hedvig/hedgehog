@@ -310,17 +310,16 @@ export const isPressing = (
   e: KeyboardEvent | React.KeyboardEvent<any>,
   key: Key | ReadonlyArray<Key> | ReadonlyArray<string>,
 ): boolean => {
-  if ('length' in key) {
-    if (typeof key[0] === 'string') {
-      return isPressingKeys(e, key as ReadonlyArray<string>)
-    } else {
-      return isPressingKeys(
-        e,
-        (key as ReadonlyArray<Key>).map((k) => k.code),
-      )
-    }
+  if (!('length' in key)) {
+    return isPressingKey(e, key.code, key.codeAlternative)
   }
-  return isPressingKey(e, key.code, key.codeAlternative)
+
+  if (typeof key[0] === 'string') {
+    return isPressingKeys(e, key as ReadonlyArray<string>)
+  }
+
+  const codes = (key as ReadonlyArray<Key>).map((k) => k.code)
+  return isPressingKeys(e, codes)
 }
 
 const isPressingKey = (
