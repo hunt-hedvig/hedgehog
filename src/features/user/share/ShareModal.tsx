@@ -16,13 +16,9 @@ import {
   useUsersQuery,
 } from 'types/generated/graphql'
 
-const Container = styled.div`
-  padding: 1rem;
-`
-
 // noinspection CssInvalidPropertyValue
 const UserList = styled.div`
-  margin-top: 1rem;
+  padding-right: 1.5rem;
   max-height: calc(500px - 10.2rem);
   overflow-y: scroll;
   overflow: overlay;
@@ -47,7 +43,9 @@ const UserListItem = styled.div`
 
   color: ${({ theme }) => theme.accent};
 
-  margin-top: 0.75rem;
+  :not(:first-child) {
+    margin-top: 0.75rem;
+  }
   font-size: 1rem;
 
   padding: 0.8rem 1.2rem;
@@ -100,43 +98,47 @@ export const ShareModal: React.FC<{
   }
 
   return (
-    <Modal width="500px" height="500px" withoutHeader onClose={onClose}>
-      <Container>
-        <div>
-          <ThirdLevelHeadline>Share page</ThirdLevelHeadline>
-        </div>
-        <Spacing top="medium" />
-        <Input
-          autoFocus
-          muted
-          size="medium"
-          placeholder="Filter on name..."
-          value={filter}
-          onChange={(e) => setFilter(e.currentTarget.value)}
-        />
-        <UserList>
-          {users.map((user) => (
-            <UserListItem
-              key={user.id}
-              tabIndex={0}
-              onKeyDown={(e) => isPressing(e, Keys.Enter) && handleShare(user)}
-            >
-              <div>{user.fullName}</div>
-              {sharedWith.includes(user.id) ? (
-                <SharedLabel>Shared</SharedLabel>
-              ) : (
-                <Button
-                  size="small"
-                  variant="secondary"
-                  onClick={() => handleShare(user)}
-                >
-                  Share
-                </Button>
-              )}
-            </UserListItem>
-          ))}
-        </UserList>
-      </Container>
+    <Modal
+      width="500px"
+      withoutHeader
+      onClose={onClose}
+      style={{ padding: '1rem' }}
+    >
+      <div>
+        <ThirdLevelHeadline>Share page</ThirdLevelHeadline>
+      </div>
+      <Spacing top="medium" />
+      <Input
+        autoFocus
+        muted
+        size="medium"
+        placeholder="Filter on name..."
+        value={filter}
+        onChange={(e) => setFilter(e.currentTarget.value)}
+      />
+      <Spacing top="medium" />
+      <UserList>
+        {users.map((user) => (
+          <UserListItem
+            key={user.id}
+            tabIndex={0}
+            onKeyDown={(e) => isPressing(e, Keys.Enter) && handleShare(user)}
+          >
+            <div>{user.fullName}</div>
+            {sharedWith.includes(user.id) ? (
+              <SharedLabel>Shared</SharedLabel>
+            ) : (
+              <Button
+                size="small"
+                variant="secondary"
+                onClick={() => handleShare(user)}
+              >
+                Share
+              </Button>
+            )}
+          </UserListItem>
+        ))}
+      </UserList>
     </Modal>
   )
 }
