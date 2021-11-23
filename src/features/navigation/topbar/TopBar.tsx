@@ -16,16 +16,16 @@ import { BellFill, PeopleFill } from 'react-bootstrap-icons'
 import UserMenu from './UserMenu'
 
 const Wrapper = styled.div`
+  z-index: 9999;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   flex-direction: row;
   background-color: ${({ theme }) => theme.background};
-  box-shadow: 1px 5px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 1px 5px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
   height: 4.5rem;
   padding: 1rem 2rem;
-  margin-bottom: 2rem;
 `
 
 export const CircleButton = styled.div`

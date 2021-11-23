@@ -26,7 +26,7 @@ import { Route, Router, Switch } from 'react-router'
 
 const Layout = styled(BaseStyle)`
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
 `
 
 const Main = styled.div<{ dark: boolean }>`
@@ -42,7 +42,8 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 2rem 4rem;
+  padding: 4rem 4rem 2rem 4rem;
+  overflow-y: auto;
 `
 
 const globalCss = css`
