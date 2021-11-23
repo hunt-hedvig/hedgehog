@@ -1,10 +1,14 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
-import React, { useRef } from 'react'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
+import React, { useEffect, useRef } from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { Portal } from 'react-portal'
-import { useClickOutside } from '../hooks/use-click-outside'
 
 const ModalWrapperStyled = styled.div<{
   position?: 'top' | 'center' | 'bottom'
@@ -103,6 +107,7 @@ export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Modal = (props: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null)
+  const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   const clickOutsideCloseHandler = () => {
     if (!props.disableClickOutside) {
@@ -113,6 +118,12 @@ export const Modal = (props: ModalProps) => {
   }
 
   useClickOutside(modalRef, clickOutsideCloseHandler)
+
+  useEffect(() => {
+    if (isEscapePressed) {
+      props.onClose()
+    }
+  }, [isEscapePressed])
 
   return (
     <Portal>
