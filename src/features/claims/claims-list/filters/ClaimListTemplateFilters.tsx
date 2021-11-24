@@ -140,7 +140,7 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
         <Label>Number of member groups</Label>
         <Flex>
           <NumberMemberGroupsRadioButtons
-            groupsNumber={filters?.filterNumberOfMemberGroups || undefined}
+            groupsNumber={filters.filterNumberOfMemberGroups || undefined}
             setGroupsNumber={(e: number) =>
               changeNumberMemberGroupsHandler(e, 'filterNumberOfMemberGroups')
             }
