@@ -80,6 +80,26 @@ export const useTemplateClaims = () => {
     }))
   }
 
+  const editTemplateWithName = (
+    id: number,
+    newFilter: ClaimsFiltersTypeWithName,
+  ) => {
+    setTemplateFilters((prev) => ({
+      filters: prev.filters.map((filter, index) =>
+        index !== id ? filter : newFilter,
+      ),
+    }))
+  }
+
+  const removeTemplate = (id: number) => {
+    const newFilters = templateFilters.filters.filter(
+      (_, index) => index !== id,
+    )
+    setTemplateFilters({
+      filters: newFilters,
+    })
+  }
+
   return {
     templateActive,
     selectedTemplate,
@@ -88,5 +108,7 @@ export const useTemplateClaims = () => {
     selectTemplate,
     createTemplate,
     editTemplate,
+    editTemplateWithName,
+    removeTemplate,
   }
 }

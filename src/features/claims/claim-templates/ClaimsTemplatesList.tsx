@@ -26,14 +26,10 @@ const TemplateCardStyled = styled.div<{ active: boolean }>`
   border-radius: 8px;
   background-color: ${({ theme }) => theme.accent};
   cursor: pointer;
-  opacity: ${({ active }) => (!active ? 0.4 : 1)};
+  opacity: ${({ active }) => (active ? 0.4 : 1)};
 
   &:hover {
     opacity: 0.8;
-  }
-
-  &:focus {
-    opacity: 0.6;
   }
 `
 
@@ -95,7 +91,11 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
         {templates.filters.map((filter, index) => (
           <TemplateCard
             key={`${filter.name}-${index}`}
-            active={!!activeId || activeId === 0 ? index === activeId : false}
+            active={
+              !!activeId || typeof activeId === 'number'
+                ? index !== activeId
+                : false
+            }
             filter={filter}
             id={index}
             select={selectHandler}
