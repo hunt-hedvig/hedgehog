@@ -130,15 +130,42 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   }
 
   const setFilterHandler = (state: string | number, field) => {
-    if (setFilters && typeof templatedId === 'number' && filters) {
+    const idExist = typeof templatedId === 'number'
+    if (setFilters && filters) {
+      if (field === 'filterNumberOfMemberGroups') {
+        if (idExist) {
+          setFilters(
+            {
+              ...filters,
+              [field]: state,
+            },
+            templatedId,
+          )
+        } else {
+          setFilters({
+            ...filters,
+            [field]: state,
+          })
+        }
+
+        return
+      }
+
       if (isFilterExist(state, field)) {
-        setFilters(
-          {
+        if (idExist) {
+          setFilters(
+            {
+              ...filters,
+              [field]: filters[field].filter((st) => st !== state),
+            },
+            templatedId,
+          )
+        } else {
+          setFilters({
             ...filters,
             [field]: filters[field].filter((st) => st !== state),
-          },
-          templatedId,
-        )
+          })
+        }
 
         if (page && page !== '1') {
           history.push(`/claims/list/1`)
@@ -147,13 +174,20 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         return
       }
 
-      setFilters(
-        {
+      if (idExist) {
+        setFilters(
+          {
+            ...filters,
+            [field]: filters[field] ? [...filters[field], state] : [state],
+          },
+          templatedId,
+        )
+      } else {
+        setFilters({
           ...filters,
           [field]: filters[field] ? [...filters[field], state] : [state],
-        },
-        templatedId,
-      )
+        })
+      }
     }
 
     if (page && page !== '1') {
@@ -273,40 +307,57 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       <FilterElement>
         <Label>Number of member groups</Label>
         <div style={{ display: 'flex' }}>
-          <NumberMemberGroupsRadioButtons />
+          <NumberMemberGroupsRadioButtons
+            number={
+              (templated && filters?.filterNumberOfMemberGroups) || undefined
+            }
+            setNumber={
+              templated
+                ? (e: number) =>
+                    setFilterHandler(e, 'filterNumberOfMemberGroups')
+                : undefined
+            }
+          />
         </div>
       </FilterElement>
 
       <FilterElement>
         <Label>Groups</Label>
-        {range(numberMemberGroups).map((filterNumber) => (
-          <Flex key={filterNumber} direction="row" align="center">
-            <Checkbox
-              label={FilterGroupState[filterNumber]}
-              checked={
-                !templated
-                  ? settingExist(
-                      UserSettingKey.MemberGroupsFilter,
-                      filterNumber,
-                    )
-                  : isFilterExist(filterNumber, 'filterSelectedMemberGroups') ||
-                    false
-              }
-              onChange={() => {
-                !templated
-                  ? updateFilterHandler(
-                      UserSettingKey.MemberGroupsFilter,
-                      filterNumber,
-                    )
-                  : setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
-              }}
-            />
-            <MemberGroupColorBadge
-              filter={filterNumber}
-              style={{ height: '0.7em', width: '0.7em' }}
-            />
-          </Flex>
-        ))}
+        {range(filters?.filterNumberOfMemberGroups || numberMemberGroups).map(
+          (filterNumber) => (
+            <Flex key={filterNumber} direction="row" align="center">
+              <Checkbox
+                label={FilterGroupState[filterNumber]}
+                checked={
+                  !templated
+                    ? settingExist(
+                        UserSettingKey.MemberGroupsFilter,
+                        filterNumber,
+                      )
+                    : isFilterExist(
+                        filterNumber,
+                        'filterSelectedMemberGroups',
+                      ) || false
+                }
+                onChange={() => {
+                  !templated
+                    ? updateFilterHandler(
+                        UserSettingKey.MemberGroupsFilter,
+                        filterNumber,
+                      )
+                    : setFilterHandler(
+                        filterNumber,
+                        'filterSelectedMemberGroups',
+                      )
+                }}
+              />
+              <MemberGroupColorBadge
+                filter={filterNumber}
+                style={{ height: '0.7em', width: '0.7em' }}
+              />
+            </Flex>
+          ),
+        )}
       </FilterElement>
 
       <FilterElement>
