@@ -28,11 +28,13 @@ const numberMemberGroupsOptions = range(
 interface MemberGroupsProps {
   groupsNumber?: number
   setGroupsNumber?: (value: number) => void
+  additionalSettingUpdate?: (value: number) => void
 }
 
 export const NumberMemberGroupsRadioButtons: React.FC<MemberGroupsProps> = ({
   groupsNumber,
   setGroupsNumber,
+  additionalSettingUpdate,
 }) => {
   const { updateSetting } = useMe()
   const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
@@ -43,6 +45,9 @@ export const NumberMemberGroupsRadioButtons: React.FC<MemberGroupsProps> = ({
         value={groupsNumber || numberMemberGroups}
         onChange={(e: number) => {
           if (!setGroupsNumber) {
+            if (additionalSettingUpdate) {
+              additionalSettingUpdate(e)
+            }
             setNumberMemberGroups(e)
             updateSetting(UserSettingKey.NumberOfMemberGroups, { value: e })
           } else {

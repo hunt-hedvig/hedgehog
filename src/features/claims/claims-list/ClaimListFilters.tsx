@@ -132,25 +132,6 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   const setFilterHandler = (state: string | number, field) => {
     const idExist = typeof templatedId === 'number'
     if (setFilters && filters) {
-      if (field === 'filterNumberOfMemberGroups') {
-        if (idExist) {
-          setFilters(
-            {
-              ...filters,
-              [field]: state,
-            },
-            templatedId,
-          )
-        } else {
-          setFilters({
-            ...filters,
-            [field]: state,
-          })
-        }
-
-        return
-      }
-
       if (isFilterExist(state, field)) {
         if (idExist) {
           setFilters(
@@ -219,6 +200,63 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
 
     if (page && page !== '1') {
       history.push(`/claims/list/1`)
+    }
+  }
+
+  const updateNumberMemberSetting = (state: number) => {
+    if (
+      state === 2 &&
+      settings[UserSettingKey.MemberGroupsFilter].claims.includes(2)
+    ) {
+      updateSetting(UserSettingKey.MemberGroupsFilter, {
+        ...settings[UserSettingKey.MemberGroupsFilter],
+        claims: settings[UserSettingKey.MemberGroupsFilter].claims.filter(
+          (numb) => numb !== 2,
+        ),
+      })
+    }
+  }
+
+  const changeNumberMemberGroupsHandler = (state: number, field: string) => {
+    const idExist = typeof templatedId === 'number'
+    if (filters && setFilters) {
+      if (state === 2 && filters.filterSelectedMemberGroups?.includes(2)) {
+        if (idExist) {
+          setFilters(
+            {
+              ...filters,
+              [field]: state,
+              filterSelectedMemberGroups: filters.filterSelectedMemberGroups.filter(
+                (num) => num !== 2,
+              ),
+            },
+            templatedId,
+          )
+        } else {
+          setFilters({
+            ...filters,
+            [field]: state,
+            filterSelectedMemberGroups: filters.filterSelectedMemberGroups.filter(
+              (num) => num !== 2,
+            ),
+          })
+        }
+      } else {
+        if (idExist) {
+          setFilters(
+            {
+              ...filters,
+              [field]: state,
+            },
+            templatedId,
+          )
+        } else {
+          setFilters({
+            ...filters,
+            [field]: state,
+          })
+        }
+      }
     }
   }
 
@@ -308,13 +346,19 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         <Label>Number of member groups</Label>
         <div style={{ display: 'flex' }}>
           <NumberMemberGroupsRadioButtons
-            number={
+            groupsNumber={
               (templated && filters?.filterNumberOfMemberGroups) || undefined
             }
-            setNumber={
+            additionalSettingUpdate={
+              !templated ? updateNumberMemberSetting : undefined
+            }
+            setGroupsNumber={
               templated
                 ? (e: number) =>
-                    setFilterHandler(e, 'filterNumberOfMemberGroups')
+                    changeNumberMemberGroupsHandler(
+                      e,
+                      'filterNumberOfMemberGroups',
+                    )
                 : undefined
             }
           />
