@@ -13,10 +13,6 @@ import React, {
   useState,
 } from 'react'
 
-const Content = styled.h3`
-  word-wrap: break-word;
-`
-
 const ConfirmButtons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -24,7 +20,7 @@ const ConfirmButtons = styled.div`
 `
 
 const Button = styled(DefaultButton)`
-  font-size: 14px;
+  font-size: 0.875rem;
 `
 
 export const ConfirmDialogComponent: React.FC<{
@@ -58,7 +54,7 @@ export const ConfirmDialogComponent: React.FC<{
       onClose={close}
     >
       <div>
-        <Content>{content}</Content>
+        <h3 style={{ wordBreak: 'break-word' }}>{content}</h3>
         <ConfirmButtons>
           <Button size="small" status="success" onClick={confirm} autoFocus>
             Confirm

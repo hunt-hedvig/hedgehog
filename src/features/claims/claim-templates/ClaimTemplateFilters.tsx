@@ -17,13 +17,14 @@ import React from 'react'
 import { useHistory } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 
-interface FiltersProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ClaimTemplateFiltersProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   filters: ClaimsFiltersType
   setFilters: (newFilter: ClaimsFiltersType, id?: number) => void
   page?: string
 }
 
-export const ClaimTemplateFilters: React.FC<FiltersProps> = ({
+export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
   filters,
   setFilters,
   page,
@@ -32,17 +33,24 @@ export const ClaimTemplateFilters: React.FC<FiltersProps> = ({
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
 
-  const isFilterExist = (state, field) =>
-    filters &&
-    filters[field] &&
-    !!filters[field].filter((st) => st === state).length
+  const filterExists = (state: string | number, field: string) => {
+    if (!filters) {
+      return false
+    }
 
-  const setFilterHandler = (state: string | number, field) => {
+    if (!filters[field]) {
+      return false
+    }
+
+    return filters[field].some((filterState) => filterState === state)
+  }
+
+  const setFilterHandler = (state: string | number, field: string) => {
     if (page && page !== '1') {
       history.push(`/claims/list/1`)
     }
 
-    if (isFilterExist(state, field)) {
+    if (filterExists(state, field)) {
       setFilters({
         ...filters,
         [field]: filters[field].filter((st) => st !== state),
@@ -82,9 +90,7 @@ export const ClaimTemplateFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={
-                isFilterExist(ClaimState[key], 'filterClaimStates') || false
-              }
+              checked={filterExists(ClaimState[key], 'filterClaimStates')}
               onChange={() =>
                 setFilterHandler(ClaimState[key], 'filterClaimStates')
               }
@@ -109,10 +115,7 @@ export const ClaimTemplateFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={
-                isFilterExist(ClaimComplexity[key], 'filterComplexities') ||
-                false
-              }
+              checked={filterExists(ClaimComplexity[key], 'filterComplexities')}
               onChange={() =>
                 setFilterHandler(ClaimComplexity[key], 'filterComplexities')
               }
@@ -124,14 +127,14 @@ export const ClaimTemplateFilters: React.FC<FiltersProps> = ({
 
       <FilterElement>
         <Label>Number of member groups</Label>
-        <div style={{ display: 'flex' }}>
+        <Flex>
           <NumberMemberGroupsRadioButtons
             groupsNumber={filters?.filterNumberOfMemberGroups || undefined}
             setGroupsNumber={(e: number) =>
               changeNumberMemberGroupsHandler(e, 'filterNumberOfMemberGroups')
             }
           />
-        </div>
+        </Flex>
       </FilterElement>
 
       <FilterElement>
@@ -141,10 +144,10 @@ export const ClaimTemplateFilters: React.FC<FiltersProps> = ({
             <Flex key={filterNumber} direction="row" align="center">
               <Checkbox
                 label={FilterGroupState[filterNumber]}
-                checked={
-                  isFilterExist(filterNumber, 'filterSelectedMemberGroups') ||
-                  false
-                }
+                checked={filterExists(
+                  filterNumber,
+                  'filterSelectedMemberGroups',
+                )}
                 onChange={() =>
                   setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
                 }
@@ -164,7 +167,7 @@ export const ClaimTemplateFilters: React.FC<FiltersProps> = ({
           <Flex key={key} direction="row" align="center">
             <Checkbox
               label={key}
-              checked={isFilterExist(Market[key], 'filterMarkets') || false}
+              checked={filterExists(Market[key], 'filterMarkets')}
               onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
             />
             <span style={{ marginLeft: '0.5rem' }}>

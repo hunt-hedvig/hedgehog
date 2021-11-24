@@ -7,14 +7,14 @@ import {
 import { ClaimTemplateFilters } from 'features/claims/claim-templates/ClaimTemplateFilters'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import { ClaimsFiltersTypeWithName } from 'pages/DashboardPage'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
-const filtersStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr',
-  columnGap: '1em',
-  rowGap: '1em',
-}
+const ClaimFilters = styled(ClaimTemplateFilters)`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 1em;
+  row-gap: 1em;
+`
 
 const Body = styled.div`
   height: 100%;
@@ -25,25 +25,23 @@ const Body = styled.div`
 `
 
 interface CreateFilterProps {
-  close: () => void
-  editFilter?: ClaimsFiltersTypeWithName
-  createFilter: (id: number, filters: ClaimsFiltersTypeWithName) => void
+  onClose: () => void
+  editableFilter?: ClaimsFiltersTypeWithName
+  onSave: (id: number, filters: ClaimsFiltersTypeWithName) => void
   id: number
 }
 
-const CreateFilterForm: React.FC<CreateFilterProps> = ({
-  editFilter,
-  createFilter,
+export const CreateFilterForm: React.FC<CreateFilterProps> = ({
+  editableFilter,
+  onSave,
   id,
-  close,
+  onClose,
 }) => {
-  const isEnterPressed = useKeyIsPressed(Keys.Enter)
-
   const [name, setName] = useState<string>(
-    (editFilter && editFilter.name) || '',
+    (editableFilter && editableFilter.name) || '',
   )
   const [filters, setFilters] = useState<ClaimsFiltersType>(
-    editFilter || {
+    editableFilter || {
       filterClaimStates: null,
       filterCreatedBeforeOrOnDate: null,
       filterComplexities: null,
@@ -55,22 +53,18 @@ const CreateFilterForm: React.FC<CreateFilterProps> = ({
   )
 
   const createFilterHandler = () => {
-    createFilter(id, { ...filters, name })
-    close()
+    onSave(id, { ...filters, name })
+    onClose()
   }
 
-  useEffect(() => {
-    if (isEnterPressed) {
-      createFilterHandler()
-    }
-  }, [isEnterPressed])
+  useKeyIsPressed(Keys.Enter, createFilterHandler)
 
   return (
     <Modal
-      onClose={close}
+      onClose={onClose}
       width="700px"
       height="500px"
-      title={name ? name : 'Set Claim Filters'}
+      title={name ? name : 'Create claim filter'}
     >
       <Body>
         <Input
@@ -81,18 +75,12 @@ const CreateFilterForm: React.FC<CreateFilterProps> = ({
           }}
         />
 
-        <ClaimTemplateFilters
-          filters={filters}
-          setFilters={setFilters}
-          style={filtersStyle}
-        />
+        <ClaimFilters filters={filters} setFilters={setFilters} />
 
         <Button onClick={createFilterHandler}>
-          {!editFilter ? 'Create' : 'Save'}
+          {!editableFilter ? 'Create' : 'Save'}
         </Button>
       </Body>
     </Modal>
   )
 }
-
-export default CreateFilterForm

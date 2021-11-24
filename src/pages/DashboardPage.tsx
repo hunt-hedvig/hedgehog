@@ -15,7 +15,7 @@ import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persis
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
-import CreateFilterForm from 'features/claims/claim-templates/CreateFilterForm'
+import { CreateFilterForm } from 'features/claims/claim-templates/CreateFilterForm'
 import FilteredMetric from 'features/claims/claim-templates/FilteredMetric'
 import { Greeting } from 'features/dashboard/Greeting'
 import { useMe } from 'features/user/hooks/use-me'
@@ -57,7 +57,7 @@ const Metric = styled(Link)`
   ${({ theme }) => metricStyles(theme)}
 `
 
-const AddMetric = styled.div`
+const AddMetricCard = styled.div`
   width: 200px;
 
   display: flex;
@@ -131,11 +131,11 @@ const GET_DASHBOARD_NUMBERS = gql`
 `
 
 export interface ClaimsFiltersTypeWithName extends ClaimsFiltersType {
-  name?: string
+  name: string
 }
 
-export interface TemplateFiltersType {
-  filters: ClaimsFiltersTypeWithName[] | []
+export interface TemplateFilters {
+  filters: ClaimsFiltersTypeWithName[]
 }
 
 const DashboardPage: React.FC = () => {
@@ -144,7 +144,7 @@ const DashboardPage: React.FC = () => {
   })
   const [createFilter, setCreateFilter] = useState(false)
   const [templateFilters, setTemplateFilters] = useInsecurePersistentState<
-    TemplateFiltersType
+    TemplateFilters
   >('claims:template-filters', {
     filters: [],
   })
@@ -172,7 +172,7 @@ const DashboardPage: React.FC = () => {
 
   const editTemplateFilterHandler = (
     id: number,
-    newFilter: ClaimsFiltersType,
+    newFilter: ClaimsFiltersTypeWithName,
   ) => {
     setTemplateFilters((prev) => ({
       filters: prev.filters.map((filter, index) =>
@@ -225,16 +225,16 @@ const DashboardPage: React.FC = () => {
 
             {templateFilters.filters.map((filter, index) => (
               <FilteredMetric
-                createHandler={setTemplateFilterHandler}
-                removeFilter={removeTemplateFilterHandler}
+                onCreate={setTemplateFilterHandler}
+                onRemove={removeTemplateFilterHandler}
+                onEdit={editTemplateFilterHandler}
                 key={index + templateFilters.filters.length}
                 id={index}
                 filter={filter}
-                editFilterHandler={editTemplateFilterHandler}
               />
             ))}
 
-            <AddMetric
+            <AddMetricCard
               tabIndex={0}
               onClick={() => setCreateFilter(true)}
               onKeyDown={(e) => {
@@ -245,7 +245,7 @@ const DashboardPage: React.FC = () => {
             >
               <Plus />
               <span>Filtered Claim Template</span>
-            </AddMetric>
+            </AddMetricCard>
           </MetricsWrapper>
         </FadeIn>
       )}
@@ -289,8 +289,8 @@ const DashboardPage: React.FC = () => {
       </Spacing>
       {createFilter && (
         <CreateFilterForm
-          close={() => setCreateFilter(false)}
-          createFilter={setTemplateFilterHandler}
+          onClose={() => setCreateFilter(false)}
+          onSave={setTemplateFilterHandler}
           id={templateFilters.filters.length}
         />
       )}

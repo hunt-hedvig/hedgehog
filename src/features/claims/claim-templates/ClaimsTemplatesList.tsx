@@ -1,12 +1,9 @@
 import styled from '@emotion/styled'
 import { Label } from '@hedvig-ui'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import CreateFilterForm from 'features/claims/claim-templates/CreateFilterForm'
+import { CreateFilterForm } from 'features/claims/claim-templates/CreateFilterForm'
 import { useListClaims } from 'features/claims/claims-list/graphql/use-list-claims'
-import {
-  ClaimsFiltersTypeWithName,
-  TemplateFiltersType,
-} from 'pages/DashboardPage'
+import { ClaimsFiltersTypeWithName, TemplateFilters } from 'pages/DashboardPage'
 import React, { useEffect, useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
 
@@ -22,18 +19,21 @@ const List = styled.div`
   margin-top: 0.5rem;
 `
 
-const TemplateCard = styled.div<{ nonActive: boolean }>`
+const TemplateCardStyled = styled.div<{ active: boolean }>`
   margin-right: 1rem;
   margin-bottom: 1rem;
   padding: 5px 13px;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.accent};
   cursor: pointer;
-  opacity: ${({ nonActive }) => (nonActive ? 0.5 : 1)};
+  opacity: ${({ active }) => (!active ? 0.4 : 1)};
 
-  &:hover,
-  &:focus {
+  &:hover {
     opacity: 0.8;
+  }
+
+  &:focus {
+    opacity: 0.6;
   }
 `
 
@@ -42,7 +42,7 @@ const TemplateName = styled.span`
   color: ${({ theme }) => theme.accentContrast};
 `
 
-const AddTemplate = styled.div`
+const AddTemplateCard = styled.div`
   display: flex;
   align-items: center;
   height: fit-content;
@@ -71,7 +71,7 @@ const AddTemplate = styled.div`
 
 interface ClaimsTemplatesProps {
   activeId?: number
-  templates: TemplateFiltersType
+  templates: TemplateFilters
   selectHandler: (id: number) => void
   createHandler: (id: number, filter: ClaimsFiltersTypeWithName) => void
 }
@@ -93,17 +93,15 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
       <Label>Templates</Label>
       <List>
         {templates.filters.map((filter, index) => (
-          <Template
+          <TemplateCard
             key={`${filter.name}-${index}`}
-            nonActive={
-              !!activeId || activeId === 0 ? index !== activeId : false
-            }
+            active={!!activeId || activeId === 0 ? index === activeId : false}
             filter={filter}
             id={index}
             select={selectHandler}
           />
         ))}
-        <AddTemplate
+        <AddTemplateCard
           onClick={() => setCreateFilter(true)}
           tabIndex={0}
           onKeyDown={(e) => {
@@ -114,13 +112,13 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
         >
           <Plus />
           <span>Add New</span>
-        </AddTemplate>
+        </AddTemplateCard>
       </List>
 
       {createFilter && (
         <CreateFilterForm
-          close={() => setCreateFilter(false)}
-          createFilter={createHandler}
+          onClose={() => setCreateFilter(false)}
+          onSave={createHandler}
           id={templates.filters.length}
         />
       )}
@@ -132,14 +130,14 @@ interface TemplateProps {
   filter: ClaimsFiltersTypeWithName
   select: (id: number) => void
   id: number
-  nonActive: boolean
+  active: boolean
 }
 
-const Template: React.FC<TemplateProps> = ({
+const TemplateCard: React.FC<TemplateProps> = ({
   filter,
   select,
   id,
-  nonActive,
+  active,
 }) => {
   const [{ totalClaims }, listClaims] = useListClaims()
 
@@ -150,9 +148,9 @@ const Template: React.FC<TemplateProps> = ({
   }, [filter])
 
   return (
-    <TemplateCard
+    <TemplateCardStyled
       onClick={() => select(id)}
-      nonActive={nonActive}
+      active={active}
       tabIndex={0}
       onKeyDown={(e) => {
         if (isPressing(e, Keys.Enter)) {
@@ -163,6 +161,6 @@ const Template: React.FC<TemplateProps> = ({
       <TemplateName>
         {filter.name} ({totalClaims || 0})
       </TemplateName>
-    </TemplateCard>
+    </TemplateCardStyled>
   )
 }

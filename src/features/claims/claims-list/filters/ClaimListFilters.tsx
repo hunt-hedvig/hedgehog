@@ -89,13 +89,13 @@ export enum FilterGroupState {
   Third,
 }
 
-interface FiltersProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ClaimListFiltersProps extends React.HTMLAttributes<HTMLDivElement> {
   date?: string | null
   setDate?: (date: string) => void
   page?: string
 }
 
-export const ClaimListFilters: React.FC<FiltersProps> = ({
+export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   date,
   setDate,
   page,
@@ -149,7 +149,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       updateSetting(UserSettingKey.MemberGroupsFilter, {
         ...settings[UserSettingKey.MemberGroupsFilter],
         claims: settings[UserSettingKey.MemberGroupsFilter].claims.filter(
-          (numb) => numb !== 2,
+          (memberGroup) => memberGroup !== 2,
         ),
       })
     }
@@ -164,9 +164,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       .toISOString()
       .split('T')[0]
 
-    if (setDate) {
-      setDate(dateString)
-    }
+    setDate?.(dateString)
   }
 
   return (

@@ -6,7 +6,7 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { Portal } from 'react-portal'
 
@@ -105,51 +105,58 @@ export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   padding?: string
 }
 
-export const Modal = (props: ModalProps) => {
+export const Modal: React.FC<ModalProps> = ({
+  disableClickOutside,
+  onClose,
+  position,
+  side,
+  dimBackground,
+  padding,
+  height,
+  width,
+  style,
+  title,
+  withoutHeader,
+  children,
+}) => {
   const modalRef = useRef<HTMLDivElement>(null)
-  const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   const clickOutsideCloseHandler = () => {
-    if (!props.disableClickOutside) {
-      return props.onClose()
+    if (!disableClickOutside) {
+      return onClose()
     } else {
       return
     }
   }
 
   useClickOutside(modalRef, clickOutsideCloseHandler)
-
-  useEffect(() => {
-    if (isEscapePressed) {
-      props.onClose()
-    }
-  }, [isEscapePressed])
+  useKeyIsPressed(Keys.Escape, () => onClose())
 
   return (
     <Portal>
       <ModalWrapperStyled
-        position={props.position}
-        side={props.side}
-        dim={props.dimBackground ?? true}
-        padding={props.padding}
+        position={position}
+        side={side}
+        dim={dimBackground ?? true}
+        padding={padding}
       >
         <FadeIn duration={250}>
           <ModalContent
             className="modal"
             ref={modalRef}
-            height={props.height}
-            width={props.width}
-            style={props.style}
+            height={height}
+            width={width}
+            style={style}
           >
-            {!props.withoutHeader && (
+            {!withoutHeader && (
               <ModalHeader className="modal__header">
-                <span className="modal-title" title={props.title}>
-                  {props.title}
+                <span className="modal-title" title={title}>
+                  {title}
                 </span>
-                <CloseIcon className="modal-close" onClick={props.onClose} />
+                <CloseIcon className="modal-close" onClick={onClose} />
               </ModalHeader>
             )}
-            <ModalBody className="modal__body">{props.children}</ModalBody>
+            <ModalBody className="modal__body">{children}</ModalBody>
           </ModalContent>
         </FadeIn>
       </ModalWrapperStyled>

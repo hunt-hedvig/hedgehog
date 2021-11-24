@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { Files, Pencil, Trash } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
-import CreateFilterForm from './CreateFilterForm'
+import { CreateFilterForm } from './CreateFilterForm'
 
 const IconsWrapper = styled.div`
   position: absolute;
@@ -42,17 +42,17 @@ const Metric = styled.div`
 interface FilteredMetricProps {
   id: number
   filter: ClaimsFiltersTypeWithName
-  removeFilter: (id: number) => void
-  createHandler: (id: number, filter: ClaimsFiltersTypeWithName) => void
-  editFilterHandler: (id: number, filter: ClaimsFiltersTypeWithName) => void
+  onRemove: (id: number) => void
+  onCreate: (id: number, filter: ClaimsFiltersTypeWithName) => void
+  onEdit: (id: number, filter: ClaimsFiltersTypeWithName) => void
 }
 
 const FilteredMetric: React.FC<FilteredMetricProps> = ({
   id,
   filter,
-  editFilterHandler,
-  createHandler,
-  removeFilter,
+  onRemove,
+  onCreate,
+  onEdit,
 }) => {
   const history = useHistory()
   const [edit, setEdit] = useState(false)
@@ -77,7 +77,7 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
 
   const deleteHandler = () => {
     confirm(`Are you sure you want to delete ${filter.name}?`).then(() => {
-      removeFilter(id)
+      onRemove(id)
     })
   }
 
@@ -110,7 +110,7 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
           <Icon
             title="Duplicate"
             onClick={() => {
-              createHandler(id + 1, { ...filter, name: `${filter.name} copy` })
+              onCreate(id + 1, { ...filter, name: `${filter.name} copy` })
             }}
           >
             <Files />
@@ -122,10 +122,10 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
       )}
       {edit && (
         <CreateFilterForm
-          close={() => setEdit(false)}
-          editFilter={filter}
+          onClose={() => setEdit(false)}
+          editableFilter={filter}
           id={id}
-          createFilter={editFilterHandler}
+          onSave={onEdit}
         />
       )}
     </Metric>
