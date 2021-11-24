@@ -1,6 +1,7 @@
 import { StandaloneMessage } from '@hedvig-ui'
-import React, { lazy, Suspense } from 'react'
-import { Redirect, Route, Switch } from 'react-router'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
+import TagManager from 'react-gtm-module'
+import { Redirect, Route, Switch, useLocation } from 'react-router'
 
 const DashboardPage = lazy(() => import('./DashboardPage'))
 const ProfilePage = lazy(() => import('./settings/ProfilePage'))
@@ -28,6 +29,24 @@ const CampaignCodesPage = lazy(() => import('./tools/CampaignCodesPage'))
 const UnsignMemberPage = lazy(() => import('./tools/UnsignMemberPage'))
 
 const NotificationsPage = lazy(() => import('./NotificationsPage'))
+
+const GTMTracker: React.FC = () => {
+  const [prevPath, setPrevPath] = useState('')
+  const location = useLocation()
+
+  useEffect(() => {
+    if (prevPath !== location.pathname) {
+      TagManager.dataLayer({
+        dataLayer: {
+          event: 'virtual_page_view',
+        },
+      })
+      setPrevPath(location.pathname)
+    }
+  }, [location.pathname])
+
+  return null
+}
 
 export const Routes: React.FC = () => {
   return (
@@ -70,6 +89,7 @@ export const Routes: React.FC = () => {
             </StandaloneMessage>
           )}
         />
+        <GTMTracker />
       </Switch>
     </Suspense>
   )
