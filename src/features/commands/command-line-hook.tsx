@@ -108,7 +108,7 @@ export const CommandLineComponent: React.FC<{
   hide: () => void
   actions: CommandLineAction[]
 }> = ({ hide, actions }) => {
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = useState<string>('')
   const [searchResult, setSearchResult] = useState<CommandLineAction[]>([])
 
   const isUpPressed = useKeyIsPressed(Keys.Up)
