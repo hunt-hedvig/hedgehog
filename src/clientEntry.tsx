@@ -13,7 +13,7 @@ export const history =
 
 const appElement = document.getElementById('react-root')
 
-TagManager.initialize({ gtmId: 'GTM-WR6SSKF' })
+TagManager.initialize({ gtmId: 'GTM-MPF6CLX' })
 
 ReactDOM.render(
   <CookiesProvider>
