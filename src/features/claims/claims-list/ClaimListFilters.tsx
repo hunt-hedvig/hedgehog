@@ -91,8 +91,9 @@ export enum FilterGroupState {
 
 interface FiltersProps extends React.HTMLAttributes<HTMLDivElement> {
   templated?: boolean
+  templatedId?: number
   filters?: ClaimsFiltersType
-  setFilters?: (filters: any) => void
+  setFilters?: (newFilter: ClaimsFiltersType, id?: number) => void
   date?: string | null
   setDate?: (date: string) => void
   page?: string
@@ -107,6 +108,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   setDate,
   page,
   withDate = true,
+  templatedId,
   ...props
 }) => {
   const history = useHistory()
@@ -128,12 +130,15 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   }
 
   const setFilterHandler = (state: string | number, field) => {
-    if (setFilters) {
+    if (setFilters && typeof templatedId === 'number' && filters) {
       if (isFilterExist(state, field)) {
-        setFilters((prev) => ({
-          ...prev,
-          [field]: prev[field].filter((st) => st !== state),
-        }))
+        setFilters(
+          {
+            ...filters,
+            [field]: filters[field].filter((st) => st !== state),
+          },
+          templatedId,
+        )
 
         if (page && page !== '1') {
           history.push(`/claims/list/1`)
@@ -142,10 +147,13 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         return
       }
 
-      setFilters((prev) => ({
-        ...prev,
-        [field]: prev[field] ? [...prev[field], state] : [state],
-      }))
+      setFilters(
+        {
+          ...filters,
+          [field]: filters[field] ? [...filters[field], state] : [state],
+        },
+        templatedId,
+      )
     }
 
     if (page && page !== '1') {

@@ -51,7 +51,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   const [selectedTemplateId, setSelectedTemplateId] = useState<
     number | undefined
   >()
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<ClaimsFiltersType>({
     filterClaimStates: null,
     filterCreatedBeforeOrOnDate: null,
     filterComplexities: null,
@@ -123,6 +123,15 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
     }))
   }
 
+  const editTemplateHandler = (newFilter: ClaimsFiltersType, id?: number) => {
+    setFilters(newFilter)
+    setTemplateFilters((prev) => ({
+      filters: prev.filters.map((filter, index) =>
+        index !== id ? filter : { ...newFilter, name: filter.name },
+      ),
+    }))
+  }
+
   return (
     <ListPage>
       <FadeIn>
@@ -138,11 +147,12 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
 
       <ClaimListFilters
         templated={templated}
+        templatedId={filterQuery ? +filterQuery : undefined}
         date={!templated ? date : undefined}
         setDate={!templated ? setDate : undefined}
         page={page}
         filters={templated ? filters : undefined}
-        setFilters={templated ? setFilters : undefined}
+        setFilters={templated ? editTemplateHandler : undefined}
       />
 
       <LargeClaimsList
