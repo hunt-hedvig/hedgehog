@@ -4,7 +4,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { ClaimListTemplateFilters } from 'features/claims/claims-list/filters/ClaimListTemplateFilters'
+import { ClaimTemplateFilters } from 'features/claims/claim-templates/ClaimTemplateFilters'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import { ClaimsFiltersTypeWithName } from 'pages/DashboardPage'
 import React, { useEffect, useState } from 'react'
@@ -81,7 +81,7 @@ const CreateFilterForm: React.FC<CreateFilterProps> = ({
           }}
         />
 
-        <ClaimListTemplateFilters
+        <ClaimTemplateFilters
           filters={filters}
           setFilters={setFilters}
           style={filtersStyle}

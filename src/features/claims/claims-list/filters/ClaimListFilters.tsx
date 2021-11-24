@@ -60,18 +60,18 @@ export const StyledLabel = styled(Label)`
   }
 `
 
-const complexityIcons = {
+export const complexityIcons = {
   Simple: '📱',
   Complex: '🌊',
 }
 
-const stateColors = {
+export const stateColors = {
   Open: lightTheme.accent,
   Closed: lightTheme.activeInsuranceBackground,
   Reopened: lightTheme.accentLight,
 }
 
-const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
+export const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
   label,
   popover,
 }) => (
@@ -118,6 +118,10 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
     field: UserSettingKey,
     value: string | number,
   ) => {
+    if (page && page !== '1') {
+      history.push(`/claims/list/1`)
+    }
+
     if (!settings[field] || !settings[field].claims) {
       updateSetting(field, {
         ...settings[field],
@@ -135,10 +139,6 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           )
         : [...settings[field].claims, value],
     })
-
-    if (page && page !== '1') {
-      history.push(`/claims/list/1`)
-    }
   }
 
   const updateNumberMemberSetting = (state: number) => {

@@ -14,22 +14,22 @@ import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
+import { useHistory } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 
-// TODO: SWAP WITH CLAIM LIST TEMPLATE FILTERS
-
 interface FiltersProps extends React.HTMLAttributes<HTMLDivElement> {
-  templatedId: number
   filters: ClaimsFiltersType
   setFilters: (newFilter: ClaimsFiltersType, id?: number) => void
+  page?: string
 }
 
-export const ClaimListTemplateFilters: React.FC<FiltersProps> = ({
+export const ClaimTemplateFilters: React.FC<FiltersProps> = ({
   filters,
   setFilters,
-  templatedId,
+  page,
   ...props
 }) => {
+  const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
 
   const isFilterExist = (state, field) =>
@@ -38,46 +38,39 @@ export const ClaimListTemplateFilters: React.FC<FiltersProps> = ({
     !!filters[field].filter((st) => st === state).length
 
   const setFilterHandler = (state: string | number, field) => {
+    if (page && page !== '1') {
+      history.push(`/claims/list/1`)
+    }
+
     if (isFilterExist(state, field)) {
-      setFilters(
-        {
-          ...filters,
-          [field]: filters[field].filter((st) => st !== state),
-        },
-        templatedId,
-      )
+      setFilters({
+        ...filters,
+        [field]: filters[field].filter((st) => st !== state),
+      })
+
       return
     }
 
-    setFilters(
-      {
-        ...filters,
-        [field]: filters[field] ? [...filters[field], state] : [state],
-      },
-      templatedId,
-    )
+    setFilters({
+      ...filters,
+      [field]: filters[field] ? [...filters[field], state] : [state],
+    })
   }
 
   const changeNumberMemberGroupsHandler = (state: number, field: string) => {
     if (state === 2 && filters.filterSelectedMemberGroups?.includes(2)) {
-      setFilters(
-        {
-          ...filters,
-          [field]: state,
-          filterSelectedMemberGroups: filters.filterSelectedMemberGroups.filter(
-            (num) => num !== 2,
-          ),
-        },
-        templatedId,
-      )
+      setFilters({
+        ...filters,
+        [field]: state,
+        filterSelectedMemberGroups: filters.filterSelectedMemberGroups.filter(
+          (num) => num !== 2,
+        ),
+      })
     } else {
-      setFilters(
-        {
-          ...filters,
-          [field]: state,
-        },
-        templatedId,
-      )
+      setFilters({
+        ...filters,
+        [field]: state,
+      })
     }
   }
 

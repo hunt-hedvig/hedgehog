@@ -146,12 +146,11 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
         createHandler={createTemplateHandler}
       />
 
-      {templated ? (
+      {templated && filterQuery ? (
         <ClaimListTemplateFilters
-          templatedId={filterQuery ? +filterQuery : undefined}
+          templatedId={+filterQuery}
           filters={filters}
           setFilters={editTemplateHandler}
-          page={page}
         />
       ) : (
         <ClaimListFilters
