@@ -1,4 +1,5 @@
 import { differenceInSeconds, parseISO } from 'date-fns'
+import { useMemberSearch } from 'features/members-search/hooks/use-member-search'
 import { useMe } from 'features/user/hooks/use-me'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -63,28 +64,49 @@ export const useAdvancedActions = (
   setSearchValue: (value: string) => void,
   hide: () => void,
 ) => {
+  const history = useHistory()
+
   const [advanced, setAdvanced] = useState(false)
-  const [options, setOptions] = useState<any>([])
+  const [options, setOptions] = useState<
+    Array<{ label: string; onResolve: () => void }>
+  >([])
 
   const {
     me: { email: myEmail },
   } = useMe()
   const { data } = useUsersQuery()
   const [sharePath] = useSharePathMutation()
-  const history = useHistory()
+  const [
+    { members },
+    memberSearch,
+    { loading: membersLoading },
+  ] = useMemberSearch()
 
   const advancedActions: CommandLineAction[] = [
     {
       label: 'Share path',
-      onResolve: () => setSearchValue('/share @'),
+      onResolve: () => {
+        setSearchValue('/share @')
+        setOptions([])
+      },
     },
     {
       label: 'Go to User',
-      onResolve: () => setSearchValue('/goto @'),
+      onResolve: () => {
+        setSearchValue('/goto @')
+        setOptions([])
+      },
+    },
+    {
+      label: 'Search Members',
+      onResolve: () => {
+        setSearchValue('/search @')
+        setOptions([])
+      },
     },
   ]
 
-  const setValuesAsOptions = (values, field, action) => {
+  const setValuesAsOptions = (values, action, field) => {
     setOptions(
       values.map((value) => ({
         label: value[field],
@@ -95,7 +117,7 @@ export const useAdvancedActions = (
     )
   }
 
-  const handleRedirect = (user: Omit<User, 'notifications' | 'signature'>) => {
+  const handleToUser = (user: Omit<User, 'notifications' | 'signature'>) => {
     const hasCurrentLocation = !!user.latestLocation && user.email !== myEmail
 
     if (hasCurrentLocation && user.latestLocation) {
@@ -103,37 +125,76 @@ export const useAdvancedActions = (
     }
   }
 
+  const handleToMember = (id: string) => {
+    const link = `/members/${id}/contracts`
+
+    history.push(link)
+  }
+
+  const searchMembers = () => {
+    const name = searchValue.split('@')[searchValue.split('@').length - 1]
+    memberSearch(name || '%', { page: 0 })
+  }
+
   useEffect(() => {
     if (searchValue.includes('@')) {
       if (searchValue.includes('/share')) {
         setValuesAsOptions(
           getUniqueUsers(searchValue, data?.users, myEmail),
-          'fullName',
           (user) => {
             handleShare(user, sharePath)
             hide()
           },
+          'fullName',
         )
       }
       if (searchValue.includes('/goto')) {
-        // some action
         setValuesAsOptions(
           getOnlineUsers(searchValue, data?.users, myEmail),
-          'fullName',
           (user) => {
-            handleRedirect(user)
+            handleToUser(user)
             hide()
           },
+          'fullName',
         )
       }
-    } else if (searchValue[0] === '/') {
+      if (searchValue.includes('/search')) {
+        searchMembers()
+      }
+    } else if (searchValue === '/') {
       setAdvanced(true)
       setOptions(advancedActions)
     } else {
       setOptions([])
+    }
+
+    if (!searchValue.includes('/')) {
       setAdvanced(false)
     }
   }, [searchValue])
+
+  useEffect(() => {
+    if (!membersLoading && members.length) {
+      setOptions(
+        members.map((member) => ({
+          label: `${member.firstName} ${member.lastName}`,
+          onResolve: () => {
+            handleToMember(member.memberId)
+            hide()
+          },
+        })),
+      )
+    } else if (membersLoading) {
+      setOptions([
+        {
+          label: 'Loading...',
+          onResolve: () => {
+            return
+          },
+        },
+      ])
+    }
+  }, [members.length, membersLoading])
 
   return {
     advanced,

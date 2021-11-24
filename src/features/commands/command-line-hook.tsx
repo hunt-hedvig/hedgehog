@@ -225,7 +225,7 @@ export const CommandLineComponent: React.FC<{
                 selectedActionIndex - firstActionIndex - index,
               ) * 40}ms`}
               duration={400}
-              key={`${action.label} ${searchValue}`}
+              key={`${action.label}-${index}`}
             >
               <ResultItem
                 hide={hide}
