@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { ClaimListFilters } from 'features/claims/claims-list/ClaimListFilters'
 import { ClaimsTemplates } from 'features/claims/claims-list/ClaimsTemplates'
+import { ClaimListFilters } from 'features/claims/claims-list/filters/ClaimListFilters'
+import { ClaimListTemplateFilters } from 'features/claims/claims-list/filters/ClaimListTemplateFilters'
 import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
 import {
   ClaimsFiltersTypeWithName,
@@ -145,15 +146,20 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
         createHandler={createTemplateHandler}
       />
 
-      <ClaimListFilters
-        templated={templated}
-        templatedId={filterQuery ? +filterQuery : undefined}
-        date={!templated ? date : undefined}
-        setDate={!templated ? setDate : undefined}
-        page={page}
-        filters={templated ? filters : undefined}
-        setFilters={templated ? editTemplateHandler : undefined}
-      />
+      {templated ? (
+        <ClaimListTemplateFilters
+          templatedId={filterQuery ? +filterQuery : undefined}
+          filters={filters}
+          setFilters={editTemplateHandler}
+          page={page}
+        />
+      ) : (
+        <ClaimListFilters
+          date={!templated ? date : undefined}
+          setDate={!templated ? setDate : undefined}
+          page={page}
+        />
+      )}
 
       <LargeClaimsList
         page={selectedPage}
