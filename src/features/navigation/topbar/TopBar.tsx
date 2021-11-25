@@ -16,7 +16,7 @@ import { BellFill, PeopleFill } from 'react-bootstrap-icons'
 import UserMenu from './UserMenu'
 
 const Wrapper = styled.div`
-  z-index: 9999;
+  z-index: 1000;
   display: flex;
   justify-content: flex-end;
   align-items: center;
