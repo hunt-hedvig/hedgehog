@@ -75,24 +75,15 @@ export const useAdvancedActions = (
   const advancedActions: CommandLineAction[] = [
     {
       label: 'Share path',
-      onResolve: () => {
-        onChange('/share @')
-        setResult([])
-      },
+      onResolve: () => onChange('/share @'),
     },
     {
       label: 'Go to User',
-      onResolve: () => {
-        onChange('/goto @')
-        setResult([])
-      },
+      onResolve: () => onChange('/goto @'),
     },
     {
       label: 'Search Members',
-      onResolve: () => {
-        onChange('/search @')
-        setResult([])
-      },
+      onResolve: () => onChange('/search @'),
     },
   ]
 
