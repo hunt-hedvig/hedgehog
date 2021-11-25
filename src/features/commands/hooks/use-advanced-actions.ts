@@ -9,7 +9,7 @@ import {
   useSharePathMutation,
   useUsersQuery,
 } from 'types/generated/graphql'
-import { CommandLineAction } from './command-line-hook'
+import { CommandLineAction } from '../use-command-line'
 
 const handleShare = (
   user: Omit<User, 'notifications' | 'signature'>,

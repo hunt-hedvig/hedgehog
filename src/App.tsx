@@ -8,7 +8,7 @@ import {
 import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
-import { CommandLineProvider } from 'features/commands/command-line-hook'
+import { CommandLineProvider } from 'features/commands/use-command-line'
 import { Logo, LogoIcon } from 'features/navigation/sidebar/elements'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'

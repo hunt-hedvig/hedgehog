@@ -1,5 +1,5 @@
 import { Keys, NumberKeys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useCommandLine } from 'features/commands/command-line-hook'
+import { useCommandLine } from 'features/commands/use-command-line'
 import { getMemberFlag } from 'features/member/utils'
 import {
   EmptyState,

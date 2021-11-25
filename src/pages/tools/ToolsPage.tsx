@@ -11,7 +11,7 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { useCommandLine } from 'features/commands/command-line-hook'
+import { useCommandLine } from 'features/commands/use-command-line'
 import React from 'react'
 import { useHistory } from 'react-router'
 

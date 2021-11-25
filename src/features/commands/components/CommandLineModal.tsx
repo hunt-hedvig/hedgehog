@@ -2,28 +2,12 @@ import styled from '@emotion/styled'
 import { FadeIn, FourthLevelHeadline, Input, Paragraph } from '@hedvig-ui'
 import {
   isPressing,
-  Key,
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
-import { useAdvancedActions } from './use-advanced-actions'
-
-const CommandLineWindow = styled.div`
-  position: absolute;
-  top: 20vh;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(255, 255, 255, 1);
-  box-shadow: -1px -1px 42px 0px rgba(0, 0, 0, 0.25);
-  border-radius: 0.3em;
-`
+import { useAdvancedActions } from 'features/commands/hooks/use-advanced-actions'
+import { CommandLineAction } from 'features/commands/use-command-line'
+import React, { useEffect, useState } from 'react'
 
 const CharacterBadge = styled.div`
   background: rgba(0, 0, 0, 0.1);
@@ -54,6 +38,16 @@ const ResultItemContent = styled.div`
   flex-direction: row;
 `
 
+const Wrapper = styled.div`
+  position: absolute;
+  top: 20vh;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: -1px -1px 42px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 0.3em;
+`
+
 const CommandLineInput = styled(Input)`
   &&&& {
     width: 40vw;
@@ -67,8 +61,6 @@ const CommandLineInput = styled(Input)`
 const SearchWrapper = styled.div`
   width: 100%;
 `
-
-const SearchResultWrapper = styled.div``
 
 const ResultItem: React.FC<{
   action: CommandLineAction
@@ -98,13 +90,7 @@ const ResultItem: React.FC<{
   )
 }
 
-export interface CommandLineAction {
-  label: string
-  keys?: Key[]
-  onResolve: () => void
-}
-
-export const CommandLineComponent: React.FC<{
+export const CommandLineModal: React.FC<{
   hide: () => void
   actions: CommandLineAction[]
 }> = ({ hide, actions }) => {
@@ -191,7 +177,7 @@ export const CommandLineComponent: React.FC<{
   }, [isEnterPressed])
 
   return (
-    <CommandLineWindow>
+    <Wrapper>
       <SearchWrapper>
         <CommandLineInput
           autoFocus
@@ -215,7 +201,7 @@ export const CommandLineComponent: React.FC<{
           placeholder="What can I help you with?"
         />
       </SearchWrapper>
-      <SearchResultWrapper>
+      <div>
         {searchResult
           .slice(firstActionIndex, firstActionIndex + maxActions)
           .map((action, index) => (
@@ -233,140 +219,7 @@ export const CommandLineComponent: React.FC<{
               />
             </FadeIn>
           ))}
-      </SearchResultWrapper>
-    </CommandLineWindow>
-  )
-}
-
-interface CommandLineContextProps {
-  registerActions: (newActions: CommandLineAction[]) => any
-  isHintingOption: boolean
-  isHintingControl: boolean
-}
-
-const CommandLineContext = createContext<CommandLineContextProps>({
-  registerActions: (_: CommandLineAction[]) => void 0,
-  isHintingOption: false,
-  isHintingControl: false,
-})
-
-const CommandLineWrapper = styled.div``
-
-export const useCommandLine = () => useContext(CommandLineContext)
-
-export const CommandLineProvider: React.FC = ({ children }) => {
-  const commandLine = useRef<HTMLInputElement>(null)
-  const [showCommandLine, setShowCommandLine] = useState(false)
-  const actions = useRef<CommandLineAction[]>([])
-  const actionKeyCodes = useRef<string[][]>([])
-
-  const isControlPressed = useKeyIsPressed(Keys.Control)
-  const isOptionPressed = useKeyIsPressed(Keys.Option)
-
-  const onKeyDownShowCommandLine = (e: KeyboardEvent) => {
-    if (!isPressing(e, Keys.Space)) {
-      return
-    }
-    if (e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
-      setShowCommandLine(true)
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener('keydown', onKeyDownShowCommandLine)
-
-    return () => {
-      document.removeEventListener('keydown', onKeyDownShowCommandLine)
-    }
-  }, [])
-
-  useKeyIsPressed(Keys.Escape, () => {
-    setShowCommandLine(false)
-  })
-
-  const onMouseDown = (event) => {
-    if (commandLine.current && commandLine.current.contains(event.target)) {
-      return
-    }
-    setShowCommandLine(false)
-  }
-
-  useEffect(() => {
-    document.addEventListener('mousedown', onMouseDown)
-
-    return () => {
-      document.removeEventListener('mousedown', onMouseDown)
-    }
-  }, [])
-
-  const addAction = (newActions: CommandLineAction[]) => {
-    useEffect(() => {
-      actions.current = [...newActions, ...actions.current]
-      updateActionKeyCodes()
-      return () => {
-        newActions.forEach((newAction) => {
-          removeAction(newAction.label)
-        })
-        updateActionKeyCodes()
-      }
-    }, [])
-  }
-
-  const removeAction = (label: string) => {
-    actions.current = actions.current.filter((action) => action.label !== label)
-  }
-
-  const updateActionKeyCodes = () => {
-    actionKeyCodes.current = actions.current.map(
-      (action) => (action.keys && action.keys.map((key) => key.code)) || [],
-    )
-  }
-
-  // tslint:disable:no-unused-expression
-  const handleKeyDown = async (e: KeyboardEvent) => {
-    if (e.getModifierState(e.key)) {
-      return
-    }
-    if (!(e.shiftKey || e.ctrlKey || e.altKey || e.metaKey)) {
-      return
-    }
-
-    const matchIndex = actionKeyCodes.current.findIndex((keyCodes) => {
-      return isPressing(e, keyCodes)
-    })
-
-    if (matchIndex > -1) {
-      actions.current[matchIndex].onResolve()
-      setShowCommandLine(false)
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown, {
-      capture: true,
-    })
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [])
-
-  return (
-    <CommandLineContext.Provider
-      value={{
-        registerActions: addAction,
-        isHintingOption: isOptionPressed,
-        isHintingControl: isControlPressed,
-      }}
-    >
-      {children}
-      {showCommandLine && (
-        <CommandLineWrapper ref={commandLine}>
-          <CommandLineComponent
-            hide={() => setShowCommandLine(false)}
-            actions={actions.current}
-          />
-        </CommandLineWrapper>
-      )}
-    </CommandLineContext.Provider>
+      </div>
+    </Wrapper>
   )
 }
