@@ -9,7 +9,7 @@ import { Clipboard } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { useHistory } from 'react-router'
 import { Member } from 'types/generated/graphql'
-import { useCommandLine } from '../commands/command-line-hook'
+import { useCommandLine } from '../commands/use-command-line'
 
 const Wrapper = styled.div`
   display: flex;

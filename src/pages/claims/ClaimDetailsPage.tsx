@@ -23,7 +23,7 @@ import { ClaimRestrictionInformation } from 'features/claims/claim-details/compo
 import { ClaimTranscriptions } from 'features/claims/claim-details/components/ClaimTranscriptions'
 import { ClaimType } from 'features/claims/claim-details/components/ClaimType/ClaimType'
 import { MemberInformation } from 'features/claims/claim-details/components/MemberInformation'
-import { useCommandLine } from 'features/commands/command-line-hook'
+import { useCommandLine } from 'features/commands/use-command-line'
 import { ChatPane } from 'features/member/tabs/ChatPane'
 import { getCarrierText } from 'features/member/tabs/contracts-tab/utils'
 import { useMemberHistory } from 'features/user/hooks/use-member-history'
