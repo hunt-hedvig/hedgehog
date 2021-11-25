@@ -5,8 +5,8 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ClaimTemplateFilters } from 'features/claims/claim-templates/ClaimTemplateFilters'
+import { ClaimsFiltersTypeWithName } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
-import { ClaimsFiltersTypeWithName } from 'pages/DashboardPage'
 import React, { useState } from 'react'
 
 const ClaimFilters = styled(ClaimTemplateFilters)`

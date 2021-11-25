@@ -2,8 +2,11 @@ import styled from '@emotion/styled'
 import { Label } from '@hedvig-ui'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { CreateFilterForm } from 'features/claims/claim-templates/CreateFilterForm'
+import {
+  ClaimsFiltersTypeWithName,
+  TemplateFilters,
+} from 'features/claims/claim-templates/hooks/use-template-claims'
 import { useListClaims } from 'features/claims/claims-list/graphql/use-list-claims'
-import { ClaimsFiltersTypeWithName, TemplateFilters } from 'pages/DashboardPage'
 import React, { useEffect, useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
 

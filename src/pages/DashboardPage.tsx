@@ -19,7 +19,6 @@ import FilteredMetric from 'features/claims/claim-templates/FilteredMetric'
 import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { Greeting } from 'features/dashboard/Greeting'
 import { useMe } from 'features/user/hooks/use-me'
-import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
@@ -129,14 +128,6 @@ const GET_DASHBOARD_NUMBERS = gql`
     }
   }
 `
-
-export interface ClaimsFiltersTypeWithName extends ClaimsFiltersType {
-  name: string
-}
-
-export interface TemplateFilters {
-  filters: ClaimsFiltersTypeWithName[]
-}
 
 const DashboardPage: React.FC = () => {
   const { data: dashboardData } = useQuery(GET_DASHBOARD_NUMBERS, {

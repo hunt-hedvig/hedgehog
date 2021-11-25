@@ -1,13 +1,9 @@
 import styled from '@emotion/styled'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { ClaimsFiltersTypeWithName } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { useListClaims } from 'features/claims/claims-list/graphql/use-list-claims'
-import {
-  ClaimsFiltersTypeWithName,
-  MetricName,
-  MetricNumber,
-  metricStyles,
-} from 'pages/DashboardPage'
+import { MetricName, MetricNumber, metricStyles } from 'pages/DashboardPage'
 import React, { useEffect, useState } from 'react'
 import { Files, Pencil, Trash } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'

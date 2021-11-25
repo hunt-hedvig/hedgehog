@@ -1,6 +1,5 @@
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
-import { ClaimsFiltersTypeWithName, TemplateFilters } from 'pages/DashboardPage'
 import { useEffect, useMemo, useState } from 'react'
 import { useHistory, useLocation } from 'react-router'
 
@@ -10,7 +9,27 @@ const useQuery = () => {
   return useMemo(() => new URLSearchParams(search), [search])
 }
 
-export const useTemplateClaims = () => {
+export interface TemplateFilters {
+  filters: ClaimsFiltersTypeWithName[]
+}
+
+export interface ClaimsFiltersTypeWithName extends ClaimsFiltersType {
+  name: string
+}
+
+interface Templates {
+  templateActive: boolean
+  selectedTemplate?: number
+  localFilter: ClaimsFiltersType
+  templateFilters: TemplateFilters
+  selectTemplate: (id: number) => void
+  createTemplate: (id: number, filter: ClaimsFiltersTypeWithName) => void
+  editTemplate: (filter: ClaimsFiltersType, id?: number) => void
+  editTemplateWithName: (id: number, filter: ClaimsFiltersTypeWithName) => void
+  removeTemplate: (id: number) => void
+}
+
+export const useTemplateClaims = (): Templates => {
   const filterQuery = useQuery().get('filter')
 
   const [templateActive, setTemplateActive] = useState(false)
