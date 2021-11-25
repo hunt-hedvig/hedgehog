@@ -112,6 +112,7 @@ const CollapseToggle = styled('button')<{ collapsed?: boolean }>(
     padding: 0,
     border: 0,
     borderLeftColor: 'transparent',
+    zIndex: 1001,
 
     '&& > *': {
       transition: 'transform 500ms',
