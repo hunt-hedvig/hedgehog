@@ -4,10 +4,11 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { ClaimTemplateFilters } from 'features/claims/claim-templates/ClaimTemplateFilters'
-import { ClaimsFiltersTypeWithName } from 'features/claims/claim-templates/hooks/use-template-claims'
+import { ClaimTemplateFilters } from 'features/claims/claim-templates/components/ClaimTemplateFilters'
+import { ClaimFilterTemplate } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useState } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
 const ClaimFilters = styled(ClaimTemplateFilters)`
   display: grid;
@@ -26,15 +27,13 @@ const Body = styled.div`
 
 interface CreateFilterProps {
   onClose: () => void
-  editableFilter?: ClaimsFiltersTypeWithName
-  onSave: (id: number, filters: ClaimsFiltersTypeWithName) => void
-  id: number
+  editableFilter?: ClaimFilterTemplate
+  onSave: (filters: ClaimFilterTemplate) => void
 }
 
-export const CreateFilterForm: React.FC<CreateFilterProps> = ({
+export const CreateFilterModal: React.FC<CreateFilterProps> = ({
   editableFilter,
   onSave,
-  id,
   onClose,
 }) => {
   const [name, setName] = useState<string>(
@@ -53,7 +52,11 @@ export const CreateFilterForm: React.FC<CreateFilterProps> = ({
   )
 
   const createFilterHandler = () => {
-    onSave(id, { ...filters, name })
+    onSave({
+      ...filters,
+      name,
+      id: editableFilter ? editableFilter.id : uuidv4(),
+    })
     onClose()
   }
 

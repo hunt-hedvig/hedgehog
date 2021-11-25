@@ -14,8 +14,8 @@ import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
-import { CreateFilterForm } from 'features/claims/claim-templates/CreateFilterForm'
-import FilteredMetric from 'features/claims/claim-templates/FilteredMetric'
+import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterModal'
+import { FilteredMetric } from 'features/claims/claim-templates/FilteredMetric'
 import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { Greeting } from 'features/dashboard/Greeting'
 import { useMe } from 'features/user/hooks/use-me'
@@ -57,6 +57,7 @@ const Metric = styled(Link)`
 `
 
 const AddMetricCard = styled.div`
+  min-height: 111.5px;
   width: 200px;
 
   display: flex;
@@ -181,13 +182,12 @@ const DashboardPage: React.FC = () => {
               </Metric>
             )}
 
-            {templateFilters.filters.map((filter, index) => (
+            {templateFilters.map((filter, index) => (
               <FilteredMetric
                 onCreate={createTemplate}
                 onRemove={removeTemplate}
                 onEdit={editTemplateWithName}
-                key={index + templateFilters.filters.length}
-                id={index}
+                key={index + templateFilters.length}
                 filter={filter}
               />
             ))}
@@ -246,10 +246,9 @@ const DashboardPage: React.FC = () => {
         </ChangeLogWrapper>
       </Spacing>
       {createFilter && (
-        <CreateFilterForm
+        <CreateFilterModal
           onClose={() => setCreateFilter(false)}
           onSave={createTemplate}
-          id={templateFilters.filters.length}
         />
       )}
     </Wrapper>

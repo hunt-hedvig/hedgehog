@@ -1,13 +1,14 @@
 import styled from '@emotion/styled'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { ClaimsFiltersTypeWithName } from 'features/claims/claim-templates/hooks/use-template-claims'
+import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterModal'
+import { ClaimFilterTemplate } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { useListClaims } from 'features/claims/claims-list/graphql/use-list-claims'
 import { MetricName, MetricNumber, metricStyles } from 'pages/DashboardPage'
 import React, { useEffect, useState } from 'react'
 import { Files, Pencil, Trash } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
-import { CreateFilterForm } from './CreateFilterForm'
+import { v4 as uuidv4 } from 'uuid'
 
 const IconsWrapper = styled.div`
   position: absolute;
@@ -36,15 +37,13 @@ const Metric = styled.div`
 `
 
 interface FilteredMetricProps {
-  id: number
-  filter: ClaimsFiltersTypeWithName
-  onRemove: (id: number) => void
-  onCreate: (id: number, filter: ClaimsFiltersTypeWithName) => void
-  onEdit: (id: number, filter: ClaimsFiltersTypeWithName) => void
+  filter: ClaimFilterTemplate
+  onRemove: (id: string) => void
+  onCreate: (filter: ClaimFilterTemplate) => void
+  onEdit: (filter: ClaimFilterTemplate) => void
 }
 
-const FilteredMetric: React.FC<FilteredMetricProps> = ({
-  id,
+export const FilteredMetric: React.FC<FilteredMetricProps> = ({
   filter,
   onRemove,
   onCreate,
@@ -62,7 +61,7 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
       return
     }
 
-    history.push(`/claims/list/1?filter=${id}`)
+    history.push(`/claims/list/1?filter=${filter.id}`)
   }
 
   useEffect(() => {
@@ -73,7 +72,7 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
 
   const deleteHandler = () => {
     confirm(`Are you sure you want to delete ${filter.name}?`).then(() => {
-      onRemove(id)
+      onRemove(filter.id)
     })
   }
 
@@ -91,7 +90,7 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
     >
       <MetricNumber onClick={clickHandler}>{totalClaims || 0}</MetricNumber>
       <MetricName onClick={clickHandler} title={filter.name}>
-        {filter.name || `Claims Template ${id}`}
+        {filter.name || `Claims Template ${filter.id}`}
       </MetricName>
       {hover && (
         <IconsWrapper>
@@ -106,7 +105,7 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
           <Icon
             title="Duplicate"
             onClick={() => {
-              onCreate(id + 1, { ...filter, name: `${filter.name} copy` })
+              onCreate({ ...filter, name: `${filter.name} copy`, id: uuidv4() })
             }}
           >
             <Files />
@@ -117,15 +116,12 @@ const FilteredMetric: React.FC<FilteredMetricProps> = ({
         </IconsWrapper>
       )}
       {edit && (
-        <CreateFilterForm
+        <CreateFilterModal
           onClose={() => setEdit(false)}
           editableFilter={filter}
-          id={id}
           onSave={onEdit}
         />
       )}
     </Metric>
   )
 }
-
-export default FilteredMetric

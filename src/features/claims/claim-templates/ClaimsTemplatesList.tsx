@@ -1,11 +1,8 @@
 import styled from '@emotion/styled'
 import { Label } from '@hedvig-ui'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { CreateFilterForm } from 'features/claims/claim-templates/CreateFilterForm'
-import {
-  ClaimsFiltersTypeWithName,
-  TemplateFilters,
-} from 'features/claims/claim-templates/hooks/use-template-claims'
+import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterModal'
+import { ClaimFilterTemplate } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { useListClaims } from 'features/claims/claims-list/graphql/use-list-claims'
 import React, { useEffect, useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
@@ -69,21 +66,21 @@ const AddTemplateCard = styled.div`
 `
 
 interface ClaimsTemplatesProps {
-  activeId?: number
-  templates: TemplateFilters
-  selectHandler: (id: number) => void
-  createHandler: (id: number, filter: ClaimsFiltersTypeWithName) => void
+  activeId?: string
+  templates: ClaimFilterTemplate[]
+  onSelect: (id: string) => void
+  onCreate: (filter: ClaimFilterTemplate) => void
 }
 
 export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
   activeId,
   templates,
-  selectHandler,
-  createHandler,
+  onSelect,
+  onCreate,
 }) => {
   const [createFilter, setCreateFilter] = useState(false)
 
-  if (!templates.filters.length) {
+  if (!templates.length) {
     return null
   }
 
@@ -91,17 +88,12 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
     <Wrapper>
       <Label>Templates</Label>
       <List>
-        {templates.filters.map((filter, index) => (
+        {templates.map((filter) => (
           <TemplateCard
-            key={`${filter.name}-${index}`}
-            active={
-              !!activeId || typeof activeId === 'number'
-                ? index !== activeId
-                : false
-            }
+            key={filter.id}
+            active={!!activeId ? filter.id !== activeId : false}
             filter={filter}
-            id={index}
-            select={selectHandler}
+            select={onSelect}
           />
         ))}
         <AddTemplateCard
@@ -119,10 +111,9 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
       </List>
 
       {createFilter && (
-        <CreateFilterForm
+        <CreateFilterModal
           onClose={() => setCreateFilter(false)}
-          onSave={createHandler}
-          id={templates.filters.length}
+          onSave={onCreate}
         />
       )}
     </Wrapper>
@@ -130,18 +121,12 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
 }
 
 interface TemplateProps {
-  filter: ClaimsFiltersTypeWithName
-  select: (id: number) => void
-  id: number
+  filter: ClaimFilterTemplate
+  select: (id: string) => void
   active: boolean
 }
 
-const TemplateCard: React.FC<TemplateProps> = ({
-  filter,
-  select,
-  id,
-  active,
-}) => {
+const TemplateCard: React.FC<TemplateProps> = ({ filter, select, active }) => {
   const [{ totalClaims }, listClaims] = useListClaims()
 
   useEffect(() => {
@@ -152,12 +137,12 @@ const TemplateCard: React.FC<TemplateProps> = ({
 
   return (
     <TemplateCardStyled
-      onClick={() => select(id)}
+      onClick={() => select(filter.id)}
       active={active}
       tabIndex={0}
       onKeyDown={(e) => {
         if (isPressing(e, Keys.Enter)) {
-          select(id)
+          select(filter.id)
         }
       }}
     >

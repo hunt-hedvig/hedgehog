@@ -1,39 +1,30 @@
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
-import { useEffect, useMemo, useState } from 'react'
-import { useHistory, useLocation } from 'react-router'
+import { useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 
-const useQuery = () => {
-  const { search } = useLocation()
-
-  return useMemo(() => new URLSearchParams(search), [search])
-}
-
-export interface TemplateFilters {
-  filters: ClaimsFiltersTypeWithName[]
-}
-
-export interface ClaimsFiltersTypeWithName extends ClaimsFiltersType {
+export interface ClaimFilterTemplate extends ClaimsFiltersType {
+  id: string
   name: string
 }
 
-interface Templates {
+interface UseTemplateClaimsResult {
   templateActive: boolean
-  selectedTemplate?: number
+  selectedTemplate?: string
   localFilter: ClaimsFiltersType
-  templateFilters: TemplateFilters
-  selectTemplate: (id: number) => void
-  createTemplate: (id: number, filter: ClaimsFiltersTypeWithName) => void
-  editTemplate: (filter: ClaimsFiltersType, id?: number) => void
-  editTemplateWithName: (id: number, filter: ClaimsFiltersTypeWithName) => void
-  removeTemplate: (id: number) => void
+  templateFilters: ClaimFilterTemplate[]
+  selectTemplate: (id: string) => void
+  createTemplate: (filter: ClaimFilterTemplate) => void
+  editTemplate: (filter: ClaimsFiltersType, id?: string) => void
+  editTemplateWithName: (filter: ClaimFilterTemplate) => void
+  removeTemplate: (id: string) => void
 }
 
-export const useTemplateClaims = (): Templates => {
-  const filterQuery = useQuery().get('filter')
-
+export const useTemplateClaims = (
+  selectedId?: string | null,
+): UseTemplateClaimsResult => {
   const [templateActive, setTemplateActive] = useState(false)
-  const [selectedTemplate, setSelectedTemplate] = useState<number>()
+  const [selectedTemplate, setSelectedTemplate] = useState<string | undefined>()
   const [localFilter, setLocalFilter] = useState<ClaimsFiltersType>({
     filterClaimStates: null,
     filterCreatedBeforeOrOnDate: null,
@@ -45,30 +36,29 @@ export const useTemplateClaims = (): Templates => {
   })
 
   const [templateFilters, setTemplateFilters] = useInsecurePersistentState<
-    TemplateFilters
-  >('claims:template-filters', {
-    filters: [],
-  })
+    ClaimFilterTemplate[]
+  >('claims:templates', [])
 
   const history = useHistory()
 
   useEffect(() => {
-    if (!filterQuery) {
+    if (!selectedId) {
       setTemplateActive(false)
       return
     }
 
-    const filter = { ...templateFilters.filters[filterQuery] }
+    const filter = {
+      ...templateFilters.filter((template) => template.id === selectedId)[0],
+    }
 
     if (filter) {
-      delete filter.name
       setLocalFilter(filter)
       setTemplateActive(true)
-      setSelectedTemplate(+filterQuery)
+      setSelectedTemplate(selectedId)
     }
-  }, [filterQuery])
+  }, [selectedId])
 
-  const selectTemplate = (id: number) => {
+  const selectTemplate = (id: string) => {
     if (id === selectedTemplate) {
       setSelectedTemplate(undefined)
       history.push(`/claims/list/1`)
@@ -78,45 +68,34 @@ export const useTemplateClaims = (): Templates => {
     history.push(`/claims/list/1?filter=${id}`)
   }
 
-  const createTemplate = (id: number, filter: ClaimsFiltersTypeWithName) => {
-    setTemplateFilters((prev) => ({
-      filters: [
-        ...prev.filters,
-        {
-          ...filter,
-          name: filter.name ? filter.name : `Claims Template ${id + 1}`,
-        },
-      ],
-    }))
+  const createTemplate = (filter: ClaimFilterTemplate) => {
+    setTemplateFilters((prev) => [
+      ...prev,
+      {
+        ...filter,
+        name: filter.name ? filter.name : `Claims Template ${filter.id + 1}`,
+      },
+    ])
   }
 
-  const editTemplate = (newFilter: ClaimsFiltersType, id?: number) => {
+  const editTemplate = (newFilter: ClaimsFiltersType, id?: string) => {
     setLocalFilter(newFilter)
-    setTemplateFilters((prev) => ({
-      filters: prev.filters.map((filter, index) =>
-        index !== id ? filter : { ...newFilter, name: filter.name },
+    setTemplateFilters((prev) =>
+      prev.map((filter) =>
+        filter.id !== id ? filter : { ...newFilter, name: filter.name, id },
       ),
-    }))
-  }
-
-  const editTemplateWithName = (
-    id: number,
-    newFilter: ClaimsFiltersTypeWithName,
-  ) => {
-    setTemplateFilters((prev) => ({
-      filters: prev.filters.map((filter, index) =>
-        index !== id ? filter : newFilter,
-      ),
-    }))
-  }
-
-  const removeTemplate = (id: number) => {
-    const newFilters = templateFilters.filters.filter(
-      (_, index) => index !== id,
     )
-    setTemplateFilters({
-      filters: newFilters,
-    })
+  }
+
+  const editTemplateWithName = (newFilter: ClaimFilterTemplate) => {
+    setTemplateFilters((prev) =>
+      prev.map((filter) => (filter.id !== newFilter.id ? filter : newFilter)),
+    )
+  }
+
+  const removeTemplate = (id: string) => {
+    const newFilters = templateFilters.filter((filter) => filter.id !== id)
+    setTemplateFilters(newFilters)
   }
 
   return {

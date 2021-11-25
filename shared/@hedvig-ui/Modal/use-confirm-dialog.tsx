@@ -48,7 +48,7 @@ export const ConfirmDialogComponent: React.FC<{
       withoutHeader={true}
       disableClickOutside={true}
       height="auto"
-      width="500px"
+      width="400px"
       position="top"
       side="center"
       onClose={close}

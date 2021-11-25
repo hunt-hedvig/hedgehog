@@ -5,7 +5,7 @@ import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-tem
 import { ClaimListFilters } from 'features/claims/claims-list/filters/ClaimListFilters'
 import { ClaimListTemplateFilters } from 'features/claims/claims-list/filters/ClaimListTemplateFilters'
 import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 
@@ -16,6 +16,12 @@ const ListPage = styled.div`
   align-items: flex-start;
   margin: 0;
 `
+
+const useQuery = () => {
+  const { search } = useLocation()
+
+  return useMemo(() => new URLSearchParams(search), [search])
+}
 
 export interface ClaimsFiltersType {
   filterClaimStates: ClaimState[] | null
@@ -35,6 +41,8 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   },
 }) => {
   const location = useLocation()
+  const filterQuery = useQuery().get('filter')
+
   const {
     templateActive,
     selectedTemplate,
@@ -43,7 +51,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
     selectTemplate,
     createTemplate,
     editTemplate,
-  } = useTemplateClaims()
+  } = useTemplateClaims(filterQuery)
 
   const [date, setDate] = useState<string | null>(null)
 
@@ -68,13 +76,13 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
       <ClaimsTemplates
         activeId={selectedTemplate}
         templates={templateFilters}
-        selectHandler={selectTemplate}
-        createHandler={createTemplate}
+        onSelect={selectTemplate}
+        onCreate={createTemplate}
       />
 
-      {templateActive && typeof selectedTemplate === 'number' ? (
+      {templateActive && selectedTemplate ? (
         <ClaimListTemplateFilters
-          templatedId={+selectedTemplate}
+          templatedId={selectedTemplate}
           filters={localFilter}
           setFilters={editTemplate}
         />

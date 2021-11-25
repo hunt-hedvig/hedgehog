@@ -18,9 +18,9 @@ import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 
 interface ClaimListTemplateFiltersProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  templatedId: number
+  templatedId: string
   filters: ClaimsFiltersType
-  setFilters: (newFilter: ClaimsFiltersType, id?: number) => void
+  setFilters: (newFilter: ClaimsFiltersType, id?: string) => void
 }
 
 export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> = ({

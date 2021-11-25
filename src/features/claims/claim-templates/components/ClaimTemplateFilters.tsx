@@ -20,7 +20,7 @@ import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 interface ClaimTemplateFiltersProps
   extends React.HTMLAttributes<HTMLDivElement> {
   filters: ClaimsFiltersType
-  setFilters: (newFilter: ClaimsFiltersType, id?: number) => void
+  setFilters: (newFilter: ClaimsFiltersType) => void
   page?: string
 }
 
