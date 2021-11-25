@@ -13,7 +13,8 @@ export interface Change {
 export const changelog: ReadonlyArray<Change> = [
   {
     date: '2021-11-25',
-    change: "Add advanced features in Command Line. Just open it and type '/'!",
+    change:
+      "Search for members wherever you are - press option + space and type '/'!",
     authorGithubHandle: 'maxplt',
   },
   {

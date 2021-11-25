@@ -107,9 +107,9 @@ export const CommandLineModal: React.FC<{
 
   useAdvancedActions(
     searchValue,
-    (value: string) => setSearchValue(value),
-    (value: CommandLineAction[]) => setSearchResult(value),
-    hide,
+    (value) => setSearchValue(value),
+    (value) => setSearchResult(value),
+    () => hide(),
   )
 
   useEffect(() => {
