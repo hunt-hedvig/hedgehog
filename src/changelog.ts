@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2021-11-25',
+    change: "Add advanced features in Command Line. Just open it and type '/'!",
+    authorGithubHandle: 'maxplt',
+  },
+  {
     date: '2021-11-18',
     change:
       'Allow signing quotes for Norweigan customer that failed debt check, and allow manual input for yearly charge',

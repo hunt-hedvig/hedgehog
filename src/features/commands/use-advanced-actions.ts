@@ -1,7 +1,7 @@
 import { differenceInSeconds, parseISO } from 'date-fns'
 import { useMemberSearch } from 'features/members-search/hooks/use-member-search'
 import { useMe } from 'features/user/hooks/use-me'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { useHistory } from 'react-router'
 import {
@@ -25,7 +25,7 @@ const handleShare = (
   )
 }
 
-const getUniqueUsers = (searchValue, users, myEmail) => {
+const getFilteredUsers = (searchValue, users, myEmail) => {
   const name = searchValue.split('@')[searchValue.split('@').length - 1]
 
   return (
@@ -38,17 +38,11 @@ const getUniqueUsers = (searchValue, users, myEmail) => {
 }
 
 const getOnlineUsers = (searchValue, users, myEmail) => {
-  const name = searchValue.split('@')[searchValue.split('@').length - 1]
   const now = new Date()
 
-  const uniqueUsers =
-    users?.filter(
-      (user) =>
-        user.email !== myEmail &&
-        user.fullName.toLowerCase().includes(name.toLowerCase()),
-    ) ?? []
+  const filteredUsers = getFilteredUsers(searchValue, users, myEmail)
 
-  return uniqueUsers
+  return filteredUsers
     .filter((user) =>
       user.latestPresence
         ? differenceInSeconds(now, parseISO(user.latestPresence)) <= 10
@@ -61,15 +55,11 @@ const getOnlineUsers = (searchValue, users, myEmail) => {
 
 export const useAdvancedActions = (
   searchValue: string,
-  setSearchValue: (value: string) => void,
-  hide: () => void,
+  onChange: (value: string) => void,
+  setResult: (value: CommandLineAction[]) => void,
+  onHide: () => void,
 ) => {
   const history = useHistory()
-
-  const [advanced, setAdvanced] = useState(false)
-  const [options, setOptions] = useState<
-    Array<{ label: string; onResolve: () => void }>
-  >([])
 
   const {
     me: { email: myEmail },
@@ -86,29 +76,33 @@ export const useAdvancedActions = (
     {
       label: 'Share path',
       onResolve: () => {
-        setSearchValue('/share @')
-        setOptions([])
+        onChange('/share @')
+        setResult([])
       },
     },
     {
       label: 'Go to User',
       onResolve: () => {
-        setSearchValue('/goto @')
-        setOptions([])
+        onChange('/goto @')
+        setResult([])
       },
     },
     {
       label: 'Search Members',
       onResolve: () => {
-        setSearchValue('/search @')
-        setOptions([])
+        onChange('/search @')
+        setResult([])
       },
     },
   ]
 
-  const setValuesAsOptions = (values, action, field) => {
-    setOptions(
-      values.map((value) => ({
+  const setUsersAsOptions = (
+    users: User[],
+    action: (value: User) => void,
+    field: string,
+  ) => {
+    setResult(
+      users.map((value) => ({
         label: value[field],
         onResolve: () => {
           action(value)
@@ -133,71 +127,68 @@ export const useAdvancedActions = (
 
   const searchMembers = () => {
     const name = searchValue.split('@')[searchValue.split('@').length - 1]
-    memberSearch(name || '%', { page: 0 })
+    memberSearch(name || '%', { page: 0, pageSize: 10 })
   }
 
   useEffect(() => {
-    if (searchValue.includes('@')) {
-      if (searchValue.includes('/share')) {
-        setValuesAsOptions(
-          getUniqueUsers(searchValue, data?.users, myEmail),
-          (user) => {
-            handleShare(user, sharePath)
-            hide()
-          },
-          'fullName',
-        )
-      }
-      if (searchValue.includes('/goto')) {
-        setValuesAsOptions(
-          getOnlineUsers(searchValue, data?.users, myEmail),
-          (user) => {
-            handleToUser(user)
-            hide()
-          },
-          'fullName',
-        )
-      }
-      if (searchValue.includes('/search')) {
-        searchMembers()
-      }
-    } else if (searchValue === '/') {
-      setAdvanced(true)
-      setOptions(advancedActions)
-    } else {
-      setOptions([])
+    if (!searchValue.includes('@') && searchValue[0] === '/') {
+      setResult(
+        advancedActions.filter((act) =>
+          `/${act.label}`.toLowerCase().includes(searchValue.toLowerCase()),
+        ),
+      )
+
+      return
     }
 
-    if (!searchValue.includes('/')) {
-      setAdvanced(false)
+    if (searchValue.includes('/share')) {
+      setUsersAsOptions(
+        getFilteredUsers(searchValue, data?.users, myEmail),
+        (user) => {
+          handleShare(user, sharePath)
+          onHide()
+        },
+        'fullName',
+      )
+    }
+    if (searchValue.includes('/goto')) {
+      setUsersAsOptions(
+        getOnlineUsers(searchValue, data?.users, myEmail),
+        (user) => {
+          handleToUser(user)
+          onHide()
+        },
+        'fullName',
+      )
+    }
+
+    if (searchValue.includes('/search')) {
+      searchMembers()
     }
   }, [searchValue])
 
   useEffect(() => {
-    if (!membersLoading && members.length) {
-      setOptions(
-        members.map((member) => ({
-          label: `${member.firstName} ${member.lastName}`,
-          onResolve: () => {
-            handleToMember(member.memberId)
-            hide()
-          },
-        })),
-      )
-    } else if (membersLoading) {
-      setOptions([
+    if ((!membersLoading && !members.length) || membersLoading) {
+      setResult([
         {
-          label: 'Loading...',
+          label: membersLoading ? 'Loading...' : 'Empty',
           onResolve: () => {
             return
           },
         },
       ])
-    }
-  }, [members.length, membersLoading])
 
-  return {
-    advanced,
-    options,
-  }
+      return
+    }
+
+    setResult(
+      members.map((member) => ({
+        label: `${member.firstName} ${member.lastName}`,
+        onResolve: () => {
+          handleToMember(member.memberId)
+          onHide()
+        },
+      })),
+    )
+  }, [members.length, membersLoading])
 }

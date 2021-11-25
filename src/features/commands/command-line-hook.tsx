@@ -108,7 +108,7 @@ export const CommandLineComponent: React.FC<{
   hide: () => void
   actions: CommandLineAction[]
 }> = ({ hide, actions }) => {
-  const [searchValue, setSearchValue] = useState<string>('')
+  const [searchValue, setSearchValue] = useState('')
   const [searchResult, setSearchResult] = useState<CommandLineAction[]>([])
 
   const isUpPressed = useKeyIsPressed(Keys.Up)
@@ -119,26 +119,25 @@ export const CommandLineComponent: React.FC<{
   const [selectedActionIndex, setSelectedActionIndex] = useState(0)
   const [firstActionIndex, setFirstActionIndex] = useState(0)
 
-  const { advanced, options } = useAdvancedActions(
+  useAdvancedActions(
     searchValue,
-    setSearchValue,
+    (value: string) => setSearchValue(value),
+    (value: CommandLineAction[]) => setSearchResult(value),
     hide,
   )
 
   useEffect(() => {
-    if (advanced) {
-      setSearchResult(options)
-    } else {
+    if (searchValue[0] !== '/') {
       setSearchResult(
-        actions.filter((item) => {
-          return item.label.toLowerCase().includes(searchValue.toLowerCase())
-        }),
+        actions.filter((item) =>
+          item.label.toLowerCase().includes(searchValue.toLowerCase()),
+        ),
       )
     }
 
     setFirstActionIndex(0)
     setSelectedActionIndex(0)
-  }, [searchValue, advanced])
+  }, [searchValue])
 
   useEffect(() => {
     if (!isUpPressed) {
