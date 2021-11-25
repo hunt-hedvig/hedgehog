@@ -30,7 +30,7 @@ const UnsignMemberPage = lazy(() => import('./tools/UnsignMemberPage'))
 
 const NotificationsPage = lazy(() => import('./NotificationsPage'))
 
-const GTMTracker: React.FC = () => {
+export const Routes: React.FC = () => {
   const [prevPath, setPrevPath] = useState('')
   const location = useLocation()
 
@@ -45,10 +45,6 @@ const GTMTracker: React.FC = () => {
     }
   }, [location.pathname])
 
-  return null
-}
-
-export const Routes: React.FC = () => {
   return (
     <Suspense fallback={<div />}>
       <Switch>
@@ -89,7 +85,6 @@ export const Routes: React.FC = () => {
             </StandaloneMessage>
           )}
         />
-        <GTMTracker />
       </Switch>
     </Suspense>
   )

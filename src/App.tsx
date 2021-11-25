@@ -99,7 +99,10 @@ const App: React.FC = () => {
 
     TagManager.initialize({
       gtmId: 'GTM-MPF6CLX',
-      dataLayer: { userEmail: me.user.email },
+      dataLayer: {
+        userEmail: me.user.email,
+        environment: process.env.NODE_ENV,
+      },
     })
   }, [me])
 
