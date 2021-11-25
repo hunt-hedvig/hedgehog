@@ -28,7 +28,7 @@ const Wrapper = styled.div`
   padding: 1rem 2rem;
 `
 
-export const CircleButton = styled.div`
+export const CircleButton = styled.button`
   width: 2.5rem;
   height: 2.5rem;
 
@@ -48,7 +48,10 @@ export const CircleButton = styled.div`
   & svg {
     height: 16px;
     width: 16px;
+    pointer-events: none;
   }
+
+  border: none;
 `
 
 const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
@@ -141,6 +144,7 @@ export const TopBar = () => {
         <NotificationsButton onClick={() => setShowUserNotifications(true)} />
 
         <CircleButton
+          id="show_users_online"
           onClick={() => setShowUsers(true)}
           style={{ marginLeft: '1rem' }}
         >
