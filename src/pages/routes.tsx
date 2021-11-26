@@ -50,15 +50,21 @@ const getCleanPath = (pathname: string) =>
     .join('/')
 
 export const Routes: React.FC = () => {
-  const [prevPath, setPrevPath] = useState('')
+  const [prevPath, setPrevPath] = useState<string | null>(null)
   const location = useLocation()
 
   useEffect(() => {
+    if (prevPath === null) {
+      setPrevPath(location.pathname)
+      return
+    }
+
     if (prevPath !== location.pathname) {
       TagManager.dataLayer({
         dataLayer: {
           event: 'virtual_page_view',
           cleanPath: getCleanPath(location.pathname),
+          cleanPrevPath: getCleanPath(prevPath),
         },
       })
       setPrevPath(location.pathname)
