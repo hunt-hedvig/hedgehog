@@ -12,6 +12,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import TagManager from 'react-gtm-module'
 
 export interface CommandLineAction {
   label: string
@@ -114,6 +115,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     })
 
     if (matchIndex > -1) {
+      TagManager.dataLayer({ dataLayer: { event: 'shortcut_used' } })
       actions.current[matchIndex].onResolve()
       setShowCommandLine(false)
     }

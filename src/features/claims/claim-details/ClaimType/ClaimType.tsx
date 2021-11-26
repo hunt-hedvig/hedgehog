@@ -5,7 +5,7 @@ import {
   SearchableDropdownWithRef,
 } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
-import { ClaimPropertyForm } from 'features/claims/claim-details/components/ClaimType/components/ClaimPropertyForm'
+import { ClaimPropertyForm } from 'features/claims/claim-details/ClaimType/components/ClaimPropertyForm'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'

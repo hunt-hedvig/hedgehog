@@ -30,12 +30,12 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
-import { ContractDropdown } from 'features/claims/claim-details/components/ClaimInformation/components/ContractDropdown'
-import { OutcomeDropdown } from 'features/claims/claim-details/components/ClaimType/components/OutcomeDropdown'
+import { ContractDropdown } from 'features/claims/claim-details/ClaimInformation/components/ContractDropdown'
+import { OutcomeDropdown } from 'features/claims/claim-details/ClaimType/components/OutcomeDropdown'
 import {
   CoInsuredForm,
   useDeleteCoInsured,
-} from 'features/claims/claim-details/components/CoInsured/CoInsuredForm'
+} from 'features/claims/claim-details/CoInsured/CoInsuredForm'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'

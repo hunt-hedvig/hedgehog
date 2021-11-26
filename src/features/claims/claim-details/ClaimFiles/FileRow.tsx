@@ -4,7 +4,7 @@ import { dateTimeFormatter } from '@hedvig-ui/utils/date'
 import { sleep } from '@hedvig-ui/utils/sleep'
 import React from 'react'
 import { useSetClaimFileCategoryMutation } from 'types/generated/graphql'
-import { DeleteButton } from '../DeleteClaimFileButton'
+import { DeleteButton } from './DeleteClaimFileButton'
 
 const Image = styled.img`
   width: 450px;
