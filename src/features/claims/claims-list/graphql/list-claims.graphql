@@ -15,5 +15,6 @@ query ListClaims($options: ListClaimsOptions!) {
     }
     page
     totalPages
+    totalClaims
   }
 }

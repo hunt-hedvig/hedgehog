@@ -22,16 +22,17 @@ import {
   UserSettingKey,
 } from 'types/generated/graphql'
 
-const FilterWrapper = styled.div`
+export const FilterWrapper = styled.div`
   width: 100%;
   max-width: 1500px;
-  display: flex;
+
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
   align-items: flex-start;
-  justify-content: space-between;
   margin: 2rem 0;
 `
 
-const FilterElement = styled.div`
+export const FilterElement = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
@@ -41,7 +42,7 @@ const FilterElement = styled.div`
   }
 `
 
-const StyledLabel = styled(Label)`
+export const StyledLabel = styled(Label)`
   display: flex;
   align-items: center;
 
@@ -59,18 +60,18 @@ const StyledLabel = styled(Label)`
   }
 `
 
-const complexityIcons = {
+export const complexityIcons = {
   Simple: '📱',
   Complex: '🌊',
 }
 
-const stateColors = {
+export const stateColors = {
   Open: lightTheme.accent,
   Closed: lightTheme.activeInsuranceBackground,
   Reopened: lightTheme.accentLight,
 }
 
-const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
+export const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
   label,
   popover,
 }) => (
@@ -88,16 +89,17 @@ export enum FilterGroupState {
   Third,
 }
 
-interface FiltersProps {
-  date: string | null
-  setDate: (date: string) => void
+interface ClaimListFiltersProps extends React.HTMLAttributes<HTMLDivElement> {
+  date?: string | null
+  setDate?: (date: string) => void
   page?: string
 }
 
-export const ClaimListFilters: React.FC<FiltersProps> = ({
+export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   date,
   setDate,
   page,
+  ...props
 }) => {
   const history = useHistory()
   const { settings, updateSetting } = useMe()
@@ -116,6 +118,10 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
     field: UserSettingKey,
     value: string | number,
   ) => {
+    if (page && page !== '1') {
+      history.push(`/claims/list/1`)
+    }
+
     if (!settings[field] || !settings[field].claims) {
       updateSetting(field, {
         ...settings[field],
@@ -133,9 +139,19 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           )
         : [...settings[field].claims, value],
     })
+  }
 
-    if (page && page !== '1') {
-      history.push(`/claims/list/1`)
+  const updateNumberMemberSetting = (state: number) => {
+    if (
+      state === 2 &&
+      settings[UserSettingKey.MemberGroupsFilter].claims.includes(2)
+    ) {
+      updateSetting(UserSettingKey.MemberGroupsFilter, {
+        ...settings[UserSettingKey.MemberGroupsFilter],
+        claims: settings[UserSettingKey.MemberGroupsFilter].claims.filter(
+          (memberGroup) => memberGroup !== 2,
+        ),
+      })
     }
   }
 
@@ -148,11 +164,11 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       .toISOString()
       .split('T')[0]
 
-    setDate(dateString)
+    setDate?.(dateString)
   }
 
   return (
-    <FilterWrapper>
+    <FilterWrapper {...props}>
       <FilterElement>
         <Label>States</Label>
         {Object.keys(ClaimState).map((key) => (
@@ -163,12 +179,12 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
                 UserSettingKey.ClaimStatesFilter,
                 ClaimState[key],
               )}
-              onChange={() => {
+              onChange={() =>
                 updateFilterHandler(
                   UserSettingKey.ClaimStatesFilter,
                   ClaimState[key],
                 )
-              }}
+              }
             />
             <MemberGroupColorBadge
               style={{
@@ -194,12 +210,12 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
                 UserSettingKey.ClaimComplexityFilter,
                 ClaimComplexity[key],
               )}
-              onChange={() => {
+              onChange={() =>
                 updateFilterHandler(
                   UserSettingKey.ClaimComplexityFilter,
                   ClaimComplexity[key],
                 )
-              }}
+              }
             />
             <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
           </Flex>
@@ -209,7 +225,9 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       <FilterElement>
         <Label>Number of member groups</Label>
         <div style={{ display: 'flex' }}>
-          <NumberMemberGroupsRadioButtons />
+          <NumberMemberGroupsRadioButtons
+            additionalSettingUpdate={updateNumberMemberSetting}
+          />
         </div>
       </FilterElement>
 
@@ -223,12 +241,12 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
                 UserSettingKey.MemberGroupsFilter,
                 filterNumber,
               )}
-              onChange={() => {
+              onChange={() =>
                 updateFilterHandler(
                   UserSettingKey.MemberGroupsFilter,
                   filterNumber,
                 )
-              }}
+              }
             />
             <MemberGroupColorBadge
               filter={filterNumber}
@@ -245,9 +263,9 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
             <Checkbox
               label={key}
               checked={settingExist(UserSettingKey.MarketFilter, Market[key])}
-              onChange={() => {
+              onChange={() =>
                 updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
-              }}
+              }
             />
             <span style={{ marginLeft: '0.5rem' }}>
               {MarketFlags[key.toUpperCase()]}

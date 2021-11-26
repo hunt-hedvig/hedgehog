@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
-import { Button, Modal } from '@hedvig-ui'
+import { Button as DefaultButton, Modal } from '@hedvig-ui'
 import {
+  isPressing,
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
@@ -16,6 +17,10 @@ const ConfirmButtons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 15px;
+`
+
+const Button = styled(DefaultButton)`
+  font-size: 0.875rem;
 `
 
 export const ConfirmDialogComponent: React.FC<{
@@ -49,12 +54,22 @@ export const ConfirmDialogComponent: React.FC<{
       onClose={close}
     >
       <div>
-        <h3>{content}</h3>
+        <h3 style={{ wordBreak: 'break-word' }}>{content}</h3>
         <ConfirmButtons>
-          <Button status="success" onClick={confirm} autoFocus>
+          <Button size="small" status="success" onClick={confirm} autoFocus>
             Confirm
           </Button>
-          <Button variant="tertiary" onClick={close}>
+          <Button
+            size="small"
+            variant="tertiary"
+            onClick={close}
+            onKeyDown={(e) => {
+              if (isPressing(e, Keys.Enter)) {
+                e.preventDefault()
+                close()
+              }
+            }}
+          >
             Cancel
           </Button>
         </ConfirmButtons>
