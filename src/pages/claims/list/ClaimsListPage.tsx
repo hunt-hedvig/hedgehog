@@ -41,7 +41,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   },
 }) => {
   const location = useLocation()
-  const filterQuery = useQuery().get('filter')
+  const filterQuery = useQuery().get('template')
 
   const {
     templateActive,

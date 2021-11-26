@@ -65,7 +65,7 @@ export const useTemplateClaims = (
       return
     }
 
-    history.push(`/claims/list/1?filter=${templateId}`)
+    history.push(`/claims/list/1?template=${templateId}`)
   }
 
   const createTemplate = (template: ClaimFilterTemplate) => {

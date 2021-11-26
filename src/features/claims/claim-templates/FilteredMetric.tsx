@@ -61,7 +61,7 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
       return
     }
 
-    history.push(`/claims/list/1?filter=${template.id}`)
+    history.push(`/claims/list/1?template=${template.id}`)
   }
 
   useEffect(() => {
