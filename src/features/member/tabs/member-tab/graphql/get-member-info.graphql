@@ -21,6 +21,7 @@ query GetMemberInfo($memberId: ID!) {
       registrationDate
       state
       claimType
+      outcome
     }
   }
 }

@@ -3,10 +3,11 @@ import { CardContent, Copyable, Spacing, Tabs } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import chroma from 'chroma-js'
 import copy from 'copy-to-clipboard'
+import { MemberClaimsView } from 'features/claims/claim-details/MemberInformation/components/MemberClaimsView'
 import { MemberGeneralView } from 'features/claims/claim-details/MemberInformation/components/MemberGeneralView'
 import { useCommandLine } from 'features/commands/use-command-line'
 import { getMemberFlag } from 'features/member/utils'
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { useGetMemberInfoQuery } from 'types/generated/graphql'
@@ -47,6 +48,7 @@ export const MemberInformation: React.FC<{
   claimId: string
   memberId: string
 }> = ({ claimId, memberId }) => {
+  const [tab, setTab] = useState<'general' | 'claims'>('general')
   const { data } = useGetMemberInfoQuery({ variables: { memberId } })
   const { registerActions } = useCommandLine()
   const history = useHistory()
@@ -94,19 +96,22 @@ export const MemberInformation: React.FC<{
       <Tabs
         list={[
           {
-            active: true,
+            active: tab === 'general',
             title: 'General',
-            action: () => void 0,
+            action: () => setTab('general'),
           },
           {
-            active: false,
+            active: tab === 'claims',
             title: `Claims (${totalClaimsWithoutDuplicates})`,
-            action: () => void 0,
+            action: () => setTab('claims'),
           },
         ]}
       />
       <Spacing top="small" />
-      <MemberGeneralView memberId={memberId} claimId={claimId} />
+      {tab === 'general' && (
+        <MemberGeneralView memberId={memberId} claimId={claimId} />
+      )}
+      {tab === 'claims' && <MemberClaimsView member={member} />}
     </CardContent>
   )
 }
