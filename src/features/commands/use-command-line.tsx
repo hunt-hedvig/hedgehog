@@ -12,7 +12,6 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import TagManager from 'react-gtm-module'
 
 export interface CommandLineAction {
   label: string
