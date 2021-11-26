@@ -1,6 +1,7 @@
 import { StandaloneMessage } from '@hedvig-ui'
-import React, { lazy, Suspense } from 'react'
-import { Redirect, Route, Switch } from 'react-router'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
+import TagManager from 'react-gtm-module'
+import { Redirect, Route, Switch, useLocation } from 'react-router'
 
 const DashboardPage = lazy(() => import('./DashboardPage'))
 const ProfilePage = lazy(() => import('./settings/ProfilePage'))
@@ -29,7 +30,41 @@ const UnsignMemberPage = lazy(() => import('./tools/UnsignMemberPage'))
 
 const NotificationsPage = lazy(() => import('./NotificationsPage'))
 
+// Replace member IDs or UUIDs with {id} to simplify page tracking
+const getCleanPath = (pathname: string) =>
+  pathname
+    .split('/')
+    .map((subpath) => {
+      if (subpath === '') {
+        return subpath
+      }
+
+      const isNumber = !isNaN(Number(subpath))
+
+      if (isNumber) {
+        return '{id}'
+      }
+
+      return subpath.length < 16 ? subpath : '{id}'
+    })
+    .join('/')
+
 export const Routes: React.FC = () => {
+  const [prevPath, setPrevPath] = useState('')
+  const location = useLocation()
+
+  useEffect(() => {
+    if (prevPath !== location.pathname) {
+      TagManager.dataLayer({
+        dataLayer: {
+          event: 'virtual_page_view',
+          cleanPath: getCleanPath(location.pathname),
+        },
+      })
+      setPrevPath(location.pathname)
+    }
+  }, [location.pathname])
+
   return (
     <Suspense fallback={<div />}>
       <Switch>

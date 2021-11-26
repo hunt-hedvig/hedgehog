@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { useCommandLine } from 'features/commands/command-line-hook'
+import { useCommandLine } from 'features/commands/use-command-line'
 import { ChatPanel } from 'features/member/chat/ChatPanel'
 import { MessagesList } from 'features/member/messages/MessagesList'
 import React, { useEffect, useRef } from 'react'

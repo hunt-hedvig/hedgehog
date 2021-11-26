@@ -22,7 +22,7 @@ import {
 } from '@hedvig-ui/utils/text'
 import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
-import { useCommandLine } from 'features/commands/command-line-hook'
+import { useCommandLine } from 'features/commands/use-command-line'
 import { Market } from 'features/config/constants'
 import {
   currentAgreementForContract,

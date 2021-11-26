@@ -8,7 +8,7 @@ import {
 import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
-import { CommandLineProvider } from 'features/commands/command-line-hook'
+import { CommandLineProvider } from 'features/commands/use-command-line'
 import { Logo, LogoIcon } from 'features/navigation/sidebar/elements'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'
@@ -19,7 +19,8 @@ import { MeProvider } from 'features/user/hooks/use-me'
 import { MemberHistoryProvider } from 'features/user/hooks/use-member-history'
 import { NumberMemberGroupsProvider } from 'features/user/hooks/use-number-member-groups'
 import { Routes } from 'pages/routes'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import TagManager from 'react-gtm-module'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Route, Router, Switch } from 'react-router'
@@ -91,6 +92,20 @@ const App: React.FC = () => {
   const [isDarkmode, setIsDarkmode] = useState(getDefaultIsDarkmode())
   const { me, loading } = useAuthenticate()
 
+  useEffect(() => {
+    if (!me) {
+      return
+    }
+
+    TagManager.initialize({
+      gtmId: 'GTM-MPF6CLX',
+      dataLayer: {
+        userEmail: me.user.email,
+        environment: process.env.NODE_ENV,
+      },
+    })
+  }, [me])
+
   const redirectToLogin = () => {
     window.location.href = `${(window as any).GATEKEEPER_HOST}/sso?redirect=${
       window.location.protocol
@@ -140,10 +155,10 @@ const App: React.FC = () => {
           <MemberHistoryProvider>
             <NumberMemberGroupsProvider>
               <Router history={history}>
-                <CommandLineProvider>
-                  <ConfirmDialogProvider>
-                    <Layout>
-                      <MeProvider me={me}>
+                <MeProvider me={me}>
+                  <CommandLineProvider>
+                    <ConfirmDialogProvider>
+                      <Layout>
                         <Tracker />
                         {!history.location.pathname.startsWith('/login') && (
                           <VerticalMenu history={history} />
@@ -166,10 +181,10 @@ const App: React.FC = () => {
                             />
                           </MainContent>
                         </Main>
-                      </MeProvider>
-                    </Layout>
-                  </ConfirmDialogProvider>
-                </CommandLineProvider>
+                      </Layout>
+                    </ConfirmDialogProvider>
+                  </CommandLineProvider>
+                </MeProvider>
               </Router>
             </NumberMemberGroupsProvider>
           </MemberHistoryProvider>

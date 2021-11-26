@@ -2,7 +2,7 @@ import styled, { StyledComponent } from '@emotion/styled'
 import { Hotkey } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { colorsV3 } from '@hedviginsurance/brand'
-import { useCommandLine } from 'features/commands/command-line-hook'
+import { useCommandLine } from 'features/commands/use-command-line'
 import React from 'react'
 import { ArrowUpRight, Icon } from 'react-bootstrap-icons'
 import { NavLink, NavLinkProps } from 'react-router-dom'
@@ -40,7 +40,7 @@ const MenuItemStyled = styled<
 
   svg {
     fill: ${() => colorsV3.gray100};
-    margin-right: 16;
+    margin-right: 16px;
     text-align: center;
     transition: width 300ms, weight 300ms, margin 300ms;
     flex-shrink: 0;
