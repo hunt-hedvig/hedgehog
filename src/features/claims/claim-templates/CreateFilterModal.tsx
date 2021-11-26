@@ -27,20 +27,20 @@ const Body = styled.div`
 
 interface CreateFilterProps {
   onClose: () => void
-  editableFilter?: ClaimFilterTemplate
+  editableTemplate?: ClaimFilterTemplate
   onSave: (filters: ClaimFilterTemplate) => void
 }
 
 export const CreateFilterModal: React.FC<CreateFilterProps> = ({
-  editableFilter,
+  editableTemplate,
   onSave,
   onClose,
 }) => {
   const [name, setName] = useState<string>(
-    (editableFilter && editableFilter.name) || '',
+    (editableTemplate && editableTemplate.name) || '',
   )
   const [filters, setFilters] = useState<ClaimsFiltersType>(
-    editableFilter || {
+    editableTemplate || {
       filterClaimStates: null,
       filterCreatedBeforeOrOnDate: null,
       filterComplexities: null,
@@ -55,7 +55,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
     onSave({
       ...filters,
       name,
-      id: editableFilter ? editableFilter.id : uuidv4(),
+      id: editableTemplate ? editableTemplate.id : uuidv4(),
     })
     onClose()
   }
@@ -81,7 +81,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
         <ClaimFilters filters={filters} setFilters={setFilters} />
 
         <Button onClick={createFilterHandler}>
-          {!editableFilter ? 'Create' : 'Save'}
+          {!editableTemplate ? 'Create' : 'Save'}
         </Button>
       </Body>
     </Modal>

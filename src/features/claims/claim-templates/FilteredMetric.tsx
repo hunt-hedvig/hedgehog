@@ -37,14 +37,14 @@ const Metric = styled.div`
 `
 
 interface FilteredMetricProps {
-  filter: ClaimFilterTemplate
+  template: ClaimFilterTemplate
   onRemove: (id: string) => void
   onCreate: (filter: ClaimFilterTemplate) => void
   onEdit: (filter: ClaimFilterTemplate) => void
 }
 
 export const FilteredMetric: React.FC<FilteredMetricProps> = ({
-  filter,
+  template,
   onRemove,
   onCreate,
   onEdit,
@@ -61,18 +61,18 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
       return
     }
 
-    history.push(`/claims/list/1?filter=${filter.id}`)
+    history.push(`/claims/list/1?filter=${template.id}`)
   }
 
   useEffect(() => {
     listClaims({
-      ...filter,
+      ...template,
     })
-  }, [filter])
+  }, [template])
 
   const deleteHandler = () => {
-    confirm(`Are you sure you want to delete ${filter.name}?`).then(() => {
-      onRemove(filter.id)
+    confirm(`Are you sure you want to delete ${template.name}?`).then(() => {
+      onRemove(template.id)
     })
   }
 
@@ -89,8 +89,8 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
       }}
     >
       <MetricNumber onClick={clickHandler}>{totalClaims || 0}</MetricNumber>
-      <MetricName onClick={clickHandler} title={filter.name}>
-        {filter.name || `Claims Template ${filter.id}`}
+      <MetricName onClick={clickHandler} title={template.name}>
+        {template.name}
       </MetricName>
       {hover && (
         <IconsWrapper>
@@ -105,7 +105,11 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
           <Icon
             title="Duplicate"
             onClick={() => {
-              onCreate({ ...filter, name: `${filter.name} copy`, id: uuidv4() })
+              onCreate({
+                ...template,
+                name: `${template.name} copy`,
+                id: uuidv4(),
+              })
             }}
           >
             <Files />
@@ -118,7 +122,7 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
       {edit && (
         <CreateFilterModal
           onClose={() => setEdit(false)}
-          editableFilter={filter}
+          editableTemplate={template}
           onSave={onEdit}
         />
       )}

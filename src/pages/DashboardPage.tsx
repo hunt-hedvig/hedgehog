@@ -182,13 +182,13 @@ const DashboardPage: React.FC = () => {
               </Metric>
             )}
 
-            {templateFilters.map((filter, index) => (
+            {templateFilters.map((template) => (
               <FilteredMetric
                 onCreate={createTemplate}
                 onRemove={removeTemplate}
                 onEdit={editTemplateWithName}
-                key={index + templateFilters.length}
-                filter={filter}
+                key={template.id}
+                template={template}
               />
             ))}
 

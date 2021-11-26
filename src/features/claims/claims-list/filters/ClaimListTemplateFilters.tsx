@@ -18,49 +18,49 @@ import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 
 interface ClaimListTemplateFiltersProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  templatedId: string
-  filters: ClaimsFiltersType
-  setFilters: (newFilter: ClaimsFiltersType, id?: string) => void
+  templateId: string
+  template: ClaimsFiltersType
+  editTemplate: (newFilter: ClaimsFiltersType, id?: string) => void
 }
 
 export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> = ({
-  filters,
-  setFilters,
-  templatedId,
+  template,
+  editTemplate,
+  templateId,
   ...props
 }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
 
   const filterExists = (state: string | number, field: string) => {
-    if (!filters) {
+    if (!template) {
       return false
     }
 
-    if (!filters[field]) {
+    if (!template[field]) {
       return false
     }
 
-    return filters[field].some((filterState) => filterState === state)
+    return template[field].some((filterState) => filterState === state)
   }
 
   const setFilterHandler = (state: string | number, field: string) => {
     if (filterExists(state, field)) {
-      setFilters(
+      editTemplate(
         {
-          ...filters,
-          [field]: filters[field].filter((st) => st !== state),
+          ...template,
+          [field]: template[field].filter((st) => st !== state),
         },
-        templatedId,
+        templateId,
       )
       return
     }
 
-    setFilters(
+    editTemplate(
       {
-        ...filters,
-        [field]: filters[field] ? [...filters[field], state] : [state],
+        ...template,
+        [field]: template[field] ? [...template[field], state] : [state],
       },
-      templatedId,
+      templateId,
     )
   }
 
@@ -70,25 +70,25 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
   ) => {
     if (
       numberOfMemberGroups === 2 &&
-      filters.filterSelectedMemberGroups?.includes(2)
+      template.filterSelectedMemberGroups?.includes(2)
     ) {
-      setFilters(
+      editTemplate(
         {
-          ...filters,
+          ...template,
           [field]: numberOfMemberGroups,
-          filterSelectedMemberGroups: filters.filterSelectedMemberGroups.filter(
+          filterSelectedMemberGroups: template.filterSelectedMemberGroups.filter(
             (num) => num !== 2,
           ),
         },
-        templatedId,
+        templateId,
       )
     } else {
-      setFilters(
+      editTemplate(
         {
-          ...filters,
+          ...template,
           [field]: numberOfMemberGroups,
         },
-        templatedId,
+        templateId,
       )
     }
   }
@@ -140,7 +140,7 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
         <Label>Number of member groups</Label>
         <Flex>
           <NumberMemberGroupsRadioButtons
-            groupsNumber={filters.filterNumberOfMemberGroups || undefined}
+            groupsNumber={template.filterNumberOfMemberGroups || undefined}
             setGroupsNumber={(e: number) =>
               changeNumberMemberGroupsHandler(e, 'filterNumberOfMemberGroups')
             }
@@ -150,7 +150,7 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
 
       <FilterElement>
         <Label>Groups</Label>
-        {range(filters?.filterNumberOfMemberGroups || numberMemberGroups).map(
+        {range(template?.filterNumberOfMemberGroups || numberMemberGroups).map(
           (filterNumber) => (
             <Flex key={filterNumber} direction="row" align="center">
               <Checkbox

@@ -82,9 +82,9 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
 
       {templateActive && selectedTemplate ? (
         <ClaimListTemplateFilters
-          templatedId={selectedTemplate}
-          filters={localFilter}
-          setFilters={editTemplate}
+          templateId={selectedTemplate}
+          template={localFilter}
+          editTemplate={editTemplate}
         />
       ) : (
         <ClaimListFilters date={date} setDate={setDate} page={page} />

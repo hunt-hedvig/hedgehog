@@ -13,11 +13,11 @@ interface UseTemplateClaimsResult {
   selectedTemplate?: string
   localFilter: ClaimsFiltersType
   templateFilters: ClaimFilterTemplate[]
-  selectTemplate: (id: string) => void
-  createTemplate: (filter: ClaimFilterTemplate) => void
-  editTemplate: (filter: ClaimsFiltersType, id?: string) => void
-  editTemplateWithName: (filter: ClaimFilterTemplate) => void
-  removeTemplate: (id: string) => void
+  selectTemplate: (templateId: string) => void
+  createTemplate: (template: ClaimFilterTemplate) => void
+  editTemplate: (template: ClaimsFiltersType, id?: string) => void
+  editTemplateWithName: (template: ClaimFilterTemplate) => void
+  removeTemplate: (templateId: string) => void
 }
 
 export const useTemplateClaims = (
@@ -58,44 +58,52 @@ export const useTemplateClaims = (
     }
   }, [selectedId])
 
-  const selectTemplate = (id: string) => {
-    if (id === selectedTemplate) {
+  const selectTemplate = (templateId: string) => {
+    if (templateId === selectedTemplate) {
       setSelectedTemplate(undefined)
       history.push(`/claims/list/1`)
       return
     }
 
-    history.push(`/claims/list/1?filter=${id}`)
+    history.push(`/claims/list/1?filter=${templateId}`)
   }
 
-  const createTemplate = (filter: ClaimFilterTemplate) => {
+  const createTemplate = (template: ClaimFilterTemplate) => {
     setTemplateFilters((prev) => [
       ...prev,
       {
-        ...filter,
-        name: filter.name ? filter.name : `Claims Template ${filter.id + 1}`,
+        ...template,
+        name: template.name
+          ? template.name
+          : `Claims Template ${templateFilters.length + 1}`,
       },
     ])
   }
 
-  const editTemplate = (newFilter: ClaimsFiltersType, id?: string) => {
-    setLocalFilter(newFilter)
+  const editTemplate = (newTemplate: ClaimsFiltersType, id?: string) => {
+    setLocalFilter(newTemplate)
     setTemplateFilters((prev) =>
-      prev.map((filter) =>
-        filter.id !== id ? filter : { ...newFilter, name: filter.name, id },
+      prev.map((template) =>
+        template.id !== id
+          ? template
+          : { ...newTemplate, name: template.name, id },
       ),
     )
   }
 
-  const editTemplateWithName = (newFilter: ClaimFilterTemplate) => {
+  const editTemplateWithName = (newTemplate: ClaimFilterTemplate) => {
     setTemplateFilters((prev) =>
-      prev.map((filter) => (filter.id !== newFilter.id ? filter : newFilter)),
+      prev.map((template) =>
+        template.id !== newTemplate.id ? template : newTemplate,
+      ),
     )
   }
 
-  const removeTemplate = (id: string) => {
-    const newFilters = templateFilters.filter((filter) => filter.id !== id)
-    setTemplateFilters(newFilters)
+  const removeTemplate = (templateId: string) => {
+    const newTemplates = templateFilters.filter(
+      (template) => template.id !== templateId,
+    )
+    setTemplateFilters(newTemplates)
   }
 
   return {

@@ -91,9 +91,15 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
         {templates.map((filter) => (
           <TemplateCard
             key={filter.id}
-            active={!!activeId ? filter.id !== activeId : false}
-            filter={filter}
-            select={onSelect}
+            active={
+              templates.length === 1 && !!activeId
+                ? filter.id === activeId
+                : !!activeId
+                ? filter.id !== activeId
+                : false
+            }
+            template={filter}
+            onSelect={onSelect}
           />
         ))}
         <AddTemplateCard
@@ -120,34 +126,38 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
   )
 }
 
-interface TemplateProps {
-  filter: ClaimFilterTemplate
-  select: (id: string) => void
+interface TemplateCardProps {
+  template: ClaimFilterTemplate
+  onSelect: (id: string) => void
   active: boolean
 }
 
-const TemplateCard: React.FC<TemplateProps> = ({ filter, select, active }) => {
+const TemplateCard: React.FC<TemplateCardProps> = ({
+  template,
+  onSelect,
+  active,
+}) => {
   const [{ totalClaims }, listClaims] = useListClaims()
 
   useEffect(() => {
     listClaims({
-      ...filter,
+      ...template,
     })
-  }, [filter])
+  }, [template])
 
   return (
     <TemplateCardStyled
-      onClick={() => select(filter.id)}
+      onClick={() => onSelect(template.id)}
       active={active}
       tabIndex={0}
       onKeyDown={(e) => {
         if (isPressing(e, Keys.Enter)) {
-          select(filter.id)
+          onSelect(template.id)
         }
       }}
     >
       <TemplateName>
-        {filter.name} ({totalClaims || 0})
+        {template.name} ({totalClaims || 0})
       </TemplateName>
     </TemplateCardStyled>
   )
