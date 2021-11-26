@@ -351,11 +351,15 @@ const isPressingKeys = (
   }, true)
 }
 
-export const useKeyIsPressed = (key: Key, callback?: (e) => void): boolean => {
+export const useKeyIsPressed = (
+  key: Key,
+  callback?: (e) => void,
+  active: boolean = true,
+): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
   const handleKeydown = (e: KeyboardEvent) => {
-    if (isPressing(e, key)) {
+    if (active && isPressing(e, key)) {
       callback?.(e)
       setKeyPressed(true)
     }

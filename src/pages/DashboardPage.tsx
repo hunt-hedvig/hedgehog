@@ -13,8 +13,12 @@ import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'features/dashboard/Greeting'
+import {
+  FocusItems,
+  useNavigation,
+} from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
 
@@ -81,6 +85,14 @@ const DashboardPage: React.FC = () => {
     | undefined
 
   useTitle('Dashboard')
+
+  const { focus, setFocus } = useNavigation()
+
+  useEffect(() => {
+    if (!focus) {
+      setFocus(FocusItems.Dashborad.name)
+    }
+  }, [focus])
 
   return (
     <Wrapper>
