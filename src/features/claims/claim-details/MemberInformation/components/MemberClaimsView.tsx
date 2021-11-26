@@ -5,6 +5,7 @@ import chroma from 'chroma-js'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React from 'react'
+import { useHistory } from 'react-router'
 import { Claim, ClaimState, GetMemberInfoQuery } from 'types/generated/graphql'
 
 const ClaimItemWrapper = styled.div<{ claimType: boolean; outcome: boolean }>`
@@ -41,16 +42,20 @@ const ClaimItemWrapper = styled.div<{ claimType: boolean; outcome: boolean }>`
       font-size: 1rem;
       padding: 0;
       margin: 0;
+      color: ${({ theme, claimType }) =>
+        claimType ? theme.foreground : theme.semiStrongForeground};
     }
     span {
       font-size: 0.9rem;
       color: ${({ theme, outcome }) =>
-        outcome ? theme.placeholderColor : theme.semiStrongForeground};
+        outcome ? theme.foreground : theme.semiStrongForeground};
     }
   }
 `
 
 const ClaimItem: React.FC<{ claim: Claim }> = ({ claim }) => {
+  const history = useHistory()
+
   const registrationDateString = formatDate(
     parseISO(claim.registrationDate),
     'dd MMMM, yyyy',
@@ -61,12 +66,18 @@ const ClaimItem: React.FC<{ claim: Claim }> = ({ claim }) => {
   )
 
   return (
-    <ClaimItemWrapper outcome={!!claim.outcome} claimType={!!claim.claimType}>
+    <ClaimItemWrapper
+      outcome={!!claim.outcome}
+      claimType={!!claim.claimType}
+      onClick={() => history.push(`/claims/${claim.id}`)}
+    >
       <div>
         <h5>
           {claim.claimType ? convertEnumToTitle(claim.claimType) : 'No type'}
         </h5>
-        <span>{claim.outcome ?? 'No outcome'}</span>
+        <span>
+          {claim.outcome ? convertEnumToTitle(claim.outcome) : 'No outcome'}
+        </span>
       </div>
       <div>
         <h5>{registrationDateString}</h5>
@@ -79,7 +90,9 @@ const ClaimItem: React.FC<{ claim: Claim }> = ({ claim }) => {
 export const MemberClaimsView: React.FC<{
   member: GetMemberInfoQuery['member']
 }> = ({ member }) => {
-  const claims = member?.claims ?? []
+  const claims = (member?.claims ?? []).filter(
+    (claim) => claim.outcome !== 'DUPLICATE',
+  )
 
   const openClaims = claims.filter(
     (claim) =>

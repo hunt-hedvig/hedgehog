@@ -70,7 +70,7 @@ export const MemberInformation: React.FC<{
   }
 
   const totalClaimsWithoutDuplicates = member.claims.reduce(
-    (count, claim) => (claim.claimType !== 'DUPLICATE' ? count + 1 : count),
+    (count, claim) => (claim.outcome !== 'DUPLICATE' ? count + 1 : count),
     0,
   )
 
