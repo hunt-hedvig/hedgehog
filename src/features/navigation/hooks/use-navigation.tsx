@@ -19,6 +19,7 @@ export const FocusItems: IFocusItems = {
     items: {
       Sidebar: 'SIDEBAR_SECTION',
       Topbar: 'TOPBAR_SECTION',
+      Modal: 'MODAL_SECTION',
     },
   },
   Dashborad: {
@@ -38,9 +39,10 @@ export const FocusItems: IFocusItems = {
   },
   Claims: {
     name: 'CLAIMS_PAGE',
-  },
-  ClaimsFilters: {
-    name: 'CLAIMS_FILTERS',
+    items: {
+      ClaimsTemplates: 'CLAIMS_TEMPLATES',
+      ClaimsFilters: 'CLAIMS_FILTERS',
+    },
   },
   Claim: {
     name: 'CLAIM_PAGE',
@@ -55,7 +57,7 @@ interface NavigationContextProps {
   setFocus: (e?: string) => void
 }
 
-const NavigationContext = createContext<NavigationContextProps>({
+export const NavigationContext = createContext<NavigationContextProps>({
   focus: undefined,
   setFocus: (_?: string) => void 0,
 })

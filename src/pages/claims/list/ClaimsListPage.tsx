@@ -83,11 +83,12 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
     }
   }, [focus])
 
-  const focusHandler = () => {
-    setFocus(FocusItems.ClaimsFilters.name)
-  }
-
-  useKeyIsPressed(Keys.F, focusHandler)
+  useKeyIsPressed(Keys.F, () =>
+    setFocus(FocusItems.Claims.items?.ClaimsFilters),
+  )
+  useKeyIsPressed(Keys.T, () =>
+    setFocus(FocusItems.Claims.items?.ClaimsTemplates),
+  )
 
   return (
     <ListPage>
@@ -100,6 +101,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
         templates={templateFilters}
         onSelect={selectTemplate}
         onCreate={createTemplate}
+        navigationAvailable={focus === FocusItems.Claims.items?.ClaimsTemplates}
       />
 
       {templateActive && selectedTemplate ? (
@@ -107,13 +109,14 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
           templateId={selectedTemplate}
           template={localFilter}
           editTemplate={editTemplate}
+          navigationAvailable={focus === FocusItems.Claims.items?.ClaimsFilters}
         />
       ) : (
         <ClaimListFilters
           date={date}
           setDate={setDate}
           page={page}
-          navigationAvailable={focus === FocusItems.ClaimsFilters.name}
+          navigationAvailable={focus === FocusItems.Claims.items?.ClaimsFilters}
         />
       )}
 
