@@ -1,4 +1,8 @@
 import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MembersList } from 'features/members-search/components/MembersList'
 import { MemberSuggestions } from 'features/members-search/components/MemberSuggestions'
@@ -51,6 +55,12 @@ const MemberSearchPage: React.FC = () => {
       setFocus(FocusItems.Members.name)
     }
   }, [focus])
+
+  useKeyIsPressed(Keys.Down, () => {
+    if (!members.length) {
+      setFocus(FocusItems.Members.items?.Suggestions)
+    }
+  })
 
   return (
     <>
@@ -109,7 +119,11 @@ const MemberSearchPage: React.FC = () => {
 
           <MemberSuggestionsWrapper>
             <MainHeadline>Suggestions</MainHeadline>
-            <MemberSuggestions />
+            <MemberSuggestions
+              navigationAvailable={
+                focus === FocusItems.Members.items?.Suggestions
+              }
+            />
           </MemberSuggestionsWrapper>
         </>
       )}
