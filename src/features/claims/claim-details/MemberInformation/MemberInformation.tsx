@@ -111,7 +111,9 @@ export const MemberInformation: React.FC<{
       {tab === 'general' && (
         <MemberGeneralView memberId={memberId} claimId={claimId} />
       )}
-      {tab === 'claims' && <MemberClaimsView member={member} />}
+      {tab === 'claims' && (
+        <MemberClaimsView member={member} claimId={claimId} />
+      )}
     </CardContent>
   )
 }

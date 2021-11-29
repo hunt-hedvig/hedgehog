@@ -5,10 +5,10 @@ import chroma from 'chroma-js'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React from 'react'
-import { useHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 import { Claim, ClaimState, GetMemberInfoQuery } from 'types/generated/graphql'
 
-const ClaimItemWrapper = styled.div<{ claimType: boolean; outcome: boolean }>`
+const ClaimItemWrapper = styled(Link)<{ claimType: boolean; outcome: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -38,6 +38,10 @@ const ClaimItemWrapper = styled.div<{ claimType: boolean; outcome: boolean }>`
   padding: 0.75rem;
 
   div {
+    :nth-of-type(2) {
+      text-align: right;
+    }
+
     h5 {
       font-size: 1rem;
       padding: 0;
@@ -54,8 +58,6 @@ const ClaimItemWrapper = styled.div<{ claimType: boolean; outcome: boolean }>`
 `
 
 const ClaimItem: React.FC<{ claim: Claim }> = ({ claim }) => {
-  const history = useHistory()
-
   const registrationDateString = formatDate(
     parseISO(claim.registrationDate),
     'dd MMMM, yyyy',
@@ -69,7 +71,7 @@ const ClaimItem: React.FC<{ claim: Claim }> = ({ claim }) => {
     <ClaimItemWrapper
       outcome={!!claim.outcome}
       claimType={!!claim.claimType}
-      onClick={() => history.push(`/claims/${claim.id}`)}
+      to={`/claims/${claim.id}`}
     >
       <div>
         <h5>
@@ -89,10 +91,15 @@ const ClaimItem: React.FC<{ claim: Claim }> = ({ claim }) => {
 
 export const MemberClaimsView: React.FC<{
   member: GetMemberInfoQuery['member']
-}> = ({ member }) => {
-  const claims = (member?.claims ?? []).filter(
-    (claim) => claim.outcome !== 'DUPLICATE',
+  claimId: string
+}> = ({ member, claimId }) => {
+  const currentClaim = (member?.claims ?? []).find(
+    (claim) => claim.id === claimId,
   )
+
+  const claims = (member?.claims ?? [])
+    .filter((claim) => claim.outcome !== 'DUPLICATE' && claim.id !== claimId)
+    .sort((c1, c2) => (c1.registrationDate < c2.registrationDate ? 1 : -1))
 
   const openClaims = claims.filter(
     (claim) =>
@@ -100,11 +107,21 @@ export const MemberClaimsView: React.FC<{
   )
 
   const closedClaims = claims.filter(
-    (claim) => claim.state === ClaimState.Closed,
+    (claim) => claim.state === ClaimState.Closed || claim.id === claimId,
   )
 
   return (
     <>
+      {currentClaim && (
+        <>
+          <Label>This claim</Label>
+          <div style={{ marginBottom: '0.25rem' }} />
+          <ClaimItem key={currentClaim?.id} claim={currentClaim as Claim} />
+
+          <Spacing top="small" />
+        </>
+      )}
+
       {openClaims.length !== 0 && (
         <>
           <Label>Open</Label>
