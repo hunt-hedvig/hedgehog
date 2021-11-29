@@ -19,10 +19,12 @@ export const Table = styled.table`
 export const TableBody: React.FC<{
   onPerformNavigation?: (index) => void
   setActiveRow?: (n: number) => void
+  isActive?: boolean
 } & TableHTMLAttributes<HTMLTableSectionElement>> = ({
   onPerformNavigation,
   children,
   setActiveRow,
+  isActive = true,
   ...props
 }) => {
   const numberOfRows = React.Children.count(children)
@@ -34,7 +36,7 @@ export const TableBody: React.FC<{
         onPerformNavigation(index)
       }
     },
-    isActive: !!onPerformNavigation,
+    isActive: isActive && !!onPerformNavigation,
   })
 
   useEffect(() => {

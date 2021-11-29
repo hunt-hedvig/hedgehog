@@ -97,6 +97,14 @@ const ConversationsPage: React.FC<RouteComponentProps<{
     }
   }
 
+  const { focus, setFocus } = useNavigation()
+
+  useEffect(() => {
+    if (!focus) {
+      setFocus(FocusItems.Conversations.name)
+    }
+  }, [focus])
+
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
 
@@ -127,7 +135,11 @@ const ConversationsPage: React.FC<RouteComponentProps<{
       return
     }
 
-    if (isDownKeyPressed && currentQuestionOrder < filteredGroups.length - 1) {
+    if (
+      isDownKeyPressed &&
+      currentQuestionOrder < filteredGroups.length - 1 &&
+      focus === FocusItems.Conversations.name
+    ) {
       fade('up', 'out').then(() => {
         history.push(
           `/conversations/${
@@ -137,7 +149,11 @@ const ConversationsPage: React.FC<RouteComponentProps<{
       })
     }
 
-    if (isUpKeyPressed && currentQuestionOrder > 0) {
+    if (
+      isUpKeyPressed &&
+      currentQuestionOrder > 0 &&
+      focus === FocusItems.Conversations.name
+    ) {
       fade('down', 'out').then(() => {
         history.push(
           `/conversations/${
@@ -160,14 +176,6 @@ const ConversationsPage: React.FC<RouteComponentProps<{
 
     history.push(`/conversations/${filteredGroups[0].memberId}`)
   }, [filteredGroups])
-
-  const { focus, setFocus } = useNavigation()
-
-  useEffect(() => {
-    if (!focus) {
-      setFocus(FocusItems.Conversations.name)
-    }
-  }, [focus])
 
   return (
     <>

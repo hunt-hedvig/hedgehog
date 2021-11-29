@@ -25,6 +25,7 @@ interface SearchFieldProps {
   currentResultSize: number
   searchFieldRef: React.RefObject<HTMLInputElement>
   setLuckySearch: (luckySearch: boolean) => void
+  focus?: boolean
 }
 
 const stagingToolsAvailable = () => {
@@ -42,6 +43,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
   currentResultSize,
   searchFieldRef,
   setLuckySearch,
+  focus,
 }) => {
   const [textFieldFocused, setTextFieldFocused] = useState(false)
   const { isMetaKey, metaKey } = usePlatform()
@@ -73,6 +75,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             size="large"
             type="search"
             autoFocus
+            focus={focus}
             muted={!query}
             ref={searchFieldRef}
             onFocus={() => {

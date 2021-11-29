@@ -1,5 +1,9 @@
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ClaimListFilters } from 'features/claims/claims-list/ClaimListFilters'
 import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
 import {
@@ -59,15 +63,30 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
     }
   }, [focus])
 
+  const focusHandler = () => {
+    setFocus(FocusItems.ClaimsFilters.name)
+  }
+
+  useKeyIsPressed(Keys.F, focusHandler)
+
   return (
     <ListPage>
       <FadeIn>
         <MainHeadline>Claims</MainHeadline>
       </FadeIn>
 
-      <ClaimListFilters date={date} setDate={setDate} page={page} />
+      <ClaimListFilters
+        date={date}
+        setDate={setDate}
+        page={page}
+        navigationAvailable={focus === FocusItems.ClaimsFilters.name}
+      />
 
-      <LargeClaimsList page={selectedPage} date={date} />
+      <LargeClaimsList
+        page={selectedPage}
+        date={date}
+        navigationAvailable={focus === FocusItems.Claims.name}
+      />
     </ListPage>
   )
 }

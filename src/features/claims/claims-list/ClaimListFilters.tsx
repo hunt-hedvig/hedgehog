@@ -22,13 +22,15 @@ import {
   UserSettingKey,
 } from 'types/generated/graphql'
 
-const FilterWrapper = styled.div`
+const FilterWrapper = styled.div<{ active: boolean }>`
   width: 100%;
   max-width: 1500px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   margin: 2rem 0;
+  border: ${({ active, theme }) =>
+    active ? `2px solid ${theme.accent}` : 'none'};
 `
 
 const FilterElement = styled.div`
@@ -92,12 +94,14 @@ interface FiltersProps {
   date: string | null
   setDate: (date: string) => void
   page?: string
+  navigationAvailable: boolean
 }
 
 export const ClaimListFilters: React.FC<FiltersProps> = ({
   date,
   setDate,
   page,
+  navigationAvailable,
 }) => {
   const history = useHistory()
   const { settings, updateSetting } = useMe()
@@ -152,7 +156,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   }
 
   return (
-    <FilterWrapper>
+    <FilterWrapper active={navigationAvailable}>
       <FilterElement>
         <Label>States</Label>
         {Object.keys(ClaimState).map((key) => (

@@ -354,12 +354,18 @@ const isPressingKeys = (
 export const useKeyIsPressed = (
   key: Key,
   callback?: (e) => void,
-  active: boolean = true,
+  disableInInput: boolean = true,
 ): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
-  const handleKeydown = (e: KeyboardEvent) => {
-    if (active && isPressing(e, key)) {
+  const handleKeydown = (e: any) => {
+    if (
+      isPressing(e, key) &&
+      // Disable when input | textarea
+      (disableInInput
+        ? e.target?.nodeName !== 'INPUT' && e.target?.nodeName !== 'TEXTAREA'
+        : true)
+    ) {
       callback?.(e)
       setKeyPressed(true)
     }
