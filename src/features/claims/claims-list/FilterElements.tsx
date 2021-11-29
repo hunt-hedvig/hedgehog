@@ -7,7 +7,8 @@ import React, { useEffect } from 'react'
 import { LabelWithPopover } from './filters/ClaimListFilters'
 
 export const Filters = styled(Flex)<{ active: boolean }>`
-  border-bottom: ${({ active, theme }) =>
+  width: fit-content;
+  border: ${({ active, theme }) =>
     active ? `2px solid ${theme.accentLight}` : 'none'};
 `
 

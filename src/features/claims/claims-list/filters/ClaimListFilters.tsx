@@ -93,7 +93,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
 }) => {
   const history = useHistory()
   const { settings, updateSetting } = useMe()
-  const { numberMemberGroups } = useNumberMemberGroups()
+  const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
 
   const settingExist = (field: UserSettingKey, value) => {
     if (!settings[field]) {
@@ -232,9 +232,11 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       <FilterNumberMemberGroups
         active={navigationAvailable && navigationStep + 1 === 2}
         numberMemberGroups={numberMemberGroups}
-        setNumberMemberGroups={(value: number) =>
+        setNumberMemberGroups={(value: number) => {
           updateNumberMemberSetting(value)
-        }
+          updateSetting(UserSettingKey.NumberOfMemberGroups, { value })
+          setNumberMemberGroups(value)
+        }}
       />
 
       <FilterElement

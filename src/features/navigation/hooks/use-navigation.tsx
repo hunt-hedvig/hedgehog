@@ -63,30 +63,20 @@ const NavigationContext = createContext<NavigationContextProps>({
 export const useNavigation = () => useContext(NavigationContext)
 
 export const NavigationProvider = ({ children }) => {
-  const [_, setPrevFocus] = useState<string>()
+  // const [prevFocus, setPrevFocus] = useState<string>()
   const [mainFocus, setMainFocus] = useState<string>()
 
-  // useEffect(() => {
-  //   console.log('Prev: ' + prevFocus)
-  // }, [prevFocus])
-
-  // useEffect(() => {
-  //   console.log('Main: ' + mainFocus)
-  // }, [mainFocus])
-
   const changeFocusHandler = (value?: string) => {
-    setMainFocus((prev) => {
-      if (prev) {
-        setPrevFocus(prev)
-      }
+    setMainFocus(() => {
+      // if (prev) {
+      //   setPrevFocus(prev)
+      // }
 
       return value
     })
   }
 
-  useKeyIsPressed(Keys.Escape, () => {
-    changeFocusHandler(undefined)
-  })
+  useKeyIsPressed(Keys.Escape, () => changeFocusHandler(undefined))
 
   return (
     <NavigationContext.Provider
