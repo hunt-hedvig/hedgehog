@@ -2925,7 +2925,7 @@ export type GetMemberInfoQuery = { __typename?: 'QueryType' } & {
         claims: Array<
           { __typename?: 'Claim' } & Pick<
             Claim,
-            'id' | 'registrationDate' | 'state' | 'claimType'
+            'id' | 'registrationDate' | 'state' | 'claimType' | 'outcome'
           >
         >
       }
@@ -7153,6 +7153,7 @@ export const GetMemberInfoDocument = gql`
         registrationDate
         state
         claimType
+        outcome
       }
     }
   }

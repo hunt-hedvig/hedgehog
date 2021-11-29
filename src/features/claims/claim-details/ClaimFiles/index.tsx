@@ -14,8 +14,8 @@ import { sleep } from '@hedvig-ui/utils/sleep'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { ClaimFileUpload, useClaimPageQuery } from 'types/generated/graphql'
-import { FileUpload } from '../FileUpload'
 import { FileRow } from './FileRow'
+import { FileUpload } from './FileUpload'
 
 const TableWithOverflow = styled(Table)`
   overflow: visible !important;
