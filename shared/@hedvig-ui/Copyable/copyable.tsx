@@ -8,7 +8,6 @@ const CopyableWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   align-content: center;
-  justify-content: center;
 
   .link-icon {
     background-color: ${({ theme }) => theme.backgroundTransparent};
