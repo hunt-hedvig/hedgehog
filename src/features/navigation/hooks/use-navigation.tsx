@@ -66,13 +66,13 @@ export const NavigationProvider = ({ children }) => {
   const [prevFocus, setPrevFocus] = useState<string>()
   const [mainFocus, setMainFocus] = useState<string>()
 
-  useEffect(() => {
-    console.log('Prev: ' + prevFocus)
-  }, [prevFocus])
+  // useEffect(() => {
+  //   console.log('Prev: ' + prevFocus)
+  // }, [prevFocus])
 
-  useEffect(() => {
-    console.log('Main: ' + mainFocus)
-  }, [mainFocus])
+  // useEffect(() => {
+  //   console.log('Main: ' + mainFocus)
+  // }, [mainFocus])
 
   const changeFocusHandler = (value?: string) => {
     setMainFocus((prev) => {

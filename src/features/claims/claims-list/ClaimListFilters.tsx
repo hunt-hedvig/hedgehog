@@ -1,19 +1,12 @@
 import styled from '@emotion/styled'
-import {
-  Checkbox,
-  Flex,
-  Label,
-  lightTheme,
-  Popover,
-  TextDatePicker,
-} from '@hedvig-ui'
+import { Label, lightTheme, Popover, TextDatePicker } from '@hedvig-ui'
+import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { range } from '@hedvig-ui/utils/range'
 import { Market, MarketFlags } from 'features/config/constants'
 import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
-import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { InfoCircle } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import {
@@ -21,26 +14,19 @@ import {
   ClaimState,
   UserSettingKey,
 } from 'types/generated/graphql'
+import {
+  FilterElement,
+  FilterElementStyled,
+  FilterNumberMemberGroups,
+} from './FilterElements'
 
-const FilterWrapper = styled.div<{ active: boolean }>`
+const FilterWrapper = styled.div`
   width: 100%;
   max-width: 1500px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   margin: 2rem 0;
-  border: ${({ active, theme }) =>
-    active ? `2px solid ${theme.accent}` : 'none'};
-`
-
-const FilterElement = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-
-  & label {
-    margin: 0;
-  }
 `
 
 const StyledLabel = styled(Label)`
@@ -61,18 +47,18 @@ const StyledLabel = styled(Label)`
   }
 `
 
-const complexityIcons = {
+export const complexityIcons = {
   Simple: '📱',
   Complex: '🌊',
 }
 
-const stateColors = {
+export const stateColors = {
   Open: lightTheme.accent,
   Closed: lightTheme.activeInsuranceBackground,
   Reopened: lightTheme.accentLight,
 }
 
-const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
+export const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
   label,
   popover,
 }) => (
@@ -105,7 +91,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
 }) => {
   const history = useHistory()
   const { settings, updateSetting } = useMe()
-  const { numberMemberGroups } = useNumberMemberGroups()
+  const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
 
   const settingExist = (field: UserSettingKey, value) => {
     if (!settings[field]) {
@@ -155,121 +141,147 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
     setDate(dateString)
   }
 
+  const [navigationStep, reset] = useArrowKeyboardNavigation({
+    maxStep: 4,
+    isActive: navigationAvailable,
+    vertical: false,
+    withNegative: true,
+  })
+
+  useEffect(() => {
+    if (!navigationAvailable) {
+      reset()
+    }
+  }, [navigationAvailable])
+
   return (
-    <FilterWrapper active={navigationAvailable}>
-      <FilterElement>
-        <Label>States</Label>
-        {Object.keys(ClaimState).map((key) => (
-          <Flex key={key} direction="row" align="center">
-            <Checkbox
-              label={key}
-              checked={settingExist(
-                UserSettingKey.ClaimStatesFilter,
-                ClaimState[key],
-              )}
-              onChange={() => {
-                updateFilterHandler(
-                  UserSettingKey.ClaimStatesFilter,
-                  ClaimState[key],
-                )
-              }}
-            />
-            <MemberGroupColorBadge
-              style={{
-                height: '0.7em',
-                width: '0.7em',
-                backgroundColor: stateColors[key],
-              }}
-            />
-          </Flex>
-        ))}
-      </FilterElement>
+    <FilterWrapper>
+      <FilterElement
+        active={navigationAvailable && navigationStep + 1 === 0}
+        checked={(key) =>
+          settingExist(UserSettingKey.ClaimStatesFilter, ClaimState[key])
+        }
+        onChange={(key) =>
+          updateFilterHandler(UserSettingKey.ClaimStatesFilter, ClaimState[key])
+        }
+        onPerfom={(index) =>
+          updateFilterHandler(
+            UserSettingKey.ClaimStatesFilter,
+            ClaimState[Object.keys(ClaimState)[index + 1]],
+          )
+        }
+        maxStep={Object.keys(ClaimState).length - 2}
+        label="States"
+        values={Object.keys(ClaimState)}
+        getContent={(key) => (
+          <MemberGroupColorBadge
+            style={{
+              height: '0.7em',
+              width: '0.7em',
+              backgroundColor: stateColors[key],
+            }}
+          />
+        )}
+      />
 
-      <FilterElement>
-        <LabelWithPopover
-          label="Complexities"
-          popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
-        />
-        {Object.keys(ClaimComplexity).map((key) => (
-          <Flex key={key} direction="row" align="center">
-            <Checkbox
-              label={key}
-              checked={settingExist(
-                UserSettingKey.ClaimComplexityFilter,
-                ClaimComplexity[key],
-              )}
-              onChange={() => {
-                updateFilterHandler(
-                  UserSettingKey.ClaimComplexityFilter,
-                  ClaimComplexity[key],
-                )
-              }}
-            />
-            <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
-          </Flex>
-        ))}
-      </FilterElement>
+      <FilterElement
+        active={navigationAvailable && navigationStep + 1 === 1}
+        checked={(key) =>
+          settingExist(
+            UserSettingKey.ClaimComplexityFilter,
+            ClaimComplexity[key],
+          )
+        }
+        onChange={(key) =>
+          updateFilterHandler(
+            UserSettingKey.ClaimComplexityFilter,
+            ClaimComplexity[key],
+          )
+        }
+        onPerfom={(index) =>
+          updateFilterHandler(
+            UserSettingKey.ClaimComplexityFilter,
+            ClaimComplexity[Object.keys(ClaimComplexity)[index + 1]],
+          )
+        }
+        maxStep={Object.keys(ClaimComplexity).length - 2}
+        label="Complexities"
+        popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
+        values={Object.keys(ClaimComplexity)}
+        getContent={(key) => (
+          <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
+        )}
+      />
 
-      <FilterElement>
+      {/* <FilterElementStyled>
         <Label>Number of member groups</Label>
         <div style={{ display: 'flex' }}>
           <NumberMemberGroupsRadioButtons />
         </div>
-      </FilterElement>
+      </FilterElementStyled> */}
 
-      <FilterElement>
-        <Label>Groups</Label>
-        {range(numberMemberGroups).map((filterNumber) => (
-          <Flex key={filterNumber} direction="row" align="center">
-            <Checkbox
-              label={FilterGroupState[filterNumber]}
-              checked={settingExist(
-                UserSettingKey.MemberGroupsFilter,
-                filterNumber,
-              )}
-              onChange={() => {
-                updateFilterHandler(
-                  UserSettingKey.MemberGroupsFilter,
-                  filterNumber,
-                )
-              }}
-            />
-            <MemberGroupColorBadge
-              filter={filterNumber}
-              style={{ height: '0.7em', width: '0.7em' }}
-            />
-          </Flex>
-        ))}
-      </FilterElement>
+      <FilterNumberMemberGroups
+        active={navigationAvailable && navigationStep + 1 === 2}
+        numberMemberGroups={numberMemberGroups}
+        setNumberMemberGroups={(value: number) => setNumberMemberGroups(value)}
+      />
 
-      <FilterElement>
-        <Label>Markets</Label>
-        {Object.keys(Market).map((key) => (
-          <Flex key={key} direction="row" align="center">
-            <Checkbox
-              label={key}
-              checked={settingExist(UserSettingKey.MarketFilter, Market[key])}
-              onChange={() => {
-                updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
-              }}
-            />
-            <span style={{ marginLeft: '0.5rem' }}>
-              {MarketFlags[key.toUpperCase()]}
-            </span>
-          </Flex>
-        ))}
-      </FilterElement>
+      <FilterElement
+        active={navigationAvailable && navigationStep + 1 === 3}
+        checked={(key) => settingExist(UserSettingKey.MemberGroupsFilter, key)}
+        onChange={(key) =>
+          updateFilterHandler(UserSettingKey.MemberGroupsFilter, key)
+        }
+        onPerfom={(index) =>
+          updateFilterHandler(UserSettingKey.MemberGroupsFilter, index + 1)
+        }
+        maxStep={numberMemberGroups - 2}
+        CheckboxLabel={FilterGroupState}
+        label="Groups"
+        values={range(numberMemberGroups)}
+        getContent={(key) => (
+          <MemberGroupColorBadge
+            filter={+key}
+            style={{ height: '0.7em', width: '0.7em' }}
+          />
+        )}
+      />
 
-      <FilterElement>
+      <FilterElement
+        active={navigationAvailable && navigationStep + 1 === 4}
+        checked={(key) =>
+          settingExist(UserSettingKey.MarketFilter, Market[key])
+        }
+        onChange={(key) =>
+          updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
+        }
+        onPerfom={(index) =>
+          updateFilterHandler(
+            UserSettingKey.MarketFilter,
+            Market[Object.keys(Market)[index + 1]],
+          )
+        }
+        maxStep={Object.keys(Market).length - 2}
+        values={Object.keys(Market)}
+        label="Markets"
+        getContent={(key) => (
+          <span style={{ marginLeft: '0.5rem' }}>
+            {MarketFlags[key.toUpperCase()]}
+          </span>
+        )}
+      />
+
+      <FilterElementStyled>
         <LabelWithPopover
           label="Date up until"
           popover="The claim was registered either before or on this date."
         />
         <TextDatePicker
+          focus={navigationAvailable && navigationStep + 1 === 5}
           value={date ? new Date(date) : new Date()}
           onChange={setDateHandler}
         />
-      </FilterElement>
+      </FilterElementStyled>
     </FilterWrapper>
   )
 }

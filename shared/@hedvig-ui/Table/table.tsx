@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
+import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import React, { TableHTMLAttributes, useEffect, useRef } from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
 
@@ -29,7 +29,7 @@ export const TableBody: React.FC<{
 }) => {
   const numberOfRows = React.Children.count(children)
 
-  const [navigationStep] = useVerticalKeyboardNavigation({
+  const [navigationStep] = useArrowKeyboardNavigation({
     maxStep: numberOfRows - 1,
     onPerformNavigation: (index) => {
       if (onPerformNavigation) {

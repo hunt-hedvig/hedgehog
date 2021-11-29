@@ -1,5 +1,6 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
+import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import React, {
   HTMLAttributes,
   LiHTMLAttributes,
@@ -8,7 +9,6 @@ import React, {
 } from 'react'
 import { TriangleFill } from 'react-bootstrap-icons'
 import { isPressing, Keys } from '../hooks/keyboard/use-key-is-pressed'
-import { useVerticalKeyboardNavigation } from '../hooks/keyboard/use-vertical-keyboard-navigation'
 import { useClickOutside } from '../hooks/use-click-outside'
 
 const show = keyframes`
@@ -142,7 +142,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const [selectedIdx, setSelectedIdx] = React.useState(0)
   const [active, setActive] = React.useState(false)
 
-  const [navigationStep] = useVerticalKeyboardNavigation({
+  const [navigationStep] = useArrowKeyboardNavigation({
     maxStep: numberOfOptions - 1,
     onPerformNavigation: (index) => {
       children[index].props.onClick()

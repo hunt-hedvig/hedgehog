@@ -82,10 +82,10 @@ interface RadioGroupProps {
 interface RadioProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onKeyDown'> {
   label: string | React.ReactNode
-  onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void
+  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
 }
 
-const Radio: React.FC<RadioProps> = ({
+export const Radio: React.FC<RadioProps> = ({
   value,
   label,
   id,
