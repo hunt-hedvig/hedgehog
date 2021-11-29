@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { gql } from '@apollo/client/core'
+import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
   Badge,
@@ -9,16 +10,21 @@ import {
   SecondLevelHeadline,
   Spacing,
 } from '@hedvig-ui'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
+import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterModal'
+import { FilteredMetric } from 'features/claims/claim-templates/FilteredMetric'
+import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { Greeting } from 'features/dashboard/Greeting'
 import {
   FocusItems,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Plus } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
 
@@ -27,30 +33,85 @@ const Wrapper = styled.div`
   flex-direction: column;
 `
 
-const MetricsWrapper = styled.div({
-  display: 'flex',
-})
-const Metric = styled(Link)`
+const MetricsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
+
+export const metricStyles = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.accentContrast} !important;
-  background: ${({ theme }) => theme.accent};
+  color: ${theme.accentContrast} !important;
+  background: ${theme.accent};
   padding: 1.5rem;
   border-radius: 0.5rem;
   margin-right: 1rem;
+  margin-bottom: 1rem;
   min-width: 200px;
+
   &:hover,
-  &focus {
-    color: ${({ theme }) => theme.accentContrast}!important;
+  &:focus {
+    opacity: 0.8;
+    color: ${theme.accentContrast}!important;
   }
 `
 
-const MetricNumber = styled.span`
+const Metric = styled(Link)`
+  ${({ theme }) => metricStyles(theme)}
+`
+
+const AddMetricCard = styled.div`
+  min-height: 111.5px;
+  width: 200px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+
+  outline: none;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  padding: 15px 0;
+
+  border: 2px dotted ${({ theme }) => theme.border};
+
+  & svg {
+    width: 2em;
+    height: 2em;
+    color: ${({ theme }) => theme.border};
+    margin-bottom: 0.5rem;
+    transition: none;
+  }
+
+  & span {
+    font-size: 14px;
+    color: ${({ theme }) => theme.accentLight};
+  }
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+    border-color: ${({ theme }) => theme.accent};
+
+    & svg,
+    & span {
+      color: ${({ theme }) => theme.accent};
+    }
+  }
+`
+
+export const MetricNumber = styled.span`
   display: block;
   font-size: 2rem;
   padding-bottom: 0.25rem;
 `
-const MetricName = styled.span`
+export const MetricName = styled.span`
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   opacity: 0.66;
 `
 
@@ -77,6 +138,7 @@ const DashboardPage: React.FC = () => {
   const { data: dashboardData } = useQuery(GET_DASHBOARD_NUMBERS, {
     pollInterval: 1000 * 5,
   })
+  const [createFilter, setCreateFilter] = useState(false)
 
   const { settings, me } = useMe()
 
@@ -93,6 +155,13 @@ const DashboardPage: React.FC = () => {
       setFocus(FocusItems.Dashborad.name)
     }
   }, [focus])
+
+  const {
+    templateFilters,
+    createTemplate,
+    editTemplateWithName,
+    removeTemplate,
+  } = useTemplateClaims()
 
   return (
     <Wrapper>
@@ -124,6 +193,29 @@ const DashboardPage: React.FC = () => {
                 <MetricName>questions</MetricName>
               </Metric>
             )}
+
+            {templateFilters.map((template) => (
+              <FilteredMetric
+                onCreate={createTemplate}
+                onRemove={removeTemplate}
+                onEdit={editTemplateWithName}
+                key={template.id}
+                template={template}
+              />
+            ))}
+
+            <AddMetricCard
+              tabIndex={0}
+              onClick={() => setCreateFilter(true)}
+              onKeyDown={(e) => {
+                if (isPressing(e, Keys.Enter)) {
+                  setCreateFilter(true)
+                }
+              }}
+            >
+              <Plus />
+              <span>Filtered Claim Template</span>
+            </AddMetricCard>
           </MetricsWrapper>
         </FadeIn>
       )}
@@ -165,6 +257,12 @@ const DashboardPage: React.FC = () => {
           })}
         </ChangeLogWrapper>
       </Spacing>
+      {createFilter && (
+        <CreateFilterModal
+          onClose={() => setCreateFilter(false)}
+          onSave={createTemplate}
+        />
+      )}
     </Wrapper>
   )
 }

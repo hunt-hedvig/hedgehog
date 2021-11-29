@@ -26,6 +26,7 @@ import { useListClaims } from 'features/claims/claims-list/graphql/use-list-clai
 import { getMemberIdColor } from 'features/member/utils'
 import { useMe } from 'features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
+import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState, UserSettingKey } from 'types/generated/graphql'
@@ -82,7 +83,9 @@ export const LargeClaimsList: React.FC<{
   page: number
   date: string | null
   navigationAvailable: boolean
-}> = ({ page, date, navigationAvailable }) => {
+  templated?: boolean
+  filters?: ClaimsFiltersType
+}> = ({ page, date, templated, filters, navigationAvailable }) => {
   const { settings } = useMe()
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -103,8 +106,7 @@ export const LargeClaimsList: React.FC<{
     null
 
   useEffect(() => {
-    listClaims({
-      page: page - 1 ?? 0,
+    const settingsFilters = {
       filterCreatedBeforeOrOnDate: date,
       filterClaimStates: getClaimFilter(UserSettingKey.ClaimStatesFilter),
       filterComplexities: getClaimFilter(UserSettingKey.ClaimComplexityFilter),
@@ -117,8 +119,13 @@ export const LargeClaimsList: React.FC<{
       ),
       filterMarkets: getClaimFilter(UserSettingKey.MarketFilter),
       filterTypesOfContract: null,
+    }
+
+    listClaims({
+      page: page - 1 ?? 0,
+      ...(!templated ? settingsFilters : filters ? filters : {}),
     })
-  }, [page, date, settings])
+  }, [page, date, settings, filters])
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />

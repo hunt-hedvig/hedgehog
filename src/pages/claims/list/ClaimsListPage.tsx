@@ -4,13 +4,16 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { ClaimListFilters } from 'features/claims/claims-list/ClaimListFilters'
+import { ClaimsTemplates } from 'features/claims/claim-templates/ClaimsTemplatesList'
+import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
+import { ClaimListFilters } from 'features/claims/claims-list/filters/ClaimListFilters'
+import { ClaimListTemplateFilters } from 'features/claims/claims-list/filters/ClaimListTemplateFilters'
 import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
 import {
   FocusItems,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 
@@ -21,6 +24,12 @@ const ListPage = styled.div`
   align-items: flex-start;
   margin: 0;
 `
+
+const useQuery = () => {
+  const { search } = useLocation()
+
+  return useMemo(() => new URLSearchParams(search), [search])
+}
 
 export interface ClaimsFiltersType {
   filterClaimStates: ClaimState[] | null
@@ -40,6 +49,17 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
   },
 }) => {
   const location = useLocation()
+  const filterQuery = useQuery().get('template')
+
+  const {
+    templateActive,
+    selectedTemplate,
+    localFilter,
+    templateFilters,
+    selectTemplate,
+    createTemplate,
+    editTemplate,
+  } = useTemplateClaims(filterQuery)
 
   const [date, setDate] = useState<string | null>(null)
 
@@ -75,17 +95,34 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
         <MainHeadline>Claims</MainHeadline>
       </FadeIn>
 
-      <ClaimListFilters
-        date={date}
-        setDate={setDate}
-        page={page}
-        navigationAvailable={focus === FocusItems.ClaimsFilters.name}
+      <ClaimsTemplates
+        activeId={selectedTemplate}
+        templates={templateFilters}
+        onSelect={selectTemplate}
+        onCreate={createTemplate}
       />
+
+      {templateActive && selectedTemplate ? (
+        <ClaimListTemplateFilters
+          templateId={selectedTemplate}
+          template={localFilter}
+          editTemplate={editTemplate}
+        />
+      ) : (
+        <ClaimListFilters
+          date={date}
+          setDate={setDate}
+          page={page}
+          navigationAvailable={focus === FocusItems.ClaimsFilters.name}
+        />
+      )}
 
       <LargeClaimsList
         page={selectedPage}
         date={date}
         navigationAvailable={focus === FocusItems.Claims.name}
+        templated={templateActive}
+        filters={templateActive ? localFilter : undefined}
       />
     </ListPage>
   )

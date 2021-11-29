@@ -18,18 +18,19 @@ import {
   FilterElement,
   FilterElementStyled,
   FilterNumberMemberGroups,
-} from './FilterElements'
+} from '../FilterElements'
 
-const FilterWrapper = styled.div`
+export const FilterWrapper = styled.div`
   width: 100%;
   max-width: 1500px;
-  display: flex;
+
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
   align-items: flex-start;
-  justify-content: space-between;
   margin: 2rem 0;
 `
 
-const StyledLabel = styled(Label)`
+export const StyledLabel = styled(Label)`
   display: flex;
   align-items: center;
 
@@ -76,22 +77,23 @@ export enum FilterGroupState {
   Third,
 }
 
-interface FiltersProps {
-  date: string | null
-  setDate: (date: string) => void
+interface ClaimListFiltersProps extends React.HTMLAttributes<HTMLDivElement> {
+  date?: string | null
+  setDate?: (date: string) => void
   page?: string
   navigationAvailable: boolean
 }
 
-export const ClaimListFilters: React.FC<FiltersProps> = ({
+export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   date,
   setDate,
   page,
   navigationAvailable,
+  ...props
 }) => {
   const history = useHistory()
   const { settings, updateSetting } = useMe()
-  const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
+  const { numberMemberGroups } = useNumberMemberGroups()
 
   const settingExist = (field: UserSettingKey, value) => {
     if (!settings[field]) {
@@ -106,6 +108,10 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
     field: UserSettingKey,
     value: string | number,
   ) => {
+    if (page && page !== '1') {
+      history.push(`/claims/list/1`)
+    }
+
     if (!settings[field] || !settings[field].claims) {
       updateSetting(field, {
         ...settings[field],
@@ -123,9 +129,19 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
           )
         : [...settings[field].claims, value],
     })
+  }
 
-    if (page && page !== '1') {
-      history.push(`/claims/list/1`)
+  const updateNumberMemberSetting = (state: number) => {
+    if (
+      state === 2 &&
+      settings[UserSettingKey.MemberGroupsFilter].claims.includes(2)
+    ) {
+      updateSetting(UserSettingKey.MemberGroupsFilter, {
+        ...settings[UserSettingKey.MemberGroupsFilter],
+        claims: settings[UserSettingKey.MemberGroupsFilter].claims.filter(
+          (memberGroup) => memberGroup !== 2,
+        ),
+      })
     }
   }
 
@@ -138,7 +154,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
       .toISOString()
       .split('T')[0]
 
-    setDate(dateString)
+    setDate?.(dateString)
   }
 
   const [navigationStep, reset] = useArrowKeyboardNavigation({
@@ -155,7 +171,7 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
   }, [navigationAvailable])
 
   return (
-    <FilterWrapper>
+    <FilterWrapper {...props}>
       <FilterElement
         active={navigationAvailable && navigationStep + 1 === 0}
         checked={(key) =>
@@ -213,17 +229,12 @@ export const ClaimListFilters: React.FC<FiltersProps> = ({
         )}
       />
 
-      {/* <FilterElementStyled>
-        <Label>Number of member groups</Label>
-        <div style={{ display: 'flex' }}>
-          <NumberMemberGroupsRadioButtons />
-        </div>
-      </FilterElementStyled> */}
-
       <FilterNumberMemberGroups
         active={navigationAvailable && navigationStep + 1 === 2}
         numberMemberGroups={numberMemberGroups}
-        setNumberMemberGroups={(value: number) => setNumberMemberGroups(value)}
+        setNumberMemberGroups={(value: number) =>
+          updateNumberMemberSetting(value)
+        }
       />
 
       <FilterElement

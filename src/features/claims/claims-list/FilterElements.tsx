@@ -4,7 +4,7 @@ import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-
 import { Radio } from '@hedvig-ui/Radio/radio'
 import { numberMemberGroupsOptions } from 'features/questions/number-member-groups-radio-buttons'
 import React, { useEffect } from 'react'
-import { LabelWithPopover } from './ClaimListFilters'
+import { LabelWithPopover } from './filters/ClaimListFilters'
 
 export const Filters = styled(Flex)<{ active: boolean }>`
   border-bottom: ${({ active, theme }) =>
