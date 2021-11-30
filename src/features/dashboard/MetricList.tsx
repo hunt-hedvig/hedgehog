@@ -11,6 +11,7 @@ import { Plus } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { UserSettingKey } from 'types/generated/graphql'
+import { FocusItems } from '../navigation/hooks/use-navigation'
 
 const MetricsWrapper = styled.div`
   display: flex;
@@ -95,7 +96,11 @@ export const MetricName = styled.span`
   opacity: 0.66;
 `
 
-export const MetricList = ({ dashboardNumbers, navigationAvailable }) => {
+export const MetricList = ({
+  dashboardNumbers,
+  navigationAvailable,
+  setFocus,
+}) => {
   const [createFilter, setCreateFilter] = useState(false)
   const { settings } = useMe()
   const history = useHistory()
@@ -132,6 +137,7 @@ export const MetricList = ({ dashboardNumbers, navigationAvailable }) => {
         return
       }
 
+      setFocus(FocusItems.Claims.name)
       history.push(
         `/claims/list/1?template=${templateFilters[itemIndex - 2].id}`,
       )
