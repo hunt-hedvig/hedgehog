@@ -1,5 +1,9 @@
 import styled from '@emotion/styled'
 import { Capitalized, Tabs } from '@hedvig-ui'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { memberPagePanes } from 'features/member/tabs'
 import { ChatPane } from 'features/member/tabs/ChatPane'
 import { FraudulentStatus } from 'features/member/tabs/member-tab/FraudulentStatus'
@@ -14,6 +18,7 @@ import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-gro
 import React, { useEffect } from 'react'
 import { Route, RouteComponentProps, useHistory } from 'react-router'
 import { Member } from 'types/generated/graphql'
+import { FocusItems } from '../navigation/hooks/use-navigation'
 import { MemberDetails } from './MemberDetails'
 
 const MemberPageWrapper = styled('div')({
@@ -61,7 +66,10 @@ export const MemberTabs: React.FC<RouteComponentProps<{
   memberId: string
 }> & {
   member: Member
-}> = ({ match, member }) => {
+  navigationAvailable: boolean
+  setFocus: (value?: string) => void
+  focus?: string
+}> = ({ match, member, setFocus, focus }) => {
   const history = useHistory()
   const pathname = history.location.pathname.split('/')
   const path =
@@ -79,6 +87,10 @@ export const MemberTabs: React.FC<RouteComponentProps<{
     pushToMemberHistory(memberId)
     navigateToTab(path)
   }, [])
+
+  useKeyIsPressed(Keys.T, () => {
+    setFocus(FocusItems.Member.items?.Tabs)
+  })
 
   const { numberMemberGroups } = useNumberMemberGroups()
 
@@ -121,6 +133,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
             action: () => navigateToTab(pane.tabName),
             hotkey: pane.hotkey,
           }))}
+          navigationAvailable={focus === FocusItems.Member.items?.Tabs}
         />
         <div style={{ marginTop: '4rem' }}>
           {panes.map((pane, id) => (

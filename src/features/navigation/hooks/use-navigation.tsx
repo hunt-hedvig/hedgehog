@@ -2,7 +2,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
 interface IFocusItems {
   [key: string]: {
@@ -34,6 +34,10 @@ export const FocusItems: IFocusItems = {
   },
   Member: {
     name: 'MEMBER_PAGE',
+    items: {
+      Chat: 'MEMBER_CHAT',
+      Tabs: 'MEMBER_TABS',
+    },
   },
   Conversations: {
     name: 'CONVERSATIONS_PAGE',
@@ -68,6 +72,10 @@ export const useNavigation = () => useContext(NavigationContext)
 export const NavigationProvider = ({ children }) => {
   // const [prevFocus, setPrevFocus] = useState<string>()
   const [mainFocus, setMainFocus] = useState<string>()
+
+  useEffect(() => {
+    console.log(mainFocus)
+  }, [mainFocus])
 
   const changeFocusHandler = (value?: string) => {
     setMainFocus(() => {

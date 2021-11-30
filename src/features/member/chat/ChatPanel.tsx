@@ -15,6 +15,7 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
+import { FocusItems } from 'features/navigation/hooks/use-navigation'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -99,7 +100,7 @@ const ChatTip = styled.div`
   }
 `
 
-export const ChatPanel = ({ memberId }) => {
+export const ChatPanel = ({ memberId, focus }) => {
   const [draft, setDraft] = useDraftMessage({ memberId })
   const [error, setError] = useState(false)
   const [currentMessage, setCurrentMessage] = useState(draft)
@@ -182,7 +183,7 @@ export const ChatPanel = ({ memberId }) => {
     <MessagesPanelContainer>
       <ChatForm onSubmit={handleSubmit}>
         <ChatTextArea
-          focus={true}
+          focus={focus === FocusItems.Member.items?.Chat}
           autoResize={true}
           maxHeight="350px"
           error={error}
