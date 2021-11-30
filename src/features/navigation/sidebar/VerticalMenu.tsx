@@ -291,7 +291,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   useKeyIsPressed(Keys.S, focusHandler)
 
   const [navigationStep, reset] = useArrowKeyboardNavigation({
-    maxStep: MenuItemsList.length,
+    maxStep: MenuItemsList.length - 2,
     isActive: focus === FocusItems.Main.items?.Sidebar,
   })
 
