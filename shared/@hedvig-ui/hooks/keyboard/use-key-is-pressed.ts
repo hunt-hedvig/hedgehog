@@ -361,7 +361,7 @@ export const useKeyIsPressed = (
   const handleKeydown = (e: any) => {
     if (
       isPressing(e, key) &&
-      (disableInInput
+      (disableInInput && !isPressing(e, Keys.Escape)
         ? e.target?.nodeName !== 'INPUT' && e.target?.nodeName !== 'TEXTAREA'
         : true)
     ) {
