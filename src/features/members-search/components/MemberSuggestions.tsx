@@ -9,16 +9,14 @@ import {
   MemberId,
   MemberName,
 } from 'features/members-search/styles'
-import { useMemberHistory } from 'features/user/hooks/use-member-history'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useMemberNameAndContractMarketInfoQuery } from 'types/generated/graphql'
 
-export const MemberSuggestions: React.FC<{ navigationAvailable: boolean }> = ({
-  navigationAvailable,
-}) => {
-  const { memberHistory } = useMemberHistory()
-
+export const MemberSuggestions: React.FC<{
+  navigationAvailable: boolean
+  memberHistory: readonly string[]
+}> = ({ navigationAvailable, memberHistory }) => {
   const history = useHistory()
 
   const [navigationStep, reset] = useArrowKeyboardNavigation({

@@ -1,8 +1,5 @@
 import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MembersList } from 'features/members-search/components/MembersList'
 import { MemberSuggestions } from 'features/members-search/components/MemberSuggestions'
@@ -18,6 +15,7 @@ import {
   FocusItems,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
+import { useMemberHistory } from 'features/user/hooks/use-member-history'
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router'
 
@@ -28,6 +26,7 @@ const MemberSearchPage: React.FC = () => {
   const history = useHistory()
   const searchField = useRef<HTMLInputElement>(null)
 
+  const { memberHistory } = useMemberHistory()
   const [
     { members, totalPages, page },
     memberSearch,
@@ -56,14 +55,18 @@ const MemberSearchPage: React.FC = () => {
     }
   }, [focus])
 
-  useKeyIsPressed(Keys.Down, () => {
-    if (!members.length) {
-      setFocus(FocusItems.Members.items?.Suggestions)
-    }
-  })
-
   return (
-    <>
+    <div
+      onKeyDown={(e) => {
+        if (
+          isPressing(e, Keys.Down) &&
+          focus === FocusItems.Members.name &&
+          !members.length
+        ) {
+          setFocus(FocusItems.Members.items?.Suggestions)
+        }
+      }}
+    >
       <SearchForm
         onSubmit={() => {
           memberSearch(query || '%', {
@@ -120,6 +123,7 @@ const MemberSearchPage: React.FC = () => {
           <MemberSuggestionsWrapper>
             <MainHeadline>Suggestions</MainHeadline>
             <MemberSuggestions
+              memberHistory={memberHistory}
               navigationAvailable={
                 focus === FocusItems.Members.items?.Suggestions
               }
@@ -133,7 +137,7 @@ const MemberSearchPage: React.FC = () => {
           <div>D*shborad! No members found</div>
         </NoMembers>
       )}
-    </>
+    </div>
   )
 }
 

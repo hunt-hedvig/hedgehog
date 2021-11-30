@@ -99,7 +99,10 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
       <ClaimsTemplates
         activeId={selectedTemplate}
         templates={templateFilters}
-        onSelect={selectTemplate}
+        onSelect={(id) => {
+          setFocus()
+          selectTemplate(id)
+        }}
         onCreate={createTemplate}
         navigationAvailable={focus === FocusItems.Claims.items?.ClaimsTemplates}
       />
