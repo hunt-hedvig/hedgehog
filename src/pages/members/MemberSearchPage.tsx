@@ -77,6 +77,7 @@ const MemberSearchPage: React.FC = () => {
           memberSearch(query || '%', {
             includeAll,
           })
+          setFocus(null)
         }}
         loading={loading}
         query={query}
@@ -92,8 +93,9 @@ const MemberSearchPage: React.FC = () => {
         <>
           <FadeIn>
             <MembersList
+              setFocus={setFocus}
               members={members}
-              navigationAvailable={focus === FocusItems.Members.name}
+              navigationAvailable={focus === null}
             />
             <TablePageSelect
               currentPage={page}

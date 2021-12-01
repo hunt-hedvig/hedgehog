@@ -20,6 +20,7 @@ import {
   getLastTerminationDate,
 } from 'features/member/tabs/contracts-tab/utils'
 import { getMemberFlag, MemberAge } from 'features/member/utils'
+import { FocusItems } from 'features/navigation/hooks/use-navigation'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import { Contract, ContractStatus, Member } from 'types/generated/graphql'
@@ -99,7 +100,8 @@ const countContractsByStatus = (contracts: Contract[]): NumberOfContracts =>
 export const MembersList: React.FC<{
   members: Member[]
   navigationAvailable: boolean
-}> = ({ members, navigationAvailable }) => {
+  setFocus: (focus: string) => void
+}> = ({ members, navigationAvailable, setFocus }) => {
   const [activeRow, setActiveRow] = useState<number | null>(null)
   const history = useHistory()
   const isCommandPressed = useKeyIsPressed(Keys.Command)
@@ -137,6 +139,11 @@ export const MembersList: React.FC<{
             }
 
             redirectMemberHandler(memberId)
+          }}
+          onNavigationStep={(step: number) => {
+            if (step === -1) {
+              setFocus(FocusItems.Members.items.Search)
+            }
           }}
         >
           {members.map((member, index) => {
