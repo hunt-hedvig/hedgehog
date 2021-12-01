@@ -99,3 +99,15 @@ export const NavigationProvider = ({ children }) => {
     </NavigationContext.Provider>
   )
 }
+
+export const useFocus = (value?: string) => {
+  const { focus, setFocus } = useNavigation()
+
+  useEffect(() => {
+    if (!focus) {
+      setFocus(value)
+    }
+  }, [focus])
+
+  return () => setFocus()
+}

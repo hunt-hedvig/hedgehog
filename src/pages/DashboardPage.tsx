@@ -16,10 +16,11 @@ import { Greeting } from 'features/dashboard/Greeting'
 import { MetricList } from 'features/dashboard/MetricList'
 import {
   FocusItems,
+  useFocus,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { DashboardNumbers } from 'types/generated/graphql'
 
 const Wrapper = styled.div`
@@ -61,11 +62,7 @@ const DashboardPage: React.FC = () => {
 
   const { focus, setFocus } = useNavigation()
 
-  useEffect(() => {
-    if (!focus) {
-      setFocus(FocusItems.Dashborad.name)
-    }
-  }, [focus])
+  useFocus(FocusItems.Dashborad.name)
 
   return (
     <Wrapper>

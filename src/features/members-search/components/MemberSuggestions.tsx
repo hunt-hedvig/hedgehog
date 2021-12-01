@@ -64,7 +64,9 @@ const MemberHistoryCard: React.FC<{
 
   const { registerActions, isHintingControl } = useCommandLine()
   const history = useHistory()
-  const targetLocation = registerActions([
+  const targetLocation = `/members/${memberId}`
+
+  registerActions([
     {
       label: `Navigate to ${data?.member?.firstName} ${data?.member?.lastName} (${memberId})`,
       keys: [Keys.Control, NumberKeys[orderNumber]],

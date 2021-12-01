@@ -15,6 +15,7 @@ import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
 import {
   FocusItems,
+  useFocus,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
 import { FilterStateType } from 'features/questions/FilterSelect'
@@ -97,13 +98,9 @@ const ConversationsPage: React.FC<RouteComponentProps<{
     }
   }
 
-  const { focus, setFocus } = useNavigation()
+  const { focus } = useNavigation()
 
-  useEffect(() => {
-    if (!focus) {
-      setFocus(FocusItems.Conversations.name)
-    }
-  }, [focus])
+  useFocus(FocusItems.Claims.name)
 
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)

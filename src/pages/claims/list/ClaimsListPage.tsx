@@ -11,6 +11,7 @@ import { ClaimListTemplateFilters } from 'features/claims/claims-list/filters/Cl
 import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
 import {
   FocusItems,
+  useFocus,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -77,11 +78,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
 
   const { focus, setFocus } = useNavigation()
 
-  useEffect(() => {
-    if (!focus) {
-      setFocus(FocusItems.Claims.name)
-    }
-  }, [focus])
+  useFocus(FocusItems.Claims.name)
 
   useKeyIsPressed(Keys.F, () =>
     setFocus(FocusItems.Claims.items?.ClaimsFilters),
