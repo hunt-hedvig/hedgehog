@@ -14,7 +14,8 @@ import {
 } from 'features/members-search/styles'
 import React, { useState } from 'react'
 
-interface SearchFieldProps {
+interface SearchFieldProps
+  extends Omit<React.HTMLAttributes<HTMLInputElement>, 'onSubmit'> {
   onSubmit: (query: string, includeAll: boolean) => void
   onFocus?: () => void
   loading: boolean
@@ -44,6 +45,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
   searchFieldRef,
   setLuckySearch,
   focus,
+  ...props
 }) => {
   const [textFieldFocused, setTextFieldFocused] = useState(false)
   const { isMetaKey, metaKey } = usePlatform()
@@ -60,6 +62,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
       <Group>
         <SearchInputGroup>
           <Input
+            {...props}
             style={{ borderRadius: '0.5rem' }}
             onChange={({ target: { value } }) => {
               if (shouldIgnoreInput(value)) {
@@ -85,6 +88,10 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             }}
             onBlur={() => setTextFieldFocused(false)}
             onKeyDown={(e) => {
+              if (props.onKeyDown) {
+                props.onKeyDown(e)
+              }
+
               if (
                 isMetaKey(e) &&
                 isPressing(e, Keys.Enter) &&
