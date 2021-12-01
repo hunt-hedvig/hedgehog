@@ -4,7 +4,7 @@ import React from 'react'
 import { toast } from 'react-hot-toast'
 import { ClaimState, useSetClaimOutcomeMutation } from 'types/generated/graphql'
 
-enum ClaimOutcomes {
+export enum ClaimOutcomes {
   PAID_OUT = 'PAID_OUT',
   NOT_COVERED_BY_TERMS = 'NOT_COVERED_BY_TERMS',
   COMPENSATION_BELOW_DEDUCTIBLE = 'COMPENSATION_BELOW_DEDUCTIBLE',

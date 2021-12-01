@@ -31,7 +31,10 @@ import {
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
 import { ContractDropdown } from 'features/claims/claim-details/ClaimInformation/components/ContractDropdown'
-import { OutcomeDropdown } from 'features/claims/claim-details/ClaimType/components/OutcomeDropdown'
+import {
+  ClaimOutcomes,
+  OutcomeDropdown,
+} from 'features/claims/claim-details/ClaimType/components/OutcomeDropdown'
 import {
   CoInsuredForm,
   useDeleteCoInsured,
@@ -140,6 +143,8 @@ export const ClaimInformation: React.FC<{
     contract: selectedContract,
     agreement: selectedAgreement,
     coInsured,
+    payments = [],
+    outcome,
   } = data?.claim ?? {}
 
   const contracts = memberData?.member?.contracts ?? []
@@ -177,6 +182,19 @@ export const ClaimInformation: React.FC<{
   }
 
   const setClaimStateHandler = async (value: string) => {
+    if (
+      (data?.claim?.state === ClaimState.Open ||
+        data?.claim?.state === ClaimState.Reopened) &&
+      (outcome === ClaimOutcomes.DUPLICATE ||
+        outcome === ClaimOutcomes.NOT_COVERED_BY_TERMS ||
+        outcome === ClaimOutcomes.RETRACTED_BY_MEMBER ||
+        outcome === ClaimOutcomes.RETRACTED_BY_HEDVIG) &&
+      payments.length !== 0
+    ) {
+      toast.error("This outcome can't be used to close when there are payments")
+      return
+    }
+
     await updateClaimState({
       variables: { id: claimId, state: validateSelectOption(value) },
       optimisticResponse: {
