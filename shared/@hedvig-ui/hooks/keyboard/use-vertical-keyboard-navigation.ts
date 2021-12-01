@@ -3,6 +3,7 @@ import {
   useKeyboardListener,
   UseVerticalKeyboardNavigationProps,
 } from '@hedvig-ui/hooks/keyboard/use-keyboard-listener'
+import { PushKeyboardNavigation } from 'features/tracking/utils/tags'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 const handleStepChange = (
@@ -39,6 +40,7 @@ export const useVerticalKeyboardNavigation = ({
     ) {
       e.preventDefault()
       onPerformNavigation(navigationIndex)
+      PushKeyboardNavigation('useVerticalKeyboardNavigation', [Keys.Enter.code])
       return
     }
 
@@ -48,12 +50,14 @@ export const useVerticalKeyboardNavigation = ({
         onExit()
       }
       handleStepChange(setNavigationIndex, (i) => i > -1, -1)
+      PushKeyboardNavigation('useVerticalKeyboardNavigation', [Keys.Up.code])
       return
     }
 
     if (isPressing(e, Keys.Down)) {
       e.preventDefault()
       handleStepChange(setNavigationIndex, (i) => i < maxStep, 1)
+      PushKeyboardNavigation('useVerticalKeyboardNavigation', [Keys.Down.code])
       return
     }
   })
