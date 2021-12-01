@@ -122,10 +122,6 @@ export const NavigationProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    console.log(focus)
-  }, [focus])
-
-  useEffect(() => {
     if (isEscapePressed) {
       changeFocusHandler(null)
     }
