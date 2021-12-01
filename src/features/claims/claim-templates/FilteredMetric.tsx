@@ -33,11 +33,12 @@ const Icon = styled.div`
   }
 `
 
-const Metric = styled.div<{ active: boolean }>`
+const Metric = styled.div<{ focus: boolean }>`
+  transition: none;
   position: relative;
   cursor: pointer;
   max-width: 200px;
-  ${({ theme, active }) => metricStyles(theme, active)};
+  ${({ theme, focus }) => metricStyles(theme, focus)};
 `
 
 interface FilteredMetricProps {
@@ -45,7 +46,7 @@ interface FilteredMetricProps {
   onRemove: (id: string) => void
   onCreate: (filter: ClaimFilterTemplate) => void
   onEdit: (filter: ClaimFilterTemplate) => void
-  active: boolean
+  focus: boolean
 }
 
 export const FilteredMetric: React.FC<FilteredMetricProps> = ({
@@ -53,7 +54,7 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
   onRemove,
   onCreate,
   onEdit,
-  active,
+  focus,
 }) => {
   const history = useHistory()
   const [edit, setEdit] = useState(false)
@@ -84,7 +85,7 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
 
   return (
     <Metric
-      active={active}
+      focus={focus}
       tabIndex={0}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}

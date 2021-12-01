@@ -1,6 +1,7 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Button, Paragraph } from '@hedvig-ui'
+import chroma from 'chroma-js'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 
@@ -97,22 +98,25 @@ export const EmptyState = styled.div`
 
 export const MemberHistoryCardWrapper = styled(Link)<{
   muted: boolean
-  active: boolean
+  focus: boolean
 }>`
   display: flex;
   flex-direction: column;
   width: calc((100% / 3) - 1rem);
-  padding: ${({ active }) => (active ? '1rem' : '1.5rem')};
+  padding: 1.5rem;
   border-radius: 0.5rem;
   margin-left: 1rem;
   min-height: 5rem;
   margin-bottom: 1rem;
 
-  border: ${({ active }) => (active ? `0.5rem solid red` : 'none')};
-
   & {
-    ${({ theme, muted }) => css`
-      background: ${theme.foreground};
+    ${({ theme, muted, focus }) => css`
+      background: ${!focus
+        ? theme.foreground
+        : chroma(theme.foreground)
+            .alpha(0.7)
+            .hex()};
+
       color: ${theme.backgroundLight} !important;
 
       ${muted && 'opacity: 0.5;'};

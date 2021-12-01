@@ -2,6 +2,7 @@ import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import chroma from 'chroma-js'
 import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterModal'
 import { FilteredMetric } from 'features/claims/claim-templates/FilteredMetric'
 import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
@@ -18,17 +19,20 @@ const MetricsWrapper = styled.div`
   flex-wrap: wrap;
 `
 
-export const metricStyles = (theme: Theme, active: boolean = false) => css`
+export const metricStyles = (theme: Theme, focus: boolean = false) => css`
   display: flex;
   flex-direction: column;
   color: ${theme.accentContrast} !important;
-  background: ${theme.accent};
-  padding: ${active ? '1rem' : '1.5rem'};
+  background: ${!focus
+    ? theme.accent
+    : chroma(theme.accent)
+        .alpha(0.7)
+        .hex()};
+  padding: 1.5rem;
   border-radius: 0.5rem;
   margin-right: 1rem;
   margin-bottom: 1rem;
   min-width: 200px;
-  border: ${active ? '0.5rem solid red' : 'none'};
 
   &:hover,
   &:focus {
@@ -37,11 +41,12 @@ export const metricStyles = (theme: Theme, active: boolean = false) => css`
   }
 `
 
-const Metric = styled(Link)<{ active: boolean }>`
-  ${({ theme, active }) => metricStyles(theme, active)}
+const Metric = styled(Link)<{ focus: boolean }>`
+  ${({ theme, focus }) => metricStyles(theme, focus)}
 `
 
-const AddMetricCard = styled.div<{ active: boolean }>`
+const AddMetricCard = styled.div<{ focus: boolean }>`
+  transition: none;
   min-height: 111.5px;
   width: 200px;
 
@@ -56,7 +61,13 @@ const AddMetricCard = styled.div<{ active: boolean }>`
   margin-bottom: 1rem;
   padding: 15px 0;
 
-  border: 2px dotted ${({ active, theme }) => (!active ? theme.border : 'red')};
+  border: 2px dotted
+    ${({ theme, focus }) =>
+      !focus
+        ? theme.accent
+        : chroma(theme.accent)
+            .alpha(0.7)
+            .hex()};
 
   & svg {
     width: 2em;
@@ -68,7 +79,10 @@ const AddMetricCard = styled.div<{ active: boolean }>`
 
   & span {
     font-size: 14px;
-    color: ${({ theme }) => theme.accentLight};
+  }
+
+  & * {
+    color: ${({ focus, theme }) => (!focus ? theme.accent : theme.accentLight)};
   }
 
   &:hover,
@@ -157,7 +171,7 @@ export const MetricList = ({
       <MetricsWrapper>
         <Metric
           to="/claims/list/1"
-          active={navigationAvailable && navigationStep + 1 === 0}
+          focus={navigationAvailable && navigationStep + 1 === 0}
         >
           <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
           <MetricName>claims</MetricName>
@@ -166,7 +180,7 @@ export const MetricList = ({
         settings[UserSettingKey.FeatureFlags].conversations ? (
           <Metric
             to="/conversations"
-            active={navigationAvailable && navigationStep + 1 === 1}
+            focus={navigationAvailable && navigationStep + 1 === 1}
           >
             <MetricNumber>
               {dashboardNumbers?.numberOfQuestions || 0}
@@ -176,7 +190,7 @@ export const MetricList = ({
         ) : (
           <Metric
             to="/questions"
-            active={navigationAvailable && navigationStep + 1 === 1}
+            focus={navigationAvailable && navigationStep + 1 === 1}
           >
             <MetricNumber>
               {dashboardNumbers?.numberOfQuestions || 0}
@@ -187,7 +201,7 @@ export const MetricList = ({
 
         {templateFilters.map((template, index) => (
           <FilteredMetric
-            active={navigationAvailable && navigationStep === index + 1}
+            focus={navigationAvailable && navigationStep === index + 1}
             onCreate={createTemplate}
             onRemove={removeTemplate}
             onEdit={editTemplateWithName}
@@ -197,7 +211,7 @@ export const MetricList = ({
         ))}
 
         <AddMetricCard
-          active={
+          focus={
             navigationAvailable && navigationStep === templateFilters.length + 1
           }
           tabIndex={0}
