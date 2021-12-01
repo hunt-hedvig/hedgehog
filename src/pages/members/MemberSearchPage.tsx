@@ -65,7 +65,7 @@ const MemberSearchPage: React.FC = () => {
   }, [isEnterPressed])
 
   useEffect(() => {
-    if (isDownPressed && !focus) {
+    if (isDownPressed && !focus && !!memberHistory.length && !members.length) {
       setFocus(FocusItems.Members.items?.Suggestions)
     }
   }, [isDownPressed])

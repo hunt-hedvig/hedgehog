@@ -142,7 +142,7 @@ export const MetricList = ({
         `/claims/list/1?template=${templateFilters[itemIndex - 2].id}`,
       )
     },
-    vertical: false,
+    direction: 'horizontal',
     withNegative: true,
   })
 

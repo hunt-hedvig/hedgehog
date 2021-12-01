@@ -22,7 +22,7 @@ export const MemberSuggestions: React.FC<{
   const [navigationStep, reset] = useArrowKeyboardNavigation({
     maxStep: memberHistory.length - 2,
     isActive: navigationAvailable && !!memberHistory.length,
-    vertical: false,
+    direction: 'horizontal',
     withNegative: true,
     onPerformNavigation: (index) => {
       history.push(`/members/${memberHistory[index + 1]}`)

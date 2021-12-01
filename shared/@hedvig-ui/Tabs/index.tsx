@@ -148,7 +148,7 @@ export const Tabs: React.FC<TabsProps> = ({
       const currentTab = index + 1
       list[currentTab].action()
     },
-    vertical: false,
+    direction: 'horizontal',
     withNegative: true,
   })
 

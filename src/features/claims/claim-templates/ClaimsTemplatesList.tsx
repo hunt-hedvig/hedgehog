@@ -102,7 +102,7 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
 
       onSelect(templates[currentIndex].id)
     },
-    vertical: false,
+    direction: 'horizontal',
     withNegative: true,
   })
 

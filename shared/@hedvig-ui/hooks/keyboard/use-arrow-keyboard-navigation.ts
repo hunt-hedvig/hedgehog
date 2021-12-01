@@ -25,7 +25,7 @@ export const useArrowKeyboardNavigation = ({
   onPerformNavigation,
   onExit,
   isActive = false,
-  vertical = true,
+  direction = 'vertical',
   withNegative = false,
 }: UseVerticalKeyboardNavigationProps): [number, () => void] => {
   const [navigationIndex, setNavigationIndex] = useState(-1)
@@ -44,7 +44,7 @@ export const useArrowKeyboardNavigation = ({
       return
     }
 
-    if (isPressing(e, vertical ? Keys.Up : Keys.Left)) {
+    if (isPressing(e, direction === 'vertical' ? Keys.Up : Keys.Left)) {
       e.preventDefault()
       if (navigationIndex === 0 && onExit) {
         onExit()
@@ -53,7 +53,7 @@ export const useArrowKeyboardNavigation = ({
       return
     }
 
-    if (isPressing(e, vertical ? Keys.Down : Keys.Right)) {
+    if (isPressing(e, direction === 'vertical' ? Keys.Down : Keys.Right)) {
       e.preventDefault()
       handleStepChange(setNavigationIndex, (i) => i < maxStep, 1)
       return

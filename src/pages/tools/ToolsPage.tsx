@@ -139,7 +139,7 @@ const ToolsPage: React.FC = () => {
       const currentIndex = index + 1
       history.push(paths[currentIndex])
     },
-    vertical: false,
+    direction: 'horizontal',
     withNegative: true,
   })
 

@@ -96,7 +96,7 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
   const [navigationStep, reset] = useArrowKeyboardNavigation({
     maxStep: 3,
     isActive: navigationAvailable,
-    vertical: false,
+    direction: 'horizontal',
     withNegative: true,
   })
 
