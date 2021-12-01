@@ -67,8 +67,8 @@ export const MemberTabs: React.FC<RouteComponentProps<{
 }> & {
   member: Member
   navigationAvailable: boolean
-  setFocus: (value?: string) => void
-  focus?: string
+  setFocus: (value: string | null) => void
+  focus: string | null
 }> = ({ match, member, setFocus, focus }) => {
   const history = useHistory()
   const pathname = history.location.pathname.split('/')
@@ -89,7 +89,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
   }, [])
 
   useKeyIsPressed(Keys.T, () => {
-    setFocus(FocusItems.Member.items?.Tabs)
+    setFocus(FocusItems.Member.items.Tabs)
   })
 
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -133,7 +133,7 @@ export const MemberTabs: React.FC<RouteComponentProps<{
             action: () => navigateToTab(pane.tabName),
             hotkey: pane.hotkey,
           }))}
-          navigationAvailable={focus === FocusItems.Member.items?.Tabs}
+          navigationAvailable={focus === FocusItems.Member.items.Tabs}
         />
         <div style={{ marginTop: '4rem' }}>
           {panes.map((pane, id) => (

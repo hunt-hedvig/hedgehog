@@ -187,7 +187,7 @@ export const MetricList = ({
 
         {templateFilters.map((template, index) => (
           <FilteredMetric
-            active={navigationAvailable && navigationStep + 1 === index + 2}
+            active={navigationAvailable && navigationStep === index + 1}
             onCreate={createTemplate}
             onRemove={removeTemplate}
             onEdit={editTemplateWithName}
@@ -198,8 +198,7 @@ export const MetricList = ({
 
         <AddMetricCard
           active={
-            navigationAvailable &&
-            navigationStep + 1 === templateFilters.length + 2
+            navigationAvailable && navigationStep === templateFilters.length + 1
           }
           tabIndex={0}
           onClick={() => setCreateFilter(true)}

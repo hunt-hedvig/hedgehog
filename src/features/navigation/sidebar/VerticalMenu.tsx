@@ -285,18 +285,18 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   const { focus, setFocus } = useNavigation()
 
   const focusHandler = () => {
-    setFocus(FocusItems.Main.items?.Sidebar)
+    setFocus(FocusItems.Main.items.Sidebar)
   }
 
   useKeyIsPressed(Keys.S, focusHandler)
 
   const [navigationStep, reset] = useArrowKeyboardNavigation({
     maxStep: MenuItemsList.length - 2,
-    isActive: focus === FocusItems.Main.items?.Sidebar,
+    isActive: focus === FocusItems.Main.items.Sidebar,
   })
 
   useClickOutside(sidebarRef, () =>
-    focus === FocusItems.Main.items?.Sidebar ? setFocus() : {},
+    focus === FocusItems.Main.items.Sidebar ? setFocus(null) : {},
   )
 
   return (
@@ -324,8 +324,8 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 !external ? (
                   <MenuItem
                     focus={
-                      focus === FocusItems.Main.items?.Sidebar &&
-                      navigationStep + 1 === index
+                      focus === FocusItems.Main.items.Sidebar &&
+                      navigationStep === index - 1
                     }
                     key={item.route}
                     style={{ marginBottom: single ? '4rem' : 0 }}
@@ -342,7 +342,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                     onKeyDown={(e) => {
                       if (isPressing(e, Keys.Enter)) {
                         e.preventDefault()
-                        setFocus()
+                        setFocus(null)
                         reset()
                         MenuItemsList[index].hotkeyHandler()
                       }
@@ -352,8 +352,8 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                 ) : (
                   <ExternalMenuItem
                     focus={
-                      focus === FocusItems.Main.items?.Sidebar &&
-                      navigationStep + 1 === index
+                      focus === FocusItems.Main.items.Sidebar &&
+                      navigationStep === index - 1
                     }
                     key={item.route}
                     style={{ marginBottom: single ? '4rem' : 0 }}
@@ -363,7 +363,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                     onKeyDown={(e) => {
                       if (isPressing(e, Keys.Enter)) {
                         e.preventDefault()
-                        setFocus()
+                        setFocus(null)
                         reset()
                         MenuItemsList[index].hotkeyHandler()
                       }

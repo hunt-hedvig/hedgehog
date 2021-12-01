@@ -4,16 +4,51 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-interface IFocusItems {
-  [key: string]: {
+interface FocusItemsType {
+  Main: {
     name: string
-    items?: {
-      [key: string]: string
+    items: {
+      Sidebar: string
+      Topbar: string
+      Modal: string
     }
+  }
+  Dashborad: {
+    name: string
+  }
+  Members: {
+    name: string
+    items: {
+      Search: string
+      Suggestions: string
+    }
+  }
+  Member: {
+    name: string
+    items: {
+      Chat: string
+      Tabs: string
+    }
+  }
+  Conversations: {
+    name: string
+  }
+  Claims: {
+    name: string
+    items: {
+      ClaimsTemplates: string
+      ClaimsFilters: string
+    }
+  }
+  Claim: {
+    name: string
+  }
+  Tools: {
+    name: string
   }
 }
 
-export const FocusItems: IFocusItems = {
+export const FocusItems: FocusItemsType = {
   Main: {
     name: 'MAIN_SECTION',
     items: {
@@ -58,23 +93,23 @@ export const FocusItems: IFocusItems = {
 }
 
 interface NavigationContextProps {
-  focus?: string
-  setFocus: (focus?: string) => void
+  focus: string | null
+  setFocus: (focus: string | null) => void
 }
 
 export const NavigationContext = createContext<NavigationContextProps>({
-  focus: undefined,
-  setFocus: (_?: string) => void 0,
+  focus: null,
+  setFocus: (_: string | null) => void 0,
 })
 
 export const useNavigation = () => useContext(NavigationContext)
 
 export const NavigationProvider = ({ children }) => {
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
-  const [focus, setFocus] = useState<string>()
-  const [_, setPrevFocus] = useState<string>()
+  const [focus, setFocus] = useState<string | null>(null)
+  const [_, setPrevFocus] = useState<string | null>(null)
 
-  const changeFocusHandler = (value?: string) => {
+  const changeFocusHandler = (value: string | null) => {
     setFocus((prev) => {
       setPrevFocus(prev)
 
@@ -84,7 +119,7 @@ export const NavigationProvider = ({ children }) => {
 
   useEffect(() => {
     if (isEscapePressed) {
-      changeFocusHandler(undefined)
+      changeFocusHandler(null)
     }
   }, [isEscapePressed])
 
@@ -100,7 +135,7 @@ export const NavigationProvider = ({ children }) => {
   )
 }
 
-export const useFocus = (value?: string) => {
+export const useFocus = (value: string | null) => {
   const { focus, setFocus } = useNavigation()
 
   useEffect(() => {
@@ -109,5 +144,5 @@ export const useFocus = (value?: string) => {
     }
   }, [focus])
 
-  return () => setFocus()
+  return () => setFocus(null)
 }

@@ -101,9 +101,9 @@ export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
 
   useEffect(() => {
     if (isVisible) {
-      setFocus(FocusItems.Member.items?.Chat)
+      setFocus(FocusItems.Member.items.Chat)
     } else {
-      setFocus()
+      setFocus(null)
     }
   }, [isVisible])
 

@@ -163,7 +163,7 @@ export const Tabs: React.FC<TabsProps> = ({
       {list.map((tab, index) => (
         <Tab
           key={tab.title}
-          focused={navigationAvailable && navigationStep + 1 === index}
+          focused={navigationAvailable && navigationStep === index - 1}
           {...tab}
         />
       ))}

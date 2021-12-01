@@ -33,7 +33,7 @@ const MemberPage: React.FC<RouteComponentProps<{
       {...props}
       member={member}
       navigationAvailable={focus === FocusItems.Member.name}
-      setFocus={(value?: string) => setFocus(value)}
+      setFocus={(value: string | null) => setFocus(value)}
       focus={focus}
     />
   )
