@@ -15,10 +15,9 @@ import { TerminationDate } from 'features/member/tabs/contracts-tab/contract/ter
 import { getSignSource } from 'features/member/tabs/contracts-tab/utils'
 import {
   FocusItems,
-  useFocus,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Contract as ContractType } from 'types/generated/graphql'
 
 const ContractWrapper = styled('div')`
@@ -33,7 +32,9 @@ export const Contract: React.FC<{
   contract: ContractType
   refetch: () => Promise<any>
   shouldPreSelectAgreement: boolean
-}> = ({ contract, refetch, shouldPreSelectAgreement }) => {
+  focused: boolean
+  selected: boolean
+}> = ({ contract, refetch, shouldPreSelectAgreement, focused, selected }) => {
   const [selectedAgreement, setSelectedAgreement] = React.useState<
     string | undefined
   >(shouldPreSelectAgreement ? contract.currentAgreementId : undefined)
@@ -42,13 +43,35 @@ export const Contract: React.FC<{
     (agreement) => agreement.id === selectedAgreement,
   )
 
-  const { focus } = useNavigation()
+  const { focus, setFocus } = useNavigation()
 
-  useFocus(FocusItems.Member.items.ContractTable)
+  const cardsRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!cardsRef?.current) {
+      return
+    }
+
+    if (focused) {
+      cardsRef.current.scrollIntoView({
+        block: 'center',
+      })
+      return
+    }
+
+    cardsRef.current.blur()
+  }, [focused])
+
+  const selectAgreementHandler = (agreementId: string | undefined) => {
+    setSelectedAgreement(agreementId)
+    if (agreementId) {
+      setFocus(FocusItems.Member.items.ContractForm)
+    }
+  }
 
   return (
     <ContractWrapper>
-      <CardsWrapper>
+      <CardsWrapper ref={cardsRef} focused={focused}>
         <Card locked={contract.isLocked} span={3}>
           <InfoContainer>
             <ThirdLevelHeadline>
@@ -88,14 +111,17 @@ export const Contract: React.FC<{
       <AgreementsTable
         agreements={contract.genericAgreements}
         selectedAgreement={selectedAgreement}
-        setSelectedAgreement={setSelectedAgreement}
-        navigationAvailable={focus === FocusItems.Member.items.ContractTable}
+        setSelectedAgreement={selectAgreementHandler}
+        navigationAvailable={
+          selected && focus === FocusItems.Member.items.ContractTable
+        }
       />
       {agreementToShow && (
         <Agreement
           agreement={agreementToShow}
           contract={contract}
           refetch={refetch}
+          navigationAvailable={focus === FocusItems.Member.items.ContractForm}
         />
       )}
     </ContractWrapper>

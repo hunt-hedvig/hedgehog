@@ -6,13 +6,14 @@ import {
   InfoText,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { format, parseISO } from 'date-fns'
 import { AgreementInfo } from 'features/member/tabs/contracts-tab/agreement/AgreementInfo'
 import { FromDate } from 'features/member/tabs/contracts-tab/agreement/FromDate'
 import { InsuranceCertificate } from 'features/member/tabs/contracts-tab/agreement/InsuranceCertificate'
 import { InsuranceMandate } from 'features/member/tabs/contracts-tab/agreement/InsuranceMandate'
 import { ToDate } from 'features/member/tabs/contracts-tab/agreement/ToDate'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   AgreementStatus,
   Contract,
@@ -33,10 +34,66 @@ export const Agreement: React.FC<{
   agreement: AgreementType
   contract: Contract
   refetch: () => Promise<void>
-}> = ({ agreement, contract, refetch }) => {
+  navigationAvailable: boolean
+}> = ({ agreement, contract, refetch, navigationAvailable }) => {
+  const [buttons, setButtons] = useState<HTMLElement[]>([])
+  const cardsRef = useRef<HTMLDivElement>(null)
+
+  const [navigationStep] = useArrowKeyboardNavigation({
+    maxStep: buttons.length - 2,
+    onNavigationStep: () => {
+      if (!!buttons.length && !!buttons[navigationStep + 1]) {
+        buttons[navigationStep + 1].focus()
+        buttons[navigationStep + 1].scrollIntoView({
+          block: 'center',
+        })
+      }
+    },
+    isActive: navigationAvailable,
+    direction: 'horizontal',
+    withNegative: true,
+  })
+
+  const updateButtons = () => {
+    if (cardsRef.current) {
+      const newButtons: ChildNode[] = []
+
+      // TODO: Find better solution?
+      cardsRef.current.childNodes.forEach((child) => {
+        child.childNodes.forEach((subChild) => {
+          if (subChild.nodeName === 'BUTTON') {
+            newButtons.push(subChild)
+          }
+
+          if (subChild.childNodes.length) {
+            subChild.childNodes.forEach((subSubChild) => {
+              if (subSubChild.nodeName === 'BUTTON') {
+                newButtons.push(subSubChild)
+              }
+
+              if (subSubChild.childNodes.length) {
+                subSubChild.childNodes.forEach((subSubSubChild) => {
+                  if (subSubSubChild.nodeName === 'BUTTON') {
+                    newButtons.push(subSubSubChild)
+                  }
+                })
+              }
+            })
+          }
+        })
+      })
+
+      setButtons(newButtons.map((btn) => btn as HTMLElement))
+    }
+  }
+
+  useEffect(() => {
+    updateButtons()
+  }, [])
+
   return (
     <>
-      <CardsWrapper>
+      <CardsWrapper focused={navigationAvailable} ref={cardsRef}>
         <Card span={2}>
           <AgreementInfo agreement={agreement} />
         </Card>

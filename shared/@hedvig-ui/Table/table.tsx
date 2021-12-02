@@ -187,8 +187,10 @@ export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
   const rowRef = useRef<HTMLTableRowElement>(null)
 
   useEffect(() => {
-    if (active && rowRef && rowRef.current) {
-      rowRef.current.focus()
+    if (active && rowRef?.current) {
+      rowRef.current.scrollIntoView({
+        block: 'center',
+      })
     }
   }, [active])
 

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { HotkeyStyled } from '@hedvig-ui'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
   isPressing,
   Key,
@@ -141,6 +141,8 @@ export const Tabs: React.FC<TabsProps> = ({
   navigationAvailable,
   ...props
 }) => {
+  const tabsRef = useRef<HTMLUListElement>(null)
+
   const [navigationStep, reset] = useArrowKeyboardNavigation({
     maxStep: list.length - 2,
     isActive: navigationAvailable,
@@ -156,10 +158,18 @@ export const Tabs: React.FC<TabsProps> = ({
     if (!navigationAvailable) {
       reset()
     }
+
+    if (!tabsRef?.current) {
+      return
+    }
+
+    if (navigationAvailable) {
+      tabsRef.current.scrollIntoView(false)
+    }
   }, [navigationAvailable])
 
   return (
-    <TabsWrapper tabCount={list.length} {...props}>
+    <TabsWrapper tabCount={list.length} ref={tabsRef} {...props}>
       {list.map((tab, index) => (
         <Tab
           key={tab.title}
