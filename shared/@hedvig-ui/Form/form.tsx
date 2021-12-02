@@ -48,12 +48,12 @@ interface FormProps extends Omit<HTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   onSubmit: (data: FieldValues) => void
 }
 
-interface FormFieldProps {
+interface FormFieldProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue'> {
   label?: React.ReactNode
   name: string
   defaultValue: unknown
   rules?: RegisterOptions
-  className?: string
 }
 
 interface FieldProps {
@@ -192,6 +192,7 @@ export const FormTextArea: React.FC<TextAreaProps & FormFieldProps> = ({
 interface FormDropdownProps {
   options: Array<{ key: number; value: string | number; text: string | number }>
   placeholder?: string
+  focus?: boolean
 }
 
 const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
@@ -200,6 +201,8 @@ const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
   defaultValue,
   options,
   placeholder,
+  focus,
+  ...props
 }) => {
   return (
     <Controller
@@ -207,7 +210,12 @@ const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
       rules={rules}
       defaultValue={defaultValue}
       render={({ onChange, value, onBlur }) => (
-        <Dropdown onBlur={onBlur} placeholder={placeholder}>
+        <Dropdown
+          onBlur={onBlur}
+          placeholder={placeholder}
+          focus={focus}
+          {...props}
+        >
           {options.map((opt) => (
             <DropdownOption
               style={{ fontSize: 14 }}

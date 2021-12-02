@@ -22,15 +22,20 @@ import {
   TableRow,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { formatMoney } from '@hedvig-ui/utils/money'
 import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import { Market } from 'features/config/constants'
 import { useGetAccount } from 'features/member/tabs/account-tab/hooks/use-get-account'
-import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
+import {
+  FocusItems,
+  useFocus,
+  useNavigation,
+} from 'features/navigation/hooks/use-navigation'
 import gql from 'graphql-tag'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   Transaction,
@@ -39,6 +44,10 @@ import {
   useGetQuotesQuery,
 } from 'types/generated/graphql'
 import { PayoutDetails } from './PayoutDetails'
+
+const PaymentCard = styled(Card)<{ focused: boolean }>`
+  border: ${({ focused }) => (focused ? '2px solid red' : 'none')};
+`
 
 const numberRegex = /^\d+$/
 
@@ -152,10 +161,21 @@ export const PaymentsTab: React.FC<{
   } = useGetMemberTransactionsQuery({
     variables: { id: memberId },
   })
-
   const [manualAmount, setManualAmount] = useState('0')
+  const cardsRef = useRef<HTMLDivElement>(null)
 
+  const { focus, setFocus } = useNavigation()
   useFocus(FocusItems.Member.items.Payments)
+
+  const [navigationStep] = useArrowKeyboardNavigation({
+    // maxStep: cardsRef.current?.children.length || 0,
+    maxStep: 3,
+    onPerformNavigation: () => {
+      setFocus(FocusItems.Member.items.PaymentsForm)
+    },
+    direction: 'horizontal',
+    isActive: focus === FocusItems.Member.items.Payments,
+  })
 
   const { data: quotesData } = useGetQuotesQuery({
     variables: {
@@ -230,8 +250,8 @@ export const PaymentsTab: React.FC<{
   return (
     <>
       <MainHeadline>Payments</MainHeadline>
-      <CardsWrapper>
-        <Card span={2}>
+      <CardsWrapper ref={cardsRef}>
+        <PaymentCard span={2} focused={navigationStep + 1 === 0}>
           <InfoRow>
             Direct debit
             <InfoText>
@@ -266,8 +286,8 @@ export const PaymentsTab: React.FC<{
               </InfoTag>
             </InfoText>
           </InfoRow>
-        </Card>
-        <Card span={2}>
+        </PaymentCard>
+        <PaymentCard span={2} focused={navigationStep + 1 === 1}>
           <ThirdLevelHeadline>Payments Link</ThirdLevelHeadline>
           <Button
             onClick={(e) => {
@@ -291,10 +311,10 @@ export const PaymentsTab: React.FC<{
           >
             Generate payments link
           </Button>
-        </Card>
+        </PaymentCard>
 
         {memberData.member?.directDebitStatus?.activated && (
-          <Card>
+          <PaymentCard focused={navigationStep + 1 === 2}>
             {allowManualCharge ? (
               <form
                 onSubmit={(e) => {
@@ -353,16 +373,22 @@ export const PaymentsTab: React.FC<{
                 )}
               </>
             )}
-          </Card>
+          </PaymentCard>
         )}
         {memberData.member.payoutMethodStatus?.activated &&
           memberData.member.contractMarketInfo?.market === Market.Sweden && (
-            <Card>
+            <PaymentCard focused={navigationStep + 1 === 3}>
               <ThirdLevelHeadline>Payout</ThirdLevelHeadline>
-              <PayoutDetails memberId={memberId} />
-            </Card>
+              <PayoutDetails
+                memberId={memberId}
+                navigationAvailable={
+                  navigationStep + 1 === 3 &&
+                  focus === FocusItems.Member.items.PaymentsForm
+                }
+              />
+            </PaymentCard>
           )}
-        <Card>
+        <PaymentCard focused={navigationStep + 1 === 4}>
           <ThirdLevelHeadline>Transactions</ThirdLevelHeadline>
           <MemberTransactionsTable
             transactions={
@@ -372,7 +398,7 @@ export const PaymentsTab: React.FC<{
                 .reverse() as Transaction[]
             }
           />
-        </Card>
+        </PaymentCard>
       </CardsWrapper>
     </>
   )
