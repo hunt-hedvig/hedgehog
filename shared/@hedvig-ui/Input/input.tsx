@@ -200,8 +200,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const isError = error && !success && !loading
 
     useEffect(() => {
-      if (focus && inputRef.current) {
-        inputRef.current.focus()
+      if (inputRef.current) {
+        if (focus) {
+          inputRef.current.focus()
+        } else {
+          inputRef.current.blur()
+        }
       }
     }, [focus])
 

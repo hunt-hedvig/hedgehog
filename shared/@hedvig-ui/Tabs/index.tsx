@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { HotkeyStyled } from '@hedvig-ui'
+import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import React, { useEffect } from 'react'
 import {
   isPressing,
@@ -8,7 +9,7 @@ import {
   useKeyIsPressed,
 } from '../hooks/keyboard/use-key-is-pressed'
 
-const TabStyled = styled.li<{ active?: boolean }>`
+const TabStyled = styled.li<{ active?: boolean; focused?: boolean }>`
   transition: all 0.3s;
   position: relative;
 
@@ -25,9 +26,17 @@ const TabStyled = styled.li<{ active?: boolean }>`
   padding: 5px 0;
   margin: 0;
 
-  ${({ active, theme }) => `
-    border-bottom: 1px solid ${!active ? theme.accentLighter : theme.accent};
-    color: ${!active ? theme.semiStrongForeground : theme.foreground};
+  ${({ active, theme, focused }) => `
+    border-bottom: 1px solid ${
+      focused ? theme.foreground : !active ? theme.accentLighter : theme.accent
+    };
+    color: ${
+      focused
+        ? theme.accent
+        : !active
+        ? theme.semiStrongForeground
+        : theme.foreground
+    };
   `}
 
   &:hover,
@@ -66,6 +75,7 @@ const Hotkey = styled(HotkeyStyled)`
 
 export interface TabProps extends React.HTMLAttributes<HTMLLIElement> {
   active?: boolean
+  focused?: boolean
   action: () => void
   title: string
   hotkey?: {
@@ -75,6 +85,7 @@ export interface TabProps extends React.HTMLAttributes<HTMLLIElement> {
 }
 
 export const Tab: React.FC<TabProps> = ({
+  focused,
   active,
   title,
   action,
@@ -93,6 +104,7 @@ export const Tab: React.FC<TabProps> = ({
   return (
     <TabStyled
       active={active}
+      focused={focused}
       tabIndex={0}
       onClick={action}
       onKeyDown={(e) => isPressing(e, Keys.Enter) && action()}
@@ -121,13 +133,39 @@ const TabsWrapper = styled.ul<{ tabCount: number }>`
 
 export interface TabsProps extends React.HTMLAttributes<HTMLUListElement> {
   list: TabProps[]
+  navigationAvailable?: boolean
 }
 
-export const Tabs: React.FC<TabsProps> = ({ list, ...props }) => {
+export const Tabs: React.FC<TabsProps> = ({
+  list,
+  navigationAvailable,
+  ...props
+}) => {
+  const [navigationStep, reset] = useArrowKeyboardNavigation({
+    maxStep: list.length - 2,
+    isActive: navigationAvailable,
+    onPerformNavigation: (index) => {
+      const currentTab = index + 1
+      list[currentTab].action()
+    },
+    direction: 'horizontal',
+    withNegative: true,
+  })
+
+  useEffect(() => {
+    if (!navigationAvailable) {
+      reset()
+    }
+  }, [navigationAvailable])
+
   return (
     <TabsWrapper tabCount={list.length} {...props}>
-      {list.map((tab) => (
-        <Tab key={tab.title} {...tab} />
+      {list.map((tab, index) => (
+        <Tab
+          key={tab.title}
+          focused={navigationAvailable && navigationStep === index - 1}
+          {...tab}
+        />
       ))}
     </TabsWrapper>
   )

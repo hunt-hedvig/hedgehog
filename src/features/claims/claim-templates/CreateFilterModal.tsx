@@ -6,6 +6,7 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ClaimTemplateFilters } from 'features/claims/claim-templates/components/ClaimTemplateFilters'
 import { ClaimFilterTemplate } from 'features/claims/claim-templates/hooks/use-template-claims'
+import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
@@ -61,6 +62,8 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
   }
 
   useKeyIsPressed(Keys.Enter, createFilterHandler)
+
+  useFocus(FocusItems.Main.items.Modal)
 
   return (
     <Modal

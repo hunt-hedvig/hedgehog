@@ -1,4 +1,9 @@
 import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
+import {
+  isPressing,
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MembersList } from 'features/members-search/components/MembersList'
 import { MemberSuggestions } from 'features/members-search/components/MemberSuggestions'
@@ -10,7 +15,12 @@ import {
   MemberSuggestionsWrapper,
   NoMembers,
 } from 'features/members-search/styles'
-import React, { useRef } from 'react'
+import {
+  FocusItems,
+  useNavigation,
+} from 'features/navigation/hooks/use-navigation'
+import { useMemberHistory } from 'features/user/hooks/use-member-history'
+import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router'
 
 const MemberSearchPage: React.FC = () => {
@@ -18,8 +28,9 @@ const MemberSearchPage: React.FC = () => {
   const [includeAll, setIncludeAll] = React.useState(false)
   const [luckySearch, setLuckySearch] = React.useState(false)
   const history = useHistory()
-  const searchField = useRef<React.ReactElement>()
+  const searchField = useRef<HTMLInputElement>(null)
 
+  const { memberHistory } = useMemberHistory()
   const [
     { members, totalPages, page },
     memberSearch,
@@ -40,13 +51,31 @@ const MemberSearchPage: React.FC = () => {
 
   useTitle('Members')
 
+  const isUpPressed = useKeyIsPressed(Keys.Up)
+  const { focus, setFocus } = useNavigation()
+
+  useEffect(() => {
+    setFocus(FocusItems.Members.items.Search)
+  }, [])
+
+  useEffect(() => {
+    if (
+      isUpPressed &&
+      (!focus || focus === FocusItems.Members.items.Suggestions) &&
+      !members.length
+    ) {
+      setFocus(FocusItems.Members.items.Search)
+    }
+  }, [isUpPressed])
+
   return (
-    <>
+    <div>
       <SearchForm
         onSubmit={() => {
           memberSearch(query || '%', {
             includeAll,
           })
+          setFocus(null)
         }}
         loading={loading}
         query={query}
@@ -56,11 +85,32 @@ const MemberSearchPage: React.FC = () => {
         currentResultSize={members.length}
         searchFieldRef={searchField as any}
         setLuckySearch={setLuckySearch}
+        focus={focus === FocusItems.Members.items.Search}
+        onKeyDown={(e) => {
+          if (isPressing(e, Keys.Down)) {
+            if (!!members.length && focus === FocusItems.Members.items.Search) {
+              setFocus(null)
+              return
+            }
+
+            if (
+              !members.length &&
+              !!memberHistory.length &&
+              focus === FocusItems.Members.items.Search
+            ) {
+              setFocus(FocusItems.Members.items.Suggestions)
+            }
+          }
+        }}
       />
       {members.length > 0 && (
         <>
           <FadeIn>
-            <MembersList members={members} />
+            <MembersList
+              setFocus={setFocus}
+              members={members}
+              navigationAvailable={focus === null}
+            />
             <TablePageSelect
               currentPage={page}
               totalPages={totalPages}
@@ -93,7 +143,12 @@ const MemberSearchPage: React.FC = () => {
 
           <MemberSuggestionsWrapper>
             <MainHeadline>Suggestions</MainHeadline>
-            <MemberSuggestions />
+            <MemberSuggestions
+              memberHistory={memberHistory}
+              navigationAvailable={
+                focus === FocusItems.Members.items.Suggestions
+              }
+            />
           </MemberSuggestionsWrapper>
         </>
       )}
@@ -103,7 +158,7 @@ const MemberSearchPage: React.FC = () => {
           <div>D*shborad! No members found</div>
         </NoMembers>
       )}
-    </>
+    </div>
   )
 }
 

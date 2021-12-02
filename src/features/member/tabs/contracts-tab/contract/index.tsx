@@ -13,6 +13,11 @@ import { AgreementsTable } from 'features/member/tabs/contracts-tab/agreement/Ag
 import { MasterInception } from 'features/member/tabs/contracts-tab/contract/master-inception'
 import { TerminationDate } from 'features/member/tabs/contracts-tab/contract/termination-date'
 import { getSignSource } from 'features/member/tabs/contracts-tab/utils'
+import {
+  FocusItems,
+  useFocus,
+  useNavigation,
+} from 'features/navigation/hooks/use-navigation'
 import React from 'react'
 import { Contract as ContractType } from 'types/generated/graphql'
 
@@ -36,6 +41,10 @@ export const Contract: React.FC<{
   const agreementToShow = contract.genericAgreements.find(
     (agreement) => agreement.id === selectedAgreement,
   )
+
+  const { focus } = useNavigation()
+
+  useFocus(FocusItems.Member.items.ContractTable)
 
   return (
     <ContractWrapper>
@@ -80,6 +89,7 @@ export const Contract: React.FC<{
         agreements={contract.genericAgreements}
         selectedAgreement={selectedAgreement}
         setSelectedAgreement={setSelectedAgreement}
+        navigationAvailable={focus === FocusItems.Member.items.ContractTable}
       />
       {agreementToShow && (
         <Agreement

@@ -14,7 +14,8 @@ import {
 } from 'features/members-search/styles'
 import React, { useState } from 'react'
 
-interface SearchFieldProps {
+interface SearchFieldProps
+  extends Omit<React.HTMLAttributes<HTMLInputElement>, 'onSubmit'> {
   onSubmit: (query: string, includeAll: boolean) => void
   onFocus?: () => void
   loading: boolean
@@ -25,6 +26,7 @@ interface SearchFieldProps {
   currentResultSize: number
   searchFieldRef: React.RefObject<HTMLInputElement>
   setLuckySearch: (luckySearch: boolean) => void
+  focus?: boolean
 }
 
 const stagingToolsAvailable = () => {
@@ -42,6 +44,8 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
   currentResultSize,
   searchFieldRef,
   setLuckySearch,
+  focus,
+  ...props
 }) => {
   const [textFieldFocused, setTextFieldFocused] = useState(false)
   const { isMetaKey, metaKey } = usePlatform()
@@ -58,6 +62,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
       <Group>
         <SearchInputGroup>
           <Input
+            {...props}
             style={{ borderRadius: '0.5rem' }}
             onChange={({ target: { value } }) => {
               if (shouldIgnoreInput(value)) {
@@ -72,7 +77,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             loading={loading}
             size="large"
             type="search"
-            autoFocus
+            focus={focus}
             muted={!query}
             ref={searchFieldRef}
             onFocus={() => {
@@ -83,6 +88,10 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             }}
             onBlur={() => setTextFieldFocused(false)}
             onKeyDown={(e) => {
+              if (props.onKeyDown) {
+                props.onKeyDown(e)
+              }
+
               if (
                 isMetaKey(e) &&
                 isPressing(e, Keys.Enter) &&

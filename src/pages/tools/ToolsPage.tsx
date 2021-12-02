@@ -1,18 +1,25 @@
 import styled from '@emotion/styled'
 import {
-  CardLink,
+  CardLink as CardWithLink,
   CardsWrapper,
   FadeIn,
   HotkeyStyled,
   MainHeadline,
 } from '@hedvig-ui'
+import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
+import chroma from 'chroma-js'
 import { useCommandLine } from 'features/commands/use-command-line'
-import React from 'react'
+import {
+  FocusItems,
+  useFocus,
+  useNavigation,
+} from 'features/navigation/hooks/use-navigation'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 
 const Row = styled.div<{ columns?: number }>`
@@ -25,8 +32,26 @@ const Icon = styled('div')`
   padding-bottom: 1rem;
 `
 
-const Card = styled(CardLink)`
+const Card = styled(CardWithLink)<{ focus?: boolean }>`
   position: relative;
+
+  padding: 2rem;
+
+  ${({ theme, focus }) =>
+    focus &&
+    `background: ${chroma(theme.accentLight)
+      .alpha(0.1)
+      .hex()};`}
+`
+
+const CardLink = styled(CardWithLink)<{ focus?: boolean }>`
+  padding: 2rem;
+
+  ${({ theme, focus }) =>
+    focus &&
+    `background: ${chroma(theme.accentLight)
+      .alpha(0.1)
+      .hex()};`}
 `
 
 const Hotkey = styled(HotkeyStyled)`
@@ -105,21 +130,63 @@ const ToolsPage: React.FC = () => {
     },
   ])
 
+  const paths = [
+    '/tools/charges',
+    '/tools/switcher-automation',
+    '/tools/perils-editor',
+    '/tools/campaign-codes',
+    '/tools/employees',
+    '/tools/claim-types',
+  ]
+
+  const { focus } = useNavigation()
+
+  useFocus(FocusItems.Tools.name)
+
+  const [navigationStep, reset] = useArrowKeyboardNavigation({
+    maxStep: 4,
+    isActive: focus === FocusItems.Tools.name,
+    onPerformNavigation: (index) => {
+      const currentIndex = index + 1
+      history.push(paths[currentIndex])
+    },
+    direction: 'horizontal',
+    withNegative: true,
+  })
+
+  useEffect(() => {
+    if (focus !== FocusItems.Tools.name) {
+      reset()
+    }
+  }, [focus])
+
   return (
     <FadeIn>
       <CardsWrapper style={{ flexDirection: 'column' }}>
         <Row columns={3}>
-          <Card to="/tools/charges" span={4}>
+          <Card
+            to="/tools/charges"
+            span={4}
+            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 0}
+          >
             <Icon>💰</Icon>
             Approve Charges
             {isControlPressed && <Hotkey dark>1</Hotkey>}
           </Card>
-          <Card to="/tools/switcher-automation" span={4}>
+          <Card
+            to="/tools/switcher-automation"
+            span={4}
+            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 1}
+          >
             <Icon>🏡</Icon>
             {isControlPressed && <Hotkey dark>2</Hotkey>}
             Switcher Automation
           </Card>
-          <Card to="/tools/perils-editor" span={4}>
+          <Card
+            to="/tools/perils-editor"
+            span={4}
+            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 2}
+          >
             <Icon>📝</Icon>
             {isControlPressed && <Hotkey dark>3</Hotkey>}
             Perils Editor
@@ -127,17 +194,29 @@ const ToolsPage: React.FC = () => {
         </Row>
 
         <Row columns={3}>
-          <CardLink to="/tools/campaign-codes" span={4}>
+          <CardLink
+            to="/tools/campaign-codes"
+            span={4}
+            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 3}
+          >
             <Icon>💵</Icon>
             {isControlPressed && <Hotkey dark>4</Hotkey>}
             Campaign Codes
           </CardLink>
-          <CardLink to="/tools/employees" span={4}>
+          <CardLink
+            to="/tools/employees"
+            span={4}
+            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 4}
+          >
             <Icon>👩🏼‍🦰</Icon>
             {isControlPressed && <Hotkey dark>5</Hotkey>}
             Employees
           </CardLink>
-          <CardLink to="/tools/claim-types" span={4}>
+          <CardLink
+            to="/tools/claim-types"
+            span={4}
+            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 5}
+          >
             <Icon>🧠</Icon>
             {isControlPressed && <Hotkey dark>6</Hotkey>}
             Claim Types
