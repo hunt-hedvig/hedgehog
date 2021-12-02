@@ -5,6 +5,7 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { CommandLineModal } from 'features/commands/components/CommandLineModal'
+import { PushShortcutUsed } from 'features/tracking/utils/tags'
 import React, {
   createContext,
   useContext,
@@ -114,6 +115,11 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     })
 
     if (matchIndex > -1) {
+      PushShortcutUsed(
+        actions.current[matchIndex].label,
+        actions.current[matchIndex].keys?.map((key) => key.code) ?? [],
+      )
+
       actions.current[matchIndex].onResolve()
       setShowCommandLine(false)
     }
