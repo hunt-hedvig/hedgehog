@@ -28,11 +28,8 @@ export const Capitalized = styled.div`
   text-transform: lowercase;
 `
 
-export const Placeholder = styled.div`
-  && {
-    display: inline-block;
-    color: ${({ theme }) => theme.placeholderColor};
-  }
+export const Placeholder = styled.span`
+  color: ${({ theme }) => theme.placeholderColor};
 `
 
 export const Bold = styled.strong`
