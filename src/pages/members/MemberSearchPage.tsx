@@ -61,7 +61,8 @@ const MemberSearchPage: React.FC = () => {
   useEffect(() => {
     if (
       isUpPressed &&
-      (!focus || focus === FocusItems.Members.items.Suggestions)
+      (!focus || focus === FocusItems.Members.items.Suggestions) &&
+      !members.length
     ) {
       setFocus(FocusItems.Members.items.Search)
     }
@@ -86,12 +87,19 @@ const MemberSearchPage: React.FC = () => {
         setLuckySearch={setLuckySearch}
         focus={focus === FocusItems.Members.items.Search}
         onKeyDown={(e) => {
-          if (
-            isPressing(e, Keys.Down) &&
-            !!memberHistory.length &&
-            !members.length
-          ) {
-            setFocus(FocusItems.Members.items.Suggestions)
+          if (isPressing(e, Keys.Down)) {
+            if (!!members.length && focus === FocusItems.Members.items.Search) {
+              setFocus(null)
+              return
+            }
+
+            if (
+              !members.length &&
+              !!memberHistory.length &&
+              focus === FocusItems.Members.items.Search
+            ) {
+              setFocus(FocusItems.Members.items.Suggestions)
+            }
           }
         }}
       />
