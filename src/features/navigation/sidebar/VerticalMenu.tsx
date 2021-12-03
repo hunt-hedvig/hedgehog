@@ -312,6 +312,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
         <Wrapper
           collapsed={shouldAlwaysCollapse || isCollapsed}
           ref={sidebarRef}
+          onClick={() => setFocus(null)}
         >
           <CollapseToggle
             onClick={toggleOpen}
