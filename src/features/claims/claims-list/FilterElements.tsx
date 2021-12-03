@@ -8,8 +8,11 @@ import { FilterGroupState, LabelWithPopover } from './filters/ClaimListFilters'
 
 export const Filters = styled(Flex)<{ active: boolean }>`
   width: fit-content;
+
+  border-radius: 0.5rem;
+  padding: ${({ active }) => (active ? '0.1rem 0.5rem' : '0.2rem 0.6rem')};
   border: ${({ active, theme }) =>
-    active ? `2px solid ${theme.accentLight}` : 'none'};
+    active ? `0.1rem solid ${theme.accentLight}` : 'none'};
 `
 
 export const FilterElementStyled = styled.div`
