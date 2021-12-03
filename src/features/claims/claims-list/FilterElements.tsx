@@ -33,6 +33,7 @@ interface FilterElementProps {
   checkboxLabel?: typeof FilterGroupState
   onRender: (key: string) => React.ReactNode
   maxStep: number
+  onNavigationStep?: (step: number) => void
 }
 
 export const FilterElement: React.FC<FilterElementProps> = ({
@@ -46,11 +47,17 @@ export const FilterElement: React.FC<FilterElementProps> = ({
   checkboxLabel,
   onRender,
   maxStep,
+  onNavigationStep,
 }) => {
   const [navigationStep, reset] = useArrowKeyboardNavigation({
     maxStep,
     onPerformNavigation: (index) => {
       onPerfom(index)
+    },
+    onNavigationStep: () => {
+      if (onNavigationStep) {
+        onNavigationStep(navigationStep)
+      }
     },
     isActive: active,
     withNegative: true,

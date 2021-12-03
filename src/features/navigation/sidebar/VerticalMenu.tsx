@@ -8,7 +8,7 @@ import {
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Chat,
   ChevronLeft,
@@ -284,11 +284,18 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   const sidebarRef = useRef<HTMLDivElement>(null)
   const { focus, setFocus } = useNavigation()
 
-  const focusHandler = () => {
-    setFocus(FocusItems.Main.items.Sidebar)
-  }
+  const isSPressed = useKeyIsPressed(Keys.S)
 
-  useKeyIsPressed(Keys.S, focusHandler)
+  useEffect(() => {
+    if (
+      isSPressed &&
+      focus !== FocusItems.Main.items.Modal &&
+      focus !== FocusItems.Main.items.ModalFilters &&
+      focus !== FocusItems.Main.items.ModalSubmit
+    ) {
+      setFocus(FocusItems.Main.items.Sidebar)
+    }
+  }, [isSPressed])
 
   const [navigationStep, reset] = useArrowKeyboardNavigation({
     maxStep: MenuItemsList.length - 2,
