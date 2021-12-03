@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import _chroma from 'chroma-js'
 import { useElementFocus } from 'features/navigation/hooks/use-navigation'
-import React, { useRef } from 'react'
+import React, { ButtonHTMLAttributes, useRef } from 'react'
 
 // Necessary for tests to run - if not, theme colors used might be undefined at test-time
 const chroma = (c: string) => _chroma(c ?? 'white')
@@ -207,7 +207,12 @@ const ButtonIconWrapper = styled.div`
 `
 
 export const Button = styled(
-  ({ icon, children, focus, ...props }: ButtonProps) => {
+  ({
+    icon,
+    children,
+    focus,
+    ...props
+  }: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) => {
     const btnRef = useRef<HTMLButtonElement>(null)
     useElementFocus(btnRef, focus || false)
 
