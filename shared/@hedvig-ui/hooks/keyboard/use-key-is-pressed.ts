@@ -1,3 +1,4 @@
+import { PushKeyboardNavigation } from 'features/tracking/utils/tags'
 import React, { useEffect, useState } from 'react'
 
 export interface Key {
@@ -351,6 +352,24 @@ const isPressingKeys = (
   }, true)
 }
 
+const trackNavigation = (e) => {
+  if (isPressing(e, Keys.Up)) {
+    PushKeyboardNavigation('navigate', [Keys.Up.code])
+  }
+
+  if (isPressing(e, Keys.Down)) {
+    PushKeyboardNavigation('navigate', [Keys.Down.code])
+  }
+
+  if (isPressing(e, Keys.Left)) {
+    PushKeyboardNavigation('navigate', [Keys.Left.code])
+  }
+
+  if (isPressing(e, Keys.Right)) {
+    PushKeyboardNavigation('navigate', [Keys.Right.code])
+  }
+}
+
 export const useKeyIsPressed = (
   key: Key,
   callback?: (e) => void,
@@ -367,6 +386,8 @@ export const useKeyIsPressed = (
     ) {
       callback?.(e)
       setKeyPressed(true)
+
+      trackNavigation(e)
     }
   }
 

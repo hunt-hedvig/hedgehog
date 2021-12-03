@@ -20,7 +20,7 @@ const MemberCard = styled.div`
   background-color: ${({ theme }) =>
     chroma(theme.accent)
       .brighten(0.5)
-      .alpha(0.15)
+      .alpha(0.25)
       .hex()};
   border-radius: 0.5rem;
   padding: 1rem;

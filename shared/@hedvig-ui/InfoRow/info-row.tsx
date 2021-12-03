@@ -1,5 +1,6 @@
 import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
+import chroma from 'chroma-js'
 
 export const InfoContainer = styled('div')`
   display: flex;
@@ -21,8 +22,15 @@ export const InfoText = styled('span')`
 `
 
 export const InfoSection = styled.div`
-  margin-top: 2em;
-  margin-bottom: 2em;
+  margin: 1.5rem 0;
+  background-color: ${({ theme }) =>
+    chroma(theme.accent)
+      .brighten(1)
+      .alpha(0.1)
+      .hex()};
+
+  padding: 0.3rem 1rem;
+  border-radius: 0.5rem;
 `
 
 const mapInfoTagStatus = (status: InfoTagStatus) => {
@@ -41,7 +49,7 @@ const mapInfoTagStatus = (status: InfoTagStatus) => {
   }
 
   if (status === 'neutral') {
-    return { backgroundColor: '#e7e7e7', color: '#777777' }
+    return { backgroundColor: '#c7c7c7', color: '#777777' }
   }
 
   if (status === 'info') {

@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
 import {
   Copyable,
+  Flex,
   InfoContainer,
-  InfoRow,
   InfoSection,
   InfoTag,
   InfoTagStatus,
-  InfoText,
   Loadable,
+  Placeholder,
   Popover,
 } from '@hedvig-ui'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
@@ -61,9 +61,23 @@ const debtFlagDescriptionMap: Record<Flag, string> = {
   [Flag.Red]: 'Major Debt',
 }
 
-const ClickableText = styled.span`
-  color: ${({ theme }) => theme.accent};
+const Info = styled.div`
+  width: 100%;
+  margin: 0.5rem 0;
+
+  > span {
+    display: block;
+    width: 100%;
+    font-size: 0.75rem;
+    color: ${({ theme }) => theme.semiStrongForeground};
+    margin-bottom: -0.1rem;
+  }
+
+  > div {
+    border-radius: 0.5rem;
+  }
 `
+
 export const MemberGeneralView: React.FC<{
   memberId: string
   claimId: string
@@ -100,116 +114,157 @@ export const MemberGeneralView: React.FC<{
   return (
     <InfoContainer>
       <Loadable loading={memberContractsDataLoading}>
-        {member?.contractMarketInfo?.market === Market.Norway && (
-          <InfoRow>
-            Identified
-            <InfoText>
-              <InfoTag
-                style={{ fontWeight: 'bold' }}
-                status={member.identity ? 'success' : 'warning'}
-              >
-                {member.identity ? 'Yes' : 'No'}
-              </InfoTag>
-            </InfoText>
-          </InfoRow>
-        )}
-        {!!member?.personalNumber && (
-          <InfoRow>
-            Personal number
-            <InfoText>
-              <Copyable onClick={() => copy(member.personalNumber!)}>
-                <ClickableText>
-                  {formatSsn(member.personalNumber)}
-                </ClickableText>
-              </Copyable>
-            </InfoText>
-          </InfoRow>
-        )}
+        <InfoSection>
+          <Flex direction="row">
+            <Info style={{ width: '70%' }}>
+              <span>Personal number</span>
+              <div>
+                {member?.personalNumber ? (
+                  <Copyable onClick={() => copy(member.personalNumber!)}>
+                    {formatSsn(member.personalNumber)}
+                  </Copyable>
+                ) : (
+                  <Placeholder>Not specified</Placeholder>
+                )}
+              </div>
+            </Info>
+            {member?.contractMarketInfo?.market === Market.Norway && (
+              <Info style={{ width: '30%' }}>
+                <span>Identified</span>
+                <div>
+                  <InfoTag
+                    style={{
+                      fontWeight: 'bold',
+                      marginTop: '0.25rem',
+                      textAlign: 'center',
+                    }}
+                    status={member.identity ? 'success' : 'warning'}
+                  >
+                    {member.identity ? 'Yes' : 'No'}
+                  </InfoTag>
+                </div>
+              </Info>
+            )}
+          </Flex>
+        </InfoSection>
         {address && (
           <InfoSection>
-            <InfoRow>
-              Street
-              <InfoText>
-                {convertEnumOrSentenceToTitle(address.street)}
-              </InfoText>
-            </InfoRow>
-            <InfoRow>
-              Postal code
-              <InfoText>{formatPostalCode(address.postalCode)}</InfoText>
-            </InfoRow>
+            <Flex direction="row">
+              <Info style={{ width: '70%' }}>
+                <span>Street</span>
+                <div>{convertEnumOrSentenceToTitle(address.street)}</div>
+              </Info>
+              <Info style={{ width: '30%' }}>
+                <span>Postal code</span>
+                <div>{formatPostalCode(address.postalCode)}</div>
+              </Info>
+            </Flex>
             {address.city && (
-              <InfoRow>
-                City
-                <InfoText>
-                  {convertEnumOrSentenceToTitle(address.city)}
-                </InfoText>
-              </InfoRow>
+              <Info>
+                <span>City</span>
+                <div>{convertEnumOrSentenceToTitle(address.city)}</div>
+              </Info>
             )}
           </InfoSection>
         )}
 
-        {member?.fraudulentStatus && (
-          <InfoRow>
-            Fraudulent status
-            <InfoText>
-              <InfoTag
-                style={{ fontWeight: 'bold' }}
-                status={fraudulentStatusMap[member.fraudulentStatus]}
-              >
-                {convertEnumOrSentenceToTitle(member.fraudulentStatus ?? '')}
-              </InfoTag>
-            </InfoText>
-          </InfoRow>
-        )}
+        <InfoSection>
+          <Flex direction="row">
+            <Info style={{ marginRight: '0.5rem' }}>
+              <span>Fraudulent Status</span>
+              <div>
+                <InfoTag
+                  style={{
+                    fontWeight: 'bold',
+                    marginTop: '0.25rem',
+                    textAlign: 'center',
+                  }}
+                  status={
+                    member?.fraudulentStatus
+                      ? fraudulentStatusMap[member.fraudulentStatus]
+                      : 'neutral'
+                  }
+                >
+                  {member?.fraudulentStatus
+                    ? convertEnumOrSentenceToTitle(member.fraudulentStatus)
+                    : 'Not applicable'}
+                </InfoTag>
+              </div>
+            </Info>
 
-        <InfoRow>
-          Direct debit
-          <InfoText>
-            <InfoTag
-              style={{ fontWeight: 'bold' }}
-              status={
-                member?.directDebitStatus?.activated ? 'success' : 'warning'
-              }
-            >
-              {member?.directDebitStatus?.activated
-                ? 'Activated'
-                : 'Not Activated'}
-            </InfoTag>
-          </InfoText>
-        </InfoRow>
+            <Info style={{ marginLeft: '0.5rem' }}>
+              <span>Direct Debit</span>
+              <div>
+                <InfoTag
+                  style={{
+                    fontWeight: 'bold',
+                    marginTop: '0.25rem',
+                    textAlign: 'center',
+                  }}
+                  status={
+                    member?.directDebitStatus?.activated ? 'success' : 'warning'
+                  }
+                >
+                  {member?.directDebitStatus?.activated
+                    ? 'Activated'
+                    : 'Not Activated'}
+                </InfoTag>
+              </div>
+            </Info>
+          </Flex>
 
-        {!!member?.sanctionStatus && (
-          <InfoRow>
-            Sanction status
-            <InfoText>
-              <InfoTag
-                style={{ fontWeight: 'bold' }}
-                status={sanctionStatusMap[member.sanctionStatus]}
-              >
-                {convertCamelcaseToTitle(member.sanctionStatus)}
-              </InfoTag>
-            </InfoText>
-          </InfoRow>
-        )}
-        {member?.person?.debtFlag && (
-          <InfoRow>
-            Debt status
-            <InfoText>
-              <InfoTag
-                style={{ fontWeight: 'bold' }}
-                status={debtFlagMap[member.person.debtFlag]}
-              >
-                {debtFlagDescriptionMap[member.person.debtFlag]}
-              </InfoTag>
-            </InfoText>
-          </InfoRow>
-        )}
+          <Flex direction="row" justify="center" align="center">
+            <Info style={{ marginRight: '0.5rem' }}>
+              <span>Sanction Status</span>
+              <div>
+                <InfoTag
+                  style={{
+                    fontWeight: 'bold',
+                    marginTop: '0.25rem',
+                    textAlign: 'center',
+                  }}
+                  status={
+                    member?.sanctionStatus
+                      ? sanctionStatusMap[member.sanctionStatus]
+                      : 'neutral'
+                  }
+                >
+                  {member?.sanctionStatus
+                    ? convertCamelcaseToTitle(member.sanctionStatus)
+                    : 'Not applicable'}
+                </InfoTag>
+              </div>
+            </Info>
+
+            <Info style={{ marginLeft: '0.5rem' }}>
+              <span>Debt status</span>
+              <div>
+                <InfoTag
+                  style={{
+                    fontWeight: 'bold',
+                    marginTop: '0.25rem',
+                    textAlign: 'center',
+                  }}
+                  status={
+                    member?.person?.debtFlag
+                      ? debtFlagMap[member.person.debtFlag]
+                      : 'neutral'
+                  }
+                >
+                  {member?.person?.debtFlag
+                    ? debtFlagDescriptionMap[member.person.debtFlag]
+                    : 'Not applicable'}
+                </InfoTag>
+              </div>
+            </Info>
+          </Flex>
+        </InfoSection>
 
         <InfoSection>
-          {member?.signedOn && (
-            <InfoRow>
-              Signed
-              <InfoText>
+          <Info>
+            <span>Signed</span>
+            <div>
+              {member?.signedOn ? (
                 <Popover
                   contents={formatDistanceToNowStrict(
                     parseISO(member.signedOn),
@@ -221,53 +276,70 @@ export const MemberGeneralView: React.FC<{
                   {member.signedOn &&
                     format(parseISO(member.signedOn), 'yyyy-MM-dd HH:mm')}
                 </Popover>
-              </InfoText>
-            </InfoRow>
-          )}
+              ) : (
+                <Placeholder>Not applicable</Placeholder>
+              )}
+            </div>
+          </Info>
 
-          <InfoRow>
-            Master inception
-            <InfoText>
-              <Popover
-                contents={
-                  firstMasterInception
-                    ? formatDistanceToNowStrict(
-                        parse(firstMasterInception, 'yyyy-MM-dd', new Date()),
-                        {
-                          addSuffix: true,
-                        },
-                      )
-                    : 'Never active'
-                }
-              >
-                {firstMasterInception ?? 'Never active'}
-              </Popover>
-            </InfoText>
-          </InfoRow>
+          <Flex direction="row">
+            <Info>
+              <span>Master inception</span>
+              <div>
+                <Popover
+                  contents={
+                    firstMasterInception
+                      ? formatDistanceToNowStrict(
+                          parse(firstMasterInception, 'yyyy-MM-dd', new Date()),
+                          {
+                            addSuffix: true,
+                          },
+                        )
+                      : 'Never active'
+                  }
+                >
+                  {firstMasterInception ?? (
+                    <Placeholder>Never active</Placeholder>
+                  )}
+                </Popover>
+              </div>
+            </Info>
 
-          {lastTermination && (
-            <InfoRow>
-              Last termination date
-              <InfoText>{lastTermination}</InfoText>
-            </InfoRow>
-          )}
-          {!!member?.account?.totalBalance && (
-            <InfoRow>
-              Payments balance
-              <InfoText>{formatMoney(member.account.totalBalance)}</InfoText>
-            </InfoRow>
-          )}
-          {!!member?.numberFailedCharges?.numberFailedCharges && (
-            <InfoRow>
-              Failed payments
-              <InfoText>
-                {member.numberFailedCharges.numberFailedCharges}
-                {member.numberFailedCharges.numberFailedCharges > 1
+            <Info>
+              <span>Last termination date</span>
+              <div>
+                {lastTermination ?? <Placeholder>Not applicable</Placeholder>}
+              </div>
+            </Info>
+          </Flex>
+
+          <Flex direction="row">
+            <Info>
+              <span>Payments balance</span>
+              <div>
+                {member?.account?.totalBalance ? (
+                  formatMoney(member.account.totalBalance)
+                ) : (
+                  <Placeholder>Not applicable</Placeholder>
+                )}
+              </div>
+            </Info>
+            <Info>
+              <span>Failed payments</span>
+              <div>
+                {member?.numberFailedCharges?.numberFailedCharges === 0 ? (
+                  <Placeholder>None</Placeholder>
+                ) : (
+                  member?.numberFailedCharges?.numberFailedCharges &&
+                  member.numberFailedCharges.numberFailedCharges
+                )}
+                {member?.numberFailedCharges?.numberFailedCharges &&
+                member.numberFailedCharges.numberFailedCharges > 1
                   ? ' in a row'
                   : ''}
-              </InfoText>
-            </InfoRow>
-          )}
+              </div>
+            </Info>
+          </Flex>
         </InfoSection>
       </Loadable>
     </InfoContainer>

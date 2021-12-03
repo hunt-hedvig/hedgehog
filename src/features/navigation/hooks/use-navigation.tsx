@@ -2,6 +2,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { PushKeyboardNavigation } from 'features/tracking/utils/tags'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 interface FocusItemsType {
@@ -146,6 +147,8 @@ export const NavigationProvider = ({ children }) => {
   const changeFocusHandler = (value: string | null) => {
     setFocus((prev) => {
       setPrevFocus(prev)
+
+      PushKeyboardNavigation(`focus: ${value}` ?? 'focus: reset', [])
 
       return value
     })
