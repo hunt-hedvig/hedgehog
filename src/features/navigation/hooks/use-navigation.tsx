@@ -146,10 +146,6 @@ export const NavigationProvider = ({ children }) => {
   const [focus, setFocus] = useState<string | null>(null)
   const [_, setPrevFocus] = useState<string | null>(null)
 
-  // useEffect(() => {
-  //   console.log(focus)
-  // }, [focus])
-
   const changeFocusHandler = (value: string | null) => {
     setFocus((prev) => {
       setPrevFocus(prev)
@@ -188,4 +184,22 @@ export const useFocus = (value: string | null) => {
   }, [focus])
 
   return () => setFocus(null)
+}
+
+export const useElementFocus = (
+  ref: React.RefObject<HTMLElement>,
+  focus: boolean,
+) => {
+  useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+
+    if (focus) {
+      ref.current.focus()
+      return
+    }
+
+    ref.current.blur()
+  }, [focus])
 }

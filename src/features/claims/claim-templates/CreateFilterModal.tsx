@@ -85,7 +85,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
     <Modal
       onClose={onClose}
       width="700px"
-      height="500px"
+      height="530px"
       title={name ? name : 'Create claim filter'}
     >
       <Body>

@@ -5,10 +5,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
+import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
 import React, {
   createContext,
   useContext,
@@ -35,13 +32,7 @@ export const ConfirmDialogComponent: React.FC<{
   const isEnterPressed = useKeyIsPressed(Keys.Enter)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
-  const { setFocus } = useNavigation()
-
-  useEffect(() => {
-    setFocus(FocusItems.Main.items.Modal)
-
-    return () => setFocus(null)
-  }, [])
+  useFocus(FocusItems.Main.items.Modal)
 
   useEffect(() => {
     if (isEnterPressed) {

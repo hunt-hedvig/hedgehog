@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { InputHTMLAttributes, useEffect, useRef } from 'react'
+import { useElementFocus } from 'features/navigation/hooks/use-navigation'
+import React, { InputHTMLAttributes, useRef } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { Spinner } from '../Spinner/spinner'
 
@@ -199,15 +200,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const isSuccess = success && !error && !loading
     const isError = error && !success && !loading
 
-    useEffect(() => {
-      if (inputRef.current) {
-        if (focus) {
-          inputRef.current.focus()
-        } else {
-          inputRef.current.blur()
-        }
-      }
-    }, [focus])
+    useElementFocus(inputRef, focus || false)
 
     return (
       <InputWrapper style={style}>
