@@ -37,6 +37,10 @@ export const useArrowKeyboardNavigation = ({
     setNavigationIndex(-1)
   }
 
+  useEffect(() => {
+    setNavigationIndex(defaultNavigationStep ?? -1)
+  }, [defaultNavigationStep])
+
   useKeyboardListener(isActive, (e) => {
     if (
       (!withNegative ? navigationIndex !== -1 : true) &&
