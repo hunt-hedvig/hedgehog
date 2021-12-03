@@ -44,7 +44,6 @@ export const Agreement: React.FC<{
   const [navigationStep] = useArrowKeyboardNavigation({
     maxStep: buttons.length - 1,
     onNavigationStep: () => {
-      console.log(navigationStep)
       if (!!buttons.length && !!buttons[navigationStep + 1]) {
         buttons[navigationStep + 1].focus()
         buttons[navigationStep + 1].scrollIntoView({
@@ -58,7 +57,7 @@ export const Agreement: React.FC<{
   })
 
   return (
-    <CardsWrapper focused={navigationAvailable} ref={cardsRef}>
+    <CardsWrapper ref={cardsRef}>
       <Card span={2}>
         <AgreementInfo agreement={agreement} />
       </Card>

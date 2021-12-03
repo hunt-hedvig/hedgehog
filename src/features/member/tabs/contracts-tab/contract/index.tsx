@@ -20,6 +20,25 @@ import {
 import React, { useEffect, useRef } from 'react'
 import { Contract as ContractType } from 'types/generated/graphql'
 
+const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
+  border-radius: 0.5rem;
+  box-shadow: ${({ focused }) =>
+    focused ? '0px 0px 10px 6px rgba(34, 60, 80, 0.2)' : 'none'};
+`
+
+const ContractCard = styled(Card)`
+  margin-top: 0;
+  margin-bottom: 0;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+`
+
 const ContractWrapper = styled('div')`
   &:not(:first-of-type) {
     margin-top: 5rem;
@@ -71,8 +90,8 @@ export const Contract: React.FC<{
 
   return (
     <ContractWrapper>
-      <CardsWrapper ref={cardsRef} focused={focused}>
-        <Card locked={contract.isLocked} span={3}>
+      <ContractsCardsWrapper ref={cardsRef} focused={focused}>
+        <ContractCard locked={contract.isLocked} span={3}>
           <InfoContainer>
             <ThirdLevelHeadline>
               <InfoRow>{contract.contractTypeName}</InfoRow>
@@ -98,16 +117,16 @@ export const Contract: React.FC<{
               </InfoRow>
             )}
           </InfoContainer>
-        </Card>
-        <Card locked={contract.isLocked} span={3}>
+        </ContractCard>
+        <ContractCard locked={contract.isLocked} span={3}>
           <ThirdLevelHeadline>Master Inception</ThirdLevelHeadline>
           <MasterInception contract={contract} />
-        </Card>
-        <Card locked={contract.isLocked} span={3}>
+        </ContractCard>
+        <ContractCard locked={contract.isLocked} span={3}>
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
-        </Card>
-      </CardsWrapper>
+        </ContractCard>
+      </ContractsCardsWrapper>
       <AgreementsTable
         agreements={contract.genericAgreements}
         selectedAgreement={selectedAgreement}
@@ -121,7 +140,9 @@ export const Contract: React.FC<{
           agreement={agreementToShow}
           contract={contract}
           refetch={refetch}
-          navigationAvailable={focus === FocusItems.Member.items.ContractForm}
+          navigationAvailable={
+            focus === FocusItems.Member.items.ContractForm && selected
+          }
         />
       )}
     </ContractWrapper>

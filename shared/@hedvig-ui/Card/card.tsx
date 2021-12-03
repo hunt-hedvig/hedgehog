@@ -7,15 +7,12 @@ import { Link } from 'react-router-dom'
 
 export const CardsWrapper = styled.div<{
   contentWrap?: string
-  focused?: boolean
 }>`
   width: calc(100% + 1rem);
   display: flex;
   flex-direction: row;
   flex-wrap: ${({ contentWrap = 'wrap' }) => contentWrap};
   margin: 0rem -0.5rem;
-
-  border: ${({ focused }) => (focused ? '2px solid red' : 'none')};
 `
 
 const LockedOverlay = styled.div`
