@@ -15,15 +15,16 @@ import { TerminationDate } from 'features/member/tabs/contracts-tab/contract/ter
 import { getSignSource } from 'features/member/tabs/contracts-tab/utils'
 import {
   FocusItems,
+  useElementFocus,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { Contract as ContractType } from 'types/generated/graphql'
 
 const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
   border-radius: 0.5rem;
-  box-shadow: ${({ focused }) =>
-    focused ? '0px 0px 10px 6px rgba(34, 60, 80, 0.2)' : 'none'};
+  border: ${({ focused, theme }) =>
+    focused ? `1px solid ${theme.accent}` : 'none'};
 `
 
 const ContractCard = styled(Card)`
@@ -62,24 +63,10 @@ export const Contract: React.FC<{
     (agreement) => agreement.id === selectedAgreement,
   )
 
-  const { focus, setFocus } = useNavigation()
-
   const cardsRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (!cardsRef?.current) {
-      return
-    }
-
-    if (focused) {
-      cardsRef.current.scrollIntoView({
-        block: 'center',
-      })
-      return
-    }
-
-    cardsRef.current.blur()
-  }, [focused])
+  const { focus, setFocus } = useNavigation()
+  useElementFocus(cardsRef, focused)
 
   const selectAgreementHandler = (agreementId: string | undefined) => {
     setSelectedAgreement(agreementId)

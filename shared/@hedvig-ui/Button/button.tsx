@@ -184,7 +184,7 @@ const cursor = ({ disabled = false }) => {
   `
 }
 
-export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'tertiary'
   status?: 'success' | 'warning' | 'danger'
   size?: 'small' | 'medium' | 'large'
@@ -207,12 +207,7 @@ const ButtonIconWrapper = styled.div`
 `
 
 export const Button = styled(
-  ({
-    icon,
-    children,
-    focus,
-    ...props
-  }: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) => {
+  ({ icon, children, focus, ...props }: ButtonProps) => {
     const btnRef = useRef<HTMLButtonElement>(null)
     useElementFocus(btnRef, focus || false)
 

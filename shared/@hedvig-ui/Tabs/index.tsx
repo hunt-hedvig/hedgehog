@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { HotkeyStyled } from '@hedvig-ui'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
+import { useElementFocus } from 'features/navigation/hooks/use-navigation'
 import React, { useEffect, useRef } from 'react'
 import {
   isPressing,
@@ -154,15 +155,7 @@ export const Tabs: React.FC<TabsProps> = ({
     withNegative: true,
   })
 
-  useEffect(() => {
-    if (!tabsRef?.current) {
-      return
-    }
-
-    if (navigationAvailable) {
-      tabsRef.current.scrollIntoView(false)
-    }
-  }, [navigationAvailable])
+  useElementFocus(tabsRef, navigationAvailable || false)
 
   return (
     <TabsWrapper tabCount={list.length} ref={tabsRef} {...props}>

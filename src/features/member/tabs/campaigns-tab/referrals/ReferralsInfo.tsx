@@ -17,8 +17,8 @@ import { MembersReferredTable } from './MembersReferredTable'
 
 const CampaignCard = styled(Card)<{ focused: boolean }>`
   border-radius: 0.5rem;
-  box-shadow: ${({ focused }) =>
-    focused ? '0px 0px 10px 6px rgba(34, 60, 80, 0.2)' : 'none'};
+  border: ${({ focused, theme }) =>
+    focused ? `1px solid ${theme.accent}` : 'none'};
 `
 
 const MemberLink: React.FC<{ memberReferral: MemberReferral }> = ({
