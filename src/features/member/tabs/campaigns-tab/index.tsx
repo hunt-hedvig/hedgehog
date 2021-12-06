@@ -4,11 +4,16 @@ import {
   MainHeadline,
   StandaloneMessage,
 } from '@hedvig-ui'
+import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { CampaignsInfo } from 'features/member/tabs/campaigns-tab/campaigns/CampaignsInfo'
 import { useGetReferralInformation } from 'features/member/tabs/campaigns-tab/hooks/use-get-referral-information'
 import { ReferralsInfo } from 'features/member/tabs/campaigns-tab/referrals/ReferralsInfo'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
-import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
+import {
+  FocusItems,
+  useFocus,
+  useNavigation,
+} from 'features/navigation/hooks/use-navigation'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 
@@ -20,7 +25,20 @@ export const CampaignsTab: React.FC<{
     { loading, error, refetch },
   ] = useGetReferralInformation(memberId)
 
+  const { focus, setFocus } = useNavigation()
   useFocus(FocusItems.Member.items.Campaigns)
+
+  const [navigationStep] = useArrowKeyboardNavigation({
+    maxStep: 1,
+    onPerformNavigation: (index) => {
+      if (index + 1 === 0) {
+        setFocus(FocusItems.Member.items.CampaignsRedeem)
+      }
+    },
+    isActive: focus === FocusItems.Member.items.Campaigns,
+    withNegative: true,
+    direction: 'vertical',
+  })
 
   if (loading) {
     return <LoadingMessage paddingTop="10vh" />
@@ -43,11 +61,17 @@ export const CampaignsTab: React.FC<{
         </RefreshButton>
       </MainHeadline>
       <CampaignsInfo
+        focused={navigationStep + 1 === 0}
+        navigationAvailable={focus === FocusItems.Member.items.CampaignsRedeem}
         memberId={memberId}
         referralInformation={referralInformation}
       />
 
-      <ReferralsInfo referralInformation={referralInformation} />
+      <ReferralsInfo
+        referralInformation={referralInformation}
+        navStep={navigationStep}
+        navigationAvailable={focus === FocusItems.Member.items.Campaigns}
+      />
     </FadeIn>
   )
 }
