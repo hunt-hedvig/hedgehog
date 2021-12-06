@@ -281,7 +281,11 @@ export const PaymentsTab: React.FC<{
     <>
       <MainHeadline>Payments</MainHeadline>
       <CardsWrapper ref={cardsRef}>
-        <PaymentCard span={2} focused={navigationStep + 1 === 0}>
+        <PaymentCard
+          span={2}
+          focus={navigationStep + 1 === 0}
+          focused={navigationStep + 1 === 0}
+        >
           <InfoRow>
             Direct debit
             <InfoText>
@@ -317,7 +321,11 @@ export const PaymentsTab: React.FC<{
             </InfoText>
           </InfoRow>
         </PaymentCard>
-        <PaymentCard span={2} focused={navigationStep + 1 === 1}>
+        <PaymentCard
+          span={2}
+          focus={navigationStep + 1 === 1}
+          focused={navigationStep + 1 === 1}
+        >
           <ThirdLevelHeadline>Payments Link</ThirdLevelHeadline>
           <Button
             onClick={(e) => {
@@ -330,7 +338,10 @@ export const PaymentsTab: React.FC<{
         </PaymentCard>
 
         {memberData.member?.directDebitStatus?.activated && (
-          <PaymentCard focused={navigationStep + 1 === 2}>
+          <PaymentCard
+            focus={navigationStep + 1 === 2}
+            focused={navigationStep + 1 === 2}
+          >
             {allowManualCharge ? (
               <form
                 onSubmit={(e) => {
@@ -393,7 +404,10 @@ export const PaymentsTab: React.FC<{
         )}
         {memberData.member.payoutMethodStatus?.activated &&
           memberData.member.contractMarketInfo?.market === Market.Sweden && (
-            <PaymentCard focused={navigationStep + 1 === 3}>
+            <PaymentCard
+              focus={navigationStep + 1 === 3}
+              focused={navigationStep + 1 === 3}
+            >
               <ThirdLevelHeadline>Payout</ThirdLevelHeadline>
               <PayoutDetails
                 memberId={memberId}
@@ -404,7 +418,10 @@ export const PaymentsTab: React.FC<{
               />
             </PaymentCard>
           )}
-        <PaymentCard focused={navigationStep + 1 === 4}>
+        <PaymentCard
+          focus={navigationStep + 1 === 4}
+          focused={navigationStep + 1 === 4}
+        >
           <ThirdLevelHeadline>Transactions</ThirdLevelHeadline>
           <MemberTransactionsTable
             transactions={
