@@ -136,7 +136,7 @@ export const MemberTabsList = ({ memberId, member }) => {
   const isTPressed = useKeyIsPressed(Keys.T)
 
   useEffect(() => {
-    if (isTPressed) {
+    if (isTPressed && focus !== FocusItems.Main.items.Modal) {
       setFocus(FocusItems.Member.items.Tabs)
     }
   }, [isTPressed])
