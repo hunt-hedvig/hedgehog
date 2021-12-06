@@ -143,7 +143,7 @@ export const Tabs: React.FC<TabsProps> = ({
 }) => {
   const tabsRef = useRef<HTMLUListElement>(null)
 
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
+  const [navigationStep] = useArrowKeyboardNavigation({
     maxStep: list.length - 2,
     isActive: navigationAvailable,
     onPerformNavigation: (index) => {
@@ -155,10 +155,6 @@ export const Tabs: React.FC<TabsProps> = ({
   })
 
   useEffect(() => {
-    if (!navigationAvailable) {
-      reset()
-    }
-
     if (!tabsRef?.current) {
       return
     }

@@ -12,6 +12,8 @@ interface FocusItemsType {
       Sidebar: string
       Topbar: string
       Modal: string
+      ModalFilters: string
+      ModalSubmit: string
     }
   }
   Dashborad: {
@@ -33,7 +35,22 @@ interface FocusItemsType {
       ContractTable: string
       ContractForm: string
       QuoteTabs: string
+      Files: string
+      Claims: string
+      Payments: string
+      PaymentsForm: string
+      PaymentsFormField: string
+      Account: string
+      AccountEntries: string
+      MonthlyEntries: string
+      Member: string
+      Debt: string
+      Campaigns: string
+      CampaignsRedeem: string
     }
+  }
+  Questions: {
+    name: string
   }
   Conversations: {
     name: string
@@ -60,6 +77,8 @@ export const FocusItems: FocusItemsType = {
       Sidebar: 'SIDEBAR_SECTION',
       Topbar: 'TOPBAR_SECTION',
       Modal: 'MODAL_SECTION',
+      ModalFilters: 'MODAL_FILTERS',
+      ModalSubmit: 'MODAL_SUBMIT',
     },
   },
   Dashborad: {
@@ -81,7 +100,22 @@ export const FocusItems: FocusItemsType = {
       ContractTable: 'MEMBER_CONTRACT_TABLE',
       ContractForm: 'MEMBER_CONTRACT_FORM',
       QuoteTabs: 'MEMBER_QUOTE_TABS',
+      Files: 'MEMBER_FILES',
+      Claims: 'MEMBER_CLAIMS',
+      Payments: 'MEMBER_PAYMENTS',
+      PaymentsForm: 'MEMBER_PAYMENTS_FORM',
+      PaymentsFormField: 'MEMBER_PAYMENTS_FORM_FIELD',
+      Account: 'MEMBER_ACCOUNT',
+      AccountEntries: 'MEMBER_ACCOUNT_ENTRIES',
+      MonthlyEntries: 'MEMBER_MONTHLY_ENTRIES',
+      Member: 'MEMBER_MEMBER_TAB',
+      Debt: 'MEMBER_DEBT',
+      Campaigns: 'MEMBER_CAMPAIGNS',
+      CampaignsRedeem: 'MEMBER_CAMPAIGNS_REDEEM',
     },
+  },
+  Questions: {
+    name: 'QUESTIONS_PAGE',
   },
   Conversations: {
     name: 'CONVERSATIONS_PAGE',
@@ -128,10 +162,6 @@ export const NavigationProvider = ({ children }) => {
     })
   }
 
-  // useEffect(() => {
-  //   console.log(focus)
-  // }, [focus])
-
   useEffect(() => {
     if (isEscapePressed) {
       changeFocusHandler(null)
@@ -160,4 +190,25 @@ export const useFocus = (value: string | null) => {
   }, [focus])
 
   return () => setFocus(null)
+}
+
+export const useElementFocus = (
+  ref: React.RefObject<HTMLElement>,
+  focus: boolean,
+) => {
+  useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+
+    if (focus) {
+      ref.current.focus()
+      ref.current.scrollIntoView({
+        block: 'center',
+      })
+      return
+    }
+
+    ref.current.blur()
+  }, [focus])
 }

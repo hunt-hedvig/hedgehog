@@ -6,7 +6,11 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
-import React, { useRef } from 'react'
+import {
+  FocusItems,
+  useNavigation,
+} from 'features/navigation/hooks/use-navigation'
+import React, { useEffect, useRef } from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { Portal } from 'react-portal'
 
@@ -19,10 +23,10 @@ const ModalWrapperStyled = styled.div<{
   width: 100vw;
   height: 100vh;
 
-  ${({ dim, theme }) =>
+  ${({ dim }) =>
     dim &&
     css`
-      background-color: ${theme.backgroundTransparent};
+      background-color: rgba(0, 0, 0, 0.4);
     `};
 
   position: fixed;
@@ -121,7 +125,17 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null)
 
+  const { setFocus } = useNavigation()
+
+  useEffect(() => {
+    setFocus(FocusItems.Main.items.Modal)
+
+    return () => setFocus(null)
+  }, [])
+
   const clickOutsideCloseHandler = () => {
+    setFocus(null)
+
     if (!disableClickOutside) {
       return onClose()
     } else {

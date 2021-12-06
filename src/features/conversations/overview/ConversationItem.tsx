@@ -2,8 +2,9 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
 import { StatusLine } from 'features/claims/claims-list/LargeClaimsList'
+import { useElementFocus } from 'features/navigation/hooks/use-navigation'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useHistory } from 'react-router'
 import { QuestionGroup } from 'types/generated/graphql'
 
@@ -71,19 +72,15 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
 
   const history = useHistory()
 
-  const ref = useRef<HTMLDivElement>(null)
+  const itemRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (focus && ref && ref.current) {
-      ref.current.focus()
-    }
-  }, [focus])
+  useElementFocus(itemRef, focus || false)
 
   const nameAvailable = group.member?.firstName && group.member.lastName
 
   return (
     <Item
-      ref={ref}
+      ref={itemRef}
       key={group.memberId}
       tabIndex={0}
       onClick={() => history.push(`/conversations/${group.memberId}`)}

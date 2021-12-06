@@ -24,15 +24,22 @@ export const useArrowKeyboardNavigation = ({
   maxStep,
   onNavigationStep,
   onPerformNavigation,
+  defaultNavigationStep,
   onExit,
   isActive = false,
   direction = 'vertical',
   withNegative = false,
 }: UseVerticalKeyboardNavigationProps): [number, () => void] => {
-  const [navigationIndex, setNavigationIndex] = useState(-1)
+  const [navigationIndex, setNavigationIndex] = useState(
+    defaultNavigationStep ?? -1,
+  )
   const reset = () => {
     setNavigationIndex(-1)
   }
+
+  useEffect(() => {
+    setNavigationIndex(defaultNavigationStep ?? -1)
+  }, [defaultNavigationStep])
 
   useKeyboardListener(isActive, (e) => {
     if (

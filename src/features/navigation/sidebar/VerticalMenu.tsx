@@ -8,7 +8,7 @@ import {
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Chat,
   ChevronLeft,
@@ -284,13 +284,33 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   const sidebarRef = useRef<HTMLDivElement>(null)
   const { focus, setFocus } = useNavigation()
 
-  const focusHandler = () => {
-    setFocus(FocusItems.Main.items.Sidebar)
+  const isSPressed = useKeyIsPressed(Keys.S)
+
+  useEffect(() => {
+    if (
+      isSPressed &&
+      focus !== FocusItems.Main.items.Modal &&
+      focus !== FocusItems.Main.items.ModalFilters &&
+      focus !== FocusItems.Main.items.ModalSubmit
+    ) {
+      setFocus(FocusItems.Main.items.Sidebar)
+    }
+  }, [isSPressed])
+
+  const getActiveMenuItem = () => {
+    const activeMenuItem = MenuItemsList.map((item, index) => {
+      if (location.pathname.startsWith(item.route)) {
+        return index
+      }
+
+      return undefined
+    }).filter((index) => typeof index === 'number')[0]
+
+    return typeof activeMenuItem === 'number' ? activeMenuItem - 1 : -1
   }
 
-  useKeyIsPressed(Keys.S, focusHandler)
-
   const [navigationStep, reset] = useArrowKeyboardNavigation({
+    defaultNavigationStep: getActiveMenuItem(),
     maxStep: MenuItemsList.length - 2,
     isActive: focus === FocusItems.Main.items.Sidebar,
   })
@@ -305,6 +325,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
         <Wrapper
           collapsed={shouldAlwaysCollapse || isCollapsed}
           ref={sidebarRef}
+          onClick={() => setFocus(null)}
         >
           <CollapseToggle
             onClick={toggleOpen}
