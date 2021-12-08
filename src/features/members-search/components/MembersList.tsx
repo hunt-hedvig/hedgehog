@@ -116,7 +116,6 @@ export const MembersList: React.FC<{
 
     history.push(link)
   }
-
   return (
     <>
       <Spacing top />
@@ -140,10 +139,8 @@ export const MembersList: React.FC<{
 
             redirectMemberHandler(memberId)
           }}
-          onNavigationStep={(step: number) => {
-            if (step === -1) {
-              setFocus(FocusItems.Members.items.Search)
-            }
+          onExit={() => {
+            setFocus(FocusItems.Members.items.Search)
           }}
         >
           {members.map((member, index) => {
