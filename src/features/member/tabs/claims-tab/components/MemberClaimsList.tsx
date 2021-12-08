@@ -15,7 +15,7 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useGetMemberClaims } from 'features/member/tabs/claims-tab/hooks/use-get-member-claims'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
 
@@ -49,6 +49,10 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
 
   const claims = memberClaims ?? []
 
+  useEffect(() => {
+    console.log(claims)
+  }, [claims])
+
   if (loading) {
     return <LoadingMessage paddingTop="10vh" />
   }
@@ -66,7 +70,7 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
       <Table>
         <TableHeader>
           <TableHeaderColumn>Date Registered</TableHeaderColumn>
-          <TableHeaderColumn>Claim Type</TableHeaderColumn>
+          <TableHeaderColumn>Claim Type & Outcome</TableHeaderColumn>
           <TableHeaderColumn>Claim State</TableHeaderColumn>
           <TableHeaderColumn>Claim Reserves</TableHeaderColumn>
         </TableHeader>
@@ -96,11 +100,20 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
                 </TableColumn>
 
                 <TableColumn>
-                  {claim.claimType ? (
-                    convertEnumToTitle(claim.claimType)
-                  ) : (
-                    <Placeholder>Not specified</Placeholder>
-                  )}
+                  <FlexVertically>
+                    {claim.claimType ? (
+                      convertEnumToTitle(claim.claimType)
+                    ) : (
+                      <Placeholder>Type not specified</Placeholder>
+                    )}
+                    <TableColumnSubtext>
+                      {claim.outcome ? (
+                        convertEnumToTitle(claim.outcome)
+                      ) : (
+                        <Placeholder>Outcome not specified</Placeholder>
+                      )}
+                    </TableColumnSubtext>
+                  </FlexVertically>
                 </TableColumn>
 
                 <TableColumn>
