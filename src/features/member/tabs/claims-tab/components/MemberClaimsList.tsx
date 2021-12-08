@@ -15,7 +15,7 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useGetMemberClaims } from 'features/member/tabs/claims-tab/hooks/use-get-member-claims'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
 
