@@ -207,19 +207,27 @@ const ButtonIconWrapper = styled.div`
 `
 
 export const Button = styled(
-  ({ icon, children, focus, ...props }: ButtonProps) => {
-    const btnRef = useRef<HTMLButtonElement>(null)
-    useElementFocus(btnRef, focus || false)
+  React.forwardRef(
+    (
+      { icon, children, focus, ...props }: ButtonProps,
+      ref: React.ForwardedRef<HTMLButtonElement>,
+    ) => {
+      const internalRef = useRef<HTMLButtonElement>(null)
+      useElementFocus(
+        (ref as React.RefObject<HTMLElement>) ?? internalRef,
+        focus || false,
+      )
 
-    return (
-      <button {...props} ref={btnRef}>
-        <ButtonIconWrapper>
-          {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
-          <div>{children}</div>
-        </ButtonIconWrapper>
-      </button>
-    )
-  },
+      return (
+        <button {...props} ref={ref ?? internalRef}>
+          <ButtonIconWrapper>
+            {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
+            <div>{children}</div>
+          </ButtonIconWrapper>
+        </button>
+      )
+    },
+  ),
 )`
   font-family: inherit;
   transition: all 200ms;
