@@ -45,10 +45,10 @@ import {
 } from 'types/generated/graphql'
 import { PayoutDetails } from './PayoutDetails'
 
-const PaymentCard = styled(Card)<{ focused: boolean }>`
+const PaymentCard = styled(Card)<{ active: boolean }>`
   border-radius: 0.5rem;
-  border: ${({ focused, theme }) =>
-    focused ? `1px solid ${theme.accent}` : 'none'};
+  border: ${({ active, theme }) =>
+    active ? `1px solid ${theme.accent}` : 'none'};
 `
 
 const numberRegex = /^\d+$/
@@ -284,7 +284,7 @@ export const PaymentsTab: React.FC<{
         <PaymentCard
           span={2}
           focus={navigationStep + 1 === 0}
-          focused={navigationStep + 1 === 0}
+          active={navigationStep + 1 === 0}
         >
           <InfoRow>
             Direct debit
@@ -324,7 +324,7 @@ export const PaymentsTab: React.FC<{
         <PaymentCard
           span={2}
           focus={navigationStep + 1 === 1}
-          focused={navigationStep + 1 === 1}
+          active={navigationStep + 1 === 1}
         >
           <ThirdLevelHeadline>Payments Link</ThirdLevelHeadline>
           <Button
@@ -340,7 +340,7 @@ export const PaymentsTab: React.FC<{
         {memberData.member?.directDebitStatus?.activated && (
           <PaymentCard
             focus={navigationStep + 1 === 2}
-            focused={navigationStep + 1 === 2}
+            active={navigationStep + 1 === 2}
           >
             {allowManualCharge ? (
               <form
@@ -406,7 +406,7 @@ export const PaymentsTab: React.FC<{
           memberData.member.contractMarketInfo?.market === Market.Sweden && (
             <PaymentCard
               focus={navigationStep + 1 === 3}
-              focused={navigationStep + 1 === 3}
+              active={navigationStep + 1 === 3}
             >
               <ThirdLevelHeadline>Payout</ThirdLevelHeadline>
               <PayoutDetails
@@ -420,7 +420,7 @@ export const PaymentsTab: React.FC<{
           )}
         <PaymentCard
           focus={navigationStep + 1 === 4}
-          focused={navigationStep + 1 === 4}
+          active={navigationStep + 1 === 4}
         >
           <ThirdLevelHeadline>Transactions</ThirdLevelHeadline>
           <MemberTransactionsTable

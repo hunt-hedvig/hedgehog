@@ -119,7 +119,6 @@ export const PayoutDetails: React.FC<{
   const { focus, setFocus } = useNavigation()
 
   const [navigationStep] = useArrowKeyboardNavigation({
-    // maxStep: cardsRef.current?.children.length || 0,
     maxStep: 3,
     onPerformNavigation: () => {
       setFocus(FocusItems.Member.items.PaymentsFormField)

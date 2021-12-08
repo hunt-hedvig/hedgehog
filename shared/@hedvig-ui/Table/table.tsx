@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
+import { useElementFocus } from 'features/navigation/hooks/use-navigation'
 import React, { TableHTMLAttributes, useEffect, useRef } from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
 
@@ -189,13 +190,7 @@ interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
 export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
   const rowRef = useRef<HTMLTableRowElement>(null)
 
-  useEffect(() => {
-    if (active && rowRef?.current) {
-      rowRef.current.scrollIntoView({
-        block: 'center',
-      })
-    }
-  }, [active])
+  useElementFocus(rowRef, active || false)
 
   return <TableRowStyled ref={rowRef} active={active} {...props} />
 }

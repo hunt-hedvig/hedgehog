@@ -97,7 +97,7 @@ export const MemberFile: React.FC<{
     </StandaloneMessage>
   ) : (
     <MemberFileTable
-      memberFiles={data.member!.fileUploads}
+      memberFiles={data.member.fileUploads}
       navigationAvailable={focus === FocusItems.Member.items.Files}
     />
   )
