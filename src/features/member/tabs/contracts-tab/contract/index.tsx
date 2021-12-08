@@ -27,19 +27,6 @@ const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
     focused ? `1px solid ${theme.accent}` : 'none'};
 `
 
-const ContractCard = styled(Card)`
-  margin-top: 0;
-  margin-bottom: 0;
-
-  &:first-child {
-    margin-left: 0;
-  }
-
-  &:last-child {
-    margin-right: 0;
-  }
-`
-
 const ContractWrapper = styled('div')`
   &:not(:first-of-type) {
     margin-top: 5rem;
@@ -78,7 +65,7 @@ export const Contract: React.FC<{
   return (
     <ContractWrapper>
       <ContractsCardsWrapper ref={cardsRef} focused={focused}>
-        <ContractCard locked={contract.isLocked} span={3}>
+        <Card locked={contract.isLocked} span={3}>
           <InfoContainer>
             <ThirdLevelHeadline>
               <InfoRow>{contract.contractTypeName}</InfoRow>
@@ -104,15 +91,15 @@ export const Contract: React.FC<{
               </InfoRow>
             )}
           </InfoContainer>
-        </ContractCard>
-        <ContractCard locked={contract.isLocked} span={3}>
+        </Card>
+        <Card locked={contract.isLocked} span={3}>
           <ThirdLevelHeadline>Master Inception</ThirdLevelHeadline>
           <MasterInception contract={contract} />
-        </ContractCard>
-        <ContractCard locked={contract.isLocked} span={3}>
+        </Card>
+        <Card locked={contract.isLocked} span={3}>
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
-        </ContractCard>
+        </Card>
       </ContractsCardsWrapper>
       <AgreementsTable
         agreements={contract.genericAgreements}
