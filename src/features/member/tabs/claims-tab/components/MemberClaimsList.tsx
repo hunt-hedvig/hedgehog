@@ -49,10 +49,6 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
 
   const claims = memberClaims ?? []
 
-  useEffect(() => {
-    console.log(claims)
-  }, [claims])
-
   if (loading) {
     return <LoadingMessage paddingTop="10vh" />
   }
