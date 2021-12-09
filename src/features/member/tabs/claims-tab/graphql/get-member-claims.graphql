@@ -10,6 +10,7 @@ query GetMemberClaims($memberId: ID!) {
       }
       registrationDate
       claimType
+      outcome
       state
       reserves
     }
