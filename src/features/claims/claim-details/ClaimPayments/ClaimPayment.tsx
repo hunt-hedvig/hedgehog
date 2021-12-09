@@ -17,6 +17,7 @@ import {
   SanctionStatus,
   useCreateClaimPaymentMutation,
   useCreateSwishClaimPaymentMutation,
+  useGetMemberTransactionsQuery,
 } from 'types/generated/graphql'
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 
@@ -55,7 +56,19 @@ export const ClaimPayment: React.FC<{
   identified: boolean
   market: string
   carrier: string
-}> = ({ focus, sanctionStatus, carrier, claimId, identified, market }) => {
+  memberId: string
+}> = ({
+  focus,
+  sanctionStatus,
+  carrier,
+  claimId,
+  identified,
+  market,
+  memberId,
+}) => {
+  const { data: memberData } = useGetMemberTransactionsQuery({
+    variables: { id: memberId },
+  })
   const [createPayment] = useCreateClaimPaymentMutation()
   const [createSwishPayment] = useCreateSwishClaimPaymentMutation()
 
@@ -63,12 +76,21 @@ export const ClaimPayment: React.FC<{
   const [isExGratia, setIsExGratia] = useState(false)
   const [isOverridden, setIsOverridden] = useState(false)
 
+  console.log(memberData)
+
+  const isPaymentActivated =
+    !!memberData?.member?.directDebitStatus?.activated ||
+    // &&
+    !!memberData?.member?.payoutMethodStatus?.activated
+
   const categoryOptions: CategoryOptionsType[] = [
     ...Object.keys(ClaimPaymentType).map((paymentType, index) => ({
       key: index + 1,
       value: paymentType,
       text: paymentType,
-      disabled: paymentType === ClaimPaymentType.Manual,
+      disabled:
+        paymentType === ClaimPaymentType.Manual ||
+        (paymentType === ClaimPaymentType.Automatic && !isPaymentActivated),
     })),
     {
       key: 5,
@@ -84,7 +106,7 @@ export const ClaimPayment: React.FC<{
     form.setValue('deductible', '')
     form.setValue('note', '')
     setIsExGratia(false)
-    form.setValue('type', 'Automatic')
+    form.setValue('type', isPaymentActivated ? 'Automatic' : 'IndemnityCost')
     form.reset()
   }
 
@@ -220,7 +242,11 @@ export const ClaimPayment: React.FC<{
             return isExGratia ? opt.value !== ClaimPaymentType.Automatic : true
           })}
           name="type"
-          defaultValue={ClaimPaymentType.Automatic}
+          defaultValue={
+            isPaymentActivated
+              ? ClaimPaymentType.Automatic
+              : ClaimPaymentType.IndemnityCost
+          }
           rules={{
             required: 'Category is required',
           }}
