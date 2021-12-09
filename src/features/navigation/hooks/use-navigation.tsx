@@ -196,7 +196,7 @@ export const useFocus = (value: string | null) => {
 
 export const useElementFocus = (
   ref: React.RefObject<HTMLElement>,
-  focus: boolean,
+  focus?: boolean,
 ) => {
   useEffect(() => {
     if (!ref.current) {
@@ -205,9 +205,13 @@ export const useElementFocus = (
 
     if (focus) {
       ref.current.focus()
-      ref.current.scrollIntoView({
-        block: 'center',
-      })
+
+      if (ref.current.scrollIntoView) {
+        ref.current.scrollIntoView({
+          block: 'center',
+        })
+      }
+
       return
     }
 

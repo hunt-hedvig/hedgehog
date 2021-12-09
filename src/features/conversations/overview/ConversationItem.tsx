@@ -74,7 +74,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
 
   const itemRef = useRef<HTMLDivElement>(null)
 
-  useElementFocus(itemRef, focus || false)
+  useElementFocus(itemRef, focus)
 
   const nameAvailable = group.member?.firstName && group.member.lastName
 

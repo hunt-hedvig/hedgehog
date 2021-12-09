@@ -70,10 +70,7 @@ export const Card = React.forwardRef(
   ) => {
     const internalRef = useRef<HTMLDivElement>(null)
 
-    useElementFocus(
-      (ref as React.RefObject<HTMLElement>) ?? internalRef,
-      focus || false,
-    )
+    useElementFocus((ref as React.RefObject<HTMLElement>) ?? internalRef, focus)
 
     return (
       <CardContainer ref={ref ?? internalRef} {...cardProps}>

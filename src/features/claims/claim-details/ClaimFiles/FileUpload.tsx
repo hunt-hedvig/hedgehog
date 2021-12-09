@@ -67,7 +67,7 @@ export const FileUpload: React.FC<{
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useElementFocus(inputRef, focus || false)
+  useElementFocus(inputRef, focus)
 
   return (
     <UploadClaimFileWrapper>

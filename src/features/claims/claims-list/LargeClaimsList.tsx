@@ -194,7 +194,7 @@ export const LargeClaimsList: React.FC<{
 
             return (
               <TableRow
-                active={activeRow === index}
+                active={activeRow === index - 1}
                 key={claim.id}
                 tabIndex={0}
                 onKeyDown={(e) => {
