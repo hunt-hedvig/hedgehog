@@ -78,7 +78,6 @@ export const ClaimPayment: React.FC<{
 
   const isPaymentActivated =
     !!memberData?.member?.directDebitStatus?.activated ||
-    // && ?
     !!memberData?.member?.payoutMethodStatus?.activated
 
   const categoryOptions: CategoryOptionsType[] = [
@@ -104,7 +103,12 @@ export const ClaimPayment: React.FC<{
     form.setValue('deductible', '')
     form.setValue('note', '')
     setIsExGratia(false)
-    form.setValue('type', isPaymentActivated ? 'Automatic' : 'IndemnityCost')
+    form.setValue(
+      'type',
+      isPaymentActivated
+        ? ClaimPaymentType.Automatic
+        : ClaimPaymentType.IndemnityCost,
+    )
     form.reset()
   }
 
