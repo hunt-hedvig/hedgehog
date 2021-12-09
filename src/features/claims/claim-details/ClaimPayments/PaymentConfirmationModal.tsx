@@ -44,6 +44,7 @@ export const PaymentConfirmationModal: React.FC<PaymentConfirmationModalProps> =
         To perform the payment, confirm it by entering "{amount}" below.
       </Explanation>
       <Input
+        focus={true}
         autoFocus
         name="confirmation"
         placeholder="Amount"
