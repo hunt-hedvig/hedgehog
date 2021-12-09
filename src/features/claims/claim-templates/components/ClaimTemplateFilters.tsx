@@ -1,5 +1,6 @@
 import { Checkbox, Flex, Label } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
+import { FilterElementStyled as FilterElement } from 'features/claims/claims-list/FilterElements'
 import {
   complexityIcons,
   FilterGroupState,
@@ -15,7 +16,6 @@ import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
-import { FilterElementStyled as FilterElement } from '../../claims-list/FilterElements'
 
 interface ClaimTemplateFiltersProps
   extends React.HTMLAttributes<HTMLDivElement> {

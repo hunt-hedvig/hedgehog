@@ -6,13 +6,13 @@ import chroma from 'chroma-js'
 import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterModal'
 import { FilteredMetric } from 'features/claims/claim-templates/FilteredMetric'
 import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
+import { FocusItems } from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { UserSettingKey } from 'types/generated/graphql'
-import { FocusItems } from '../navigation/hooks/use-navigation'
 
 const MetricsWrapper = styled.div`
   display: flex;

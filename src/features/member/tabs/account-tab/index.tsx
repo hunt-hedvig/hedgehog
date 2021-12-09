@@ -23,9 +23,9 @@ import { AddMonthlyEntryForm } from 'features/member/tabs/account-tab/AddMonthly
 import { BackfillSubscriptionsButton } from 'features/member/tabs/account-tab/BackfillSubscriptionsButton'
 import { useGetAccount } from 'features/member/tabs/account-tab/hooks/use-get-account'
 import { MonthlyEntriesTable } from 'features/member/tabs/account-tab/MonthlyEntriesTable'
+import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
 import React, { useState } from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
-import { RefreshButton } from '../shared/refresh-button'
 
 const moneyOptions = {
   minimumFractionDigits: 2,
