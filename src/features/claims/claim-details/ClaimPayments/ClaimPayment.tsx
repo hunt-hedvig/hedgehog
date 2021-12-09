@@ -76,11 +76,9 @@ export const ClaimPayment: React.FC<{
   const [isExGratia, setIsExGratia] = useState(false)
   const [isOverridden, setIsOverridden] = useState(false)
 
-  console.log(memberData)
-
   const isPaymentActivated =
     !!memberData?.member?.directDebitStatus?.activated ||
-    // &&
+    // && ?
     !!memberData?.member?.payoutMethodStatus?.activated
 
   const categoryOptions: CategoryOptionsType[] = [
