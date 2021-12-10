@@ -10,13 +10,13 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ClaimsTab } from 'features/member/tabs/claims-tab/ClaimsTab'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { useMemberHistory } from 'features/user/hooks/use-member-history'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
+import {
+  FocusItems,
+  useOldNavigation,
+} from '../../navigation/hooks/use-old-navigation'
 import { AccountTab } from './account-tab'
 import { CampaignsTab } from './campaigns-tab'
 import { DebtTab } from './debt-tab'
@@ -132,7 +132,7 @@ export const MemberTabsList = ({ memberId, member }) => {
     navigateToTab(path)
   }, [])
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
   const isTPressed = useKeyIsPressed(Keys.T)
 
   useEffect(() => {

@@ -4,12 +4,12 @@ import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persis
 import { useCommandLine } from 'features/commands/use-command-line'
 import { ChatPanel } from 'features/member/chat/ChatPanel'
 import { MessagesList } from 'features/member/messages/MessagesList'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import React, { useEffect, useRef } from 'react'
 import { ChevronDoubleDown } from 'react-bootstrap-icons'
+import {
+  FocusItems,
+  useOldNavigation,
+} from '../../navigation/hooks/use-old-navigation'
 
 const ChevronDoubleIcon = styled(ChevronDoubleDown)<{ visible: number }>`
   height: 100%;
@@ -97,7 +97,7 @@ export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
     manualChange.current = true
   }
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
 
   useEffect(() => {
     if (isVisible) {

@@ -25,7 +25,7 @@ import {
 import MediaQuery from 'react-media'
 import { useLocation } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
-import { FocusItems, useNavigation } from '../hooks/use-navigation'
+import { FocusItems, useOldNavigation } from '../hooks/use-old-navigation'
 import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
 
@@ -282,7 +282,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   ]
 
   const sidebarRef = useRef<HTMLDivElement>(null)
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
 
   const isSPressed = useKeyIsPressed(Keys.S)
 

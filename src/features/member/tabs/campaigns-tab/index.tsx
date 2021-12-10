@@ -9,13 +9,13 @@ import { CampaignsInfo } from 'features/member/tabs/campaigns-tab/campaigns/Camp
 import { useGetReferralInformation } from 'features/member/tabs/campaigns-tab/hooks/use-get-referral-information'
 import { ReferralsInfo } from 'features/member/tabs/campaigns-tab/referrals/ReferralsInfo'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
+import React from 'react'
+import { ArrowRepeat } from 'react-bootstrap-icons'
 import {
   FocusItems,
   useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
-import React from 'react'
-import { ArrowRepeat } from 'react-bootstrap-icons'
+  useOldNavigation,
+} from '../../../navigation/hooks/use-old-navigation'
 
 export const CampaignsTab: React.FC<{
   memberId: string
@@ -25,7 +25,7 @@ export const CampaignsTab: React.FC<{
     { loading, error, refetch },
   ] = useGetReferralInformation(memberId)
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
   useFocus(FocusItems.Member.items.Campaigns)
 
   const [navigationStep] = useArrowKeyboardNavigation({

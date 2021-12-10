@@ -13,7 +13,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { useNavigation } from '../navigation/hooks/use-navigation'
+import { useOldNavigation } from '../navigation/hooks/use-old-navigation'
 
 export interface CommandLineAction {
   label: string
@@ -40,7 +40,7 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   const [showCommandLine, setShowCommandLine] = useState(false)
   const actions = useRef<CommandLineAction[]>([])
   const actionKeyCodes = useRef<string[][]>([])
-  const { setFocus } = useNavigation()
+  const { setFocus } = useOldNavigation()
 
   const isControlPressed = useKeyIsPressed(Keys.Control)
   const isOptionPressed = useKeyIsPressed(Keys.Option)

@@ -14,13 +14,13 @@ import {
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import chroma from 'chroma-js'
 import { useCommandLine } from 'features/commands/use-command-line'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router'
 import {
   FocusItems,
   useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
-import React, { useEffect } from 'react'
-import { useHistory } from 'react-router'
+  useOldNavigation,
+} from '../../features/navigation/hooks/use-old-navigation'
 
 const Row = styled.div<{ columns?: number }>`
   display: grid;
@@ -139,7 +139,7 @@ const ToolsPage: React.FC = () => {
     '/tools/claim-types',
   ]
 
-  const { focus } = useNavigation()
+  const { focus } = useOldNavigation()
 
   useFocus(FocusItems.Tools.name)
 

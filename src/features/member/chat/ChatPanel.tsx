@@ -15,13 +15,13 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { useDraftMessage } from 'features/member/messages/hooks/use-draft-message'
-import { FocusItems } from 'features/navigation/hooks/use-navigation'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   GetMessageHistoryDocument,
   useSendMessageMutation,
 } from 'types/generated/graphql'
+import { FocusItems } from '../../navigation/hooks/use-old-navigation'
 
 const MessagesPanelContainer = styled.div`
   display: flex;

@@ -12,7 +12,7 @@ import { Plus } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { UserSettingKey } from 'types/generated/graphql'
-import { FocusItems } from '../navigation/hooks/use-navigation'
+import { FocusItems } from '../navigation/hooks/use-old-navigation'
 
 const MetricsWrapper = styled.div`
   display: flex;

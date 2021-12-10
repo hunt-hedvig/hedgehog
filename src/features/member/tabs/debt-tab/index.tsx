@@ -15,9 +15,12 @@ import { Market, PickedLocaleMarket } from 'features/config/constants'
 import { useGetPerson } from 'features/member/tabs/debt-tab/hooks/use-get-person'
 import { WhitelistMemberButton } from 'features/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
-import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
+import {
+  FocusItems,
+  useFocus,
+} from '../../../navigation/hooks/use-old-navigation'
 
 export const DebtTab: React.FC<{
   memberId: string

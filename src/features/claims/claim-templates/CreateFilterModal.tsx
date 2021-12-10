@@ -7,13 +7,13 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ClaimTemplateFilters } from 'features/claims/claim-templates/components/ClaimTemplateFilters'
 import { ClaimFilterTemplate } from 'features/claims/claim-templates/hooks/use-template-claims'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
+import {
+  FocusItems,
+  useOldNavigation,
+} from '../../navigation/hooks/use-old-navigation'
 
 const ClaimFilters = styled(ClaimTemplateFilters)`
   display: grid;
@@ -65,7 +65,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
     onClose()
   }
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
 
   useEffect(() => {
     setFocus(FocusItems.Main.items.Modal)

@@ -2,10 +2,6 @@ import { ApolloCache } from '@apollo/client'
 import { Form, FormDropdown, FormInput, SubmitButton } from '@hedvig-ui'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
@@ -16,6 +12,10 @@ import {
   useGetContractMarketInfoQuery,
   usePayoutMemberMutation,
 } from 'types/generated/graphql'
+import {
+  FocusItems,
+  useOldNavigation,
+} from '../../../navigation/hooks/use-old-navigation'
 
 const entryTypeOptions = [
   {
@@ -116,7 +116,7 @@ export const PayoutDetails: React.FC<{
     })
   }
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
 
   const [navigationStep] = useArrowKeyboardNavigation({
     maxStep: 3,

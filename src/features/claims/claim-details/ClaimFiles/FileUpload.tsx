@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
-import { useElementFocus } from 'features/navigation/hooks/use-navigation'
 import React, { useRef } from 'react'
 import { FileEarmark, FileEarmarkArrowUpFill } from 'react-bootstrap-icons'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
+import { useElementFocus } from '../../../navigation/hooks/use-old-navigation'
 
 const UploadClaimFileWrapper = styled('div')`
   padding: 1rem 1rem;

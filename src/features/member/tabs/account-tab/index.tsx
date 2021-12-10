@@ -24,13 +24,13 @@ import { AddMonthlyEntryForm } from 'features/member/tabs/account-tab/AddMonthly
 import { BackfillSubscriptionsButton } from 'features/member/tabs/account-tab/BackfillSubscriptionsButton'
 import { useGetAccount } from 'features/member/tabs/account-tab/hooks/use-get-account'
 import { MonthlyEntriesTable } from 'features/member/tabs/account-tab/MonthlyEntriesTable'
+import React, { useState } from 'react'
+import { ArrowRepeat } from 'react-bootstrap-icons'
 import {
   FocusItems,
   useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
-import React, { useState } from 'react'
-import { ArrowRepeat } from 'react-bootstrap-icons'
+  useOldNavigation,
+} from '../../../navigation/hooks/use-old-navigation'
 import { RefreshButton } from '../shared/refresh-button'
 
 const AccountCard = styled(Card)<{ active: boolean }>`
@@ -59,7 +59,7 @@ export const AccountTab: React.FC<{
   const [showMonthlyEntryForm, setShowMonthlyEntryForm] = useState(false)
   const [account, { loading, refetch, error }] = useGetAccount(memberId)
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
 
   useFocus(FocusItems.Member.items.Account)
 

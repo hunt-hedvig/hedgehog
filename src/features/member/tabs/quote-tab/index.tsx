@@ -7,13 +7,13 @@ import {
   QuoteProductTypeContractMap,
 } from 'features/config/constants'
 import { useQuotes } from 'features/member/tabs/quote-tab/hooks/use-get-quotes'
+import React from 'react'
+import { Quote } from 'types/generated/graphql'
 import {
   FocusItems,
   useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
-import React from 'react'
-import { Quote } from 'types/generated/graphql'
+  useOldNavigation,
+} from '../../../navigation/hooks/use-old-navigation'
 import { QuotesSubSection } from './quote-sub-section'
 
 export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
@@ -24,7 +24,7 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
     memberId,
   )
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
   useFocus(FocusItems.Member.items.QuoteTabs)
 
   if (loading) {

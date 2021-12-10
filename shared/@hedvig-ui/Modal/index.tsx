@@ -6,13 +6,13 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import React, { useEffect, useRef } from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { Portal } from 'react-portal'
+import {
+  FocusItems,
+  useOldNavigation,
+} from '../../../src/features/navigation/hooks/use-old-navigation'
 
 const ModalWrapperStyled = styled.div<{
   position?: 'top' | 'center' | 'bottom'
@@ -125,7 +125,7 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null)
 
-  const { setFocus } = useNavigation()
+  const { setFocus } = useOldNavigation()
 
   useEffect(() => {
     setFocus(FocusItems.Main.items.Modal)

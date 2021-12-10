@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
-import { useElementFocus } from 'features/navigation/hooks/use-navigation'
 import React, { TableHTMLAttributes, useEffect, useRef } from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
+import { useElementFocus } from '../../../src/features/navigation/hooks/use-old-navigation'
 
 const range = (start, end) =>
   start >= 0 && end >= start

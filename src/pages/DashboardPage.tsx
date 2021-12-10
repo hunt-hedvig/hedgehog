@@ -14,14 +14,14 @@ import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'features/dashboard/Greeting'
 import { MetricList } from 'features/dashboard/MetricList'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
 import React from 'react'
 import { DashboardNumbers } from 'types/generated/graphql'
+import {
+  FocusItems,
+  useFocus,
+  useOldNavigation,
+} from '../features/navigation/hooks/use-old-navigation'
 
 const Wrapper = styled.div`
   display: flex;
@@ -60,7 +60,7 @@ const DashboardPage: React.FC = () => {
 
   useTitle('Dashboard')
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
 
   useFocus(FocusItems.Dashborad.name)
 

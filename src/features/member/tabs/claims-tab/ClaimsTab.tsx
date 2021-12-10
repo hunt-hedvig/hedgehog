@@ -11,11 +11,6 @@ import {
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format } from 'date-fns'
 import { MemberClaimsList } from 'features/member/tabs/claims-tab/components/MemberClaimsList'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -23,6 +18,11 @@ import {
   GetMemberClaimsDocument,
   useCreateClaimMutation,
 } from 'types/generated/graphql'
+import {
+  FocusItems,
+  useFocus,
+  useOldNavigation,
+} from '../../../navigation/hooks/use-old-navigation'
 
 const HeaderWrapper = styled.div`
   display: flex;
@@ -50,7 +50,7 @@ export const ClaimsTab: React.FC<{
   const [claimSource, setClaimSource] = React.useState<ClaimSource | null>(null)
   const [claimDate, setClaimDate] = React.useState<Date>(new Date())
 
-  const { focus } = useNavigation()
+  const { focus } = useOldNavigation()
   useFocus(FocusItems.Member.items.Claims)
 
   return (

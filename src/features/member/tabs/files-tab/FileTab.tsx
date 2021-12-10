@@ -10,13 +10,13 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
+import React, { useState } from 'react'
+import { FileUpload, useFileUploadsQueryQuery } from 'types/generated/graphql'
 import {
   FocusItems,
   useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
-import React, { useState } from 'react'
-import { FileUpload, useFileUploadsQueryQuery } from 'types/generated/graphql'
+  useOldNavigation,
+} from '../../../navigation/hooks/use-old-navigation'
 
 const sortFileDate = (a, b) => {
   const aDate = new Date(a.timestamp)
@@ -76,7 +76,7 @@ export const MemberFile: React.FC<{
     variables: { memberId },
   })
 
-  const { focus } = useNavigation()
+  const { focus } = useOldNavigation()
   useFocus(FocusItems.Member.items.Files)
 
   if (error) {

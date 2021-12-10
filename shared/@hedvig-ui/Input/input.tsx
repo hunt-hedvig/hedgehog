@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { useElementFocus } from 'features/navigation/hooks/use-navigation'
 import React, { InputHTMLAttributes, useRef } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
+import { useElementFocus } from '../../../src/features/navigation/hooks/use-old-navigation'
 import { Spinner } from '../Spinner/spinner'
 
 export type InputSize = 'small' | 'medium' | 'large'

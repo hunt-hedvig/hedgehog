@@ -13,13 +13,13 @@ import { AgreementsTable } from 'features/member/tabs/contracts-tab/agreement/Ag
 import { MasterInception } from 'features/member/tabs/contracts-tab/contract/master-inception'
 import { TerminationDate } from 'features/member/tabs/contracts-tab/contract/termination-date'
 import { getSignSource } from 'features/member/tabs/contracts-tab/utils'
+import React, { useRef } from 'react'
+import { Contract as ContractType } from 'types/generated/graphql'
 import {
   FocusItems,
   useElementFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
-import React, { useRef } from 'react'
-import { Contract as ContractType } from 'types/generated/graphql'
+  useOldNavigation,
+} from '../../../../navigation/hooks/use-old-navigation'
 
 const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
   border-radius: 0.5rem;
@@ -52,7 +52,7 @@ export const Contract: React.FC<{
 
   const cardsRef = useRef<HTMLDivElement>(null)
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
   useElementFocus(cardsRef, focused)
 
   const selectAgreementHandler = (agreementId: string | undefined) => {

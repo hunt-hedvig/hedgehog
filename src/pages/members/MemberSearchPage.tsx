@@ -15,13 +15,13 @@ import {
   MemberSuggestionsWrapper,
   NoMembers,
 } from 'features/members-search/styles'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { useMemberHistory } from 'features/user/hooks/use-member-history'
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router'
+import {
+  FocusItems,
+  useOldNavigation,
+} from '../../features/navigation/hooks/use-old-navigation'
 
 const MemberSearchPage: React.FC = () => {
   const [query, setQuery] = React.useState('')
@@ -52,7 +52,7 @@ const MemberSearchPage: React.FC = () => {
   useTitle('Members')
 
   const isUpPressed = useKeyIsPressed(Keys.Up)
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
 
   useEffect(() => {
     setFocus(FocusItems.Members.items.Search)

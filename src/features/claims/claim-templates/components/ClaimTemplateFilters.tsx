@@ -7,13 +7,13 @@ import {
   stateColors,
 } from 'features/claims/claims-list/filters/ClaimListFilters'
 import { Market, MarketFlags } from 'features/config/constants'
-import { FocusItems } from 'features/navigation/hooks/use-navigation'
 import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
+import { FocusItems } from '../../../navigation/hooks/use-old-navigation'
 import {
   FilterElement,
   FilterNumberMemberGroups,

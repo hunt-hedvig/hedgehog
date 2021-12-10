@@ -20,10 +20,10 @@ import {
   getLastTerminationDate,
 } from 'features/member/tabs/contracts-tab/utils'
 import { getMemberFlag, MemberAge } from 'features/member/utils'
-import { FocusItems } from 'features/navigation/hooks/use-navigation'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import { Contract, ContractStatus, Member } from 'types/generated/graphql'
+import { FocusItems } from '../../navigation/hooks/use-old-navigation'
 
 type CircleVariation =
   | 'success'

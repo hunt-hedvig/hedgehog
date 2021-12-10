@@ -5,7 +5,6 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
 import React, {
   createContext,
   useContext,
@@ -13,6 +12,10 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import {
+  FocusItems,
+  useFocus,
+} from '../../../src/features/navigation/hooks/use-old-navigation'
 
 const ConfirmButtons = styled.div`
   display: grid;

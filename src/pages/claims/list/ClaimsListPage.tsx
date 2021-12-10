@@ -9,14 +9,14 @@ import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-tem
 import { ClaimListFilters } from 'features/claims/claims-list/filters/ClaimListFilters'
 import { ClaimListTemplateFilters } from 'features/claims/claims-list/filters/ClaimListTemplateFilters'
 import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
+import {
+  FocusItems,
+  useFocus,
+  useOldNavigation,
+} from '../../../features/navigation/hooks/use-old-navigation'
 
 const ListPage = styled.div`
   display: flex;
@@ -76,7 +76,7 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
 
   const selectedPage = parseInt(page, 10)
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
 
   useFocus(FocusItems.Claims.name)
 

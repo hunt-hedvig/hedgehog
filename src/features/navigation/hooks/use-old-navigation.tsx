@@ -142,14 +142,14 @@ interface NavigationContextProps {
   setFocus: (focus: string | null) => void
 }
 
-export const NavigationContext = createContext<NavigationContextProps>({
+const NavigationContext = createContext<NavigationContextProps>({
   focus: null,
   setFocus: (_: string | null) => void 0,
 })
 
-export const useNavigation = () => useContext(NavigationContext)
+export const useOldNavigation = () => useContext(NavigationContext)
 
-export const NavigationProvider = ({ children }) => {
+export const OldNavigationProvider = ({ children }) => {
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
   const [focus, setFocus] = useState<string | null>(null)
   const [_, setPrevFocus] = useState<string | null>(null)
@@ -183,7 +183,7 @@ export const NavigationProvider = ({ children }) => {
 }
 
 export const useFocus = (value: string | null) => {
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
 
   useEffect(() => {
     if (!focus) {

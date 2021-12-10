@@ -29,11 +29,6 @@ import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import { Market } from 'features/config/constants'
 import { useGetAccount } from 'features/member/tabs/account-tab/hooks/use-get-account'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import gql from 'graphql-tag'
 import React, { useMemo, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -43,6 +38,11 @@ import {
   useGetMemberTransactionsQuery,
   useGetQuotesQuery,
 } from 'types/generated/graphql'
+import {
+  FocusItems,
+  useFocus,
+  useOldNavigation,
+} from '../../../navigation/hooks/use-old-navigation'
 import { PayoutDetails } from './PayoutDetails'
 
 const PaymentCard = styled(Card)<{ active: boolean }>`
@@ -205,7 +205,7 @@ export const PaymentsTab: React.FC<{
   const [manualAmount, setManualAmount] = useState('0')
   const cardsRef = useRef<HTMLDivElement>(null)
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
   useFocus(FocusItems.Member.items.Payments)
 
   const { data: quotesData } = useGetQuotesQuery({

@@ -7,11 +7,6 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
@@ -20,6 +15,11 @@ import { useMe } from 'features/user/hooks/use-me'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
+import {
+  FocusItems,
+  useFocus,
+  useOldNavigation,
+} from '../features/navigation/hooks/use-old-navigation'
 
 const ListPage = styled.div`
   display: flex;
@@ -60,7 +60,7 @@ const QuestionsPage: React.FC = () => {
 
   const [questionGroups, { loading }] = useQuestionGroups()
 
-  const { focus } = useNavigation()
+  const { focus } = useOldNavigation()
   useFocus(FocusItems.Questions.name)
 
   if (loading) {

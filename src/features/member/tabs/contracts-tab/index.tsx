@@ -9,14 +9,14 @@ import { Contract } from 'features/member/tabs/contracts-tab/contract'
 import { useContracts } from 'features/member/tabs/contracts-tab/hooks/use-contracts'
 import { TrialComponent } from 'features/member/tabs/contracts-tab/trial'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import React, { useState } from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 import { Trial, useGetTrialsQuery } from 'types/generated/graphql'
+import {
+  FocusItems,
+  useFocus,
+  useOldNavigation,
+} from '../../../navigation/hooks/use-old-navigation'
 
 export const ContractTab: React.FC<{
   memberId: string
@@ -26,7 +26,7 @@ export const ContractTab: React.FC<{
   const trials = (trialsResult.data?.member?.trials ?? []) as Trial[]
   const [focusedItem, setFocusedItem] = useState<number | null>(null)
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus } = useOldNavigation()
 
   useFocus(FocusItems.Member.items.Contract)
 

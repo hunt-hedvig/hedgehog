@@ -17,11 +17,6 @@ import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
 import { FraudulentStatusEdit } from 'features/member/tabs/member-tab/FraudulentStatus'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import React, { useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -32,6 +27,11 @@ import {
   useEditMemberInfoMutation,
   useSetFraudulentStatusMutation,
 } from 'types/generated/graphql'
+import {
+  FocusItems,
+  useFocus,
+  useOldNavigation,
+} from '../../../navigation/hooks/use-old-navigation'
 
 const ButtonWrapper = styled.div`
   width: 100%;
@@ -83,7 +83,7 @@ export const MemberTab: React.FC<{
   const [editMemberInfo] = useEditMemberInfoMutation()
   const [setFraudulentStatus] = useSetFraudulentStatusMutation()
 
-  const { focus } = useNavigation()
+  const { focus } = useOldNavigation()
 
   useFocus(FocusItems.Member.items.Member)
 
