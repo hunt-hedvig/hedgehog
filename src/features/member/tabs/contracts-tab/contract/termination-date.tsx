@@ -161,6 +161,12 @@ export const TerminationDate: React.FC<{
                       changeTerminationDate({
                         variables: {
                           contractId: contract.id,
+                          request: {
+                            newTerminationDate: format(
+                              terminationDate,
+                              'yyyy-MM-dd',
+                            ),
+                          },
                         },
                         optimisticResponse: {
                           changeTerminationDate: {
