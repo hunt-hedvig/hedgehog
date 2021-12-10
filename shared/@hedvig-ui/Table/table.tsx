@@ -196,8 +196,10 @@ export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
   return <TableRowStyled ref={rowRef} active={active} {...props} />
 }
 
-export const TableHeader = ({ children }) => (
-  <thead style={{ width: '100%' }}>
+export const TableHeader: React.FC<React.HTMLAttributes<
+  HTMLTableSectionElement
+>> = ({ children, ...props }) => (
+  <thead style={{ width: '100%' }} {...props}>
     <tr style={{ width: '100%' }}>{children}</tr>
   </thead>
 )
