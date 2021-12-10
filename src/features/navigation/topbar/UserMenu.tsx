@@ -122,7 +122,10 @@ const UserMenu = () => {
                 close()
               }}
               {...register('SettingsButton', {
-                parent: 'UserMenuButton',
+                parent: () => {
+                  close()
+                  return 'UserMenuButton'
+                },
                 resolve: () => {
                   history.push('/profile')
                   close()
@@ -140,7 +143,10 @@ const UserMenu = () => {
                 close()
               }}
               {...register('DarkModeButton', {
-                parent: 'UserMenuButton',
+                parent: () => {
+                  close()
+                  return 'UserMenuButton'
+                },
                 resolve: () => {
                   setIsDarkmode(!isDarkmode)
                   close()
@@ -160,7 +166,10 @@ const UserMenu = () => {
                 close()
               }}
               {...register('LogoutButton', {
-                parent: 'UserMenuButton',
+                parent: () => {
+                  close()
+                  return 'UserMenuButton'
+                },
                 resolve: () => {
                   window.location.pathname = '/login/logout'
                   close()

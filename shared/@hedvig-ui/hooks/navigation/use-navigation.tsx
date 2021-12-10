@@ -71,8 +71,22 @@ export const NavigationProvider = ({ children }) => {
     }
 
     if (isPressing(e, Keys.Escape)) {
-      setCursor(target.parent ?? null)
-      cursorRef.current = target.parent ?? null
+      if (!target?.parent) {
+        setCursor(null)
+        cursorRef.current = null
+        return
+      }
+
+      if (typeof target.parent === 'string') {
+        setCursor(target.parent)
+        cursorRef.current = target.parent
+        return
+      }
+
+      const nextCursor = target.parent()
+      setCursor(nextCursor)
+      cursorRef.current = nextCursor
+
       return
     }
 
@@ -204,7 +218,7 @@ interface NodeNavigationDirections {
 interface UseNavigationRegisterOptions {
   focus?: Key
   resolve: string | (() => string | void)
-  parent?: string
+  parent?: string | (() => string)
   neighbors?: NodeNavigationDirections
 }
 
