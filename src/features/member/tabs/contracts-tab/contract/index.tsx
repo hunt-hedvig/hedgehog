@@ -7,6 +7,7 @@ import {
   InfoText,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { Agreement } from 'features/member/tabs/contracts-tab/agreement'
 import { AgreementsTable } from 'features/member/tabs/contracts-tab/agreement/AgreementsTable'
@@ -17,7 +18,6 @@ import React, { useRef } from 'react'
 import { Contract as ContractType } from 'types/generated/graphql'
 import {
   FocusItems,
-  useElementFocus,
   useOldNavigation,
 } from '../../../../navigation/hooks/use-old-navigation'
 

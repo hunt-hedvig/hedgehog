@@ -32,6 +32,15 @@ export const NavigationProvider = ({ children }) => {
   const cursorRef = useRef<string | null>(null)
   const registry = useRef<Record<string, UseNavigationRegisterOptions>>({})
 
+  const validate = (name: string) => {
+    if (!registry.current[name]) {
+      console.error(`[useNavigation] No item with name '${name}' found`)
+      return false
+    }
+
+    return true
+  }
+
   const handleKeydown = (e) => {
     if (e.target?.nodeName === 'INPUT' || e.target?.nodeName === 'TEXTAREA') {
       return
@@ -69,6 +78,10 @@ export const NavigationProvider = ({ children }) => {
 
     if (isPressing(e, Keys.Enter)) {
       if (typeof target.resolve === 'string') {
+        if (!validate(target.resolve)) {
+          return
+        }
+
         setCursor(target.resolve)
         cursorRef.current = target.resolve
         return
@@ -89,6 +102,10 @@ export const NavigationProvider = ({ children }) => {
           ? target.neighbors.up()
           : target.neighbors.up
 
+      if (!validate(nextCursor)) {
+        return
+      }
+
       setCursor(nextCursor)
       cursorRef.current = nextCursor
       return
@@ -99,6 +116,10 @@ export const NavigationProvider = ({ children }) => {
         typeof target.neighbors.down === 'function'
           ? target.neighbors.down()
           : target.neighbors.down
+
+      if (!validate(nextCursor)) {
+        return
+      }
 
       setCursor(nextCursor)
       cursorRef.current = nextCursor
@@ -111,6 +132,10 @@ export const NavigationProvider = ({ children }) => {
           ? target.neighbors.left()
           : target.neighbors.left
 
+      if (!validate(nextCursor)) {
+        return
+      }
+
       setCursor(nextCursor)
       cursorRef.current = nextCursor
       return
@@ -121,6 +146,10 @@ export const NavigationProvider = ({ children }) => {
         typeof target.neighbors.right === 'function'
           ? target.neighbors.right()
           : target.neighbors.right
+
+      if (!validate(nextCursor)) {
+        return
+      }
 
       setCursor(nextCursor)
       cursorRef.current = nextCursor

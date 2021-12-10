@@ -6,21 +6,15 @@ import {
   HotkeyStyled,
   MainHeadline,
 } from '@hedvig-ui'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import chroma from 'chroma-js'
-import { useCommandLine } from 'features/commands/use-command-line'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router'
-import {
-  FocusItems,
-  useFocus,
-  useOldNavigation,
-} from '../../features/navigation/hooks/use-old-navigation'
 
 const Row = styled.div<{ columns?: number }>`
   display: grid;
@@ -32,19 +26,9 @@ const Icon = styled('div')`
   padding-bottom: 1rem;
 `
 
-const Card = styled(CardWithLink)<{ focus?: boolean }>`
+const Card = styled(CardWithLink)`
   position: relative;
 
-  padding: 2rem;
-
-  ${({ theme, focus }) =>
-    focus &&
-    `background: ${chroma(theme.accentLight)
-      .alpha(0.1)
-      .hex()};`}
-`
-
-const CardLink = styled(CardWithLink)<{ focus?: boolean }>`
   padding: 2rem;
 
   ${({ theme, focus }) =>
@@ -65,100 +49,38 @@ const stagingToolsAvailable = () => {
 }
 
 const StagingTools: React.FC = () => {
+  const history = useHistory()
+  const { register } = useNavigation()
   return (
     <>
       <MainHeadline>Staging specific tools</MainHeadline>
       <CardsWrapper>
-        <CardLink to="/tools/unsign-member" span={4}>
+        <Card
+          to="/tools/unsign-member"
+          span={4}
+          {...register('UnsignMember', {
+            resolve: () => {
+              history.push('/tools/unsign-member')
+            },
+            neighbors: {
+              up: 'CampaignCodes',
+            },
+          })}
+        >
           <Icon>✍️</Icon>
           Unsign member
-        </CardLink>
+        </Card>
       </CardsWrapper>
     </>
   )
 }
 
 const ToolsPage: React.FC = () => {
+  const { register } = useNavigation()
   const history = useHistory()
   const isControlPressed = useKeyIsPressed(Keys.Control)
-  const { registerActions } = useCommandLine()
 
   useTitle('Tools')
-
-  registerActions([
-    {
-      label: 'Go to Approve Charges',
-      keys: [Keys.Control, Keys.One],
-      onResolve: () => {
-        history.push('/tools/charges')
-      },
-    },
-    {
-      label: 'Go to Switcher Automation',
-      keys: [Keys.Control, Keys.Two],
-      onResolve: () => {
-        history.push('/tools/switcher-automation')
-      },
-    },
-    {
-      label: 'Go to Perils Editor',
-      keys: [Keys.Control, Keys.Three],
-      onResolve: () => {
-        history.push('/tools/perils-editor')
-      },
-    },
-    {
-      label: 'Go to Campaign Codes',
-      keys: [Keys.Control, Keys.Four],
-      onResolve: () => {
-        history.push('/tools/campaign-codes')
-      },
-    },
-    {
-      label: 'Go to Employees',
-      keys: [Keys.Control, Keys.Five],
-      onResolve: () => {
-        history.push('/tools/employees')
-      },
-    },
-    {
-      label: 'Go to Claim Types',
-      keys: [Keys.Control, Keys.Six],
-      onResolve: () => {
-        history.push('/tools/claim-types')
-      },
-    },
-  ])
-
-  const paths = [
-    '/tools/charges',
-    '/tools/switcher-automation',
-    '/tools/perils-editor',
-    '/tools/campaign-codes',
-    '/tools/employees',
-    '/tools/claim-types',
-  ]
-
-  const { focus } = useOldNavigation()
-
-  useFocus(FocusItems.Tools.name)
-
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
-    maxStep: 4,
-    isActive: focus === FocusItems.Tools.name,
-    onPerformNavigation: (index) => {
-      const currentIndex = index + 1
-      history.push(paths[currentIndex])
-    },
-    direction: 'horizontal',
-    withNegative: true,
-  })
-
-  useEffect(() => {
-    if (focus !== FocusItems.Tools.name) {
-      reset()
-    }
-  }, [focus])
 
   return (
     <FadeIn>
@@ -167,7 +89,16 @@ const ToolsPage: React.FC = () => {
           <Card
             to="/tools/charges"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 0}
+            {...register('ApproveCharges', {
+              focus: Keys.T,
+              resolve: () => {
+                history.push('/tools/charges')
+              },
+              neighbors: {
+                right: 'SwitcherAutomation',
+                down: 'CampaignCodes',
+              },
+            })}
           >
             <Icon>💰</Icon>
             Approve Charges
@@ -176,7 +107,16 @@ const ToolsPage: React.FC = () => {
           <Card
             to="/tools/switcher-automation"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 1}
+            {...register('SwitcherAutomation', {
+              resolve: () => {
+                history.push('/tools/switcher-automation')
+              },
+              neighbors: {
+                left: 'ApproveCharges',
+                right: 'PerilsEditor',
+                down: 'Employees',
+              },
+            })}
           >
             <Icon>🏡</Icon>
             {isControlPressed && <Hotkey dark>2</Hotkey>}
@@ -185,7 +125,15 @@ const ToolsPage: React.FC = () => {
           <Card
             to="/tools/perils-editor"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 2}
+            {...register('PerilsEditor', {
+              resolve: () => {
+                history.push('/tools/perils-editor')
+              },
+              neighbors: {
+                left: 'SwitcherAutomation',
+                down: 'ClaimTypes',
+              },
+            })}
           >
             <Icon>📝</Icon>
             {isControlPressed && <Hotkey dark>3</Hotkey>}
@@ -194,33 +142,61 @@ const ToolsPage: React.FC = () => {
         </Row>
 
         <Row columns={3}>
-          <CardLink
+          <Card
             to="/tools/campaign-codes"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 3}
+            {...register('CampaignCodes', {
+              resolve: () => {
+                history.push('/tools/campaign-codes')
+              },
+              neighbors: {
+                up: 'ApproveCharges',
+                right: 'Employees',
+                down: 'UnsignMember',
+              },
+            })}
           >
             <Icon>💵</Icon>
             {isControlPressed && <Hotkey dark>4</Hotkey>}
             Campaign Codes
-          </CardLink>
-          <CardLink
+          </Card>
+          <Card
             to="/tools/employees"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 4}
+            {...register('Employees', {
+              resolve: () => {
+                history.push('/tools/employees')
+              },
+              neighbors: {
+                up: 'SwitcherAutomation',
+                right: 'ClaimTypes',
+                left: 'CampaignCodes',
+                down: 'UnsignMember',
+              },
+            })}
           >
             <Icon>👩🏼‍🦰</Icon>
             {isControlPressed && <Hotkey dark>5</Hotkey>}
             Employees
-          </CardLink>
-          <CardLink
+          </Card>
+          <Card
             to="/tools/claim-types"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 5}
+            {...register('ClaimTypes', {
+              resolve: () => {
+                history.push('/tools/claim-types')
+              },
+              neighbors: {
+                up: 'PerilsEditor',
+                left: 'Employees',
+                down: 'UnsignMember',
+              },
+            })}
           >
             <Icon>🧠</Icon>
             {isControlPressed && <Hotkey dark>6</Hotkey>}
             Claim Types
-          </CardLink>
+          </Card>
         </Row>
       </CardsWrapper>
 
