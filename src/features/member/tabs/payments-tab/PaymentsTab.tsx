@@ -46,6 +46,7 @@ import {
 import { PayoutDetails } from './PayoutDetails'
 
 const PaymentCard = styled(Card)<{ active: boolean }>`
+  width: 100%;
   border-radius: 0.5rem;
   border: ${({ active, theme }) =>
     active ? `1px solid ${theme.accent}` : 'none'};
@@ -92,10 +93,37 @@ const CHARGE_MEMBER_MUTATION = gql`
   }
 `
 
+const PaymentTable = styled(Table)`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`
+
+const PaymentTableHeader = styled(TableHeader)`
+  & tr {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 0.4fr 0.6fr 0.3fr 0.5fr;
+  }
+`
+
+const PaymentColumn = styled(TableColumn)`
+  &,
+  & * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`
+
 const TableRowColored = styled(TableRow)<{
   status: Transaction['status']
   type: Transaction['type']
 }>`
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 0.4fr 0.6fr 0.3fr 0.5fr;
+
   td {
     background-color: ${({ theme, status, type }) => {
       if (type === 'PAYOUT') {
@@ -121,14 +149,14 @@ const ChargeNotAvailableMessage = styled(StandaloneMessage)`
 const MemberTransactionsTable: React.FC<{
   transactions: Transaction[]
 }> = ({ transactions }) => (
-  <Table>
-    <TableHeader>
+  <PaymentTable>
+    <PaymentTableHeader>
       <TableHeaderColumn>ID</TableHeaderColumn>
       <TableHeaderColumn>Amount</TableHeaderColumn>
       <TableHeaderColumn>Timestamp</TableHeaderColumn>
       <TableHeaderColumn>Type</TableHeaderColumn>
       <TableHeaderColumn>Status</TableHeaderColumn>
-    </TableHeader>
+    </PaymentTableHeader>
     <TableBody>
       {transactions.map((transaction) => (
         <TableRowColored
@@ -137,19 +165,30 @@ const MemberTransactionsTable: React.FC<{
           status={transaction.status!}
           type={transaction.type!}
         >
-          <TableColumn>{transaction.id}</TableColumn>
-          <TableColumn>
+          <PaymentColumn title={transaction.id?.toString()}>
+            {transaction.id}
+          </PaymentColumn>
+          <PaymentColumn title={formatMoney(transaction.amount!)}>
             <strong>{formatMoney(transaction.amount!)}</strong>
-          </TableColumn>
-          <TableColumn>
+          </PaymentColumn>
+          <PaymentColumn
+            title={format(
+              parseISO(transaction.timestamp),
+              'yyyy-MM-dd HH:mm:ss',
+            )}
+          >
             {format(parseISO(transaction.timestamp), 'yyyy-MM-dd HH:mm:ss')}
-          </TableColumn>
-          <TableColumn>{transaction.type}</TableColumn>
-          <TableColumn>{transaction.status}</TableColumn>
+          </PaymentColumn>
+          <PaymentColumn title={transaction.type?.toString()}>
+            {transaction.type}
+          </PaymentColumn>
+          <PaymentColumn title={transaction.status?.toString()}>
+            {transaction.status}
+          </PaymentColumn>
         </TableRowColored>
       ))}
     </TableBody>
-  </Table>
+  </PaymentTable>
 )
 
 export const PaymentsTab: React.FC<{
