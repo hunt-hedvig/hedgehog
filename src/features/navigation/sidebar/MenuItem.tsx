@@ -1,9 +1,5 @@
 import styled, { StyledComponent } from '@emotion/styled'
-import { Hotkey } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 import { colorsV3 } from '@hedviginsurance/brand'
-import { useCommandLine } from 'features/commands/use-command-line'
 import React, { useRef } from 'react'
 import { ArrowUpRight, Icon } from 'react-bootstrap-icons'
 import { NavLink, NavLinkProps } from 'react-router-dom'
@@ -62,7 +58,6 @@ interface MenuItemProps extends NavLinkProps {
   isCollapsed: boolean
   hotkeyHandler: () => void
   transparent?: boolean
-  focus: boolean
 }
 
 interface ExternalMenuItemProps
@@ -74,7 +69,6 @@ interface ExternalMenuItemProps
   shouldAlwaysCollapse: boolean
   isCollapsed: boolean
   hotkeyHandler: () => void
-  focus: boolean
 }
 
 export const MenuItem: React.FC<MenuItemProps> = ({
@@ -85,30 +79,15 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   shouldAlwaysCollapse,
   isCollapsed,
   hotkeyHandler,
-  focus,
   ...props
 }) => {
   const itemRef = useRef<HTMLAnchorElement>(null)
-  const { registerActions, isHintingOption } = useCommandLine()
-
-  registerActions([
-    {
-      label: title,
-      keys: [Keys.Option, Keys[hotkey]],
-      onResolve: hotkeyHandler,
-    },
-  ])
-
   const ItemIcon = icon
-
-  useElementFocus(itemRef, focus)
 
   return (
     <MenuItemStyled innerRef={itemRef} to={to} {...props}>
       <ItemIcon />
-      <Hotkey hotkey={hotkey} hinting={isHintingOption}>
-        {!(shouldAlwaysCollapse || isCollapsed) && title}
-      </Hotkey>
+      {!(shouldAlwaysCollapse || isCollapsed) && title}
     </MenuItemStyled>
   )
 }
@@ -121,31 +100,16 @@ export const ExternalMenuItem: React.FC<ExternalMenuItemProps> = ({
   shouldAlwaysCollapse,
   isCollapsed,
   hotkeyHandler,
-  focus,
   ...props
 }) => {
   const itemRef = useRef<HTMLAnchorElement>(null)
-  const { isHintingOption, registerActions } = useCommandLine()
-
-  registerActions([
-    {
-      label: title,
-      keys: [Keys.Option, Keys[hotkey]],
-      onResolve: hotkeyHandler,
-    },
-  ])
-
   const ItemIcon = icon
-
-  useElementFocus(itemRef, focus)
 
   return (
     <MenuItemExternalLink ref={itemRef} href={href} target="_blank" {...props}>
       {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
       <ItemIcon />
-      <Hotkey hotkey={hotkey} hinting={isHintingOption}>
-        {!(shouldAlwaysCollapse || isCollapsed) && title}
-      </Hotkey>
+      {!(shouldAlwaysCollapse || isCollapsed) && title}
     </MenuItemExternalLink>
   )
 }

@@ -174,7 +174,7 @@ export const TopBar = () => {
           onClick={() => setShowUsers(true)}
           {...register('UsersOnlineButton', {
             resolve: () => {
-              setShowShareModal(true)
+              setShowUsers(true)
             },
             neighbors: {
               left: 'NotificationsButton',

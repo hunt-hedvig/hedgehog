@@ -1,11 +1,6 @@
 import styled from '@emotion/styled'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
-import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useRef, useState } from 'react'
@@ -25,7 +20,6 @@ import {
 import MediaQuery from 'react-media'
 import { useLocation } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
-import { FocusItems, useOldNavigation } from '../hooks/use-old-navigation'
 import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
 
@@ -182,7 +176,9 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
       false,
   )
 
-  React.useEffect(() => {
+  const { register } = useNavigation()
+
+  useEffect(() => {
     const latestLocations = [pathname, ...locations].filter(
       (_, index) => index < 10,
     )
@@ -282,42 +278,6 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   ]
 
   const sidebarRef = useRef<HTMLDivElement>(null)
-  const { focus, setFocus } = useOldNavigation()
-
-  const isSPressed = useKeyIsPressed(Keys.S)
-
-  useEffect(() => {
-    if (
-      isSPressed &&
-      focus !== FocusItems.Main.items.Modal &&
-      focus !== FocusItems.Main.items.ModalFilters &&
-      focus !== FocusItems.Main.items.ModalSubmit
-    ) {
-      setFocus(FocusItems.Main.items.Sidebar)
-    }
-  }, [isSPressed])
-
-  const getActiveMenuItem = () => {
-    const activeMenuItem = MenuItemsList.map((item, index) => {
-      if (location.pathname.startsWith(item.route)) {
-        return index
-      }
-
-      return undefined
-    }).filter((index) => typeof index === 'number')[0]
-
-    return typeof activeMenuItem === 'number' ? activeMenuItem - 1 : -1
-  }
-
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
-    defaultNavigationStep: getActiveMenuItem(),
-    maxStep: MenuItemsList.length - 2,
-    isActive: focus === FocusItems.Main.items.Sidebar,
-  })
-
-  useClickOutside(sidebarRef, () =>
-    focus === FocusItems.Main.items.Sidebar ? setFocus(null) : {},
-  )
 
   return (
     <MediaQuery query="(max-width: 1300px)">
@@ -325,7 +285,6 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
         <Wrapper
           collapsed={shouldAlwaysCollapse || isCollapsed}
           ref={sidebarRef}
-          onClick={() => setFocus(null)}
         >
           <CollapseToggle
             onClick={toggleOpen}
@@ -341,15 +300,28 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
             </Header>
 
             <Menu>
-              {MenuItemsList.map(({ external, single, ...item }, index) =>
-                !external ? (
+              {MenuItemsList.map(({ external, single, ...item }, index) => {
+                const navigation = register(item.title, {
+                  focus: index === 0 ? Keys.S : undefined,
+                  resolve: () => {
+                    item.hotkeyHandler()
+                  },
+                  neighbors: {
+                    up: index ? MenuItemsList[index - 1].title : undefined,
+                    down:
+                      index < MenuItemsList.length - 1
+                        ? MenuItemsList[index + 1].title
+                        : undefined,
+                  },
+                })
+
+                return !external ? (
                   <MenuItem
-                    focus={
-                      focus === FocusItems.Main.items.Sidebar &&
-                      navigationStep === index - 1
-                    }
                     key={item.route}
-                    style={{ marginBottom: single ? '4rem' : 0 }}
+                    style={{
+                      marginBottom: single ? '4rem' : 0,
+                      ...navigation.style,
+                    }}
                     isActive={(_match, location) =>
                       location.pathname.startsWith(item.route)
                     }
@@ -360,39 +332,23 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                     }
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
                     isCollapsed={isCollapsed}
-                    onKeyDown={(e) => {
-                      if (isPressing(e, Keys.Enter)) {
-                        e.preventDefault()
-                        setFocus(null)
-                        reset()
-                        MenuItemsList[index].hotkeyHandler()
-                      }
-                    }}
                     {...item}
                   />
                 ) : (
                   <ExternalMenuItem
-                    focus={
-                      focus === FocusItems.Main.items.Sidebar &&
-                      navigationStep === index - 1
-                    }
+                    {...navigation}
                     key={item.route}
-                    style={{ marginBottom: single ? '4rem' : 0 }}
+                    style={{
+                      marginBottom: single ? '4rem' : 0,
+                      ...navigation.style,
+                    }}
                     href={item.route}
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
                     isCollapsed={isCollapsed}
-                    onKeyDown={(e) => {
-                      if (isPressing(e, Keys.Enter)) {
-                        e.preventDefault()
-                        setFocus(null)
-                        reset()
-                        MenuItemsList[index].hotkeyHandler()
-                      }
-                    }}
                     {...item}
                   />
-                ),
-              )}
+                )
+              })}
             </Menu>
           </InnerWrapper>
         </Wrapper>
