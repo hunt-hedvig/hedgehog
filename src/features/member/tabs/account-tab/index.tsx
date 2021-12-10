@@ -40,8 +40,6 @@ const AccountCard = styled(Card)<{ active: boolean }>`
 `
 
 const CardTop = styled(Flex)`
-  display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
 `
 
