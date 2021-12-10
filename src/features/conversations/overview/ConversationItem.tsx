@@ -1,12 +1,12 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
+import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 import { StatusLine } from 'features/claims/claims-list/LargeClaimsList'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import React, { useRef } from 'react'
 import { useHistory } from 'react-router'
 import { QuestionGroup } from 'types/generated/graphql'
-import { useElementFocus } from '../../navigation/hooks/use-old-navigation'
 
 const Item = styled(Flex)<{ selected: boolean }>`
   background-color: ${({ theme, selected }) =>

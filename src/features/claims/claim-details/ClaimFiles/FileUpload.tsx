@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
+import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 import React, { useRef } from 'react'
 import { FileEarmark, FileEarmarkArrowUpFill } from 'react-bootstrap-icons'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
-import { useElementFocus } from '../../../navigation/hooks/use-old-navigation'
 
 const UploadClaimFileWrapper = styled('div')`
   padding: 1rem 1rem;
@@ -19,9 +19,7 @@ const Button = styled.button`
   justify-content: center;
   font-size: inherit;
   padding: 4rem;
-  border: none;
   border-color: ${({ theme }) => theme.border};
-  border-radius: 5px;
   color: ${({ theme }) => theme.semiStrongForeground};
   cursor: pointer;
   text-decoration: none;

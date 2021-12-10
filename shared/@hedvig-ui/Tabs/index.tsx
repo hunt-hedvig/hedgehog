@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { HotkeyStyled } from '@hedvig-ui'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
+import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 import React, { useEffect, useRef } from 'react'
-import { useElementFocus } from '../../../src/features/navigation/hooks/use-old-navigation'
 import {
   isPressing,
   Key,

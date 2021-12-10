@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 import _chroma from 'chroma-js'
 import React, { ButtonHTMLAttributes, useRef } from 'react'
-import { useElementFocus } from '../../../src/features/navigation/hooks/use-old-navigation'
 
 // Necessary for tests to run - if not, theme colors used might be undefined at test-time
 const chroma = (c: string) => _chroma(c ?? 'white')

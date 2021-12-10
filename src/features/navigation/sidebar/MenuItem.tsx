@@ -1,12 +1,12 @@
 import styled, { StyledComponent } from '@emotion/styled'
 import { Hotkey } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useCommandLine } from 'features/commands/use-command-line'
 import React, { useRef } from 'react'
 import { ArrowUpRight, Icon } from 'react-bootstrap-icons'
 import { NavLink, NavLinkProps } from 'react-router-dom'
-import { useElementFocus } from '../hooks/use-old-navigation'
 
 interface WithTransparent {
   transparent?: boolean

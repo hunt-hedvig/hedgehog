@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
 import { InfoTag, InfoTagStatus, ThirdLevelHeadline } from '@hedvig-ui'
+import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 import { colorsV3 } from '@hedviginsurance/brand'
 import React, { useRef } from 'react'
 import { LockFill } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
-import { useElementFocus } from '../../../src/features/navigation/hooks/use-old-navigation'
 
 export const CardsWrapper = styled.div<{
   contentWrap?: string
