@@ -39,6 +39,12 @@ const AccountCard = styled(Card)<{ active: boolean }>`
     active ? `1px solid ${theme.accent}` : 'none'};
 `
 
+const CardTop = styled(Flex)`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+`
+
 const moneyOptions = {
   minimumFractionDigits: 2,
   useGrouping: true,
@@ -201,7 +207,7 @@ export const AccountTab: React.FC<{
             focus === FocusItems.Member.items.Account
           }
         >
-          <Flex justify="space-between">
+          <CardTop justify="space-between">
             <Flex>
               <ThirdLevelHeadline>Account Entries</ThirdLevelHeadline>
               <Spacing left="small">
@@ -228,7 +234,7 @@ export const AccountTab: React.FC<{
                 New account entry
               </Button>
             </div>
-          </Flex>
+          </CardTop>
           {showAccountEntryForm && (
             <FadeIn duration={200} style={{ width: '100%' }}>
               <Spacing top="medium" bottom="large">
