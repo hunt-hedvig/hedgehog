@@ -1,5 +1,7 @@
 import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { useDarkmode } from '@hedvig-ui/hooks/use-darkmode'
 import { useMe } from 'features/user/hooks/use-me'
@@ -84,8 +86,10 @@ const UserMenu = () => {
   const [view, setView] = React.useState(false)
   const { isDarkmode, setIsDarkmode } = useDarkmode()
   const { me } = useMe()
+  const { register } = useNavigation()
 
   const close = () => setView(false)
+  const toggle = () => setView((prev) => !prev)
 
   useClickOutside(listRef, close)
 
@@ -94,7 +98,19 @@ const UserMenu = () => {
       <Username onClick={() => history.push('/profile')}>
         {me.fullName}
       </Username>
-      <CircleButton onClick={() => setView((prev) => !prev)}>
+      <CircleButton
+        onClick={toggle}
+        {...register('UserMenuButton', {
+          focus: Keys.N,
+          resolve: () => {
+            toggle()
+            return 'SettingsButton'
+          },
+          neighbors: {
+            right: 'SharePageButton',
+          },
+        })}
+      >
         <ThreeDots />
       </CircleButton>
       {view && (
@@ -105,6 +121,16 @@ const UserMenu = () => {
                 history.push('/profile')
                 close()
               }}
+              {...register('SettingsButton', {
+                parent: 'UserMenuButton',
+                resolve: () => {
+                  history.push('/profile')
+                  close()
+                },
+                neighbors: {
+                  down: 'DarkModeButton',
+                },
+              })}
             >
               <GearFill /> <span>Settings</span>
             </Option>
@@ -113,6 +139,17 @@ const UserMenu = () => {
                 setIsDarkmode(!isDarkmode)
                 close()
               }}
+              {...register('DarkModeButton', {
+                parent: 'UserMenuButton',
+                resolve: () => {
+                  setIsDarkmode(!isDarkmode)
+                  close()
+                },
+                neighbors: {
+                  up: 'SettingsButton',
+                  down: 'LogoutButton',
+                },
+              })}
             >
               {isDarkmode ? <SunFill /> : <MoonFill />}{' '}
               <span>{isDarkmode ? 'Light mode' : 'Dark mode'}</span>
@@ -122,6 +159,16 @@ const UserMenu = () => {
                 window.location.pathname = '/login/logout'
                 close()
               }}
+              {...register('LogoutButton', {
+                parent: 'UserMenuButton',
+                resolve: () => {
+                  window.location.pathname = '/login/logout'
+                  close()
+                },
+                neighbors: {
+                  up: 'DarkModeButton',
+                },
+              })}
             >
               <BoxArrowLeft />
               <span>Logout</span>
