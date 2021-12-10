@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { CardContent, Copyable, Spacing, Tabs } from '@hedvig-ui'
+import { CardContent, Spacing, Tabs } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import chroma from 'chroma-js'
 import copy from 'copy-to-clipboard'
@@ -8,6 +8,7 @@ import { MemberGeneralView } from 'features/claims/claim-details/MemberInformati
 import { useCommandLine } from 'features/commands/use-command-line'
 import { getMemberFlag } from 'features/member/utils'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { useGetMemberInfoQuery } from 'types/generated/graphql'
@@ -63,6 +64,22 @@ export const MemberInformation: React.FC<{
         history.push(`/members/${memberId}`)
       },
     },
+    {
+      label: 'Copy member ID',
+      keys: [Keys.Option, Keys.I],
+      onResolve: () => {
+        copy(memberId)
+        toast.success('Member ID copied to clipboard')
+      },
+    },
+    {
+      label: 'Copy member link',
+      keys: [Keys.Option, Keys.L],
+      onResolve: () => {
+        copy(`${window.location.origin}/members/${memberId}`)
+        toast.success('Member link copied to clipboard')
+      },
+    },
   ])
 
   if (!member) {
@@ -79,14 +96,7 @@ export const MemberInformation: React.FC<{
       <MemberCard>
         <div>
           <h3>{member.firstName + ' ' + member.lastName}</h3>
-          <Copyable
-            copyLabel={{ before: 'Copy link' }}
-            onClick={() => {
-              copy(`${window.location.origin}/members/${memberId}`)
-            }}
-          >
-            <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
-          </Copyable>
+          <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
         </div>
         <div>
           {getMemberFlag(member.contractMarketInfo, member.pickedLocale)}
