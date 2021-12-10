@@ -3,9 +3,10 @@ import { Hotkey } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useCommandLine } from 'features/commands/use-command-line'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { ArrowUpRight, Icon } from 'react-bootstrap-icons'
 import { NavLink, NavLinkProps } from 'react-router-dom'
+import { useElementFocus } from '../hooks/use-navigation'
 
 interface WithTransparent {
   transparent?: boolean
@@ -100,18 +101,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
 
   const ItemIcon = icon
 
-  useEffect(() => {
-    if (!itemRef?.current) {
-      return
-    }
-
-    if (focus) {
-      itemRef.current.focus()
-      return
-    }
-
-    itemRef.current.blur()
-  }, [focus])
+  useElementFocus(itemRef, focus)
 
   return (
     <MenuItemStyled innerRef={itemRef} to={to} {...props}>
@@ -147,18 +137,7 @@ export const ExternalMenuItem: React.FC<ExternalMenuItemProps> = ({
 
   const ItemIcon = icon
 
-  useEffect(() => {
-    if (!itemRef?.current) {
-      return
-    }
-
-    if (focus) {
-      itemRef.current.focus()
-      return
-    }
-
-    itemRef.current.blur()
-  }, [focus])
+  useElementFocus(itemRef, focus)
 
   return (
     <MenuItemExternalLink ref={itemRef} href={href} target="_blank" {...props}>

@@ -15,6 +15,7 @@ import { Market, PickedLocaleMarket } from 'features/config/constants'
 import { useGetPerson } from 'features/member/tabs/debt-tab/hooks/use-get-person'
 import { WhitelistMemberButton } from 'features/member/tabs/debt-tab/WhitelistMemberButton'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
+import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 
@@ -25,6 +26,8 @@ export const DebtTab: React.FC<{
     { person, contractMarketInfo, pickedLocale },
     { loading, error, refetch },
   ] = useGetPerson(memberId)
+
+  useFocus(FocusItems.Member.items.Debt)
 
   if (loading) {
     return <LoadingMessage paddingTop="10vh" />

@@ -122,8 +122,10 @@ export const MemberTabsList = ({ memberId, member }) => {
   const path =
     pathname.length === 4 ? pathname[pathname.length - 1] : 'contracts'
 
-  const navigateToTab = (tabName) =>
+  const navigateToTab = (tabName) => {
     history.replace(`/members/${memberId}/${tabName}`)
+    setFocus(null)
+  }
 
   useEffect(() => {
     pushToMemberHistory(memberId)
@@ -134,7 +136,7 @@ export const MemberTabsList = ({ memberId, member }) => {
   const isTPressed = useKeyIsPressed(Keys.T)
 
   useEffect(() => {
-    if (isTPressed) {
+    if (isTPressed && focus !== FocusItems.Main.items.Modal) {
       setFocus(FocusItems.Member.items.Tabs)
     }
   }, [isTPressed])

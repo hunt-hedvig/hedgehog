@@ -1,7 +1,8 @@
 import styled from '@emotion/styled'
 import { HotkeyStyled } from '@hedvig-ui'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
-import React, { useEffect } from 'react'
+import { useElementFocus } from 'features/navigation/hooks/use-navigation'
+import React, { useEffect, useRef } from 'react'
 import {
   isPressing,
   Key,
@@ -136,37 +137,39 @@ export interface TabsProps extends React.HTMLAttributes<HTMLUListElement> {
   navigationAvailable?: boolean
 }
 
-export const Tabs: React.FC<TabsProps> = ({
-  list,
-  navigationAvailable,
-  ...props
-}) => {
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
-    maxStep: list.length - 2,
-    isActive: navigationAvailable,
-    onPerformNavigation: (index) => {
-      const currentTab = index + 1
-      list[currentTab].action()
-    },
-    direction: 'horizontal',
-    withNegative: true,
-  })
+export const Tabs = React.forwardRef(
+  (
+    { list, navigationAvailable, ...props }: TabsProps,
+    ref: React.ForwardedRef<HTMLUListElement>,
+  ) => {
+    const internalRef = useRef<HTMLUListElement>(null)
 
-  useEffect(() => {
-    if (!navigationAvailable) {
-      reset()
-    }
-  }, [navigationAvailable])
+    useElementFocus(
+      (ref as React.RefObject<HTMLElement>) ?? internalRef,
+      navigationAvailable,
+    )
 
-  return (
-    <TabsWrapper tabCount={list.length} {...props}>
-      {list.map((tab, index) => (
-        <Tab
-          key={tab.title}
-          focused={navigationAvailable && navigationStep === index - 1}
-          {...tab}
-        />
-      ))}
-    </TabsWrapper>
-  )
-}
+    const [navigationStep] = useArrowKeyboardNavigation({
+      maxStep: list.length - 2,
+      isActive: navigationAvailable,
+      onPerformNavigation: (index) => {
+        const currentTab = index + 1
+        list[currentTab].action()
+      },
+      direction: 'horizontal',
+      withNegative: true,
+    })
+
+    return (
+      <TabsWrapper tabCount={list.length} ref={ref ?? internalRef} {...props}>
+        {list.map((tab, index) => (
+          <Tab
+            key={tab.title}
+            focused={navigationAvailable && navigationStep === index - 1}
+            {...tab}
+          />
+        ))}
+      </TabsWrapper>
+    )
+  },
+)

@@ -15,11 +15,17 @@ import { TerminationDate } from 'features/member/tabs/contracts-tab/contract/ter
 import { getSignSource } from 'features/member/tabs/contracts-tab/utils'
 import {
   FocusItems,
-  useFocus,
+  useElementFocus,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
-import React from 'react'
+import React, { useRef } from 'react'
 import { Contract as ContractType } from 'types/generated/graphql'
+
+const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
+  border-radius: 0.5rem;
+  border: ${({ focused, theme }) =>
+    focused ? `1px solid ${theme.accent}` : 'none'};
+`
 
 const ContractWrapper = styled('div')`
   &:not(:first-of-type) {
@@ -33,7 +39,9 @@ export const Contract: React.FC<{
   contract: ContractType
   refetch: () => Promise<any>
   shouldPreSelectAgreement: boolean
-}> = ({ contract, refetch, shouldPreSelectAgreement }) => {
+  focused: boolean
+  selected: boolean
+}> = ({ contract, refetch, shouldPreSelectAgreement, focused, selected }) => {
   const [selectedAgreement, setSelectedAgreement] = React.useState<
     string | undefined
   >(shouldPreSelectAgreement ? contract.currentAgreementId : undefined)
@@ -42,13 +50,21 @@ export const Contract: React.FC<{
     (agreement) => agreement.id === selectedAgreement,
   )
 
-  const { focus } = useNavigation()
+  const cardsRef = useRef<HTMLDivElement>(null)
 
-  useFocus(FocusItems.Member.items.ContractTable)
+  const { focus, setFocus } = useNavigation()
+  useElementFocus(cardsRef, focused)
+
+  const selectAgreementHandler = (agreementId: string | undefined) => {
+    setSelectedAgreement(agreementId)
+    if (agreementId) {
+      setFocus(FocusItems.Member.items.ContractForm)
+    }
+  }
 
   return (
     <ContractWrapper>
-      <CardsWrapper>
+      <ContractsCardsWrapper ref={cardsRef} focused={focused}>
         <Card locked={contract.isLocked} span={3}>
           <InfoContainer>
             <ThirdLevelHeadline>
@@ -84,18 +100,23 @@ export const Contract: React.FC<{
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
         </Card>
-      </CardsWrapper>
+      </ContractsCardsWrapper>
       <AgreementsTable
         agreements={contract.genericAgreements}
         selectedAgreement={selectedAgreement}
-        setSelectedAgreement={setSelectedAgreement}
-        navigationAvailable={focus === FocusItems.Member.items.ContractTable}
+        setSelectedAgreement={selectAgreementHandler}
+        navigationAvailable={
+          selected && focus === FocusItems.Member.items.ContractTable
+        }
       />
       {agreementToShow && (
         <Agreement
           agreement={agreementToShow}
           contract={contract}
           refetch={refetch}
+          navigationAvailable={
+            focus === FocusItems.Member.items.ContractForm && selected
+          }
         />
       )}
     </ContractWrapper>
