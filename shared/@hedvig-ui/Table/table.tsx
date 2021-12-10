@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
+import { useElementFocus } from 'features/navigation/hooks/use-navigation'
 import React, { TableHTMLAttributes, useEffect, useRef } from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
 
@@ -20,6 +21,7 @@ export const TableBody: React.FC<{
   onPerformNavigation?: (index) => void
   setActiveRow?: (n: number) => void
   isActive?: boolean
+  onExit?: () => void
   onNavigationStep?: (step: number) => void
 } & TableHTMLAttributes<HTMLTableSectionElement>> = ({
   onPerformNavigation,
@@ -27,15 +29,16 @@ export const TableBody: React.FC<{
   setActiveRow,
   isActive = true,
   onNavigationStep,
+  onExit,
   ...props
 }) => {
   const numberOfRows = React.Children.count(children)
 
   const [navigationStep] = useArrowKeyboardNavigation({
-    maxStep: numberOfRows - 1,
+    maxStep: numberOfRows - 2,
     onPerformNavigation: (index) => {
       if (onPerformNavigation) {
-        onPerformNavigation(index)
+        onPerformNavigation(index + 1)
       }
     },
     onNavigationStep: () => {
@@ -45,6 +48,8 @@ export const TableBody: React.FC<{
     },
     isActive: isActive && !!onPerformNavigation,
     withNegative: true,
+    direction: 'vertical',
+    onExit,
   })
 
   useEffect(() => {
@@ -55,7 +60,7 @@ export const TableBody: React.FC<{
 
   return (
     <StyledTableBody
-      activeRow={onPerformNavigation ? navigationStep : -1}
+      activeRow={onPerformNavigation ? navigationStep + 1 : -1}
       {...props}
     >
       {children}
@@ -186,11 +191,7 @@ interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
 export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
   const rowRef = useRef<HTMLTableRowElement>(null)
 
-  useEffect(() => {
-    if (active && rowRef && rowRef.current) {
-      rowRef.current.focus()
-    }
-  }, [active])
+  useElementFocus(rowRef, active)
 
   return <TableRowStyled ref={rowRef} active={active} {...props} />
 }

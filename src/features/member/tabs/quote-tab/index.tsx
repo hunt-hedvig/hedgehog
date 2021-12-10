@@ -1,8 +1,4 @@
 import { LoadingMessage, StandaloneMessage, Tabs } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import {
   ContractMarketTypes,
@@ -13,9 +9,10 @@ import {
 import { useQuotes } from 'features/member/tabs/quote-tab/hooks/use-get-quotes'
 import {
   FocusItems,
+  useFocus,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Quote } from 'types/generated/graphql'
 import { QuotesSubSection } from './quote-sub-section'
 
@@ -28,15 +25,7 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   )
 
   const { focus, setFocus } = useNavigation()
-
-  const isTPressed = useKeyIsPressed(Keys.T)
-  const isShiftPressed = useKeyIsPressed(Keys.Shift)
-
-  useEffect(() => {
-    if (isTPressed && isShiftPressed) {
-      setFocus(FocusItems.Member.items.QuoteTabs)
-    }
-  }, [isTPressed, isShiftPressed])
+  useFocus(FocusItems.Member.items.QuoteTabs)
 
   if (loading) {
     return <LoadingMessage paddingTop="10vh" />
@@ -76,7 +65,10 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
             ? ContractMarketTypes[memberMarket].map((type, index) => ({
                 active: type === activeTab,
                 title: convertEnumToTitle(type),
-                action: () => setActiveTab(type),
+                action: () => {
+                  setActiveTab(type)
+                  setFocus(FocusItems.Member.items.Quotes)
+                },
                 key: index,
               }))
             : []

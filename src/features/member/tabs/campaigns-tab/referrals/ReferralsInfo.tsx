@@ -15,6 +15,12 @@ import { Link } from 'react-router-dom'
 import { MemberReferral, ReferralInformation } from 'types/generated/graphql'
 import { MembersReferredTable } from './MembersReferredTable'
 
+const CampaignCard = styled(Card)<{ focused: boolean }>`
+  border-radius: 0.5rem;
+  border: ${({ focused, theme }) =>
+    focused ? `1px solid ${theme.accent}` : 'none'};
+`
+
 const MemberLink: React.FC<{ memberReferral: MemberReferral }> = ({
   memberReferral,
 }) => {
@@ -39,13 +45,15 @@ const NoMembersReferredMessage = styled(StandaloneMessage)`
 
 export const ReferralsInfo: React.FC<{
   referralInformation: ReferralInformation
-}> = ({ referralInformation }) => {
+  navStep: number
+  navigationAvailable: boolean
+}> = ({ referralInformation, navStep, navigationAvailable }) => {
   const { eligible } = referralInformation
 
   return (
     <>
       <CardsWrapper>
-        <Card>
+        <CampaignCard focused={navigationAvailable && navStep + 1 === 1}>
           <ThirdLevelHeadline>Referral Information</ThirdLevelHeadline>
           <InfoRow>
             Hedvig Forever
@@ -85,12 +93,12 @@ export const ReferralsInfo: React.FC<{
               )}
             </InfoText>
           </InfoRow>
-        </Card>
+        </CampaignCard>
       </CardsWrapper>
 
       {eligible && (
         <CardsWrapper>
-          <Card>
+          <CampaignCard focused={navigationAvailable && navStep + 1 === 2}>
             <ThirdLevelHeadline>Members referred</ThirdLevelHeadline>
             {referralInformation?.hasReferred?.length !== 0 ? (
               <MembersReferredTable members={referralInformation.hasReferred} />
@@ -99,7 +107,7 @@ export const ReferralsInfo: React.FC<{
                 No members referred
               </NoMembersReferredMessage>
             )}
-          </Card>
+          </CampaignCard>
         </CardsWrapper>
       )}
     </>

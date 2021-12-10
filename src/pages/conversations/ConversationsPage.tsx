@@ -100,7 +100,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
 
   const { focus } = useNavigation()
 
-  useFocus(FocusItems.Claims.name)
+  useFocus(FocusItems.Conversations.name)
 
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
