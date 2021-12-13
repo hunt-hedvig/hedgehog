@@ -50,22 +50,13 @@ interface CategoryOptionsType {
 }
 
 export const ClaimPayment: React.FC<{
-  focus: boolean
   sanctionStatus?: SanctionStatus | null
   claimId: string
   identified: boolean
   market: string
   carrier: string
   memberId: string
-}> = ({
-  focus,
-  sanctionStatus,
-  carrier,
-  claimId,
-  identified,
-  market,
-  memberId,
-}) => {
+}> = ({ sanctionStatus, carrier, claimId, identified, market, memberId }) => {
   const { data: memberData } = useGetMemberTransactionsQuery({
     variables: { id: memberId },
   })
@@ -193,7 +184,6 @@ export const ClaimPayment: React.FC<{
     <FormProvider {...form}>
       <Form onSubmit={() => setIsConfirming(true)}>
         <FormInput
-          focus={focus}
           placeholder="Payout amount"
           name="amount"
           defaultValue=""

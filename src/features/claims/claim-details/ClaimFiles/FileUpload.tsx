@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
-import React, { useRef } from 'react'
+import React from 'react'
 import { FileEarmark, FileEarmarkArrowUpFill } from 'react-bootstrap-icons'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
@@ -37,8 +36,7 @@ export const FileUpload: React.FC<{
   claimId: string
   memberId: string
   onUpload: () => void
-  focus?: boolean
-}> = ({ claimId, memberId, onUpload, focus }) => {
+}> = ({ claimId, memberId, onUpload }) => {
   const handleDrop = (acceptedFiles: ReadonlyArray<File>) => {
     const claimFiles = new FormData()
 
@@ -63,17 +61,13 @@ export const FileUpload: React.FC<{
     )
   }
 
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useElementFocus(inputRef, focus)
-
   return (
     <UploadClaimFileWrapper>
       <FileUploadContainer>
         <Dropzone onDrop={handleDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => (
             // @ts-ignore
-            <Button {...getRootProps()} ref={inputRef}>
+            <Button {...getRootProps()}>
               <div style={{ width: '100%' }}>
                 <div style={{ fontSize: '4.0em' }}>
                   {isDragActive ? <FileEarmarkArrowUpFill /> : <FileEarmark />}

@@ -5,14 +5,12 @@ import {
   CardsWrapper,
   FadeIn,
   Flex,
-  HotkeyStyled,
   LoadingMessage,
   MainHeadline,
   Paragraph,
   Shadowed,
   StandaloneMessage,
 } from '@hedvig-ui'
-import { Key, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ClaimEvents } from 'features/claims/claim-details/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/ClaimFiles'
 import { ClaimInformation } from 'features/claims/claim-details/ClaimInformation/ClaimInformation'
@@ -23,7 +21,6 @@ import { ClaimRestrictionInformation } from 'features/claims/claim-details/Claim
 import { ClaimTranscriptions } from 'features/claims/claim-details/ClaimTranscriptions'
 import { ClaimType } from 'features/claims/claim-details/ClaimType/ClaimType'
 import { MemberInformation } from 'features/claims/claim-details/MemberInformation/MemberInformation'
-import { useCommandLine } from 'features/commands/use-command-line'
 import { ChatPane } from 'features/member/tabs/ChatPane'
 import { getCarrierText } from 'features/member/tabs/contracts-tab/utils'
 import { useMemberHistory } from 'features/user/hooks/use-member-history'
@@ -58,51 +55,6 @@ const NoCarrierSubtitle = styled(Paragraph)`
   padding-top: 1em;
 `
 
-const hotkeyStyles = {
-  top: '0.3rem',
-  right: '0.3rem',
-  padding: '2px 8px',
-}
-
-interface Focus {
-  key: Key
-  focused: boolean
-  title: string
-}
-
-const FOCUSES: { [section: string]: Focus } = {
-  claimInfo: {
-    key: Keys.One,
-    focused: false,
-    title: 'Claim Info',
-  },
-  type: {
-    key: Keys.Two,
-    focused: false,
-    title: 'Claim Type',
-  },
-  notes: {
-    key: Keys.Three,
-    focused: false,
-    title: 'Claim Notes',
-  },
-  reserves: {
-    key: Keys.Four,
-    focused: false,
-    title: 'Claim Reserves',
-  },
-  payments: {
-    key: Keys.Five,
-    focused: false,
-    title: 'Claim Payments',
-  },
-  files: {
-    key: Keys.Six,
-    focused: false,
-    title: 'Claim Files',
-  },
-}
-
 const RestrictedClaimMessage: React.FC<{ claimId: string }> = ({ claimId }) => {
   const { data } = useResourceAccessInformationQuery({
     variables: { resourceId: claimId },
@@ -135,18 +87,6 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
   const { claimId } = match.params
   const { pushToMemberHistory } = useMemberHistory()
   const [showEvents, setShowEvents] = useState(false)
-  const { registerActions, isHintingControl } = useCommandLine()
-  const [focus, setFocus] = useState<string | null>(null)
-
-  registerActions(
-    Object.keys(FOCUSES).map((section) => ({
-      label: `Focus on ${FOCUSES[section].title}`,
-      keys: [Keys.Control, FOCUSES[section].key],
-      onResolve: () => {
-        setFocus(section)
-      },
-    })),
-  )
 
   const { data: claimPageData, error } = useClaimPageQuery({
     variables: { claimId },
@@ -204,25 +144,14 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
               <MemberInformation claimId={claimId} memberId={memberId} />
             </Card>
             <Card span={3}>
-              {isHintingControl && (
-                <HotkeyStyled dark style={hotkeyStyles}>
-                  1
-                </HotkeyStyled>
-              )}
               <ClaimInformation
-                focus={focus === 'claimInfo'}
                 claimId={claimId}
                 memberId={memberId}
                 restricted={!!claimPageData?.claim?.restriction}
               />
             </Card>
             <Card span={3}>
-              {isHintingControl && (
-                <HotkeyStyled dark style={hotkeyStyles}>
-                  2
-                </HotkeyStyled>
-              )}
-              <ClaimType focus={focus === 'type'} claimId={claimId} />
+              <ClaimType claimId={claimId} />
             </Card>
           </CardsWrapper>
           <CardsWrapper contentWrap="noWrap">
@@ -230,12 +159,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
           </CardsWrapper>
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              {isHintingControl && (
-                <HotkeyStyled dark style={hotkeyStyles}>
-                  3
-                </HotkeyStyled>
-              )}
-              <ClaimNotes focus={focus === 'notes'} claimId={claimId} />
+              <ClaimNotes claimId={claimId} />
             </Card>
           </CardsWrapper>
           {claimPageData?.claim?.agreement?.carrier && (
@@ -259,29 +183,12 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
             <>
               <CardsWrapper contentWrap="noWrap">
                 <Card>
-                  {isHintingControl && (
-                    <HotkeyStyled dark style={hotkeyStyles}>
-                      4
-                    </HotkeyStyled>
-                  )}
-                  <ClaimReserve
-                    focus={focus === 'reserves'}
-                    claimId={claimId}
-                  />
+                  <ClaimReserve claimId={claimId} />
                 </Card>
               </CardsWrapper>
               <CardsWrapper contentWrap="noWrap">
                 <Card>
-                  {isHintingControl && (
-                    <HotkeyStyled dark style={hotkeyStyles}>
-                      5
-                    </HotkeyStyled>
-                  )}
-                  <ClaimPayments
-                    focus={focus === 'payments'}
-                    claimId={claimId}
-                    memberId={memberId}
-                  />
+                  <ClaimPayments claimId={claimId} memberId={memberId} />
                 </Card>
               </CardsWrapper>
             </>
@@ -289,16 +196,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
 
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              {isHintingControl && (
-                <HotkeyStyled dark style={hotkeyStyles}>
-                  6
-                </HotkeyStyled>
-              )}
-              <ClaimFileTable
-                focus={focus === 'files'}
-                claimId={claimId}
-                memberId={memberId}
-              />
+              <ClaimFileTable claimId={claimId} memberId={memberId} />
             </Card>
           </CardsWrapper>
 
