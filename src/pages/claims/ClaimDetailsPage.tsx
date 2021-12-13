@@ -161,7 +161,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
             <Card
               span={3}
               {...register('ClaimInformation', {
-                resolve: 'MemberGeneral',
+                resolve: 'ClaimStatus',
                 neighbors: {
                   left: 'MemberInformation',
                   right: 'ClaimType',

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import React, { InputHTMLAttributes, useRef } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { Spinner } from '../Spinner/spinner'
@@ -191,22 +191,23 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       affix,
       style,
       focus,
+      onKeyDown,
       ...props
     },
-    _,
+    forwardRef,
   ) => {
-    const inputRef = useRef<HTMLInputElement>(null)
     const isAffix = Boolean(affix)
     const isSuccess = success && !error && !loading
     const isError = error && !success && !loading
 
-    useElementFocus(inputRef, focus)
+    const defaultRef = useRef<HTMLInputElement>(null)
+    const ref = (forwardRef ?? defaultRef) as React.RefObject<HTMLInputElement>
 
     return (
       <InputWrapper style={style}>
         {icon ? <CustomIcon>{icon}</CustomIcon> : null}
         <InputStyled
-          ref={inputRef}
+          ref={ref}
           className="input"
           withIcon={Boolean(icon)}
           inputSize={size}
@@ -216,6 +217,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           muted={muted}
           disabled={disabled}
           placeholder={props.placeholder}
+          onKeyDown={(e) => {
+            onKeyDown?.(e)
+            if (isPressing(e, Keys.Escape)) {
+              ref?.current?.blur()
+            }
+          }}
           onWheel={(e) => {
             if (props.type === 'number') {
               e.currentTarget.blur()

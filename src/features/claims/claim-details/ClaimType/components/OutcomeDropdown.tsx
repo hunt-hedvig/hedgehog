@@ -1,4 +1,5 @@
 import { Dropdown, DropdownOption } from '@hedvig-ui'
+import { DropdownProps } from '@hedvig-ui/Dropdown/dropdown'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -22,7 +23,12 @@ export const OutcomeDropdown: React.FC<{
   claimState: string
   claimId: string
   outcome: string | null
-}> = ({ claimState, claimId, outcome }) => {
+} & Omit<DropdownProps, 'children'>> = ({
+  claimState,
+  claimId,
+  outcome,
+  ...props
+}) => {
   const [setClaimOutcome] = useSetClaimOutcomeMutation()
 
   const handleSelectOutcome = async (newOutcome: string | null) => {
@@ -44,7 +50,7 @@ export const OutcomeDropdown: React.FC<{
   }
 
   return (
-    <Dropdown placeholder="Not specified">
+    <Dropdown placeholder="Not specified" {...props}>
       {[
         ...Object.keys(ClaimOutcomes).map((value) => ({
           value,

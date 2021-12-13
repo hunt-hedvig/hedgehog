@@ -28,6 +28,7 @@ import {
   Paragraph,
   TextDatePicker,
 } from '@hedvig-ui'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
 import { ContractDropdown } from 'features/claims/claim-details/ClaimInformation/components/ContractDropdown'
@@ -117,6 +118,7 @@ export const ClaimInformation: React.FC<{
   memberId: string
   restricted: boolean
 }> = ({ claimId, memberId, restricted }) => {
+  const { register } = useNavigation()
   const [creatingCoInsured, setCreatingCoInsured] = useState(false)
   const { confirm } = useConfirmDialog()
   const deleteCoInsured = useDeleteCoInsured({ claimId })
@@ -286,7 +288,15 @@ export const ClaimInformation: React.FC<{
         {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
         <SelectWrapper>
           <Label>Status</Label>
-          <Dropdown placeholder="State">
+          <Dropdown
+            placeholder="State"
+            {...register('ClaimStatus', {
+              resolve: ClaimState.Open,
+              neighbors: {
+                down: 'ClaimOutcome',
+              },
+            })}
+          >
             {Object.keys(ClaimState).map((key) => (
               <DropdownOption
                 key={key}
@@ -305,12 +315,29 @@ export const ClaimInformation: React.FC<{
               claimState={data.claim.state}
               outcome={data?.claim?.outcome ?? null}
               claimId={claimId}
+              {...register('ClaimOutcome', {
+                resolve: ClaimState.Open,
+                neighbors: {
+                  up: 'ClaimStatus',
+                  down: 'DateOfOccurrence',
+                },
+              })}
             />
           )}
         </SelectWrapper>
         <SelectWrapper>
           <Label>Date of Occurrence</Label>
           <TextDatePicker
+            {...register('DateOfOccurrence', {
+              resolve: (ref) => {
+                ref.focus()
+                return 'ClaimOutcome'
+              },
+              neighbors: {
+                up: 'ClaimOutcome',
+                down: 'ContractForClaim',
+              },
+            })}
             value={
               (data?.claim?.dateOfOccurrence &&
                 parseISO(data.claim.dateOfOccurrence)) ??
@@ -363,6 +390,13 @@ export const ClaimInformation: React.FC<{
                 })
                 await refetch()
               }}
+              {...register('ContractForClaim', {
+                resolve: ClaimState.Open,
+                neighbors: {
+                  up: 'DateOfOccurrence',
+                  down: 'EmployeeClaim',
+                },
+              })}
             />
           </SelectWrapper>
         )}
@@ -373,7 +407,15 @@ export const ClaimInformation: React.FC<{
         )}
         <SelectWrapper>
           <Label>Employee Claim</Label>
-          <Dropdown>
+          <Dropdown
+            {...register('EmployeeClaim', {
+              resolve: ClaimState.Open,
+              neighbors: {
+                up: 'ContractForClaim',
+                down: 'CoInsuredClaim',
+              },
+            })}
+          >
             {coverEmployeeOptions.map((opt) => (
               <DropdownOption
                 key={opt.key}
@@ -387,7 +429,15 @@ export const ClaimInformation: React.FC<{
         </SelectWrapper>
         <SelectWrapper>
           <Label>Co-insured Claim</Label>
-          <Dropdown>
+          <Dropdown
+            {...register('CoInsuredClaim', {
+              resolve: ClaimState.Open,
+              neighbors: {
+                up: 'EmployeeClaim',
+                down: 'RestrictClaimAccess',
+              },
+            })}
+          >
             {coInsuredClaimOptions.map((opt) => (
               <DropdownOption
                 key={opt.key}
@@ -418,7 +468,18 @@ export const ClaimInformation: React.FC<{
           <SelectWrapper>
             <Button
               variant="tertiary"
-              style={{ width: '100%' }}
+              style={{
+                width: '100%',
+                ...register('RestrictClaimAccess', {
+                  resolve: () =>
+                    confirm(
+                      'Are you sure you want to restrict access?',
+                    ).then(() => handleRestrictAccess()),
+                  neighbors: {
+                    up: 'CoInsuredClaim',
+                  },
+                }).style,
+              }}
               onClick={() =>
                 confirm('Are you sure you want to restrict access?').then(() =>
                   handleRestrictAccess(),
