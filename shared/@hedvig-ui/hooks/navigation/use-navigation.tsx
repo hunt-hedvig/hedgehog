@@ -108,9 +108,8 @@ export const NavigationProvider = ({ children }) => {
       return
     }
 
-    e.preventDefault()
-
     if (isPressing(e, Keys.Up) && target?.neighbors?.up) {
+      e.preventDefault()
       const nextCursor =
         typeof target.neighbors.up === 'function'
           ? target.neighbors.up()
@@ -126,6 +125,7 @@ export const NavigationProvider = ({ children }) => {
     }
 
     if (isPressing(e, Keys.Down) && target?.neighbors?.down) {
+      e.preventDefault()
       const nextCursor =
         typeof target.neighbors.down === 'function'
           ? target.neighbors.down()
@@ -141,6 +141,7 @@ export const NavigationProvider = ({ children }) => {
     }
 
     if (isPressing(e, Keys.Left) && target?.neighbors?.left) {
+      e.preventDefault()
       const nextCursor =
         typeof target.neighbors.left === 'function'
           ? target.neighbors.left()
@@ -156,6 +157,7 @@ export const NavigationProvider = ({ children }) => {
     }
 
     if (isPressing(e, Keys.Right) && target?.neighbors?.right) {
+      e.preventDefault()
       const nextCursor =
         typeof target.neighbors.right === 'function'
           ? target.neighbors.right()
@@ -233,17 +235,19 @@ export const useNavigation = () => {
     options: UseNavigationRegisterOptions,
   ) => {
     setRegistryItem(name, options)
+    localItems.current[name] = options
   }
 
   const itemExists = (name: string) => !!registry[name]
 
   useEffect(() => {
     return () => {
-      Object.keys(localItems).forEach((name) => {
+      Object.keys(localItems.current).forEach((name) => {
         removeRegistryItem(name)
+        delete localItems.current[name]
       })
     }
-  })
+  }, [])
 
   return {
     register: (name: string, options: UseNavigationRegisterOptions) => {
