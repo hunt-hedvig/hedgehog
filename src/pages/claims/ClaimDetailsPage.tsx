@@ -120,7 +120,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
   }
 
   return (
-    <div {...parent}>
+    <>
       <Prompt
         when={
           claimPageData?.claim?.state !== ClaimState.Closed &&
@@ -282,7 +282,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
           )}
         </ChatPaneAdjustedContainer>
       </FadeIn>
-    </div>
+    </>
   )
 }
 
