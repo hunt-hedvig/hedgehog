@@ -11,6 +11,8 @@ import {
   Shadowed,
   StandaloneMessage,
 } from '@hedvig-ui'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { ClaimEvents } from 'features/claims/claim-details/ClaimEvents'
 import { ClaimFileTable } from 'features/claims/claim-details/ClaimFiles'
 import { ClaimInformation } from 'features/claims/claim-details/ClaimInformation/ClaimInformation'
@@ -84,6 +86,7 @@ const RestrictedClaimMessage: React.FC<{ claimId: string }> = ({ claimId }) => {
 const ClaimDetailsPage: React.FC<RouteComponentProps<{
   claimId: string
 }>> = ({ match }) => {
+  const { register } = useNavigation()
   const { claimId } = match.params
   const { pushToMemberHistory } = useMemberHistory()
   const [showEvents, setShowEvents] = useState(false)
@@ -93,6 +96,8 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
   })
 
   const memberId = claimPageData?.claim?.member.memberId
+  const transcriptions = claimPageData?.claim?.transcriptions ?? []
+  const carrier = claimPageData?.claim?.agreement?.carrier
 
   useEffect(() => {
     if (!memberId) {
@@ -115,7 +120,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
   }
 
   return (
-    <>
+    <div {...parent}>
       <Prompt
         when={
           claimPageData?.claim?.state !== ClaimState.Closed &&
@@ -140,37 +145,76 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
             </CardsWrapper>
           )}
           <CardsWrapper contentWrap="noWrap">
-            <Card span={3}>
+            <Card
+              span={3}
+              {...register('MemberInformation', {
+                focus: Keys.C,
+                resolve: 'MemberGeneral',
+                neighbors: {
+                  right: 'ClaimInformation',
+                  down: 'ClaimNotes',
+                },
+              })}
+            >
               <MemberInformation claimId={claimId} memberId={memberId} />
             </Card>
-            <Card span={3}>
+            <Card
+              span={3}
+              {...register('ClaimInformation', {
+                resolve: 'MemberGeneral',
+                neighbors: {
+                  left: 'MemberInformation',
+                  right: 'ClaimType',
+                  down: 'ClaimNotes',
+                },
+              })}
+            >
               <ClaimInformation
                 claimId={claimId}
                 memberId={memberId}
                 restricted={!!claimPageData?.claim?.restriction}
               />
             </Card>
-            <Card span={3}>
+            <Card
+              span={3}
+              {...register('ClaimType', {
+                resolve: 'MemberGeneral',
+                neighbors: {
+                  left: 'ClaimInformation',
+                  down: 'ClaimNotes',
+                },
+              })}
+            >
               <ClaimType claimId={claimId} />
             </Card>
           </CardsWrapper>
+          {!!transcriptions.length && (
+            <CardsWrapper contentWrap="noWrap">
+              <Card>
+                <ClaimTranscriptions transcriptions={transcriptions} />
+              </Card>
+            </CardsWrapper>
+          )}
           <CardsWrapper contentWrap="noWrap">
-            <ClaimTranscriptions claimId={claimId} />
-          </CardsWrapper>
-          <CardsWrapper contentWrap="noWrap">
-            <Card>
+            <Card
+              {...register('ClaimNotes', {
+                resolve: 'MemberGeneral',
+                neighbors: {
+                  up: 'MemberInformation',
+                  down: carrier ? 'Reserves' : 'ClaimFiles',
+                },
+              })}
+            >
               <ClaimNotes claimId={claimId} />
             </Card>
           </CardsWrapper>
-          {claimPageData?.claim?.agreement?.carrier && (
+          {carrier && (
             <>
-              <MainHeadline>
-                {getCarrierText(claimPageData.claim.agreement.carrier)}
-              </MainHeadline>
+              <MainHeadline>{getCarrierText(carrier)}</MainHeadline>
             </>
           )}
 
-          {!claimPageData?.claim?.agreement?.carrier ? (
+          {!carrier ? (
             <NoCarrierMessage opacity={0.6}>
               Cannot make a payment or set a reserve without a carrier.
               <NoCarrierSubtitle>
@@ -182,12 +226,28 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
           ) : (
             <>
               <CardsWrapper contentWrap="noWrap">
-                <Card>
+                <Card
+                  {...register('Reserves', {
+                    resolve: 'MemberGeneral',
+                    neighbors: {
+                      up: 'ClaimNotes',
+                      down: 'Payments',
+                    },
+                  })}
+                >
                   <ClaimReserve claimId={claimId} />
                 </Card>
               </CardsWrapper>
               <CardsWrapper contentWrap="noWrap">
-                <Card>
+                <Card
+                  {...register('Payments', {
+                    resolve: 'MemberGeneral',
+                    neighbors: {
+                      up: 'Reserves',
+                      down: 'ClaimFiles',
+                    },
+                  })}
+                >
                   <ClaimPayments claimId={claimId} memberId={memberId} />
                 </Card>
               </CardsWrapper>
@@ -195,7 +255,14 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
           )}
 
           <CardsWrapper contentWrap="noWrap">
-            <Card>
+            <Card
+              {...register('ClaimFiles', {
+                resolve: 'MemberGeneral',
+                neighbors: {
+                  up: carrier ? 'Payments' : 'ClaimNotes',
+                },
+              })}
+            >
               <ClaimFileTable claimId={claimId} memberId={memberId} />
             </Card>
           </CardsWrapper>
@@ -215,7 +282,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
           )}
         </ChatPaneAdjustedContainer>
       </FadeIn>
-    </>
+    </div>
   )
 }
 

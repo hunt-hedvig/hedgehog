@@ -1,17 +1,9 @@
-import { useClaimPageQuery } from 'types/generated/graphql'
+import { ClaimTranscription } from 'types/generated/graphql'
 
 import React from 'react'
 
 import styled from '@emotion/styled'
-import {
-  Card,
-  CardContent,
-  CardTitle,
-  List,
-  ListItem,
-  Paragraph,
-} from '@hedvig-ui'
-import { BugFill } from 'react-bootstrap-icons'
+import { CardContent, CardTitle, List, ListItem, Paragraph } from '@hedvig-ui'
 
 const ClaimTranscriptionWrapper = styled.div`
   display: flex;
@@ -20,7 +12,7 @@ const ClaimTranscriptionWrapper = styled.div`
   justify-content: space-between;
 `
 
-const ClaimTranscription = styled(Paragraph)`
+const Transcription = styled(Paragraph)`
   font-size: 1rem;
   max-width: 80%;
   white-space: pre-wrap;
@@ -31,53 +23,29 @@ const ClaimTranscriptionMetaData = styled(Paragraph)`
   text-align: right;
 `
 
-const ClaimTranscriptions: React.FC<{ claimId: string }> = ({ claimId }) => {
-  const {
-    data: claimTranscriptionsData,
-    error: queryError,
-  } = useClaimPageQuery({
-    variables: { claimId },
-  })
-
-  if (!claimTranscriptionsData?.claim?.transcriptions.length) {
-    return null
-  }
-
+const ClaimTranscriptions: React.FC<{
+  transcriptions: ClaimTranscription[]
+}> = ({ transcriptions }) => {
   return (
-    <Card>
-      <CardContent>
-        <CardTitle
-          title="Transcription"
-          badge={
-            queryError
-              ? {
-                  icon: BugFill,
-                  status: 'danger',
-                  label: 'Internal Error',
-                }
-              : null
-          }
-        />
+    <CardContent>
+      <CardTitle title="Transcription" />
 
-        <List>
-          {claimTranscriptionsData?.claim?.transcriptions?.map(
-            (transcription) => (
-              <ListItem key={transcription.text}>
-                <ClaimTranscriptionWrapper>
-                  <ClaimTranscription>{transcription.text}</ClaimTranscription>
-                  <List>
-                    <ClaimTranscriptionMetaData>
-                      Confidence: {transcription.confidenceScore}
-                      <br /> Language code: {transcription.languageCode}
-                    </ClaimTranscriptionMetaData>
-                  </List>
-                </ClaimTranscriptionWrapper>
-              </ListItem>
-            ),
-          )}
-        </List>
-      </CardContent>
-    </Card>
+      <List>
+        {transcriptions.map((transcription) => (
+          <ListItem key={transcription.text}>
+            <ClaimTranscriptionWrapper>
+              <Transcription>{transcription.text}</Transcription>
+              <List>
+                <ClaimTranscriptionMetaData>
+                  Confidence: {transcription.confidenceScore}
+                  <br /> Language code: {transcription.languageCode}
+                </ClaimTranscriptionMetaData>
+              </List>
+            </ClaimTranscriptionWrapper>
+          </ListItem>
+        ))}
+      </List>
+    </CardContent>
   )
 }
 

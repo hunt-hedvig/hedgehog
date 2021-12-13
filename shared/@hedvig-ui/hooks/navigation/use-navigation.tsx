@@ -259,7 +259,15 @@ export const useNavigation = () => {
         return {}
       }
 
-      return { style: { border: '2px solid blue' } }
+      return {
+        style: { border: '2px solid blue' },
+        ref: (ref: any) =>
+          ref?.scrollIntoView({
+            inline: 'center',
+            block: 'center',
+            behavior: 'smooth',
+          }),
+      }
     },
   }
 }

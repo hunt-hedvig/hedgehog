@@ -21,17 +21,6 @@ import {
 } from 'types/generated/graphql'
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 
-export interface PaymentFormData {
-  amount: string
-  deductible: string
-  note: string
-  exGratia?: boolean
-  type: ClaimPaymentType | 'AutomaticSwish'
-  overridden?: boolean
-  phoneNumber?: string
-  message?: string
-}
-
 const areSwishPayoutsEnabled = () => {
   return (window as any).HOPE_FEATURES?.swishPayoutsEnabled ?? false
 }
