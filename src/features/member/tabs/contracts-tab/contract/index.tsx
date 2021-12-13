@@ -8,6 +8,7 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { colorsV3 } from '@hedviginsurance/brand'
 import { Agreement } from 'features/member/tabs/contracts-tab/agreement'
 import { AgreementsTable } from 'features/member/tabs/contracts-tab/agreement/AgreementsTable'
 import { MasterInception } from 'features/member/tabs/contracts-tab/contract/master-inception'
@@ -21,10 +22,50 @@ import {
 import React, { useRef } from 'react'
 import { Contract as ContractType } from 'types/generated/graphql'
 
+const selfBlockersColors = {
+  HAS_TERMINATION: colorsV3.red500,
+  HAS_FUTURE_CHANGES: colorsV3.orange,
+}
+
+const getSelfBlockerNormalName = (value: string) => {
+  const lowercaseValue = value
+    .split('_')
+    .map((word) => word.toLowerCase())
+    .join(' ')
+
+  return lowercaseValue.charAt(0).toUpperCase() + lowercaseValue.slice(1)
+}
+
 const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
+  position: relative;
   border-radius: 0.5rem;
   border: ${({ focused, theme }) =>
     focused ? `1px solid ${theme.accent}` : 'none'};
+`
+
+const BlockersWrapper = styled.ul`
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+
+  position: absolute;
+  top: -2.5rem;
+  right: 0.5rem;
+`
+
+const Blocker = styled.li<{ value: string }>`
+  padding: 0.2rem 1rem;
+  font-size: 1rem;
+  color: white;
+  border-radius: 0.5rem;
+  background-color: ${({ value, theme }) =>
+    selfBlockersColors[value] || theme.accent};
+
+  &:not(:last-child) {
+    margin-right: 1rem;
+  }
 `
 
 const ContractWrapper = styled('div')`
@@ -100,6 +141,15 @@ export const Contract: React.FC<{
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
         </Card>
+        {!!contract.selfChangeBlockers.length && (
+          <BlockersWrapper>
+            {contract.selfChangeBlockers.map((blocker) => (
+              <Blocker value={blocker}>
+                {getSelfBlockerNormalName(blocker)}
+              </Blocker>
+            ))}
+          </BlockersWrapper>
+        )}
       </ContractsCardsWrapper>
       <AgreementsTable
         agreements={contract.genericAgreements}

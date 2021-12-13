@@ -427,6 +427,7 @@ type Contract {
   contractTypeName: String!
   createdAt: Instant!
   isLocked: Boolean!
+  selfChangeBlockers: [String!]!
 }
 
 enum ContractStatus {

@@ -372,6 +372,7 @@ export type Contract = {
   contractTypeName: Scalars['String']
   createdAt: Scalars['Instant']
   isLocked: Scalars['Boolean']
+  selfChangeBlockers: Array<Scalars['String']>
 }
 
 export type ContractMarketInfo = {
@@ -2684,6 +2685,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
             | 'contractTypeName'
             | 'createdAt'
             | 'isLocked'
+            | 'selfChangeBlockers'
           > & {
               genericAgreements: Array<
                 { __typename?: 'GenericAgreement' } & Pick<
@@ -6533,6 +6535,7 @@ export const GetContractsDocument = gql`
         contractTypeName
         createdAt
         isLocked
+        selfChangeBlockers
       }
     }
   }
