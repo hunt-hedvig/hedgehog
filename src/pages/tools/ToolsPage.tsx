@@ -3,13 +3,9 @@ import {
   CardLink as CardWithLink,
   CardsWrapper,
   FadeIn,
-  HotkeyStyled,
   MainHeadline,
 } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import chroma from 'chroma-js'
@@ -36,12 +32,6 @@ const Card = styled(CardWithLink)`
     `background: ${chroma(theme.accentLight)
       .alpha(0.1)
       .hex()};`}
-`
-
-const Hotkey = styled(HotkeyStyled)`
-  right: 1em;
-  top: 1em;
-  padding: 2px 10px;
 `
 
 const stagingToolsAvailable = () => {
@@ -76,11 +66,10 @@ const StagingTools: React.FC = () => {
 }
 
 const ToolsPage: React.FC = () => {
+  useTitle('Tools')
+
   const { register } = useNavigation()
   const history = useHistory()
-  const isControlPressed = useKeyIsPressed(Keys.Control)
-
-  useTitle('Tools')
 
   return (
     <FadeIn>
@@ -90,7 +79,6 @@ const ToolsPage: React.FC = () => {
             to="/tools/charges"
             span={4}
             {...register('ApproveCharges', {
-              focusOnMount: true,
               focus: Keys.T,
               resolve: () => {
                 history.push('/tools/charges')
@@ -103,7 +91,6 @@ const ToolsPage: React.FC = () => {
           >
             <Icon>💰</Icon>
             Approve Charges
-            {isControlPressed && <Hotkey dark>1</Hotkey>}
           </Card>
           <Card
             to="/tools/switcher-automation"
@@ -120,7 +107,6 @@ const ToolsPage: React.FC = () => {
             })}
           >
             <Icon>🏡</Icon>
-            {isControlPressed && <Hotkey dark>2</Hotkey>}
             Switcher Automation
           </Card>
           <Card
@@ -137,7 +123,6 @@ const ToolsPage: React.FC = () => {
             })}
           >
             <Icon>📝</Icon>
-            {isControlPressed && <Hotkey dark>3</Hotkey>}
             Perils Editor
           </Card>
         </Row>
@@ -158,7 +143,6 @@ const ToolsPage: React.FC = () => {
             })}
           >
             <Icon>💵</Icon>
-            {isControlPressed && <Hotkey dark>4</Hotkey>}
             Campaign Codes
           </Card>
           <Card
@@ -177,7 +161,6 @@ const ToolsPage: React.FC = () => {
             })}
           >
             <Icon>👩🏼‍🦰</Icon>
-            {isControlPressed && <Hotkey dark>5</Hotkey>}
             Employees
           </Card>
           <Card
@@ -195,7 +178,6 @@ const ToolsPage: React.FC = () => {
             })}
           >
             <Icon>🧠</Icon>
-            {isControlPressed && <Hotkey dark>6</Hotkey>}
             Claim Types
           </Card>
         </Row>
