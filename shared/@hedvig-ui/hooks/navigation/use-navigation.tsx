@@ -16,6 +16,7 @@ interface NavigationContextProps {
   setCursor: (focus: string | null) => void
   registry: Record<string, UseNavigationRegisterOptions>
   setRegistryItem: (name: string, options: UseNavigationRegisterOptions) => void
+  assignRef: (name: string, ref: any) => void
   removeRegistryItem: (name: string) => void
 }
 
@@ -24,6 +25,7 @@ const NavigationContext = createContext<NavigationContextProps>({
   setCursor: (_: string | null) => void 0,
   registry: {},
   setRegistryItem: (_: string, __) => void 0,
+  assignRef: (_: string, __: any) => void 0,
   removeRegistryItem: (_: string) => false,
 })
 
@@ -34,7 +36,7 @@ export const NavigationProvider = ({ children }) => {
 
   const validate = (name: string) => {
     if (!registry.current[name]) {
-      console.error(`[useNavigation] No item with name '${name}' found`)
+      console.warn(`[useNavigation] No item with name '${name}' found`)
       return false
     }
 
@@ -101,7 +103,10 @@ export const NavigationProvider = ({ children }) => {
         return
       }
 
-      const nextCursor = target.resolve() ?? null
+      const nextCursor = cursorRef.current
+        ? target.resolve(registry.current[cursorRef.current].ref) ?? null
+        : null
+
       setCursor(nextCursor)
       cursorRef.current = nextCursor
 
@@ -195,6 +200,12 @@ export const NavigationProvider = ({ children }) => {
     delete registry.current[name]
   }
 
+  const assignRef = (name: string, ref: any) => {
+    if (!registry.current[name].ref) {
+      registry.current[name].ref = ref
+    }
+  }
+
   return (
     <NavigationContext.Provider
       value={{
@@ -203,6 +214,7 @@ export const NavigationProvider = ({ children }) => {
         registry: registry.current,
         setRegistryItem: handleSetRegistryItem,
         removeRegistryItem,
+        assignRef,
       }}
     >
       {children}
@@ -219,15 +231,20 @@ interface NodeNavigationDirections {
 
 interface UseNavigationRegisterOptions {
   focus?: Key
-  resolve: string | (() => string | void)
+  resolve: string | ((ref: any) => string | void)
   parent?: string | (() => string)
   neighbors?: NodeNavigationDirections
+  ref?: any
 }
 
 export const useNavigation = () => {
-  const { cursor, registry, setRegistryItem, removeRegistryItem } = useContext(
-    NavigationContext,
-  )
+  const {
+    cursor,
+    registry,
+    setRegistryItem,
+    removeRegistryItem,
+    assignRef,
+  } = useContext(NavigationContext)
   const localItems = useRef<Record<string, UseNavigationRegisterOptions>>({})
 
   const registerItem = (
@@ -262,6 +279,8 @@ export const useNavigation = () => {
       return {
         style: { border: '2px solid blue' },
         ref: (ref: any) => {
+          assignRef(name, ref)
+
           ref?.scrollIntoView({
             inline: 'center',
             block: 'center',
