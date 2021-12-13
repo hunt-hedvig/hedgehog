@@ -23,6 +23,7 @@ it("doesn't submit empty form", async () => {
         identified={true}
         market={Market.Sweden}
         carrier="Hedvig"
+        memberId="496557264"
       />
     </MockedProvider>,
   )
@@ -50,7 +51,7 @@ it('submits valid form with confirmation', async () => {
     note: 'test value with more than 5 chars',
     exGratia: false,
     carrier: 'Hedvig',
-    type: ClaimPaymentType.Automatic,
+    type: ClaimPaymentType.IndemnityCost,
   }
 
   const wrapper = mount(
@@ -79,6 +80,7 @@ it('submits valid form with confirmation', async () => {
       ]}
     >
       <ClaimPayment
+        memberId="496557264"
         focus={false}
         sanctionStatus={SanctionStatus.NoHit}
         claimId="abc123"

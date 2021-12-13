@@ -2,6 +2,10 @@ import styled from '@emotion/styled'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { colorsV3 } from '@hedviginsurance/brand'
+import {
+  FocusItems,
+  useNavigation,
+} from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useRef, useState } from 'react'
 import {

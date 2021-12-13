@@ -280,6 +280,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
                   <ClaimPayments
                     focus={focus === 'payments'}
                     claimId={claimId}
+                    memberId={memberId}
                   />
                 </Card>
               </CardsWrapper>
