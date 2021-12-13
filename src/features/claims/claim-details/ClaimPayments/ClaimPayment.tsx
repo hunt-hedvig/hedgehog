@@ -5,6 +5,7 @@ import {
   FormDropdown,
   FormInput,
   SubmitButton,
+  TextDatePicker,
 } from '@hedvig-ui'
 import { Market } from 'features/config/constants'
 import React, { useEffect, useState } from 'react'
@@ -62,6 +63,7 @@ export const ClaimPayment: React.FC<{
   const [isConfirming, setIsConfirming] = useState(false)
   const [isExGratia, setIsExGratia] = useState(false)
   const [isOverridden, setIsOverridden] = useState(false)
+  const [date, setDate] = useState<string | null>(null)
 
   const categoryOptions: CategoryOptionsType[] = [
     ...Object.keys(ClaimPaymentType).map((paymentType, index) => ({
@@ -115,6 +117,7 @@ export const ClaimPayment: React.FC<{
       note: form.getValues().note,
       exGratia: isExGratia,
       carrier,
+      timestamp: date,
     }
 
     if (form.getValues().type === 'AutomaticSwish') {
@@ -163,6 +166,18 @@ export const ClaimPayment: React.FC<{
         },
       )
     }
+  }
+
+  const setDateHandler = (newDate: Date | null) => {
+    if (!newDate) {
+      return
+    }
+
+    const dateString = new Date(newDate.setHours(newDate.getHours() + 2))
+      .toISOString()
+      .split('T')[0]
+
+    setDate(dateString)
   }
 
   return (
@@ -255,6 +270,13 @@ export const ClaimPayment: React.FC<{
             />
           </>
         )}
+
+        <TextDatePicker
+          style={{ marginBottom: '2rem' }}
+          placeholder={`Payment performed (${new Date().toDateString()})`}
+          value={date ? new Date(date) : null}
+          onChange={setDateHandler}
+        />
 
         <div>
           <SubmitButton>Create payment</SubmitButton>

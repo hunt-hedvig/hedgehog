@@ -251,6 +251,7 @@ export type ClaimPaymentInput = {
   exGratia: Scalars['Boolean']
   sanctionListSkipped: Scalars['Boolean']
   carrier: Scalars['String']
+  timestamp: Scalars['Instant']
 }
 
 export enum ClaimPaymentStatus {
@@ -317,6 +318,7 @@ export type ClaimSwishPaymentInput = {
   phoneNumber: Scalars['String']
   message: Scalars['String']
   carrier: Scalars['String']
+  timestamp: Scalars['Instant']
 }
 
 export type ClaimTranscription = {
