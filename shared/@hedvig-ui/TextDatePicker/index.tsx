@@ -5,7 +5,7 @@ import dates from 'compromise-dates'
 import numbers from 'compromise-numbers'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Calendar } from 'react-bootstrap-icons'
 import DatePicker from 'react-datepicker'
 import { isPressing, Keys } from '../hooks/keyboard/use-key-is-pressed'
@@ -103,12 +103,16 @@ export const TextDatePicker = React.forwardRef(
       errorMessage,
       maxDate,
       showTimePicker,
+      onKeyDown,
       ...props
     }: TextDatePickerProps,
     forwardRef: React.ForwardedRef<HTMLInputElement>,
   ) => {
     const [showOldDatepicker, setShowOldDatepicker] = React.useState(false)
     const [textValue, setTextValue] = React.useState<string | null>()
+
+    const defaultRef = useRef<HTMLInputElement>(null)
+    const ref = (forwardRef ?? defaultRef) as React.RefObject<HTMLInputElement>
 
     useEffect(() => {
       if (value) {
@@ -150,18 +154,17 @@ export const TextDatePicker = React.forwardRef(
               onClick={() => setShowOldDatepicker((prev) => !prev)}
             />
           }
-          onBlur={() => {
-            setDateHandler()
-          }}
+          onBlur={setDateHandler}
           value={textValue || ''}
           onChange={(e) => setTextValue(e.target.value)}
           onKeyDown={(e) => {
+            onKeyDown?.(e)
             if (isPressing(e, Keys.Enter) && textValue) {
               setDateHandler()
             }
           }}
           {...props}
-          ref={forwardRef}
+          ref={ref}
         />
         {error && <ErrorMessage>{errorMessage || 'Invalid Date'}</ErrorMessage>}
         {showOldDatepicker && (

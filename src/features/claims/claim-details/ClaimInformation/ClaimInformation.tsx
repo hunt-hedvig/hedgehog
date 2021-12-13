@@ -331,7 +331,7 @@ export const ClaimInformation: React.FC<{
             {...register('DateOfOccurrence', {
               resolve: (ref) => {
                 ref.focus()
-                return 'ClaimOutcome'
+                return 'DateOfOccurrence'
               },
               neighbors: {
                 up: 'ClaimOutcome',

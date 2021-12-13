@@ -220,7 +220,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           onKeyDown={(e) => {
             onKeyDown?.(e)
             if (isPressing(e, Keys.Escape)) {
-              ref?.current?.blur()
+              e.currentTarget.blur()
             }
           }}
           onWheel={(e) => {
