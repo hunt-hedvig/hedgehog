@@ -149,7 +149,7 @@ const ClaimDetailsPage: React.FC<RouteComponentProps<{
               span={3}
               {...register('MemberInformation', {
                 focus: Keys.C,
-                resolve: 'MemberGeneral',
+                resolve: 'MemberCard',
                 neighbors: {
                   right: 'ClaimInformation',
                   down: 'ClaimNotes',

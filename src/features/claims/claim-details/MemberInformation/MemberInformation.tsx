@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { CardContent, Spacing, Tabs } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import chroma from 'chroma-js'
 import copy from 'copy-to-clipboard'
 import { MemberClaimsView } from 'features/claims/claim-details/MemberInformation/components/MemberClaimsView'
@@ -49,6 +50,7 @@ export const MemberInformation: React.FC<{
   claimId: string
   memberId: string
 }> = ({ claimId, memberId }) => {
+  const { register } = useNavigation()
   const [tab, setTab] = useState<'general' | 'claims'>('general')
   const { data } = useGetMemberInfoQuery({ variables: { memberId } })
   const { registerActions } = useCommandLine()
@@ -93,7 +95,15 @@ export const MemberInformation: React.FC<{
 
   return (
     <CardContent>
-      <MemberCard>
+      <MemberCard
+        {...register('MemberCard', {
+          parent: 'MemberInformation',
+          resolve: () => history.push(`/members/${memberId}`),
+          neighbors: {
+            down: 'MemberGeneral',
+          },
+        })}
+      >
         <div>
           <h3>{member.firstName + ' ' + member.lastName}</h3>
           <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
@@ -109,11 +119,35 @@ export const MemberInformation: React.FC<{
             active: tab === 'general',
             title: 'General',
             action: () => setTab('general'),
+            ...register('MemberGeneral', {
+              parent: 'MemberInformation',
+              resolve: () => {
+                setTab('general')
+                return 'MemberGeneral'
+              },
+              neighbors: {
+                up: 'MemberCard',
+                down: 'ThisClaim',
+                right: 'MemberClaims',
+              },
+            }),
           },
           {
             active: tab === 'claims',
             title: `Claims (${totalClaimsWithoutDuplicates})`,
             action: () => setTab('claims'),
+            ...register('MemberClaims', {
+              parent: 'MemberInformation',
+              resolve: () => {
+                setTab('claims')
+                return 'MemberClaims'
+              },
+              neighbors: {
+                up: 'MemberCard',
+                left: 'MemberGeneral',
+                down: 'ThisClaim',
+              },
+            }),
           },
         ]}
       />
