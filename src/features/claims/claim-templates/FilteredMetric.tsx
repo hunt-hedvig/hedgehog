@@ -8,7 +8,7 @@ import {
   MetricNumber,
   metricStyles,
 } from 'features/dashboard/MetricList'
-import React, { useEffect, useState } from 'react'
+import React, { HTMLAttributes, useEffect, useState } from 'react'
 import { Files, Pencil, Trash } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { v4 as uuidv4 } from 'uuid'
@@ -40,7 +40,7 @@ const Metric = styled.div`
   ${({ theme }) => metricStyles(theme)};
 `
 
-interface FilteredMetricProps {
+interface FilteredMetricProps extends HTMLAttributes<HTMLDivElement> {
   template: ClaimFilterTemplate
   onRemove: (id: string) => void
   onCreate: (filter: ClaimFilterTemplate) => void
@@ -52,6 +52,7 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
   onRemove,
   onCreate,
   onEdit,
+  ...props
 }) => {
   const history = useHistory()
   const [edit, setEdit] = useState(false)
@@ -86,6 +87,7 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={clickHandler}
+      {...props}
     >
       <MetricNumber onClick={clickHandler}>{totalClaims || 0}</MetricNumber>
       <MetricName onClick={clickHandler} title={template.name}>

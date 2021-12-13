@@ -1,19 +1,10 @@
 import styled from '@emotion/styled'
 import { Button, Input, Modal } from '@hedvig-ui'
-import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ClaimTemplateFilters } from 'features/claims/claim-templates/components/ClaimTemplateFilters'
 import { ClaimFilterTemplate } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import {
-  FocusItems,
-  useOldNavigation,
-} from '../../navigation/hooks/use-old-navigation'
 
 const ClaimFilters = styled(ClaimTemplateFilters)`
   display: grid;
@@ -65,22 +56,6 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
     onClose()
   }
 
-  const { focus, setFocus } = useOldNavigation()
-
-  useEffect(() => {
-    setFocus(FocusItems.Main.items.Modal)
-
-    return () => setFocus(null)
-  }, [])
-
-  const isEnterPressed = useKeyIsPressed(Keys.Enter)
-
-  useEffect(() => {
-    if (isEnterPressed && focus === FocusItems.Main.items.ModalSubmit) {
-      createFilterHandler()
-    }
-  }, [isEnterPressed])
-
   return (
     <Modal
       onClose={onClose}
@@ -95,30 +70,11 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
           onChange={(e) => {
             setName(e.currentTarget.value)
           }}
-          focus={focus === FocusItems.Main.items.Modal}
-          onKeyDown={(e) => {
-            if (isPressing(e, Keys.Down)) {
-              setFocus(FocusItems.Main.items.ModalFilters)
-            }
-          }}
         />
 
-        <ClaimFilters
-          filters={filters}
-          setFilters={setFilters}
-          navigationAvailable={focus === FocusItems.Main.items.ModalFilters}
-          setFocus={(value: string) => setFocus(value)}
-        />
+        <ClaimFilters filters={filters} setFilters={setFilters} />
 
-        <Button
-          focus={focus === FocusItems.Main.items.ModalSubmit}
-          onClick={createFilterHandler}
-          onKeyDown={(e) => {
-            if (isPressing(e, Keys.Up) || isPressing(e, Keys.Left)) {
-              setFocus(FocusItems.Main.items.ModalFilters)
-            }
-          }}
-        >
+        <Button onClick={createFilterHandler}>
           {!editableTemplate ? 'Create' : 'Save'}
         </Button>
       </Body>

@@ -1,18 +1,15 @@
 import styled from '@emotion/styled'
 import { Checkbox, Flex, Label } from '@hedvig-ui'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { Radio } from '@hedvig-ui/Radio/radio'
 import { numberMemberGroupsOptions } from 'features/questions/number-member-groups-radio-buttons'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { FilterGroupState, LabelWithPopover } from './filters/ClaimListFilters'
 
-export const Filters = styled(Flex)<{ active: boolean }>`
+export const Filters = styled(Flex)`
   width: fit-content;
 
   border-radius: 0.5rem;
-  padding: ${({ active }) => (active ? '0.1rem 0.5rem' : '0.2rem 0.6rem')};
-  border: ${({ active, theme }) =>
-    active ? `0.1rem solid ${theme.accentLight}` : 'none'};
+  padding: 0.2rem 0.6rem;
 `
 
 export const FilterElementStyled = styled.div`
@@ -26,22 +23,16 @@ export const FilterElementStyled = styled.div`
 `
 
 interface FilterElementProps {
-  active: boolean
   checked: (key: string) => boolean
   onChange: (key: string) => void
-  onPerfom: (index: number) => void
   label: string
   values: string[] | number[]
   popover?: string
   checkboxLabel?: typeof FilterGroupState
   onRender: (key: string) => React.ReactNode
-  maxStep: number
-  onNavigationStep?: (step: number) => void
 }
 
 export const FilterElement: React.FC<FilterElementProps> = ({
-  active,
-  onPerfom,
   checked,
   onChange,
   values,
@@ -49,25 +40,7 @@ export const FilterElement: React.FC<FilterElementProps> = ({
   popover,
   checkboxLabel,
   onRender,
-  maxStep,
-  onNavigationStep,
 }) => {
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
-    maxStep,
-    onPerformNavigation: (index) => {
-      onPerfom(index)
-    },
-    onNavigationStep: () => onNavigationStep?.(navigationStep),
-    isActive: active,
-    withNegative: true,
-  })
-
-  useEffect(() => {
-    if (!active) {
-      reset()
-    }
-  }, [active])
-
   return (
     <FilterElementStyled>
       {popover ? (
@@ -76,13 +49,8 @@ export const FilterElement: React.FC<FilterElementProps> = ({
         <Label>{label}</Label>
       )}
 
-      {values.map((key, index) => (
-        <Filters
-          key={key}
-          direction="row"
-          align="center"
-          active={active && navigationStep === index - 1}
-        >
+      {values.map((key) => (
+        <Filters key={key} direction="row" align="center">
           <Checkbox
             label={!checkboxLabel ? key : checkboxLabel[key]}
             checked={checked(key)}
@@ -96,35 +64,14 @@ export const FilterElement: React.FC<FilterElementProps> = ({
 }
 
 export const FilterNumberMemberGroups = ({
-  active,
   numberMemberGroups,
   setNumberMemberGroups,
 }) => {
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
-    maxStep: 0,
-    onPerformNavigation: (index) => {
-      setNumberMemberGroups(index + 3)
-    },
-    isActive: active,
-    withNegative: true,
-  })
-
-  useEffect(() => {
-    if (!active) {
-      reset()
-    }
-  }, [active])
-
   return (
     <FilterElementStyled>
       <Label>Number of member groups</Label>
       {numberMemberGroupsOptions.map((option, index) => (
-        <Filters
-          key={index}
-          direction="row"
-          align="center"
-          active={active && navigationStep === index - 1}
-        >
+        <Filters key={index} direction="row" align="center">
           <Radio
             key={`${option.value}` + index}
             id={`${option.value}` + index}

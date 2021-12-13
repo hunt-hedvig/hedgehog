@@ -2,7 +2,8 @@ import { useQuery } from '@apollo/client'
 import { gql } from '@apollo/client/core'
 import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import chroma from 'chroma-js'
 import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterModal'
 import { FilteredMetric } from 'features/claims/claim-templates/FilteredMetric'
@@ -10,6 +11,7 @@ import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-tem
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
+import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
 
@@ -32,7 +34,7 @@ export const metricStyles = (theme: Theme) => css`
   &:hover,
   &:focus {
     opacity: 0.8;
-    color: ${theme.accentContrast}!important;
+    color: ${theme.accentContrast} !important;
   }
 `
 
@@ -115,6 +117,8 @@ const GET_DASHBOARD_NUMBERS = gql`
 `
 
 export const MetricList = () => {
+  const history = useHistory()
+  const { register } = useNavigation()
   const [createFilter, setCreateFilter] = useState(false)
   const { settings } = useMe()
   const { data: dashboardData } = useQuery(GET_DASHBOARD_NUMBERS, {
@@ -132,23 +136,57 @@ export const MetricList = () => {
     removeTemplate,
   } = useTemplateClaims()
 
+  const conversations =
+    settings[UserSettingKey.FeatureFlags] &&
+    settings[UserSettingKey.FeatureFlags].conversations
+
   return (
     <>
       <MetricsWrapper>
-        <Metric to="/claims/list/1">
+        <Metric
+          to="/claims/list/1"
+          {...register('ClaimsMetric', {
+            focus: Keys.C,
+            resolve: () => history.push('/claims/list/1'),
+            neighbors: {
+              right: conversations ? 'ConversationsMetric' : 'QuestionsMetric',
+            },
+          })}
+        >
           <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
           <MetricName>claims</MetricName>
         </Metric>
-        {settings[UserSettingKey.FeatureFlags] &&
-        settings[UserSettingKey.FeatureFlags].conversations ? (
-          <Metric to="/conversations">
+        {conversations ? (
+          <Metric
+            to="/conversations"
+            {...register('ConversationsMetric', {
+              resolve: () => history.push('/conversations'),
+              neighbors: {
+                left: 'ClaimsMetric',
+                right: templateFilters.length
+                  ? templateFilters[0].name
+                  : 'AddMetricCard',
+              },
+            })}
+          >
             <MetricNumber>
               {dashboardNumbers?.numberOfQuestions || 0}
             </MetricNumber>
             <MetricName>conversations</MetricName>
           </Metric>
         ) : (
-          <Metric to="/questions">
+          <Metric
+            to="/questions"
+            {...register('QuestionsMetric', {
+              resolve: () => history.push('/questions'),
+              neighbors: {
+                left: 'ClaimsMetric',
+                right: templateFilters.length
+                  ? templateFilters[0].name
+                  : 'AddMetricCard',
+              },
+            })}
+          >
             <MetricNumber>
               {dashboardNumbers?.numberOfQuestions || 0}
             </MetricNumber>
@@ -156,24 +194,48 @@ export const MetricList = () => {
           </Metric>
         )}
 
-        {templateFilters.map((template) => (
+        {templateFilters.map((template, index) => (
           <FilteredMetric
             onCreate={createTemplate}
             onRemove={removeTemplate}
             onEdit={editTemplateWithName}
             key={template.id}
             template={template}
+            {...register(template.name, {
+              resolve: () =>
+                history.push(`/claims/list/1?template=${template.id}`),
+              neighbors: {
+                left:
+                  index !== 0
+                    ? templateFilters[index - 1].name
+                    : conversations
+                    ? 'ConversationsMetric'
+                    : 'QuestionsMetric',
+                right:
+                  index !== templateFilters.length - 1
+                    ? templateFilters[index + 1].name
+                    : 'AddMetricCard',
+              },
+            })}
           />
         ))}
 
         <AddMetricCard
           tabIndex={0}
           onClick={() => setCreateFilter(true)}
-          onKeyDown={(e) => {
-            if (isPressing(e, Keys.Enter)) {
+          {...register('AddMetricCard', {
+            resolve: () => {
               setCreateFilter(true)
-            }
-          }}
+              return 'Create'
+            },
+            neighbors: {
+              left: templateFilters.length
+                ? templateFilters[templateFilters.length - 1].name
+                : conversations
+                ? 'ConversationsMetric'
+                : 'QuestionsMetric',
+            },
+          })}
         >
           <Plus />
           <span>Filtered Claim Template</span>
