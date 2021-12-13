@@ -7,6 +7,10 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { colorsV3 } from '@hedviginsurance/brand'
+import {
+  FocusItems,
+  useNavigation,
+} from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useRef, useState } from 'react'
 import {
@@ -25,7 +29,6 @@ import {
 import MediaQuery from 'react-media'
 import { useLocation } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
-import { FocusItems, useNavigation } from '../hooks/use-navigation'
 import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
 

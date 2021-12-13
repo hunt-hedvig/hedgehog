@@ -2,6 +2,11 @@ import styled from '@emotion/styled'
 import { Label, lightTheme, Popover, TextDatePicker } from '@hedvig-ui'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { range } from '@hedvig-ui/utils/range'
+import {
+  FilterElement,
+  FilterElementStyled,
+  FilterNumberMemberGroups,
+} from 'features/claims/claims-list/FilterElements'
 import { Market, MarketFlags } from 'features/config/constants'
 import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
 import { useMe } from 'features/user/hooks/use-me'
@@ -14,11 +19,6 @@ import {
   ClaimState,
   UserSettingKey,
 } from 'types/generated/graphql'
-import {
-  FilterElement,
-  FilterElementStyled,
-  FilterNumberMemberGroups,
-} from '../FilterElements'
 
 export const FilterWrapper = styled.div`
   width: 100%;
