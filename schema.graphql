@@ -365,6 +365,9 @@ input ListClaimsOptions {
   filterSelectedMemberGroups: [Int!]
   filterMarkets: [String!]
   filterTypesOfContract: [String!]
+  filterReserveAmount: BigDecimal
+  filterClaimTypes: [String!]
+  filterClaimOutcomes: [String!]
 }
 
 type MemberSearchResult {

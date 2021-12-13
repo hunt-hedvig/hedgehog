@@ -570,6 +570,9 @@ export type ListClaimsOptions = {
   filterSelectedMemberGroups?: Maybe<Array<Scalars['Int']>>
   filterMarkets?: Maybe<Array<Scalars['String']>>
   filterTypesOfContract?: Maybe<Array<Scalars['String']>>
+  filterReserveAmount?: Maybe<Scalars['BigDecimal']>
+  filterClaimTypes?: Maybe<Array<Scalars['String']>>
+  filterClaimOutcomes?: Maybe<Array<Scalars['String']>>
 }
 
 export type ListClaimsResult = {
