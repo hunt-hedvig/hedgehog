@@ -1,5 +1,3 @@
-import { useQuery } from '@apollo/client'
-import { gql } from '@apollo/client/core'
 import styled from '@emotion/styled'
 import {
   Badge,
@@ -16,12 +14,6 @@ import { Greeting } from 'features/dashboard/Greeting'
 import { MetricList } from 'features/dashboard/MetricList'
 import { useMe } from 'features/user/hooks/use-me'
 import React from 'react'
-import { DashboardNumbers } from 'types/generated/graphql'
-import {
-  FocusItems,
-  useFocus,
-  useOldNavigation,
-} from '../features/navigation/hooks/use-old-navigation'
 
 const Wrapper = styled.div`
   display: flex;
@@ -38,46 +30,19 @@ const MutedText = styled.div`
   font-size: 0.9rem;
 `
 
-const GET_DASHBOARD_NUMBERS = gql`
-  query GetDashboardNumbers {
-    dashboardNumbers {
-      numberOfClaims
-      numberOfQuestions
-    }
-  }
-`
-
 const DashboardPage: React.FC = () => {
-  const { data: dashboardData } = useQuery(GET_DASHBOARD_NUMBERS, {
-    pollInterval: 1000 * 5,
-  })
-
   const { me } = useMe()
 
-  const dashboardNumbers = dashboardData?.dashboardNumbers as
-    | DashboardNumbers
-    | undefined
-
   useTitle('Dashboard')
-
-  const { focus, setFocus } = useOldNavigation()
-
-  useFocus(FocusItems.Dashborad.name)
 
   return (
     <Wrapper>
       <Spacing bottom>
         <Greeting userName={me.fullName.split(' ')[0]} />
       </Spacing>
-      {dashboardNumbers && (
-        <FadeIn>
-          <MetricList
-            setFocus={(value: string) => setFocus(value)}
-            dashboardNumbers={dashboardNumbers}
-            navigationAvailable={focus === FocusItems.Dashborad.name}
-          />
-        </FadeIn>
-      )}
+      <FadeIn>
+        <MetricList />
+      </FadeIn>
       <Spacing top="large">
         <SecondLevelHeadline>Recent changes from Tech</SecondLevelHeadline>
         <Spacing bottom>

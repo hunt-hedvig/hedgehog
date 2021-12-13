@@ -1,33 +1,28 @@
+import { useQuery } from '@apollo/client'
+import { gql } from '@apollo/client/core'
 import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import chroma from 'chroma-js'
 import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterModal'
 import { FilteredMetric } from 'features/claims/claim-templates/FilteredMetric'
 import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
-import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
-import { UserSettingKey } from 'types/generated/graphql'
-import { FocusItems } from '../navigation/hooks/use-old-navigation'
+import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
 
 const MetricsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
 
-export const metricStyles = (theme: Theme, focus: boolean = false) => css`
+export const metricStyles = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   color: ${theme.accentContrast} !important;
-  background: ${!focus
-    ? theme.accent
-    : chroma(theme.accent)
-        .alpha(0.7)
-        .hex()};
+  background: ${theme.accent};
   padding: 1.5rem;
   border-radius: 0.5rem;
   margin-right: 1rem;
@@ -41,11 +36,11 @@ export const metricStyles = (theme: Theme, focus: boolean = false) => css`
   }
 `
 
-const Metric = styled(Link)<{ focus: boolean }>`
-  ${({ theme, focus }) => metricStyles(theme, focus)}
+const Metric = styled(Link)`
+  ${({ theme }) => metricStyles(theme)}
 `
 
-const AddMetricCard = styled.div<{ focus: boolean }>`
+const AddMetricCard = styled.div`
   transition: none;
   min-height: 111.5px;
   width: 200px;
@@ -62,7 +57,7 @@ const AddMetricCard = styled.div<{ focus: boolean }>`
   padding: 15px 0;
 
   border: 2px dotted
-    ${({ theme, focus }) =>
+    ${({ theme }) =>
       !focus
         ? theme.accent
         : chroma(theme.accent)
@@ -82,7 +77,7 @@ const AddMetricCard = styled.div<{ focus: boolean }>`
   }
 
   & * {
-    color: ${({ focus, theme }) => (!focus ? theme.accent : theme.accentLight)};
+    color: ${({ theme }) => (!focus ? theme.accent : theme.accentLight)};
   }
 
   &:hover,
@@ -110,14 +105,25 @@ export const MetricName = styled.span`
   opacity: 0.66;
 `
 
-export const MetricList = ({
-  dashboardNumbers,
-  navigationAvailable,
-  setFocus,
-}) => {
+const GET_DASHBOARD_NUMBERS = gql`
+  query GetDashboardNumbers {
+    dashboardNumbers {
+      numberOfClaims
+      numberOfQuestions
+    }
+  }
+`
+
+export const MetricList = () => {
   const [createFilter, setCreateFilter] = useState(false)
   const { settings } = useMe()
-  const history = useHistory()
+  const { data: dashboardData } = useQuery(GET_DASHBOARD_NUMBERS, {
+    pollInterval: 1000 * 5,
+  })
+
+  const dashboardNumbers = dashboardData?.dashboardNumbers as
+    | DashboardNumbers
+    | undefined
 
   const {
     templateFilters,
@@ -126,72 +132,23 @@ export const MetricList = ({
     removeTemplate,
   } = useTemplateClaims()
 
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
-    maxStep: templateFilters.length + 1,
-    isActive: navigationAvailable,
-    onPerformNavigation: (index) => {
-      const itemIndex = index + 1
-
-      if (itemIndex === templateFilters.length + 2) {
-        setCreateFilter(true)
-        return
-      }
-
-      if (itemIndex === 0) {
-        history.push('/claims/list/1')
-        return
-      }
-
-      if (itemIndex === 1) {
-        const isConversationsAvailable =
-          settings[UserSettingKey.FeatureFlags] &&
-          settings[UserSettingKey.FeatureFlags].conversations
-
-        history.push(isConversationsAvailable ? '/conversations' : '/questions')
-        return
-      }
-
-      setFocus(FocusItems.Claims.name)
-      history.push(
-        `/claims/list/1?template=${templateFilters[itemIndex - 2].id}`,
-      )
-    },
-    direction: 'horizontal',
-    withNegative: true,
-  })
-
-  useEffect(() => {
-    if (!navigationAvailable) {
-      reset()
-    }
-  }, [navigationAvailable])
-
   return (
     <>
       <MetricsWrapper>
-        <Metric
-          to="/claims/list/1"
-          focus={navigationAvailable && navigationStep + 1 === 0}
-        >
+        <Metric to="/claims/list/1">
           <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
           <MetricName>claims</MetricName>
         </Metric>
         {settings[UserSettingKey.FeatureFlags] &&
         settings[UserSettingKey.FeatureFlags].conversations ? (
-          <Metric
-            to="/conversations"
-            focus={navigationAvailable && navigationStep + 1 === 1}
-          >
+          <Metric to="/conversations">
             <MetricNumber>
               {dashboardNumbers?.numberOfQuestions || 0}
             </MetricNumber>
             <MetricName>conversations</MetricName>
           </Metric>
         ) : (
-          <Metric
-            to="/questions"
-            focus={navigationAvailable && navigationStep + 1 === 1}
-          >
+          <Metric to="/questions">
             <MetricNumber>
               {dashboardNumbers?.numberOfQuestions || 0}
             </MetricNumber>
@@ -199,9 +156,8 @@ export const MetricList = ({
           </Metric>
         )}
 
-        {templateFilters.map((template, index) => (
+        {templateFilters.map((template) => (
           <FilteredMetric
-            focus={navigationAvailable && navigationStep === index + 1}
             onCreate={createTemplate}
             onRemove={removeTemplate}
             onEdit={editTemplateWithName}
@@ -211,9 +167,6 @@ export const MetricList = ({
         ))}
 
         <AddMetricCard
-          focus={
-            navigationAvailable && navigationStep === templateFilters.length + 1
-          }
           tabIndex={0}
           onClick={() => setCreateFilter(true)}
           onKeyDown={(e) => {

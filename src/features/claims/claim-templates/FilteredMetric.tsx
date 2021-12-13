@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterModal'
 import { ClaimFilterTemplate } from 'features/claims/claim-templates/hooks/use-template-claims'
@@ -33,12 +32,12 @@ const Icon = styled.div`
   }
 `
 
-const Metric = styled.div<{ focus: boolean }>`
+const Metric = styled.div`
   transition: none;
   position: relative;
   cursor: pointer;
   max-width: 200px;
-  ${({ theme, focus }) => metricStyles(theme, focus)};
+  ${({ theme }) => metricStyles(theme)};
 `
 
 interface FilteredMetricProps {
@@ -46,7 +45,6 @@ interface FilteredMetricProps {
   onRemove: (id: string) => void
   onCreate: (filter: ClaimFilterTemplate) => void
   onEdit: (filter: ClaimFilterTemplate) => void
-  focus: boolean
 }
 
 export const FilteredMetric: React.FC<FilteredMetricProps> = ({
@@ -54,7 +52,6 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
   onRemove,
   onCreate,
   onEdit,
-  focus,
 }) => {
   const history = useHistory()
   const [edit, setEdit] = useState(false)
@@ -85,16 +82,10 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
 
   return (
     <Metric
-      focus={focus}
       tabIndex={0}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={clickHandler}
-      onKeyDown={(e) => {
-        if (isPressing(e, Keys.Enter)) {
-          clickHandler(e)
-        }
-      }}
     >
       <MetricNumber onClick={clickHandler}>{totalClaims || 0}</MetricNumber>
       <MetricName onClick={clickHandler} title={template.name}>
