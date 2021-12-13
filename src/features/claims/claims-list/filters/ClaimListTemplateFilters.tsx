@@ -1,6 +1,10 @@
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { range } from '@hedvig-ui/utils/range'
 import {
+  FilterElement,
+  FilterNumberMemberGroups,
+} from 'features/claims/claims-list/FilterElements'
+import {
   complexityIcons,
   FilterGroupState,
   FilterWrapper,
@@ -12,7 +16,6 @@ import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-gro
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React, { useEffect } from 'react'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
-import { FilterElement, FilterNumberMemberGroups } from '../FilterElements'
 
 interface ClaimListTemplateFiltersProps
   extends React.HTMLAttributes<HTMLDivElement> {
