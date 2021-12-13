@@ -51,6 +51,7 @@ it('submits valid form with confirmation', async () => {
     exGratia: false,
     carrier: 'Hedvig',
     type: ClaimPaymentType.Automatic,
+    timestamp: null,
   }
 
   const wrapper = mount(
