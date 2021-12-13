@@ -40,6 +40,7 @@ export interface ClaimsFiltersType {
   filterSelectedMemberGroups: number[] | null
   filterMarkets: string[] | null
   filterTypesOfContract: string[] | null
+  filterClaimOutcomes: string[] | null
 }
 
 const ClaimsListPage: React.FC<RouteComponentProps<{

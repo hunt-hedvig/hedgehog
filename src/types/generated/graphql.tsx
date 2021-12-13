@@ -1614,6 +1614,7 @@ export enum UserSettingKey {
   MemberGroupsFilter = 'MEMBER_GROUPS_FILTER',
   MarketFilter = 'MARKET_FILTER',
   NumberOfClaimsFilter = 'NUMBER_OF_CLAIMS_FILTER',
+  OutcomeFilter = 'OUTCOME_FILTER',
 }
 
 export type UserSettingsFilter = {

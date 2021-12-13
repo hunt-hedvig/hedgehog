@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Label, lightTheme, Popover, TextDatePicker } from '@hedvig-ui'
+import { Input, Label, lightTheme, Popover, TextDatePicker } from '@hedvig-ui'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { range } from '@hedvig-ui/utils/range'
 import {
@@ -170,6 +170,8 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
     }
   }, [navigationAvailable])
 
+  console.log(settings)
+
   return (
     <FilterWrapper {...props}>
       <FilterElement
@@ -282,6 +284,18 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
             {MarketFlags[key.toUpperCase()]}
           </span>
         )}
+      />
+
+      <Input
+        placeholder="Outcome"
+        value={
+          (settings[UserSettingKey.OutcomeFilter] &&
+            settings[UserSettingKey.OutcomeFilter].claims) ||
+          ''
+        }
+        onChange={(e) => {
+          updateFilterHandler(UserSettingKey.OutcomeFilter, e.target.value)
+        }}
       />
 
       <FilterElementStyled>
