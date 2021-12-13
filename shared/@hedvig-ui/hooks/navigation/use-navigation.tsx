@@ -85,7 +85,9 @@ export const NavigationProvider = ({ children }) => {
         return
       }
 
-      const nextCursor = target.parent()
+      const nextCursor = cursorRef.current
+        ? target.parent(registry.current[cursorRef.current].ref)
+        : null
       setCursor(nextCursor)
       cursorRef.current = nextCursor
 
@@ -93,6 +95,10 @@ export const NavigationProvider = ({ children }) => {
     }
 
     if (isPressing(e, Keys.Enter)) {
+      if (!target?.resolve) {
+        return
+      }
+
       if (typeof target.resolve === 'string') {
         if (!validate(target.resolve)) {
           return
@@ -187,6 +193,7 @@ export const NavigationProvider = ({ children }) => {
 
   const handleCursorChange = (value: string | null) => {
     setCursor(value)
+    cursorRef.current = value
   }
 
   const handleSetRegistryItem = (
@@ -231,8 +238,8 @@ interface NodeNavigationDirections {
 
 interface UseNavigationRegisterOptions {
   focus?: Key
-  resolve: string | ((ref: any) => string | void)
-  parent?: string | (() => string)
+  resolve?: string | ((ref: any) => string | void)
+  parent?: string | ((ref: any) => string)
   neighbors?: NodeNavigationDirections
   ref?: any
 }
@@ -241,6 +248,7 @@ export const useNavigation = () => {
   const {
     cursor,
     registry,
+    setCursor,
     setRegistryItem,
     removeRegistryItem,
     assignRef,
@@ -289,5 +297,6 @@ export const useNavigation = () => {
         },
       }
     },
+    focus: (name: string) => setCursor(name),
   }
 }

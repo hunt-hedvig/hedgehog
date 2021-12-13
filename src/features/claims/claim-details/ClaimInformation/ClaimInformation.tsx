@@ -316,7 +316,10 @@ export const ClaimInformation: React.FC<{
               outcome={data?.claim?.outcome ?? null}
               claimId={claimId}
               {...register('ClaimOutcome', {
-                resolve: ClaimState.Open,
+                resolve: (ref: HTMLDivElement) => {
+                  ref?.focus()
+                  return 'ClaimOutcomeOptions'
+                },
                 neighbors: {
                   up: 'ClaimStatus',
                   down: 'DateOfOccurrence',
