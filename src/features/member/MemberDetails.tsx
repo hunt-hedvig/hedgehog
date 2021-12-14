@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { HotkeyStyled, Popover } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import copy from 'copy-to-clipboard'
+import { useCommandLine } from 'features/commands/use-command-line'
 import { PickedLocaleFlag } from 'features/config/constants'
 import { formatSsn } from 'features/member/utils'
 import React from 'react'
@@ -9,7 +10,6 @@ import { Clipboard } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { useHistory } from 'react-router'
 import { Member } from 'types/generated/graphql'
-import { useCommandLine } from '../commands/use-command-line'
 
 const Wrapper = styled.div`
   display: flex;

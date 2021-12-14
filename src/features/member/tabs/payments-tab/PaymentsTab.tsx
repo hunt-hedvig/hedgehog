@@ -22,14 +22,20 @@ import {
   TableRow,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { formatMoney } from '@hedvig-ui/utils/money'
 import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import { Market } from 'features/config/constants'
 import { useGetAccount } from 'features/member/tabs/account-tab/hooks/use-get-account'
+import {
+  FocusItems,
+  useFocus,
+  useNavigation,
+} from 'features/navigation/hooks/use-navigation'
 import gql from 'graphql-tag'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   Transaction,
@@ -38,6 +44,13 @@ import {
   useGetQuotesQuery,
 } from 'types/generated/graphql'
 import { PayoutDetails } from './PayoutDetails'
+
+const PaymentCard = styled(Card)<{ active: boolean }>`
+  width: 100%;
+  border-radius: 0.5rem;
+  border: ${({ active, theme }) =>
+    active ? `1px solid ${theme.accent}` : 'none'};
+`
 
 const numberRegex = /^\d+$/
 
@@ -80,10 +93,37 @@ const CHARGE_MEMBER_MUTATION = gql`
   }
 `
 
+const PaymentTable = styled(Table)`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`
+
+const PaymentTableHeader = styled(TableHeader)`
+  & tr {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 0.4fr 0.6fr 0.3fr 0.5fr;
+  }
+`
+
+const PaymentColumn = styled(TableColumn)`
+  &,
+  & * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`
+
 const TableRowColored = styled(TableRow)<{
   status: Transaction['status']
   type: Transaction['type']
 }>`
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 0.4fr 0.6fr 0.3fr 0.5fr;
+
   td {
     background-color: ${({ theme, status, type }) => {
       if (type === 'PAYOUT') {
@@ -109,14 +149,14 @@ const ChargeNotAvailableMessage = styled(StandaloneMessage)`
 const MemberTransactionsTable: React.FC<{
   transactions: Transaction[]
 }> = ({ transactions }) => (
-  <Table>
-    <TableHeader>
+  <PaymentTable>
+    <PaymentTableHeader>
       <TableHeaderColumn>ID</TableHeaderColumn>
       <TableHeaderColumn>Amount</TableHeaderColumn>
       <TableHeaderColumn>Timestamp</TableHeaderColumn>
       <TableHeaderColumn>Type</TableHeaderColumn>
       <TableHeaderColumn>Status</TableHeaderColumn>
-    </TableHeader>
+    </PaymentTableHeader>
     <TableBody>
       {transactions.map((transaction) => (
         <TableRowColored
@@ -125,19 +165,30 @@ const MemberTransactionsTable: React.FC<{
           status={transaction.status!}
           type={transaction.type!}
         >
-          <TableColumn>{transaction.id}</TableColumn>
-          <TableColumn>
+          <PaymentColumn title={transaction.id?.toString()}>
+            {transaction.id}
+          </PaymentColumn>
+          <PaymentColumn title={formatMoney(transaction.amount!)}>
             <strong>{formatMoney(transaction.amount!)}</strong>
-          </TableColumn>
-          <TableColumn>
+          </PaymentColumn>
+          <PaymentColumn
+            title={format(
+              parseISO(transaction.timestamp),
+              'yyyy-MM-dd HH:mm:ss',
+            )}
+          >
             {format(parseISO(transaction.timestamp), 'yyyy-MM-dd HH:mm:ss')}
-          </TableColumn>
-          <TableColumn>{transaction.type}</TableColumn>
-          <TableColumn>{transaction.status}</TableColumn>
+          </PaymentColumn>
+          <PaymentColumn title={transaction.type?.toString()}>
+            {transaction.type}
+          </PaymentColumn>
+          <PaymentColumn title={transaction.status?.toString()}>
+            {transaction.status}
+          </PaymentColumn>
         </TableRowColored>
       ))}
     </TableBody>
-  </Table>
+  </PaymentTable>
 )
 
 export const PaymentsTab: React.FC<{
@@ -151,8 +202,11 @@ export const PaymentsTab: React.FC<{
   } = useGetMemberTransactionsQuery({
     variables: { id: memberId },
   })
-
   const [manualAmount, setManualAmount] = useState('0')
+  const cardsRef = useRef<HTMLDivElement>(null)
+
+  const { focus, setFocus } = useNavigation()
+  useFocus(FocusItems.Member.items.Payments)
 
   const { data: quotesData } = useGetQuotesQuery({
     variables: {
@@ -178,6 +232,24 @@ export const PaymentsTab: React.FC<{
   const [account] = useGetAccount(memberId)
 
   const { confirm } = useConfirmDialog()
+
+  const generateLinkHandler = () => {
+    toast.promise(createPaymentCompletionLink(), {
+      loading: 'Generating payment link...',
+      success: ({ data: response }) => {
+        if (!response?.createPaymentCompletionLink?.url) {
+          return null
+        }
+
+        copy(response?.createPaymentCompletionLink?.url, {
+          format: 'text/plain',
+        })
+
+        return 'Payment link copied to clipboard'
+      },
+      error: 'Could not generate payment link',
+    })
+  }
 
   const handleChargeSubmit = () => {
     const chargeAmount = allowManualCharge
@@ -212,6 +284,26 @@ export const PaymentsTab: React.FC<{
     })
   }
 
+  const [navigationStep] = useArrowKeyboardNavigation({
+    maxStep: 3,
+    onPerformNavigation: (index) => {
+      if (index === 0) {
+        generateLinkHandler()
+      }
+
+      if (index === 1) {
+        handleChargeSubmit()
+      }
+
+      if (index === 2) {
+        setFocus(FocusItems.Member.items.PaymentsForm)
+      }
+    },
+    direction: 'horizontal',
+    isActive: focus === FocusItems.Member.items.Payments,
+    withNegative: true,
+  })
+
   if (error) {
     return (
       <StandaloneMessage paddingTop="10vh">
@@ -227,8 +319,12 @@ export const PaymentsTab: React.FC<{
   return (
     <>
       <MainHeadline>Payments</MainHeadline>
-      <CardsWrapper>
-        <Card span={2}>
+      <CardsWrapper ref={cardsRef}>
+        <PaymentCard
+          span={2}
+          focus={navigationStep + 1 === 0}
+          active={navigationStep + 1 === 0}
+        >
           <InfoRow>
             Direct debit
             <InfoText>
@@ -263,35 +359,28 @@ export const PaymentsTab: React.FC<{
               </InfoTag>
             </InfoText>
           </InfoRow>
-        </Card>
-        <Card span={2}>
+        </PaymentCard>
+        <PaymentCard
+          span={2}
+          focus={navigationStep + 1 === 1}
+          active={navigationStep + 1 === 1}
+        >
           <ThirdLevelHeadline>Payments Link</ThirdLevelHeadline>
           <Button
             onClick={(e) => {
               e.preventDefault()
-              toast.promise(createPaymentCompletionLink(), {
-                loading: 'Generating payment link...',
-                success: ({ data: response }) => {
-                  if (!response?.createPaymentCompletionLink?.url) {
-                    return null
-                  }
-
-                  copy(response?.createPaymentCompletionLink?.url, {
-                    format: 'text/plain',
-                  })
-
-                  return 'Payment link copied to clipboard'
-                },
-                error: 'Could not generate payment link',
-              })
+              generateLinkHandler()
             }}
           >
             Generate payments link
           </Button>
-        </Card>
+        </PaymentCard>
 
         {memberData.member?.directDebitStatus?.activated && (
-          <Card>
+          <PaymentCard
+            focus={navigationStep + 1 === 2}
+            active={navigationStep + 1 === 2}
+          >
             {allowManualCharge ? (
               <form
                 onSubmit={(e) => {
@@ -350,16 +439,28 @@ export const PaymentsTab: React.FC<{
                 )}
               </>
             )}
-          </Card>
+          </PaymentCard>
         )}
         {memberData.member.payoutMethodStatus?.activated &&
           memberData.member.contractMarketInfo?.market === Market.Sweden && (
-            <Card>
+            <PaymentCard
+              focus={navigationStep + 1 === 3}
+              active={navigationStep + 1 === 3}
+            >
               <ThirdLevelHeadline>Payout</ThirdLevelHeadline>
-              <PayoutDetails memberId={memberId} />
-            </Card>
+              <PayoutDetails
+                memberId={memberId}
+                navigationAvailable={
+                  navigationStep + 1 === 3 &&
+                  focus === FocusItems.Member.items.PaymentsForm
+                }
+              />
+            </PaymentCard>
           )}
-        <Card>
+        <PaymentCard
+          focus={navigationStep + 1 === 4}
+          active={navigationStep + 1 === 4}
+        >
           <ThirdLevelHeadline>Transactions</ThirdLevelHeadline>
           <MemberTransactionsTable
             transactions={
@@ -369,7 +470,7 @@ export const PaymentsTab: React.FC<{
                 .reverse() as Transaction[]
             }
           />
-        </Card>
+        </PaymentCard>
       </CardsWrapper>
     </>
   )

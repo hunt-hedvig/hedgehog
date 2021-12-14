@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import { formatMoney } from '@hedvig-ui/utils/money'
-import React from 'react'
+import React, { useState } from 'react'
 import { InfoCircleFill } from 'react-bootstrap-icons'
 import { AccountEntry } from 'types/generated/graphql'
 import { PopoverItem } from './MonthlyEntriesTable'
@@ -53,64 +53,81 @@ const AmountCell = styled(TableColumn)<{
 
 export const AccountEntryTable: React.FC<{
   accountEntries: AccountEntry[]
-}> = ({ accountEntries }) => (
-  <StyledTable>
-    <TableHeader>
-      <TableHeaderColumn>Date</TableHeaderColumn>
-      <TableHeaderColumn>Type</TableHeaderColumn>
-      <TableHeaderColumn>Title</TableHeaderColumn>
-      <TableHeaderColumn>Amount</TableHeaderColumn>
-      <TableHeaderColumn style={{ width: 90, textAlign: 'center' }}>
-        Details
-      </TableHeaderColumn>
-    </TableHeader>
+  navigationAvailable: boolean
+}> = ({ accountEntries, navigationAvailable }) => {
+  const [activeRow, setActiveRow] = useState<number | null>(null)
 
-    <TableBody>
-      {accountEntries.map((entry) => (
-        <TableRowColored entry={entry} key={entry.id}>
-          <AmountCell entry={entry}>{entry.fromDate}</AmountCell>
-          <TableColumn>
-            <Capitalized>{entry.type}</Capitalized>
-          </TableColumn>
-          <TableColumn>
-            {entry.title && entry.title !== '' ? entry.title : 'Not specified'}
-          </TableColumn>
-          <AmountCell entry={entry}>
-            {formatMoney(entry.amount, {
-              useGrouping: true,
-              minimumFractionDigits: 2,
-            })}
-          </AmountCell>
-          <TableColumn style={{ textAlign: 'center', width: 90 }}>
-            <Popover
-              contents={
-                <>
-                  <PopoverItem>
-                    <Bold>Entry ID</Bold>
-                    {entry.id}
-                  </PopoverItem>
-                  <PopoverItem>
-                    <Bold>Reference</Bold>
-                    {entry.reference}
-                  </PopoverItem>
-                  <PopoverItem>
-                    <Bold>Source</Bold>
-                    {entry.source}
-                  </PopoverItem>
-                  {entry.comment && (
+  return (
+    <StyledTable>
+      <TableHeader>
+        <TableHeaderColumn>Date</TableHeaderColumn>
+        <TableHeaderColumn>Type</TableHeaderColumn>
+        <TableHeaderColumn>Title</TableHeaderColumn>
+        <TableHeaderColumn>Amount</TableHeaderColumn>
+        <TableHeaderColumn style={{ width: 90, textAlign: 'center' }}>
+          Details
+        </TableHeaderColumn>
+      </TableHeader>
+
+      <TableBody
+        isActive={navigationAvailable}
+        setActiveRow={(num) => setActiveRow(num)}
+        onPerformNavigation={() => {
+          return
+        }}
+      >
+        {accountEntries.map((entry, index) => (
+          <TableRowColored
+            entry={entry}
+            key={entry.id}
+            active={activeRow === index}
+          >
+            <AmountCell entry={entry}>{entry.fromDate}</AmountCell>
+            <TableColumn>
+              <Capitalized>{entry.type}</Capitalized>
+            </TableColumn>
+            <TableColumn>
+              {entry.title && entry.title !== ''
+                ? entry.title
+                : 'Not specified'}
+            </TableColumn>
+            <AmountCell entry={entry}>
+              {formatMoney(entry.amount, {
+                useGrouping: true,
+                minimumFractionDigits: 2,
+              })}
+            </AmountCell>
+            <TableColumn style={{ textAlign: 'center', width: 90 }}>
+              <Popover
+                contents={
+                  <>
                     <PopoverItem>
-                      <Bold>Comment</Bold>
-                      {entry.comment}
+                      <Bold>Entry ID</Bold>
+                      {entry.id}
                     </PopoverItem>
-                  )}
-                </>
-              }
-            >
-              <InfoCircleFill />
-            </Popover>
-          </TableColumn>
-        </TableRowColored>
-      ))}
-    </TableBody>
-  </StyledTable>
-)
+                    <PopoverItem>
+                      <Bold>Reference</Bold>
+                      {entry.reference}
+                    </PopoverItem>
+                    <PopoverItem>
+                      <Bold>Source</Bold>
+                      {entry.source}
+                    </PopoverItem>
+                    {entry.comment && (
+                      <PopoverItem>
+                        <Bold>Comment</Bold>
+                        {entry.comment}
+                      </PopoverItem>
+                    )}
+                  </>
+                }
+              >
+                <InfoCircleFill />
+              </Popover>
+            </TableColumn>
+          </TableRowColored>
+        ))}
+      </TableBody>
+    </StyledTable>
+  )
+}

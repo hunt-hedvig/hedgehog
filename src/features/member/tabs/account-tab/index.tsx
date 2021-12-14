@@ -16,6 +16,7 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
+import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { formatMoney } from '@hedvig-ui/utils/money'
 import { AccountEntryTable } from 'features/member/tabs/account-tab/AccountEntryTable'
 import { AddEntryForm } from 'features/member/tabs/account-tab/AddEntryForm'
@@ -23,9 +24,24 @@ import { AddMonthlyEntryForm } from 'features/member/tabs/account-tab/AddMonthly
 import { BackfillSubscriptionsButton } from 'features/member/tabs/account-tab/BackfillSubscriptionsButton'
 import { useGetAccount } from 'features/member/tabs/account-tab/hooks/use-get-account'
 import { MonthlyEntriesTable } from 'features/member/tabs/account-tab/MonthlyEntriesTable'
+import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
+import {
+  FocusItems,
+  useFocus,
+  useNavigation,
+} from 'features/navigation/hooks/use-navigation'
 import React, { useState } from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
-import { RefreshButton } from '../shared/refresh-button'
+
+const AccountCard = styled(Card)<{ active: boolean }>`
+  border-radius: 0.5rem;
+  border: ${({ active, theme }) =>
+    active ? `1px solid ${theme.accent}` : 'none'};
+`
+
+const CardTop = styled(Flex)`
+  flex-wrap: wrap;
+`
 
 const moneyOptions = {
   minimumFractionDigits: 2,
@@ -42,6 +58,26 @@ export const AccountTab: React.FC<{
   const [showAccountEntryForm, setShowAccountEntryForm] = useState(false)
   const [showMonthlyEntryForm, setShowMonthlyEntryForm] = useState(false)
   const [account, { loading, refetch, error }] = useGetAccount(memberId)
+
+  const { focus, setFocus } = useNavigation()
+
+  useFocus(FocusItems.Member.items.Account)
+
+  const [navigationStep] = useArrowKeyboardNavigation({
+    maxStep: 2,
+    onPerformNavigation: (index) => {
+      if (index === 1) {
+        setFocus(FocusItems.Member.items.AccountEntries)
+      }
+
+      if (index === 2) {
+        setFocus(FocusItems.Member.items.MonthlyEntries)
+      }
+    },
+    direction: 'horizontal',
+    isActive: focus === FocusItems.Member.items.Account,
+    withNegative: true,
+  })
 
   if (loading) {
     return <LoadingMessage paddingTop="10vh" />
@@ -61,7 +97,17 @@ export const AccountTab: React.FC<{
         </RefreshButton>
       </MainHeadline>
       <CardsWrapper>
-        <Card span={2}>
+        <AccountCard
+          focus={
+            navigationStep + 1 === 0 &&
+            focus === FocusItems.Member.items.Account
+          }
+          active={
+            navigationStep + 1 === 0 &&
+            focus === FocusItems.Member.items.Account
+          }
+          span={2}
+        >
           <InfoContainer>
             <InfoRow>
               <ThirdLevelHeadline>Balance</ThirdLevelHeadline>
@@ -81,8 +127,18 @@ export const AccountTab: React.FC<{
               </InfoText>
             </InfoRow>
           </InfoContainer>
-        </Card>
-        <Card span={2}>
+        </AccountCard>
+        <AccountCard
+          focus={
+            navigationStep + 1 === 1 &&
+            focus === FocusItems.Member.items.Account
+          }
+          active={
+            navigationStep + 1 === 1 &&
+            focus === FocusItems.Member.items.Account
+          }
+          span={2}
+        >
           <InfoContainer>
             <InfoRow>
               <ThirdLevelHeadline>
@@ -135,12 +191,21 @@ export const AccountTab: React.FC<{
               </InfoText>
             </InfoRow>
           </InfoContainer>
-        </Card>
+        </AccountCard>
       </CardsWrapper>
 
       <CardsWrapper>
-        <Card>
-          <Flex justify="space-between">
+        <AccountCard
+          focus={
+            navigationStep + 1 === 2 &&
+            focus === FocusItems.Member.items.Account
+          }
+          active={
+            navigationStep + 1 === 2 &&
+            focus === FocusItems.Member.items.Account
+          }
+        >
+          <CardTop justify="space-between">
             <Flex>
               <ThirdLevelHeadline>Account Entries</ThirdLevelHeadline>
               <Spacing left="small">
@@ -167,7 +232,7 @@ export const AccountTab: React.FC<{
                 New account entry
               </Button>
             </div>
-          </Flex>
+          </CardTop>
           {showAccountEntryForm && (
             <FadeIn duration={200} style={{ width: '100%' }}>
               <Spacing top="medium" bottom="large">
@@ -181,17 +246,32 @@ export const AccountTab: React.FC<{
           )}
           {account.entries.length !== 0 ? (
             <Spacing top="medium">
-              <AccountEntryTable accountEntries={account.entries} />
+              <AccountEntryTable
+                accountEntries={account.entries}
+                navigationAvailable={
+                  navigationStep + 1 === 2 &&
+                  focus === FocusItems.Member.items.AccountEntries
+                }
+              />
             </Spacing>
           ) : (
             <NoTableMessage paddingTop="4em" paddingBottom="2em">
               No account entries
             </NoTableMessage>
           )}
-        </Card>
+        </AccountCard>
       </CardsWrapper>
       <CardsWrapper>
-        <Card>
+        <AccountCard
+          focus={
+            navigationStep + 1 === 3 &&
+            focus === FocusItems.Member.items.Account
+          }
+          active={
+            navigationStep + 1 === 3 &&
+            focus === FocusItems.Member.items.Account
+          }
+        >
           <Flex justify="space-between">
             <Flex direction="row">
               <ThirdLevelHeadline>Monthly Entries</ThirdLevelHeadline>
@@ -233,6 +313,10 @@ export const AccountTab: React.FC<{
           {account.monthlyEntries.length ? (
             <Spacing top="medium">
               <MonthlyEntriesTable
+                navigationAvailable={
+                  navigationStep + 1 === 2 &&
+                  focus === FocusItems.Member.items.AccountEntries
+                }
                 memberId={memberId}
                 monthlyEntries={account.monthlyEntries}
               />
@@ -242,7 +326,7 @@ export const AccountTab: React.FC<{
               No monthly entries
             </NoTableMessage>
           )}
-        </Card>
+        </AccountCard>
       </CardsWrapper>
     </FadeIn>
   )

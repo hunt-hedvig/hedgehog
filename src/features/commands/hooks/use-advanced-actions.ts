@@ -1,4 +1,5 @@
 import { differenceInSeconds, parseISO } from 'date-fns'
+import { CommandLineAction } from 'features/commands/use-command-line'
 import { useMemberSearch } from 'features/members-search/hooks/use-member-search'
 import { useMe } from 'features/user/hooks/use-me'
 import { useEffect } from 'react'
@@ -9,7 +10,6 @@ import {
   useSharePathMutation,
   useUsersQuery,
 } from 'types/generated/graphql'
-import { CommandLineAction } from '../use-command-line'
 
 const handleShare = (
   user: Omit<User, 'notifications' | 'signature'>,
