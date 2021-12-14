@@ -27,15 +27,6 @@ const selfBlockersColors = {
   HAS_FUTURE_CHANGES: colorsV3.orange,
 }
 
-const getSelfBlockerNormalName = (value: string) => {
-  const lowercaseValue = value
-    .split('_')
-    .map((word) => word.toLowerCase())
-    .join(' ')
-
-  return lowercaseValue.charAt(0).toUpperCase() + lowercaseValue.slice(1)
-}
-
 const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
   position: relative;
   border-radius: 0.5rem;
@@ -144,9 +135,7 @@ export const Contract: React.FC<{
         {!!contract.selfChangeBlockers.length && (
           <BlockersWrapper>
             {contract.selfChangeBlockers.map((blocker) => (
-              <Blocker value={blocker}>
-                {getSelfBlockerNormalName(blocker)}
-              </Blocker>
+              <Blocker value={blocker}>{convertEnumToTitle(blocker)}</Blocker>
             ))}
           </BlockersWrapper>
         )}
