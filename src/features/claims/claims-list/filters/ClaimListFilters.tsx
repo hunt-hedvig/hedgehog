@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Input, Label, lightTheme, Popover, TextDatePicker } from '@hedvig-ui'
+import { Label, lightTheme, Popover, TextDatePicker } from '@hedvig-ui'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { range } from '@hedvig-ui/utils/range'
 import {
@@ -19,13 +19,14 @@ import {
   ClaimState,
   UserSettingKey,
 } from 'types/generated/graphql'
+import { OutcomeDropdown } from '../../claim-details/ClaimType/components/OutcomeDropdown'
 
 export const FilterWrapper = styled.div`
   width: 100%;
   max-width: 1500px;
 
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   align-items: flex-start;
   margin: 2rem 0;
 `
@@ -131,6 +132,28 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
     })
   }
 
+  const updateOutcomeFilterHandler = (value: string | null) => {
+    const field = UserSettingKey.OutcomeFilter
+
+    if (!settings[field] || !settings[field].claims) {
+      updateSetting(field, {
+        ...settings[field],
+        claims: [value],
+      })
+
+      return
+    }
+
+    const alreadyExist = settings[UserSettingKey.OutcomeFilter].claims.includes(
+      value,
+    )
+
+    updateSetting(field, {
+      ...settings[field],
+      claims: value && !alreadyExist ? [value] : [],
+    })
+  }
+
   const updateNumberMemberSetting = (state: number) => {
     if (
       state === 2 &&
@@ -158,7 +181,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   }
 
   const [navigationStep, reset] = useArrowKeyboardNavigation({
-    maxStep: 4,
+    maxStep: 5,
     isActive: navigationAvailable,
     direction: 'horizontal',
     withNegative: true,
@@ -169,8 +192,6 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       reset()
     }
   }, [navigationAvailable])
-
-  console.log(settings)
 
   return (
     <FilterWrapper {...props}>
@@ -286,17 +307,19 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         )}
       />
 
-      <Input
-        placeholder="Outcome"
-        value={
-          (settings[UserSettingKey.OutcomeFilter] &&
-            settings[UserSettingKey.OutcomeFilter].claims) ||
-          ''
-        }
-        onChange={(e) => {
-          updateFilterHandler(UserSettingKey.OutcomeFilter, e.target.value)
-        }}
-      />
+      <FilterElementStyled style={{ marginRight: '2rem' }}>
+        <Label>Outcome</Label>
+        <OutcomeDropdown
+          focus={navigationAvailable && navigationStep + 1 === 6}
+          onSelect={updateOutcomeFilterHandler}
+          outcome={
+            settings[UserSettingKey.OutcomeFilter] &&
+            settings[UserSettingKey.OutcomeFilter].claims[0]
+              ? settings[UserSettingKey.OutcomeFilter].claims[0]
+              : null
+          }
+        />
+      </FilterElementStyled>
 
       <FilterElementStyled>
         <LabelWithPopover
@@ -304,7 +327,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           popover="The claim was registered either before or on this date."
         />
         <TextDatePicker
-          focus={navigationAvailable && navigationStep + 1 === 5}
+          focus={navigationAvailable && navigationStep + 1 === 6}
           value={date ? new Date(date) : new Date()}
           onChange={setDateHandler}
         />

@@ -19,32 +19,41 @@ export enum ClaimOutcomes {
 }
 
 export const OutcomeDropdown: React.FC<{
-  claimState: string
-  claimId: string
+  claimState?: string
+  claimId?: string
   outcome: string | null
-}> = ({ claimState, claimId, outcome }) => {
+  onSelect?: (value: string | null) => void
+  focus?: boolean
+}> = ({ claimState, claimId, outcome, onSelect, focus }) => {
   const [setClaimOutcome] = useSetClaimOutcomeMutation()
 
   const handleSelectOutcome = async (newOutcome: string | null) => {
+    if (!claimState && !claimId && onSelect) {
+      onSelect(newOutcome)
+      return
+    }
+
     if (claimState === ClaimState.Closed) {
       toast.error('This claim is closed')
       return
     }
 
-    await setClaimOutcome({
-      variables: { id: claimId, outcome: newOutcome },
-      optimisticResponse: {
-        setClaimOutcome: {
-          id: claimId,
-          __typename: 'Claim',
-          outcome: newOutcome,
+    if (claimId) {
+      await setClaimOutcome({
+        variables: { id: claimId, outcome: newOutcome },
+        optimisticResponse: {
+          setClaimOutcome: {
+            id: claimId,
+            __typename: 'Claim',
+            outcome: newOutcome,
+          },
         },
-      },
-    })
+      })
+    }
   }
 
   return (
-    <Dropdown placeholder="Not specified">
+    <Dropdown placeholder="Not specified" focus={focus}>
       {[
         ...Object.keys(ClaimOutcomes).map((value) => ({
           value,
