@@ -6,11 +6,11 @@ import { Redirect, Route, Switch, useLocation } from 'react-router'
 const DashboardPage = lazy(() => import('./DashboardPage'))
 const ProfilePage = lazy(() => import('./settings/ProfilePage'))
 const QuestionsPage = lazy(() => import('./QuestionsPage'))
-const ConversationsOnboardingPage = lazy(() =>
-  import('./conversations/ConversationsOnboardingPage'),
+const ConversationsOnboardingPage = lazy(
+  () => import('./conversations/ConversationsOnboardingPage'),
 )
-const ConversationsPage = lazy(() =>
-  import('./conversations/ConversationsPage'),
+const ConversationsPage = lazy(
+  () => import('./conversations/ConversationsPage'),
 )
 const ClaimsListPage = lazy(() => import('./claims/list/ClaimsListPage'))
 const ClaimDetailsPage = lazy(() => import('./claims/ClaimDetailsPage'))
@@ -19,8 +19,8 @@ const MemberPage = lazy(() => import('./members/MemberPage'))
 const ToolsPage = lazy(() => import('./tools/ToolsPage'))
 const ChargesPage = lazy(() => import('./tools/ChargesPage'))
 const ClaimTypesPage = lazy(() => import('./tools/ClaimTypesPage'))
-const SwitcherAutomationPage = lazy(() =>
-  import('./tools/SwitcherAutomationPage'),
+const SwitcherAutomationPage = lazy(
+  () => import('./tools/SwitcherAutomationPage'),
 )
 const PerilsEditorPage = lazy(() => import('./tools/PerilsEditorPage'))
 
