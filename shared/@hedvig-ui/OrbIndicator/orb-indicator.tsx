@@ -31,7 +31,7 @@ export const OrbIndicator: React.FC<OrbIndicatorProps> = ({
       : lightTheme.placeholderColor
 
   return (
-    <OrbIndicatorStyled color={currentColor} size={size || 'tiny'} {...props} />
+    <OrbIndicatorStyled color={currentColor} size={size || '10px'} {...props} />
   )
 }
 
