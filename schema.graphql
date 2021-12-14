@@ -16,7 +16,6 @@ type QueryType {
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   availableCampaignCodeTypes: [String!]!
   dashboardNumbers: DashboardNumbers
-  quoteSchemaForContractType(contractType: String!): JSON
   quoteSchemaForInsuranceType(insuranceType: String!): JSON
   memberSearch(
     query: String!
@@ -75,6 +74,8 @@ enum UserSettingKey {
   MEMBER_GROUPS_FILTER
   MARKET_FILTER
   NUMBER_OF_CLAIMS_FILTER
+  FOCUS_MARKETS
+  LANGUAGES
 }
 
 type User {
@@ -112,8 +113,8 @@ type UserSetting {
 
 type MutationType {
   chargeMember(
-    id: ID!
-    amount: MonetaryAmount!
+    id: ID!,
+    amount: MonetaryAmount!,
     allowManualCharge: Boolean
   ): Member
   addAccountEntryToMember(
@@ -179,7 +180,7 @@ type MutationType {
   ): Contract!
   changeTerminationDate(
     contractId: ID!
-    request: ChangeTerminationDateInput
+    request: ChangeTerminationDateInput!
   ): Contract!
   revertTermination(contractId: ID!): Contract!
   createNorwegianGripenPriceEngine(
@@ -365,6 +366,9 @@ input ListClaimsOptions {
   filterSelectedMemberGroups: [Int!]
   filterMarkets: [String!]
   filterTypesOfContract: [String!]
+  filterReserveAmount: BigDecimal,
+  filterClaimTypes: [String!]
+  filterClaimOutcomes: [String!]
 }
 
 type MemberSearchResult {
@@ -427,6 +431,7 @@ type Contract {
   contractTypeName: String!
   createdAt: Instant!
   isLocked: Boolean!
+  selfChangeBlockers: [String!]!
 }
 
 enum ContractStatus {
@@ -601,7 +606,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -952,6 +957,7 @@ type Claim {
   state: ClaimState!
   claimType: String
   dateOfOccurrence: LocalDate
+  closedAt: Instant
   outcome: String
   reserves: MonetaryAmount
   registrationDate: Instant!
@@ -966,6 +972,8 @@ type Claim {
   propertySelections: [ClaimPropertySelection!]!
   coInsured: CoInsured
   restriction: ResourceAccessInformation
+  market: String
+  typeOfContract: String
 }
 
 type CoInsured {

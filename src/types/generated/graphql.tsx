@@ -182,6 +182,7 @@ export type Claim = {
   state: ClaimState
   claimType?: Maybe<Scalars['String']>
   dateOfOccurrence?: Maybe<Scalars['LocalDate']>
+  closedAt?: Maybe<Scalars['Instant']>
   outcome?: Maybe<Scalars['String']>
   reserves?: Maybe<Scalars['MonetaryAmount']>
   registrationDate: Scalars['Instant']
@@ -196,6 +197,8 @@ export type Claim = {
   propertySelections: Array<ClaimPropertySelection>
   coInsured?: Maybe<CoInsured>
   restriction?: Maybe<ResourceAccessInformation>
+  market?: Maybe<Scalars['String']>
+  typeOfContract?: Maybe<Scalars['String']>
 }
 
 export enum ClaimComplexity {
@@ -372,6 +375,7 @@ export type Contract = {
   contractTypeName: Scalars['String']
   createdAt: Scalars['Instant']
   isLocked: Scalars['Boolean']
+  selfChangeBlockers: Array<Scalars['String']>
 }
 
 export type ContractMarketInfo = {
@@ -570,6 +574,9 @@ export type ListClaimsOptions = {
   filterSelectedMemberGroups?: Maybe<Array<Scalars['Int']>>
   filterMarkets?: Maybe<Array<Scalars['String']>>
   filterTypesOfContract?: Maybe<Array<Scalars['String']>>
+  filterReserveAmount?: Maybe<Scalars['BigDecimal']>
+  filterClaimTypes?: Maybe<Array<Scalars['String']>>
+  filterClaimOutcomes?: Maybe<Array<Scalars['String']>>
 }
 
 export type ListClaimsResult = {
@@ -942,7 +949,7 @@ export type MutationTypeActivatePendingAgreementArgs = {
 
 export type MutationTypeChangeTerminationDateArgs = {
   contractId: Scalars['ID']
-  request?: Maybe<ChangeTerminationDateInput>
+  request: ChangeTerminationDateInput
 }
 
 export type MutationTypeRevertTerminationArgs = {
@@ -1259,7 +1266,6 @@ export type QueryType = {
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
   availableCampaignCodeTypes: Array<Scalars['String']>
   dashboardNumbers?: Maybe<DashboardNumbers>
-  quoteSchemaForContractType?: Maybe<Scalars['JSON']>
   quoteSchemaForInsuranceType?: Maybe<Scalars['JSON']>
   memberSearch: MemberSearchResult
   listClaims: ListClaimsResult
@@ -1297,10 +1303,6 @@ export type QueryTypeMessageHistoryArgs = {
 
 export type QueryTypeFindPartnerCampaignsArgs = {
   input: CampaignFilter
-}
-
-export type QueryTypeQuoteSchemaForContractTypeArgs = {
-  contractType: Scalars['String']
 }
 
 export type QueryTypeQuoteSchemaForInsuranceTypeArgs = {
@@ -1611,6 +1613,8 @@ export enum UserSettingKey {
   MemberGroupsFilter = 'MEMBER_GROUPS_FILTER',
   MarketFilter = 'MARKET_FILTER',
   NumberOfClaimsFilter = 'NUMBER_OF_CLAIMS_FILTER',
+  FocusMarkets = 'FOCUS_MARKETS',
+  Languages = 'LANGUAGES',
 }
 
 export type UserSettingsFilter = {
@@ -2629,7 +2633,7 @@ export type ChangeFromDateMutation = { __typename?: 'MutationType' } & {
 
 export type ChangeTerminationDateMutationVariables = Exact<{
   contractId: Scalars['ID']
-  request?: Maybe<ChangeTerminationDateInput>
+  request: ChangeTerminationDateInput
 }>
 
 export type ChangeTerminationDateMutation = { __typename?: 'MutationType' } & {
@@ -6360,7 +6364,7 @@ export type ChangeFromDateMutationOptions = ApolloReactCommon.BaseMutationOption
 export const ChangeTerminationDateDocument = gql`
   mutation ChangeTerminationDate(
     $contractId: ID!
-    $request: ChangeTerminationDateInput
+    $request: ChangeTerminationDateInput!
   ) {
     changeTerminationDate(contractId: $contractId, request: $request) {
       id
