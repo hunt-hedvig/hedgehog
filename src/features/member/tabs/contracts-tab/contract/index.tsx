@@ -51,6 +51,7 @@ const Blockers = styled.div`
   & span {
     margin-left: 0.5rem;
     font-size: 12px;
+    line-height: 0;
     color: ${({ theme }) => theme.semiStrongForeground};
   }
 `
