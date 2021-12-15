@@ -94,11 +94,8 @@ export const LargeClaimsList: React.FC<{
 
   useTitle('Claims')
 
-  const [
-    { claims, page: currentPage, totalPages },
-    listClaims,
-    { loading },
-  ] = useListClaims()
+  const [{ claims, page: currentPage, totalPages }, listClaims, { loading }] =
+    useListClaims()
 
   const getClaimFilter = (field: UserSettingKey, isClaims: boolean = true) =>
     (settings[field] &&

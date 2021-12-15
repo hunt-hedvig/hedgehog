@@ -43,9 +43,11 @@ export interface ClaimsFiltersType {
   filterClaimOutcomes: string[] | null
 }
 
-const ClaimsListPage: React.FC<RouteComponentProps<{
-  page?: string
-}>> = ({
+const ClaimsListPage: React.FC<
+  RouteComponentProps<{
+    page?: string
+  }>
+> = ({
   match: {
     params: { page = '1' },
   },

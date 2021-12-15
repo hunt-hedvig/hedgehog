@@ -41,7 +41,12 @@ export const useListClaims = (): ListClaimsReturnTuple => {
       },
     })
   }
-  const { claims = [], page = 0, totalPages = 0, totalClaims = 0 } = {
+  const {
+    claims = [],
+    page = 0,
+    totalPages = 0,
+    totalClaims = 0,
+  } = {
     ...queryResult?.data?.listClaims,
   }
 
