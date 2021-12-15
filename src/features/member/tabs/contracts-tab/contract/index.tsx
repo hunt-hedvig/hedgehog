@@ -16,12 +16,12 @@ import { TerminationDate } from 'features/member/tabs/contracts-tab/contract/ter
 import { getSignSource } from 'features/member/tabs/contracts-tab/utils'
 import {
   FocusItems,
-  useElementFocus,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
 import React, { useRef, useState } from 'react'
 import { ExclamationCircle } from 'react-bootstrap-icons'
 import { Contract as ContractType } from 'types/generated/graphql'
+import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 const blockersTranslates = {
   HAS_TERMINATION: 'terminating contracts',

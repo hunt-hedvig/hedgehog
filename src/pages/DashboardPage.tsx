@@ -22,6 +22,7 @@ import {
 import { useMe } from 'features/user/hooks/use-me'
 import React from 'react'
 import { DashboardNumbers } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
 const Wrapper = styled.div`
   display: flex;
@@ -47,7 +48,7 @@ const GET_DASHBOARD_NUMBERS = gql`
   }
 `
 
-const DashboardPage: React.FC = () => {
+const DashboardPage: Page = () => {
   const { data: dashboardData } = useQuery(GET_DASHBOARD_NUMBERS, {
     pollInterval: 1000 * 5,
   })

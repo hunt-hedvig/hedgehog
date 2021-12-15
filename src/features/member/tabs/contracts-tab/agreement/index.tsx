@@ -48,6 +48,7 @@ export const Agreement: React.FC<{
         buttons[navigationStep + 1].focus()
         buttons[navigationStep + 1].scrollIntoView({
           block: 'center',
+          behavior: 'smooth',
         })
       }
     },

@@ -2,8 +2,9 @@ import { Flex, Input, MainHeadline, Spacing } from '@hedvig-ui'
 import { useMe } from 'features/user/hooks/use-me'
 import { NotificationItem } from 'features/user/notifications/components/NotificationItem'
 import React, { useMemo, useState } from 'react'
+import { Page } from 'pages/routes'
 
-const NotificationsPage: React.FC = () => {
+const NotificationsPage: Page = () => {
   const [filter, setFilter] = useState('')
   const { me } = useMe()
 

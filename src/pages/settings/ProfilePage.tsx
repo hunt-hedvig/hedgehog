@@ -3,8 +3,9 @@ import { useTitle } from '@hedvig-ui/hooks/use-title'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useGetMeQuery, useUpdateUserMutation } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
-const ProfilePage: React.FC = () => {
+const ProfilePage: Page = () => {
   const { data } = useGetMeQuery()
   const [fullName, setFullName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState<null | string>('')

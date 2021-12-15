@@ -20,6 +20,7 @@ import { useMe } from 'features/user/hooks/use-me'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
 const ListPage = styled.div`
   display: flex;
@@ -44,7 +45,7 @@ const ConversationsMessage = styled.div`
   }
 `
 
-const QuestionsPage: React.FC = () => {
+const QuestionsPage: Page = () => {
   const history = useHistory()
   const { me, settings, updateSetting } = useMe()
 

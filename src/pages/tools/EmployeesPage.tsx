@@ -4,8 +4,9 @@ import { EmployeeFilter } from 'features/tools/employees/components/EmployeeFilt
 import { EmployeeTable } from 'features/tools/employees/components/EmployeeTable'
 import React, { useState } from 'react'
 import { useGetMeQuery } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
-const EmployeesPage: React.FC = () => {
+const EmployeesPage: Page = () => {
   const { data } = useGetMeQuery()
   const scopes = data?.me?.scopes ?? []
 

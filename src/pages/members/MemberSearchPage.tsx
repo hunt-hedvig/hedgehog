@@ -22,8 +22,9 @@ import {
 import { useMemberHistory } from 'features/user/hooks/use-member-history'
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router'
+import { Page } from 'pages/routes'
 
-const MemberSearchPage: React.FC = () => {
+const MemberSearchPage: Page = () => {
   const [query, setQuery] = React.useState('')
   const [includeAll, setIncludeAll] = React.useState(false)
   const [luckySearch, setLuckySearch] = React.useState(false)
@@ -31,11 +32,8 @@ const MemberSearchPage: React.FC = () => {
   const searchField = useRef<HTMLInputElement>(null)
 
   const { memberHistory } = useMemberHistory()
-  const [
-    { members, totalPages, page },
-    memberSearch,
-    { loading },
-  ] = useMemberSearch()
+  const [{ members, totalPages, page }, memberSearch, { loading }] =
+    useMemberSearch()
 
   const noMembersFound = members.length === 0 && query && !loading
 

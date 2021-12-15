@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { HotkeyStyled } from '@hedvig-ui'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
-import { useElementFocus } from 'features/navigation/hooks/use-navigation'
 import React, { useEffect, useRef } from 'react'
 import {
   isPressing,
@@ -9,6 +8,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '../hooks/keyboard/use-key-is-pressed'
+import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 const TabStyled = styled.li<{ active?: boolean; focused?: boolean }>`
   transition: all 0.3s;

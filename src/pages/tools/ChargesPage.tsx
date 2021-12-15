@@ -24,6 +24,7 @@ import {
   PaymentScheduleQueryDocument,
   usePaymentScheduleQueryQuery,
 } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
 const approveMemberCharge = gql`
   mutation approveMemberCharge($approvals: [MemberChargeApproval!]!) {
@@ -124,7 +125,7 @@ const Row: React.FC<{
   </>
 )
 
-const ChargesPage: React.FC = () => {
+const ChargesPage: Page = () => {
   const [confirming, setConfirming] = useState(false)
   const { data, loading, error } = usePaymentScheduleQueryQuery({
     variables: {
@@ -209,8 +210,8 @@ const ChargesPage: React.FC = () => {
                               approvals: data.paymentSchedule!.map(
                                 (payment) => ({
                                   memberId: payment!.member!.memberId,
-                                  amount: payment!.member!.account!
-                                    .currentBalance,
+                                  amount:
+                                    payment!.member!.account!.currentBalance,
                                 }),
                               ),
                             },

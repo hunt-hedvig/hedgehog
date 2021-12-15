@@ -30,6 +30,7 @@ import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-gro
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -48,9 +49,11 @@ const FadeWrapper = styled(Fade)`
   }
 `
 
-const ConversationsPage: React.FC<RouteComponentProps<{
-  memberId?: string
-}>> = ({ match }) => {
+const ConversationsPage: Page<
+  RouteComponentProps<{
+    memberId?: string
+  }>
+> = ({ match }) => {
   const { memberId } = match.params
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
