@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { apolloClient } from 'server/apollo-client'
 import { app } from 'portals'
 
-const App = app('SOS')
+const App = app('Hope')
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
