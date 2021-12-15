@@ -12,3 +12,11 @@ rules:
     languages:
       - ts
     severity: ERROR
+
+  - id: no-console-log
+    patterns:
+      - pattern: console.log(...)
+    message: Do not use `console.log`. If really necessary, consider `console.error` or `console.warn` instead.
+    languages:
+      - ts
+    severity: ERROR
