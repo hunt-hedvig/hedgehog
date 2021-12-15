@@ -1,4 +1,6 @@
 import { Key, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { FocusItems } from 'features/navigation/hooks/use-navigation'
+
 import React from 'react'
 
 interface UsePlatformResult {
@@ -8,6 +10,8 @@ interface UsePlatformResult {
 }
 
 export const usePlatform = (): UsePlatformResult => {
+  console.log(FocusItems)
+
   const isMac = window.navigator.appVersion.indexOf('Mac') !== -1
   return {
     isMetaKey: (e: KeyboardEvent | React.KeyboardEvent<any>) =>
