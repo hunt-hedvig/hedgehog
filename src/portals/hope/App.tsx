@@ -202,4 +202,4 @@ const App: React.FC = () => {
   )
 }
 
-export const HotApp = hot(App)
+export const HOPEHotApp = hot(App)

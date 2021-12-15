@@ -5,20 +5,20 @@ import { CookiesProvider } from 'react-cookie'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import { apolloClient } from 'server/apollo-client'
-import { SOSHotApp } from 'portals/sos/App'
+import { app } from 'portals'
+
+const App = app('SOS')
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
-
-const appElement = document.getElementById('react-root')
 
 ReactDOM.render(
   <CookiesProvider>
     <BrowserRouter>
       <ApolloProvider client={apolloClient!}>
-        <SOSHotApp />
+        <App />
       </ApolloProvider>
     </BrowserRouter>
   </CookiesProvider>,
-  appElement,
+  document.getElementById('react-root'),
 )
