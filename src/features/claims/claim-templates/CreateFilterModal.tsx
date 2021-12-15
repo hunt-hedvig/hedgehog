@@ -53,6 +53,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
       filterSelectedMemberGroups: null,
       filterMarkets: null,
       filterTypesOfContract: null,
+      filterClaimOutcomes: null,
     },
   )
 

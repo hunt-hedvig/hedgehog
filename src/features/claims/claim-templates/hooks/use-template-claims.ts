@@ -33,6 +33,7 @@ export const useTemplateClaims = (
     filterSelectedMemberGroups: null,
     filterMarkets: null,
     filterTypesOfContract: null,
+    filterClaimOutcomes: null,
   })
 
   const [templateFilters, setTemplateFilters] = useInsecurePersistentState<
