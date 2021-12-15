@@ -5,7 +5,6 @@ import {
   InfoContainer,
   InfoRow,
   InfoText,
-  OrbIndicator,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
@@ -21,47 +20,38 @@ import {
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
 import React, { useRef, useState } from 'react'
+import { ExclamationCircle } from 'react-bootstrap-icons'
 import { Contract as ContractType } from 'types/generated/graphql'
 
-const selfBlockersColors = {
-  HAS_TERMINATION: colorsV3.red500,
-  HAS_FUTURE_CHANGES: colorsV3.orange,
+const blockersTranslates = {
+  HAS_TERMINATION: 'terminating contracts',
+  HAS_FUTURE_CHANGES: 'making future changes',
 }
 
 const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
-  position: relative;
   border-radius: 0.5rem;
   border: ${({ focused, theme }) =>
     focused ? `1px solid ${theme.accent}` : 'none'};
 `
 
-const BlockersWrapper = styled.ul<{ visible: boolean }>`
-  transition: opacity 0.3s;
-
-  opacity: ${({ visible }) => (visible ? '1' : '0')};
-
+const Blockers = styled.div`
   margin: 0;
   padding: 0;
   list-style: none;
 
   display: flex;
-
-  position: absolute;
-  top: -1.7rem;
-  right: 0.5rem;
-`
-
-const Blocker = styled.li`
-  display: flex;
   align-items: center;
 
-  font-size: 12px;
-  color: ${({ theme }) => theme.foreground};
-
+  background-color: ${({ theme }) => theme.accentLighter ?? colorsV3.white};
+  padding: 0.625rem;
   border-radius: 0.5rem;
 
-  &:not(:last-child) {
-    margin-right: 1rem;
+  margin-bottom: 0.5rem;
+
+  & span {
+    margin-left: 0.5rem;
+    font-size: 12px;
+    color: ${({ theme }) => theme.semiStrongForeground};
   }
 `
 
@@ -80,7 +70,6 @@ export const Contract: React.FC<{
   focused: boolean
   selected: boolean
 }> = ({ contract, refetch, shouldPreSelectAgreement, focused, selected }) => {
-  const [selfBlockersVisible, setSelfBlockersVisible] = useState(false)
   const [selectedAgreement, setSelectedAgreement] = useState<
     string | undefined
   >(shouldPreSelectAgreement ? contract.currentAgreementId : undefined)
@@ -103,12 +92,26 @@ export const Contract: React.FC<{
 
   return (
     <ContractWrapper>
-      <ContractsCardsWrapper
-        ref={cardsRef}
-        focused={focused}
-        onMouseEnter={() => setSelfBlockersVisible(true)}
-        onMouseLeave={() => setSelfBlockersVisible(false)}
-      >
+      {!!contract.selfChangeBlockers.length && (
+        <Blockers>
+          <ExclamationCircle />
+          <span>
+            This member has issues in{' '}
+            {contract.selfChangeBlockers.map((blocker, index) => (
+              <>
+                <strong>
+                  {blockersTranslates[blocker] || convertEnumToTitle(blocker)}
+                </strong>
+                {index !== contract.selfChangeBlockers.length - 1
+                  ? ' and '
+                  : ''}
+              </>
+            ))}{' '}
+            on his/her own
+          </span>
+        </Blockers>
+      )}
+      <ContractsCardsWrapper ref={cardsRef} focused={focused}>
         <Card locked={contract.isLocked} span={3}>
           <InfoContainer>
             <ThirdLevelHeadline>
@@ -144,20 +147,6 @@ export const Contract: React.FC<{
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
         </Card>
-        {!!contract.selfChangeBlockers.length && (
-          <BlockersWrapper visible={selfBlockersVisible}>
-            {contract.selfChangeBlockers.map((blocker) => (
-              <Blocker key={blocker}>
-                <OrbIndicator
-                  style={{ marginRight: '0.5rem' }}
-                  size="8px"
-                  color={selfBlockersColors[blocker]}
-                />
-                {convertEnumToTitle(blocker)}
-              </Blocker>
-            ))}
-          </BlockersWrapper>
-        )}
       </ContractsCardsWrapper>
       <AgreementsTable
         agreements={contract.genericAgreements}
