@@ -20,9 +20,10 @@ export enum ClaimOutcomes {
 
 interface OutcomeDropdownProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
+  multi?: boolean
   claimState?: string
   claimId?: string
-  outcome: string | null
+  outcome: string | string[] | null
   onSelect?: (value: string | null) => void
   focus?: boolean
 }
@@ -33,6 +34,7 @@ export const OutcomeDropdown: React.FC<OutcomeDropdownProps> = ({
   outcome,
   onSelect,
   focus,
+  multi,
   ...props
 }) => {
   const [setClaimOutcome] = useSetClaimOutcomeMutation()
@@ -63,7 +65,16 @@ export const OutcomeDropdown: React.FC<OutcomeDropdownProps> = ({
   }
 
   return (
-    <Dropdown placeholder="Not specified" focus={focus} {...props}>
+    <Dropdown
+      placeholder="Not specified"
+      focus={focus}
+      selectedValue={
+        multi && !!outcome && typeof outcome === 'object'
+          ? outcome.map((item) => convertEnumToTitle(item)).join(', ')
+          : undefined
+      }
+      {...props}
+    >
       {[
         ...Object.keys(ClaimOutcomes).map((value) => ({
           value,
@@ -79,8 +90,10 @@ export const OutcomeDropdown: React.FC<OutcomeDropdownProps> = ({
             )
           }}
           selected={
-            outcome === opt.value ||
-            (outcome === null && opt.value === 'not_specified' && false)
+            !multi
+              ? outcome === opt.value
+              : outcome?.includes(opt.value) ||
+                (outcome === null && opt.value === 'not_specified' && false)
           }
         >
           {opt.text}

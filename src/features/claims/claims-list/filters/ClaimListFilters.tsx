@@ -153,13 +153,13 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       return
     }
 
-    const alreadyExist = settings[UserSettingKey.OutcomeFilter].claims.includes(
-      value,
-    )
-
     updateSetting(field, {
       ...settings[field],
-      claims: value && !alreadyExist ? [value] : [],
+      claims: settings[field].claims.includes(value)
+        ? settings[field].claims.filter(
+            (currentValue) => currentValue !== value,
+          )
+        : [...settings[field].claims, value],
     })
   }
 
@@ -319,13 +319,13 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       <FilterElementStyled>
         <Label>Outcome</Label>
         <OutcomeFilter
+          multi
           focus={navigationAvailable && navigationStep + 1 === 6}
           onSelect={updateOutcomeFilterHandler}
           outcome={
-            settings[UserSettingKey.OutcomeFilter] &&
-            settings[UserSettingKey.OutcomeFilter].claims[0]
-              ? settings[UserSettingKey.OutcomeFilter].claims[0]
-              : null
+            (settings[UserSettingKey.OutcomeFilter] &&
+              settings[UserSettingKey.OutcomeFilter].claims) ||
+            null
           }
         />
       </FilterElementStyled>
