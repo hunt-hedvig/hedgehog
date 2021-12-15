@@ -21,6 +21,7 @@ import {
 } from 'features/navigation/hooks/use-navigation'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
+import { Page } from 'pages/routes'
 
 const Row = styled.div<{ columns?: number }>`
   display: grid;
@@ -38,20 +39,14 @@ const Card = styled(CardWithLink)<{ focus?: boolean }>`
   padding: 2rem;
 
   ${({ theme, focus }) =>
-    focus &&
-    `background: ${chroma(theme.accentLight)
-      .alpha(0.1)
-      .hex()};`}
+    focus && `background: ${chroma(theme.accentLight).alpha(0.1).hex()};`}
 `
 
 const CardLink = styled(CardWithLink)<{ focus?: boolean }>`
   padding: 2rem;
 
   ${({ theme, focus }) =>
-    focus &&
-    `background: ${chroma(theme.accentLight)
-      .alpha(0.1)
-      .hex()};`}
+    focus && `background: ${chroma(theme.accentLight).alpha(0.1).hex()};`}
 `
 
 const Hotkey = styled(HotkeyStyled)`
@@ -78,7 +73,7 @@ const StagingTools: React.FC = () => {
   )
 }
 
-const ToolsPage: React.FC = () => {
+const ToolsPage: Page = () => {
   const history = useHistory()
   const isControlPressed = useKeyIsPressed(Keys.Control)
   const { registerActions } = useCommandLine()

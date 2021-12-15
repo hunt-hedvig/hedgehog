@@ -17,6 +17,7 @@ import {
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
 const ListPage = styled.div`
   display: flex;
@@ -42,9 +43,11 @@ export interface ClaimsFiltersType {
   filterTypesOfContract: string[] | null
 }
 
-const ClaimsListPage: React.FC<RouteComponentProps<{
-  page?: string
-}>> = ({
+const ClaimsListPage: Page<
+  RouteComponentProps<{
+    page?: string
+  }>
+> = ({
   match: {
     params: { page = '1' },
   },

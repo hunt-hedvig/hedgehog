@@ -36,6 +36,7 @@ import {
   useClaimPageQuery,
   useResourceAccessInformationQuery,
 } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
 const ChatPaneAdjustedContainer = styled.div`
   width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
@@ -129,9 +130,11 @@ const RestrictedClaimMessage: React.FC<{ claimId: string }> = ({ claimId }) => {
   )
 }
 
-const ClaimDetailsPage: React.FC<RouteComponentProps<{
-  claimId: string
-}>> = ({ match }) => {
+const ClaimDetailsPage: Page<
+  RouteComponentProps<{
+    claimId: string
+  }>
+> = ({ match }) => {
   const { claimId } = match.params
   const { pushToMemberHistory } = useMemberHistory()
   const [showEvents, setShowEvents] = useState(false)
