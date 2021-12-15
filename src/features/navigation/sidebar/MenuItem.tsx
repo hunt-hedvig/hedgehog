@@ -6,7 +6,7 @@ import { useCommandLine } from 'features/commands/use-command-line'
 import React, { useRef } from 'react'
 import { ArrowUpRight, Icon } from 'react-bootstrap-icons'
 import { NavLink, NavLinkProps } from 'react-router-dom'
-import { useElementFocus } from '../hooks/use-navigation'
+import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 interface WithTransparent {
   transparent?: boolean
