@@ -1,9 +1,14 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
-import { useElementFocus } from 'features/navigation/hooks/use-navigation'
-import React, { TableHTMLAttributes, useEffect, useRef } from 'react'
+import React, {
+  HTMLAttributes,
+  TableHTMLAttributes,
+  useEffect,
+  useRef,
+} from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
+import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 const range = (start, end) =>
   start >= 0 && end >= start
@@ -17,13 +22,15 @@ export const Table = styled.table`
   width: 100%;
 `
 
-export const TableBody: React.FC<{
-  onPerformNavigation?: (index) => void
-  setActiveRow?: (n: number) => void
-  isActive?: boolean
-  onExit?: () => void
-  onNavigationStep?: (step: number) => void
-} & TableHTMLAttributes<HTMLTableSectionElement>> = ({
+export const TableBody: React.FC<
+  {
+    onPerformNavigation?: (index) => void
+    setActiveRow?: (n: number) => void
+    isActive?: boolean
+    onExit?: () => void
+    onNavigationStep?: (step: number) => void
+  } & TableHTMLAttributes<HTMLTableSectionElement>
+> = ({
   onPerformNavigation,
   children,
   setActiveRow,
@@ -196,9 +203,10 @@ export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
   return <TableRowStyled ref={rowRef} active={active} {...props} />
 }
 
-export const TableHeader: React.FC<React.HTMLAttributes<
-  HTMLTableSectionElement
->> = ({ children, ...props }) => (
+export const TableHeader: React.FC<HTMLAttributes<HTMLTableSectionElement>> = ({
+  children,
+  ...props
+}) => (
   <thead style={{ width: '100%' }} {...props}>
     <tr style={{ width: '100%' }}>{children}</tr>
   </thead>
