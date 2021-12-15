@@ -94,18 +94,14 @@ export const useFadeAnimation = ({
   }
 }
 
-export const Fade: React.FC<{
-  children: React.ReactNode
-  duration: number
-  type: FadeType | null
-  direction: FadeDirection | null
-} & Omit<HTMLAttributes<HTMLDivElement>, 'children'>> = ({
-  duration,
-  type,
-  direction,
-  children,
-  ...props
-}) => {
+export const Fade: React.FC<
+  {
+    children: React.ReactNode
+    duration: number
+    type: FadeType | null
+    direction: FadeDirection | null
+  } & Omit<HTMLAttributes<HTMLDivElement>, 'children'>
+> = ({ duration, type, direction, children, ...props }) => {
   return (
     <FadeOutWrapper duration={duration} {...props}>
       <div className={(type ?? '') + ' ' + (direction ?? '')}>{children}</div>

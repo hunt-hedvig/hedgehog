@@ -72,9 +72,9 @@ export const Form: React.FC<FormProps> = ({ onSubmit, children, ...props }) => {
   )
 }
 
-const FormLabel: React.FC<{ name: string } & React.HTMLProps<
-  HTMLLabelElement
->> = ({ as, name, children, ...props }) => {
+const FormLabel: React.FC<
+  { name: string } & React.HTMLProps<HTMLLabelElement>
+> = ({ as, name, children, ...props }) => {
   return (
     <Label htmlFor={name} {...props}>
       {children}
@@ -190,7 +190,7 @@ export const FormTextArea: React.FC<TextAreaProps & FormFieldProps> = ({
 }
 
 interface FormDropdownProps {
-  options: Array<{ key: number; value: string | number; text: string | number }>
+  options: { key: number; value: string | number; text: string | number }[]
   placeholder?: string
   focus?: boolean
 }

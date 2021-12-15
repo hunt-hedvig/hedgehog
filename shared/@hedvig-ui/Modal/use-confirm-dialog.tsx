@@ -5,7 +5,10 @@ import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
+import {
+  FocusItems,
+  useFocus,
+} from 'portals/hope/features/navigation/hooks/use-navigation'
 import React, {
   createContext,
   useContext,

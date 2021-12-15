@@ -9,7 +9,7 @@ import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import {
   FocusItems,
   useNavigation,
-} from 'features/navigation/hooks/use-navigation'
+} from 'portals/hope/features/navigation/hooks/use-navigation'
 import React, { useEffect, useRef } from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { Portal } from 'react-portal'
