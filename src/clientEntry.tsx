@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
-import { HotApp } from 'App'
+import { HotApp } from 'portals/hope/App'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import React from 'react'
 import { CookiesProvider } from 'react-cookie'
