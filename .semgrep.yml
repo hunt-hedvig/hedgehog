@@ -1,0 +1,14 @@
+rules:
+  - id: prohibit-hedvig-ui-coupling
+    paths:
+      include:
+        - "*shared/@hedvig-ui*"
+    patterns:
+      - pattern: import { $X } from $Y
+      - metavariable-regex:
+          metavariable: $Y
+          regex: ^.*features/.*$
+    message: Feature folders should not be coupled with @hedvig-ui
+    languages:
+      - ts
+    severity: ERROR
