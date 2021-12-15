@@ -27,11 +27,14 @@ export const FilterWrapper = styled.div`
 
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  column-gap: 2rem;
   align-items: flex-start;
   margin: 2rem 0;
 `
 
 export const StyledLabel = styled(Label)`
+  width: 100%;
+
   display: flex;
   align-items: center;
 
@@ -46,6 +49,12 @@ export const StyledLabel = styled(Label)`
     &:hover {
       cursor: help;
     }
+  }
+`
+
+const OutcomeFilter = styled(OutcomeDropdown)`
+  & > li {
+    padding: 8px 1rem;
   }
 `
 
@@ -307,9 +316,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         )}
       />
 
-      <FilterElementStyled style={{ marginRight: '2rem' }}>
+      <FilterElementStyled>
         <Label>Outcome</Label>
-        <OutcomeDropdown
+        <OutcomeFilter
           focus={navigationAvailable && navigationStep + 1 === 6}
           onSelect={updateOutcomeFilterHandler}
           outcome={

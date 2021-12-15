@@ -123,7 +123,7 @@ const TriangleIcon = styled(TriangleFill)<{ active: number }>`
     active < 0 ? theme.placeholderColor : theme.accent};
 `
 
-interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
+export interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
   focus?: boolean
   placeholder?: string
   children: any
