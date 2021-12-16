@@ -6,6 +6,10 @@ const Wrapper = styled.form`
   width: 400px;
 `
 
+const Instructions = styled.div`
+  margin-top: 4rem;
+`
+
 export const MemberSearchForm: React.FC = () => {
   const [, setFocused] = useState(false)
   const [personalNumber, setPersonalNumber] = useState('')
@@ -26,11 +30,13 @@ export const MemberSearchForm: React.FC = () => {
       )}
       <Input
         placeholder="Personal number"
+        size="large"
         value={personalNumber}
         onBlur={() => setFocused(false)}
         onFocus={() => setFocused(true)}
         onChange={(e) => setPersonalNumber(e.currentTarget.value)}
       />
+      <Instructions />
     </Wrapper>
   )
 }

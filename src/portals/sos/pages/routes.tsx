@@ -9,7 +9,7 @@ export const Routes: React.FC = () => {
   return (
     <Suspense fallback={<div />}>
       <Switch>
-        <Route path="/" exact component={MainPage} />
+        <Route path="/" component={MainPage} />
       </Switch>
     </Suspense>
   )
