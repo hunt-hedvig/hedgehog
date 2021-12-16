@@ -57,7 +57,7 @@ const Footer = styled.div`
 
   a {
     text-decoration: underline;
-    color: ${({ theme }) => theme.foreground};
+    color: ${({ theme }) => chroma(theme.foreground).brighten(1).hex()};
     margin-top: 4vh;
     transition: color 200ms;
 

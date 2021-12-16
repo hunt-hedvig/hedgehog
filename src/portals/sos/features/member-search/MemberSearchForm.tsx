@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
-import { FadeIn, Input, Label } from '@hedvig-ui'
+import { Button, FadeIn, Flex, Input, Label, Spacing } from '@hedvig-ui'
 import styled from '@emotion/styled'
 
 const Wrapper = styled.form`
   width: 400px;
-`
-
-const Instructions = styled.div`
-  margin-top: 4rem;
 `
 
 export const MemberSearchForm: React.FC = () => {
@@ -36,7 +32,24 @@ export const MemberSearchForm: React.FC = () => {
         onFocus={() => setFocused(true)}
         onChange={(e) => setPersonalNumber(e.currentTarget.value)}
       />
-      <Instructions />
+      <Spacing top="medium" />
+      <Flex direction="row" justify="center">
+        <Button
+          style={{ width: '8rem', marginRight: '0.5rem' }}
+          size="medium"
+          type="submit"
+        >
+          Search
+        </Button>
+        <Button
+          variant="secondary"
+          style={{ marginLeft: '0.5rem', width: '8rem' }}
+          size="medium"
+          type="submit"
+        >
+          Help
+        </Button>
+      </Flex>
     </Wrapper>
   )
 }
