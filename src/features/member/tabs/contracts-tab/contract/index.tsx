@@ -8,7 +8,6 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
-import { colorsV3 } from '@hedviginsurance/brand'
 import { Agreement } from 'features/member/tabs/contracts-tab/agreement'
 import { AgreementsTable } from 'features/member/tabs/contracts-tab/agreement/AgreementsTable'
 import { MasterInception } from 'features/member/tabs/contracts-tab/contract/master-inception'
@@ -23,7 +22,7 @@ import { ExclamationCircle } from 'react-bootstrap-icons'
 import { Contract as ContractType } from 'types/generated/graphql'
 import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
-const blockersTranslates = {
+const blockerDisplayName = {
   HAS_TERMINATION: 'terminating contracts',
   HAS_FUTURE_CHANGES: 'making future changes',
 }
@@ -42,7 +41,7 @@ const Blockers = styled.div`
   display: flex;
   align-items: center;
 
-  background-color: ${({ theme }) => theme.accentLighter ?? colorsV3.white};
+  background-color: ${({ theme }) => theme.accentLighter};
   padding: 0.625rem;
   border-radius: 0.5rem;
 
@@ -101,7 +100,7 @@ export const Contract: React.FC<{
             {contract.selfChangeBlockers.map((blocker, index) => (
               <>
                 <strong>
-                  {blockersTranslates[blocker] || convertEnumToTitle(blocker)}
+                  {blockerDisplayName[blocker] || convertEnumToTitle(blocker)}
                 </strong>
                 {index !== contract.selfChangeBlockers.length - 1
                   ? ' and '
