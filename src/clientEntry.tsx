@@ -8,8 +8,9 @@ import { apolloClient } from 'server/apollo-client'
 import { app } from 'portals'
 import { css, Global } from '@emotion/react'
 import { fonts, getCdnFontFaces } from '@hedviginsurance/brand'
+import { DarkmodeProvider } from '@hedvig-ui/hooks/use-darkmode'
 
-const App = app('SOS')
+const App = app('Hope')
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
@@ -49,7 +50,9 @@ ReactDOM.render(
     <BrowserRouter>
       <ApolloProvider client={apolloClient!}>
         <Global styles={globalCss} />
-        <App />
+        <DarkmodeProvider>
+          <App />
+        </DarkmodeProvider>
       </ApolloProvider>
     </BrowserRouter>
   </CookiesProvider>,

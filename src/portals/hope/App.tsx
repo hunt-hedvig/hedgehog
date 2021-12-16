@@ -1,10 +1,5 @@
-import { ThemeProvider } from '@emotion/react'
 import styled from '@emotion/styled'
-import { BaseStyle, darkTheme, lightTheme, StandaloneMessage } from '@hedvig-ui'
-import {
-  getDefaultIsDarkmode,
-  UseDarkmode,
-} from '@hedvig-ui/hooks/use-darkmode'
+import { BaseStyle, StandaloneMessage } from '@hedvig-ui'
 import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
@@ -23,7 +18,7 @@ import { MeProvider } from 'portals/hope/features/user/hooks/use-me'
 import { MemberHistoryProvider } from 'portals/hope/features/user/hooks/use-member-history'
 import { NumberMemberGroupsProvider } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { Routes } from 'portals/hope/pages/routes'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import TagManager from 'react-gtm-module'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
@@ -63,7 +58,6 @@ const HopeLogoIcon = styled(LogoIcon)`
 `
 
 const App: React.FC = () => {
-  const [isDarkmode, setIsDarkmode] = useState(getDefaultIsDarkmode())
   const { me, loading } = useAuthenticate()
 
   useEffect(() => {
@@ -111,63 +105,46 @@ const App: React.FC = () => {
   }
 
   return (
-    <UseDarkmode.Provider
-      value={{
-        isDarkmode,
-        setIsDarkmode: (newIsDarkmode) => {
-          setIsDarkmode(newIsDarkmode)
-          localStorage.setItem(
-            'hedvig:theming:darkmode',
-            JSON.stringify(newIsDarkmode),
-          )
-        },
-      }}
-    >
-      <TrackingProvider>
-        <ThemeProvider theme={isDarkmode ? darkTheme : lightTheme}>
-          <NavigationProvider>
-            <MemberHistoryProvider>
-              <NumberMemberGroupsProvider>
-                <Router history={history}>
-                  <MeProvider me={me}>
-                    <CommandLineProvider>
-                      <ConfirmDialogProvider>
-                        <Layout>
-                          <Tracker />
-                          {!history.location.pathname.startsWith('/login') && (
-                            <VerticalMenu history={history} />
-                          )}
-                          <Main
-                            dark={history.location.pathname.startsWith(
-                              '/login',
-                            )}
-                          >
-                            <TopBar />
-                            <MainContent>
-                              <Switch>
-                                <Routes />
-                              </Switch>
-                              <Toaster
-                                position="top-center"
-                                toastOptions={{
-                                  style: {
-                                    padding: '20px 25px',
-                                  },
-                                }}
-                              />
-                            </MainContent>
-                          </Main>
-                        </Layout>
-                      </ConfirmDialogProvider>
-                    </CommandLineProvider>
-                  </MeProvider>
-                </Router>
-              </NumberMemberGroupsProvider>
-            </MemberHistoryProvider>
-          </NavigationProvider>
-        </ThemeProvider>
-      </TrackingProvider>
-    </UseDarkmode.Provider>
+    <TrackingProvider>
+      <NavigationProvider>
+        <MemberHistoryProvider>
+          <NumberMemberGroupsProvider>
+            <Router history={history}>
+              <MeProvider me={me}>
+                <CommandLineProvider>
+                  <ConfirmDialogProvider>
+                    <Layout>
+                      <Tracker />
+                      {!history.location.pathname.startsWith('/login') && (
+                        <VerticalMenu history={history} />
+                      )}
+                      <Main
+                        dark={history.location.pathname.startsWith('/login')}
+                      >
+                        <TopBar />
+                        <MainContent>
+                          <Switch>
+                            <Routes />
+                          </Switch>
+                          <Toaster
+                            position="top-center"
+                            toastOptions={{
+                              style: {
+                                padding: '20px 25px',
+                              },
+                            }}
+                          />
+                        </MainContent>
+                      </Main>
+                    </Layout>
+                  </ConfirmDialogProvider>
+                </CommandLineProvider>
+              </MeProvider>
+            </Router>
+          </NumberMemberGroupsProvider>
+        </MemberHistoryProvider>
+      </NavigationProvider>
+    </TrackingProvider>
   )
 }
 
