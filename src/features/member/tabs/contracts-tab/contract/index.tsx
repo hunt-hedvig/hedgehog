@@ -22,11 +22,6 @@ import { ExclamationCircle } from 'react-bootstrap-icons'
 import { Contract as ContractType } from 'types/generated/graphql'
 import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
-const blockerDisplayName = {
-  HAS_TERMINATION: 'terminating contracts',
-  HAS_FUTURE_CHANGES: 'making future changes',
-}
-
 const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
   border-radius: 0.5rem;
   border: ${({ focused, theme }) =>
@@ -92,25 +87,6 @@ export const Contract: React.FC<{
 
   return (
     <ContractWrapper>
-      {!!contract.selfChangeBlockers.length && (
-        <Blockers>
-          <ExclamationCircle />
-          <span>
-            This member has issues in{' '}
-            {contract.selfChangeBlockers.map((blocker, index) => (
-              <>
-                <strong>
-                  {blockerDisplayName[blocker] || convertEnumToTitle(blocker)}
-                </strong>
-                {index !== contract.selfChangeBlockers.length - 1
-                  ? ' and '
-                  : ''}
-              </>
-            ))}{' '}
-            on his/her own
-          </span>
-        </Blockers>
-      )}
       <ContractsCardsWrapper ref={cardsRef} focused={focused}>
         <Card locked={contract.isLocked} span={3}>
           <InfoContainer>
@@ -156,6 +132,20 @@ export const Contract: React.FC<{
           selected && focus === FocusItems.Member.items.ContractTable
         }
       />
+      {!!contract.selfChangeBlockers.length && (
+        <Blockers>
+          <ExclamationCircle />
+          <span>
+            Self-change blocker:{' '}
+            {contract.selfChangeBlockers.map((blocker, index) => (
+              <>
+                <strong>{convertEnumToTitle(blocker)}</strong>
+                {index !== contract.selfChangeBlockers.length - 1 ? ' & ' : ''}
+              </>
+            ))}
+          </span>
+        </Blockers>
+      )}
       {agreementToShow && (
         <Agreement
           agreement={agreementToShow}
