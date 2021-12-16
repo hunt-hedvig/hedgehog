@@ -31,6 +31,12 @@ const Card = styled.div`
     font-size: 1rem;
     color: ${({ theme }) => chroma(theme.foreground).brighten(1).hex()};
   }
+
+  #insurance-coinsured {
+    padding-top: 1rem;
+    font-size: 1rem;
+    color: ${({ theme }) => chroma(theme.foreground).brighten(1).hex()};
+  }
 `
 
 export const InsuranceCard: React.FC = () => {
@@ -41,6 +47,9 @@ export const InsuranceCard: React.FC = () => {
       </Flex>
       <Flex>
         <div id="insurance-date">2020-01-01 - Ongoing</div>
+      </Flex>
+      <Flex>
+        <div id="insurance-coinsured">Covers holder + 2</div>
       </Flex>
     </Card>
   )

@@ -8,9 +8,10 @@ import { Route, Switch } from 'react-router'
 
 const Container = styled.div`
   width: 100vw;
-  height: 90vh;
+  min-height: 90vh;
   padding-left: 10vw;
   padding-right: 10vw;
+  padding-bottom: 5rem;
 
   background-color: ${({ theme }) => theme.background};
 `
