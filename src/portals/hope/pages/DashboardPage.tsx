@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/client'
-import { gql } from '@apollo/client/core'
 import styled from '@emotion/styled'
 import {
   Badge,
@@ -23,6 +22,7 @@ import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React from 'react'
 import { DashboardNumbers } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
+import gql from 'graphql-tag'
 
 const Wrapper = styled.div`
   display: flex;
