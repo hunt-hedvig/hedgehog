@@ -6,11 +6,7 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
-import {
-  FocusItems,
-  useNavigation,
-} from 'portals/hope/features/navigation/hooks/use-navigation'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { X as CloseIcon } from 'react-bootstrap-icons'
 import { Portal } from 'react-portal'
 
@@ -125,17 +121,7 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null)
 
-  const { setFocus } = useNavigation()
-
-  useEffect(() => {
-    setFocus(FocusItems.Main.items.Modal)
-
-    return () => setFocus(null)
-  }, [])
-
   const clickOutsideCloseHandler = () => {
-    setFocus(null)
-
     if (!disableClickOutside) {
       return onClose()
     } else {
