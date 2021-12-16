@@ -126,8 +126,8 @@ type UserSetting {
 
 type MutationType {
   chargeMember(
-    id: ID!,
-    amount: MonetaryAmount!,
+    id: ID!
+    amount: MonetaryAmount!
     allowManualCharge: Boolean
   ): Member
   addAccountEntryToMember(
@@ -459,7 +459,7 @@ enum ContractStatus {
 
 type TermsAndConditions {
   commencementDate: LocalDate!
-  displayName: String!,
+  displayName: String!
   url: String!
 }
 
@@ -625,7 +625,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

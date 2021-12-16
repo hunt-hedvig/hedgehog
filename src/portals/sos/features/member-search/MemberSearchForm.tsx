@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { FadeIn, Input, Label } from '@hedvig-ui'
+import React, { useEffect, useRef, useState } from 'react'
+import { FadeIn, Input, Label, Spacing } from '@hedvig-ui'
 import styled from '@emotion/styled'
 import { useSosMemberLookupLazyQuery } from 'types/generated/graphql'
 import {
@@ -7,9 +7,10 @@ import {
   LogoIcon,
 } from 'portals/hope/features/navigation/sidebar/elements'
 import { colorsV3 } from '@hedviginsurance/brand'
+import { MemberCard } from 'portals/sos/features/member-search/components/MemberCard'
 
 const Wrapper = styled.form`
-  width: 400px;
+  width: 25rem;
 `
 
 const HopeLogo = styled(Logo)`
@@ -38,6 +39,10 @@ const FormContainer = styled.div`
 `
 
 const Container = styled.div<{ pushTop: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   transition: padding-top 300ms ease-in-out;
   padding-top: ${({ pushTop }) => (pushTop ? '5vh' : '30vh')};
 `
@@ -49,19 +54,25 @@ const ErrorInformation = styled.div`
   font-size: 0.85rem;
 `
 
+const ResultWrapper = styled.div<{ show: boolean }>`
+  transition: opacity 300ms ease-in-out;
+  opacity: ${({ show }) => (show ? 1 : 0)};
+`
+
 export const MemberSearchForm: React.FC = () => {
-  const [memberLookup, { loading, data }] = useSosMemberLookupLazyQuery()
+  const [memberLookup, { loading }] = useSosMemberLookupLazyQuery()
   const [ssn, setSsn] = useState('')
   const [showResult, setShowResult] = useState(false)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    if (data) {
-      setShowResult(true)
-    }
-  }, [data])
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => setError(''), [ssn])
+  useEffect(() => {
+    setError('')
+    if (ssn === '') {
+      setShowResult(false)
+    }
+  }, [ssn])
 
   const valid = () => {
     if (ssn === '') {
@@ -79,9 +90,15 @@ export const MemberSearchForm: React.FC = () => {
       return
     }
 
-    memberLookup({ variables: { ssn } }).catch(() => {
-      setError('No member found for SSN')
-    })
+    inputRef?.current?.blur()
+
+    memberLookup({ variables: { ssn } })
+      .then(() => {
+        setShowResult(true)
+      })
+      .catch(() => {
+        setError('No member found for SSN')
+      })
   }
 
   return (
@@ -100,6 +117,7 @@ export const MemberSearchForm: React.FC = () => {
             <Label>{'\xa0'}</Label>
           )}
           <Input
+            ref={inputRef}
             autoFocus
             placeholder="Personal number"
             size="large"
@@ -108,7 +126,6 @@ export const MemberSearchForm: React.FC = () => {
             onFocus={() => {
               if (showResult) {
                 setShowResult(false)
-                setSsn('')
               }
             }}
             onChange={(e) => setSsn(e.currentTarget.value)}
@@ -120,6 +137,10 @@ export const MemberSearchForm: React.FC = () => {
           )}
         </Wrapper>
       </FormContainer>
+      <Spacing top="medium" />
+      <ResultWrapper show={showResult}>
+        <MemberCard />
+      </ResultWrapper>
     </Container>
   )
 }

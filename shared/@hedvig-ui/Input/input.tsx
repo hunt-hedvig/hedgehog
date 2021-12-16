@@ -191,18 +191,20 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       style,
       ...props
     },
-    _,
+    forwardRef,
   ) => {
-    const inputRef = useRef<HTMLInputElement>(null)
+    const internalRef = useRef<HTMLInputElement>(null)
     const isAffix = Boolean(affix)
     const isSuccess = success && !error && !loading
     const isError = error && !success && !loading
+
+    const ref = forwardRef ?? internalRef
 
     return (
       <InputWrapper style={style}>
         {icon ? <CustomIcon>{icon}</CustomIcon> : null}
         <InputStyled
-          ref={inputRef}
+          ref={ref}
           className="input"
           withIcon={Boolean(icon)}
           inputSize={size}
