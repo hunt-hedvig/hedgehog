@@ -1,0 +1,5 @@
+query SOSMemberLookup($ssn: String!) {
+  SOSMemberLookup(ssn: $ssn) {
+    memberId
+  }
+}
