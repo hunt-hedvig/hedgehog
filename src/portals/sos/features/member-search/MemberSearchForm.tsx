@@ -80,6 +80,11 @@ export const MemberSearchForm: React.FC = () => {
       return false
     }
 
+    if (!/^[0-9]*$/.test(ssn)) {
+      setError('SSN can only be numbers')
+      return false
+    }
+
     return true
   }
 
@@ -90,11 +95,10 @@ export const MemberSearchForm: React.FC = () => {
       return
     }
 
-    inputRef?.current?.blur()
-
     memberLookup({ variables: { ssn } })
       .then(() => {
         setShowResult(true)
+        inputRef?.current?.blur()
       })
       .catch(() => {
         setError('No member found for SSN')
