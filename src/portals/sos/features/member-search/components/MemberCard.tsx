@@ -1,17 +1,19 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useState } from 'react'
 import chroma from 'chroma-js'
-import { Flex } from '@hedvig-ui'
+import { Flex, Spacing } from '@hedvig-ui'
 
-const Card = styled.div`
+const Card = styled.div<{ extended: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
+  transition: height 200ms ease-in-out;
+  border: 1px solid ${({ theme }) => theme.foreground};
   padding: 1.5rem;
   background-color: ${({ theme }) =>
     chroma(theme.foreground).brighten(0.5).hex()};
-  height: 12rem;
+  height: ${({ extended }) => (extended ? '22rem' : '12rem')};
   border-radius: 0.75rem;
   width: 25rem;
 
@@ -23,6 +25,15 @@ const Card = styled.div`
   #member-id {
     font-size: 1rem;
     color: ${({ theme }) => chroma(theme.accentContrast).darken(1).hex()};
+  }
+
+  #member-extra {
+    transition: all 200ms ease-in-out;
+    height: ${({ extended }) => (extended ? '100%' : 0)};
+    font-size: 1rem;
+    opacity: ${({ extended }) => (extended ? '1' : '0')};
+    color: ${({ theme }) => theme.accentContrast};
+    padding-top: 2rem;
   }
 
   #member-market {
@@ -37,15 +48,52 @@ const Card = styled.div`
   }
 `
 
+const Group = styled.div`
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  background-color: ${({ theme }) => chroma(theme.background).alpha(0.2).hex()};
+`
+
+const ShowLess = styled.div`
+  cursor: pointer;
+  color: ${({ theme }) => theme.accentContrast};
+  text-decoration: underline;
+  font-size: 0.95rem;
+`
+
 export const MemberCard: React.FC = () => {
+  const [extended, setExtended] = useState(false)
+
   return (
-    <Card>
+    <Card extended={extended} onClick={() => setExtended(true)}>
       <div>
         <div id="member-name">Rasmus Guterstam</div>
         <div id="member-id">123456789</div>
       </div>
-      <Flex justify="flex-end" align="flex-end">
+      <div id="member-extra">
+        <Group>
+          <div>Crafoords Väg 14</div>
+          <div>113 24 Stockholm</div>
+        </Group>
+        <Spacing top="small" />
+        <Group>
+          <div>+46702568097</div>
+          <div>rasmus.guterstam@gmail.com</div>
+        </Group>
+      </div>
+      <Spacing top="small" />
+      <Flex justify="space-between" align="flex-end">
         <div id="member-market">🇩🇰 Denmark</div>
+        {extended && (
+          <ShowLess
+            onClick={(e) => {
+              e.stopPropagation()
+              setExtended(false)
+            }}
+          >
+            Show less
+          </ShowLess>
+        )}
       </Flex>
     </Card>
   )

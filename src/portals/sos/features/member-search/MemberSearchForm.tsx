@@ -8,6 +8,7 @@ import {
 } from 'portals/hope/features/navigation/sidebar/elements'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { MemberCard } from 'portals/sos/features/member-search/components/MemberCard'
+import { InsuranceCard } from 'portals/sos/features/member-search/components/InsuranceCard'
 
 const Wrapper = styled.form`
   width: 25rem;
@@ -144,6 +145,10 @@ export const MemberSearchForm: React.FC = () => {
       <Spacing top="medium" />
       <ResultWrapper show={showResult}>
         <MemberCard />
+        <Spacing top="small" />
+        <InsuranceCard />
+        <Spacing top="small" />
+        <InsuranceCard />
       </ResultWrapper>
     </Container>
   )
