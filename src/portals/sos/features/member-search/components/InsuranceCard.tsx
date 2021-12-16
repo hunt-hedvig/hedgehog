@@ -26,6 +26,11 @@ const Card = styled.div`
     background-color: ${({ theme }) =>
       chroma(theme.success).brighten(0.5).hex()};
   }
+
+  #insurance-date {
+    font-size: 1rem;
+    color: ${({ theme }) => chroma(theme.foreground).brighten(1).hex()};
+  }
 `
 
 export const InsuranceCard: React.FC = () => {
@@ -34,7 +39,9 @@ export const InsuranceCard: React.FC = () => {
       <Flex justify="space-between" align="center">
         <div id="insurance-name">Danish Travel</div>
       </Flex>
-      <Flex></Flex>
+      <Flex>
+        <div id="insurance-date">2020-01-01 - Ongoing</div>
+      </Flex>
     </Card>
   )
 }

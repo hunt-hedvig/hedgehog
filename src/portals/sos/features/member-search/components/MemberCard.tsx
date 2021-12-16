@@ -4,6 +4,11 @@ import chroma from 'chroma-js'
 import { Flex, Spacing } from '@hedvig-ui'
 
 const Card = styled.div<{ extended: boolean }>`
+  cursor: ${({ extended }) => (extended ? 'default' : 'pointer')};
+
+  background-color: ${({ theme }) =>
+    chroma(theme.foreground).brighten(0.5).hex()};
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -11,8 +16,6 @@ const Card = styled.div<{ extended: boolean }>`
   transition: height 200ms ease-in-out;
   border: 1px solid ${({ theme }) => theme.foreground};
   padding: 1.5rem;
-  background-color: ${({ theme }) =>
-    chroma(theme.foreground).brighten(0.5).hex()};
   height: ${({ extended }) => (extended ? '22rem' : '12rem')};
   border-radius: 0.75rem;
   width: 25rem;
