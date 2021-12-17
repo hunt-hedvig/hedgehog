@@ -14,7 +14,30 @@ import { MasterInception } from 'features/member/tabs/contracts-tab/contract/mas
 import { TerminationDate } from 'features/member/tabs/contracts-tab/contract/termination-date'
 import { getSignSource } from 'features/member/tabs/contracts-tab/utils'
 import React from 'react'
+import { ExclamationCircle } from 'react-bootstrap-icons'
 import { Contract as ContractType } from 'types/generated/graphql'
+
+const Blockers = styled.div`
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  align-items: center;
+
+  background-color: ${({ theme }) => theme.accentLighter};
+  padding: 0.625rem;
+  border-radius: 0.5rem;
+
+  margin-bottom: 0.5rem;
+
+  & span {
+    margin-left: 0.5rem;
+    font-size: 12px;
+    line-height: 0;
+    color: ${({ theme }) => theme.semiStrongForeground};
+  }
+`
 
 const ContractWrapper = styled('div')`
   &:not(:first-of-type) {
@@ -81,6 +104,20 @@ export const Contract: React.FC<{
         selectedAgreement={selectedAgreement}
         setSelectedAgreement={setSelectedAgreement}
       />
+      {!!contract.selfChangeBlockers.length && (
+        <Blockers>
+          <ExclamationCircle />
+          <span>
+            Self-change blocker:{' '}
+            {contract.selfChangeBlockers.map((blocker, index) => (
+              <>
+                <strong>{convertEnumToTitle(blocker)}</strong>
+                {index !== contract.selfChangeBlockers.length - 1 ? ' & ' : ''}
+              </>
+            ))}
+          </span>
+        </Blockers>
+      )}
       {agreementToShow && (
         <Agreement
           agreement={agreementToShow}
