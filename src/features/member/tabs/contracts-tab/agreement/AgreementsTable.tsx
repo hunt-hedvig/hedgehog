@@ -27,9 +27,7 @@ const SelectableTableCell = styled(TableColumn)<{
     css`
       background: ${!focused
         ? theme.accent
-        : chroma(theme.accent)
-            .alpha(0.1)
-            .hex()} !important;
+        : chroma(theme.accent).alpha(0.1).hex()} !important;
       color: ${theme.accentContrast} !important;
     `};
   width: 20%;

@@ -15,10 +15,8 @@ import { ArrowRepeat } from 'react-bootstrap-icons'
 export const CampaignsTab: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
-  const [
-    referralInformation,
-    { loading, error, refetch },
-  ] = useGetReferralInformation(memberId)
+  const [referralInformation, { loading, error, refetch }] =
+    useGetReferralInformation(memberId)
 
   useFocus(FocusItems.Member.items.Campaigns)
 
