@@ -44,6 +44,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
   currentResultSize,
   searchFieldRef,
   setLuckySearch,
+  focus,
   ...props
 }) => {
   const [textFieldFocused, setTextFieldFocused] = useState(false)
@@ -76,6 +77,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             loading={loading}
             size="large"
             type="search"
+            focus={focus}
             muted={!query}
             ref={searchFieldRef}
             onFocus={() => {

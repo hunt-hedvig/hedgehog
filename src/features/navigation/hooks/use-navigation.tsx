@@ -36,8 +36,6 @@ interface FocusItemsType {
       Files: string
       Claims: string
       Payments: string
-      PaymentsForm: string
-      PaymentsFormField: string
       Account: string
       Member: string
       Debt: string
@@ -93,8 +91,6 @@ export const FocusItems: FocusItemsType = {
       Files: 'MEMBER_FILES',
       Claims: 'MEMBER_CLAIMS',
       Payments: 'MEMBER_PAYMENTS',
-      PaymentsForm: 'MEMBER_PAYMENTS_FORM',
-      PaymentsFormField: 'MEMBER_PAYMENTS_FORM_FIELD',
       Account: 'MEMBER_ACCOUNT',
       Member: 'MEMBER_MEMBER_TAB',
       Debt: 'MEMBER_DEBT',

@@ -10,12 +10,8 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
-import React, { useState } from 'react'
+import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
+import React from 'react'
 import { FileUpload, useFileUploadsQueryQuery } from 'types/generated/graphql'
 
 const sortFileDate = (a, b) => {
@@ -31,43 +27,28 @@ const Image = styled.img`
 
 const MemberFileTable: React.FC<{
   memberFiles: FileUpload[]
-  navigationAvailable: boolean
-}> = ({ memberFiles, navigationAvailable }) => {
-  const [activeRow, setActiveRow] = useState<number | null>(null)
-
-  return (
-    <Table>
-      <TableHeader>
-        <TableHeaderColumn>Member File</TableHeaderColumn>
-        <TableHeaderColumn>Time Stamp</TableHeaderColumn>
-        <TableHeaderColumn>File Type</TableHeaderColumn>
-      </TableHeader>
-      <TableBody
-        isActive={navigationAvailable}
-        setActiveRow={(num) => setActiveRow(num)}
-        onPerformNavigation={() => {
-          return
-        }}
-      >
-        {[...memberFiles].sort(sortFileDate).map((memberFile, index) => (
-          <TableRow
-            border
-            key={memberFile.fileUploadUrl}
-            active={activeRow === index}
-          >
-            <TableColumn>
-              <Image src={memberFile.fileUploadUrl} />
-            </TableColumn>
-            <TableColumn>
-              {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
-            </TableColumn>
-            <TableColumn>{memberFile.mimeType}</TableColumn>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  )
-}
+}> = ({ memberFiles }) => (
+  <Table>
+    <TableHeader>
+      <TableHeaderColumn>Member File</TableHeaderColumn>
+      <TableHeaderColumn>Time Stamp</TableHeaderColumn>
+      <TableHeaderColumn>File Type</TableHeaderColumn>
+    </TableHeader>
+    <TableBody>
+      {[...memberFiles].sort(sortFileDate).map((memberFile) => (
+        <TableRow border key={memberFile.fileUploadUrl}>
+          <TableColumn>
+            <Image src={memberFile.fileUploadUrl} />
+          </TableColumn>
+          <TableColumn>
+            {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
+          </TableColumn>
+          <TableColumn>{memberFile.mimeType}</TableColumn>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+)
 
 export const MemberFile: React.FC<{
   memberId: string
@@ -76,7 +57,6 @@ export const MemberFile: React.FC<{
     variables: { memberId },
   })
 
-  const { focus } = useNavigation()
   useFocus(FocusItems.Member.items.Files)
 
   if (error) {
@@ -96,9 +76,6 @@ export const MemberFile: React.FC<{
       No files uploaded for this member
     </StandaloneMessage>
   ) : (
-    <MemberFileTable
-      memberFiles={data.member!.fileUploads}
-      navigationAvailable={focus === FocusItems.Member.items.Files}
-    />
+    <MemberFileTable memberFiles={data.member!.fileUploads} />
   )
 }

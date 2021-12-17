@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import _chroma from 'chroma-js'
-import React, { ButtonHTMLAttributes, useEffect, useRef } from 'react'
+import React, { ButtonHTMLAttributes } from 'react'
 
 // Necessary for tests to run - if not, theme colors used might be undefined at test-time
 const chroma = (c: string) => _chroma(c ?? 'white')
@@ -167,13 +167,12 @@ const cursor = ({ disabled = false }) => {
   `
 }
 
-export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'tertiary'
   status?: 'success' | 'warning' | 'danger'
   size?: 'small' | 'medium' | 'large'
   disabled?: boolean
   icon?: React.ReactNode
-  focus?: boolean
   children: React.ReactNode
 }
 
@@ -193,25 +192,10 @@ export const Button = styled(
   ({
     icon,
     children,
-    focus,
     ...props
   }: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) => {
-    const btnRef = useRef<HTMLButtonElement>(null)
-
-    useEffect(() => {
-      if (!btnRef.current) {
-        return
-      }
-
-      if (focus) {
-        btnRef.current.focus()
-      }
-
-      btnRef.current.blur()
-    }, [focus])
-
     return (
-      <button ref={btnRef} {...props}>
+      <button {...props}>
         <ButtonIconWrapper>
           {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
           <div>{children}</div>
