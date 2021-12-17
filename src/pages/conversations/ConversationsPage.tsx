@@ -103,7 +103,7 @@ const ConversationsPage: Page<
 
   const { focus } = useNavigation()
 
-  useFocus(FocusItems.Conversations.name)
+  useFocus(FocusItems.Claims.name)
 
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
