@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/client'
-import { gql } from '@apollo/client/core'
 import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
@@ -24,6 +23,7 @@ import { Plus } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
 import { Page } from 'pages/routes'
+import gql from 'graphql-tag'
 
 const Wrapper = styled.div`
   display: flex;
