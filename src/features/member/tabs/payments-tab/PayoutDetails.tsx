@@ -1,11 +1,6 @@
 import { ApolloCache } from '@apollo/client'
 import { Form, FormDropdown, FormInput, SubmitButton } from '@hedvig-ui'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
@@ -35,10 +30,7 @@ const entryTypeOptions = [
   },
 ]
 
-export const PayoutDetails: React.FC<{
-  memberId: string
-  navigationAvailable: boolean
-}> = ({ memberId, navigationAvailable }) => {
+export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   const form = useForm()
   const [payoutMember] = usePayoutMemberMutation()
   const { data: contractMarketInfo } = useGetContractMarketInfoQuery({
@@ -116,37 +108,10 @@ export const PayoutDetails: React.FC<{
     })
   }
 
-  const { focus, setFocus } = useNavigation()
-
-  const [navigationStep] = useArrowKeyboardNavigation({
-    maxStep: 3,
-    onPerformNavigation: () => {
-      setFocus(FocusItems.Member.items.PaymentsFormField)
-    },
-    direction: 'vertical',
-    withNegative: true,
-    isActive:
-      focus === FocusItems.Member.items.PaymentsForm && navigationAvailable,
-  })
-
-  const getStyles = (step: number) => ({
-    border:
-      (focus === FocusItems.Member.items.PaymentsForm ||
-        focus === FocusItems.Member.items.PaymentsFormField) &&
-      navigationStep + 1 === step
-        ? '1px solid blue'
-        : 'none',
-  })
-
   return (
     <FormProvider {...form}>
       <Form onSubmit={onSubmitHandler}>
         <FormDropdown
-          focus={
-            focus === FocusItems.Member.items.PaymentsFormField &&
-            navigationStep + 1 === 0
-          }
-          style={getStyles(0)}
           label="Category"
           options={entryTypeOptions}
           name="category"
@@ -156,11 +121,6 @@ export const PayoutDetails: React.FC<{
           }}
         />
         <FormInput
-          focus={
-            focus === FocusItems.Member.items.PaymentsFormField &&
-            navigationStep + 1 === 1
-          }
-          style={getStyles(1)}
           label="Payout amount"
           name="amount"
           defaultValue=""
@@ -177,11 +137,6 @@ export const PayoutDetails: React.FC<{
           }}
         />
         <FormInput
-          focus={
-            focus === FocusItems.Member.items.PaymentsFormField &&
-            navigationStep + 1 === 2
-          }
-          style={getStyles(2)}
           label="Reference Id"
           name="referenceId"
           defaultValue=""
@@ -193,26 +148,9 @@ export const PayoutDetails: React.FC<{
             },
           }}
         />
-        <FormInput
-          focus={
-            focus === FocusItems.Member.items.PaymentsFormField &&
-            navigationStep + 1 === 3
-          }
-          label="Note"
-          name="note"
-          defaultValue=""
-          style={getStyles(3)}
-        />
+        <FormInput label="Note" name="note" defaultValue="" />
 
-        <SubmitButton
-          focus={
-            focus === FocusItems.Member.items.PaymentsFormField &&
-            navigationStep + 1 === 4
-          }
-          style={getStyles(4)}
-        >
-          Create payout
-        </SubmitButton>
+        <SubmitButton>Create payout</SubmitButton>
       </Form>
     </FormProvider>
   )

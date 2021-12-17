@@ -72,11 +72,11 @@ const RadioLabel = styled.div<{ checked?: boolean; disabled?: boolean }>`
 interface RadioGroupProps {
   value?: string | number
   onChange?: any
-  options: Array<{
+  options: {
     value: string | number
     label: string | React.ReactNode
     disabled?: boolean
-  }>
+  }[]
 }
 
 interface RadioProps

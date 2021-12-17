@@ -26,10 +26,7 @@ export type NavigationStepHandler = () => void
 export interface UseVerticalKeyboardNavigationProps {
   maxStep: number
   onPerformNavigation?: PerformNavigationHandler
-  defaultNavigationStep?: number
   onNavigationStep?: NavigationStepHandler
   onExit?: () => void
   isActive?: boolean
-  direction?: 'vertical' | 'horizontal'
-  withNegative?: boolean
 }

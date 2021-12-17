@@ -4,17 +4,11 @@ import {
   MainHeadline,
   StandaloneMessage,
 } from '@hedvig-ui'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { Contract } from 'features/member/tabs/contracts-tab/contract'
 import { useContracts } from 'features/member/tabs/contracts-tab/hooks/use-contracts'
 import { TrialComponent } from 'features/member/tabs/contracts-tab/trial'
 import { RefreshButton } from 'features/member/tabs/shared/refresh-button'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
-import React, { useState } from 'react'
+import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 import { Trial, useGetTrialsQuery } from 'types/generated/graphql'
 
@@ -24,23 +18,6 @@ export const ContractTab: React.FC<{
   const [contracts, { loading, refetch }] = useContracts(memberId)
   const trialsResult = useGetTrialsQuery({ variables: { memberId } })
   const trials = (trialsResult.data?.member?.trials ?? []) as Trial[]
-  const [focusedItem, setFocusedItem] = useState<number | null>(null)
-
-  const { focus, setFocus } = useNavigation()
-
-  useFocus(FocusItems.Member.items.Contract)
-
-  const [navigationStep] = useArrowKeyboardNavigation({
-    maxStep: contracts.length - 2,
-    onPerformNavigation: (index) => {
-      const currentItem = index + 1
-      setFocusedItem(currentItem)
-      setFocus(FocusItems.Member.items.ContractTable)
-    },
-    direction: 'vertical',
-    isActive: focus === FocusItems.Member.items.Contract,
-    withNegative: true,
-  })
 
   if (loading) {
     return <LoadingMessage paddingTop="10vh" />
@@ -67,13 +44,8 @@ export const ContractTab: React.FC<{
           </RefreshButton>
         </MainHeadline>
       )}
-      {contracts.map((contract, index) => (
+      {contracts.map((contract) => (
         <Contract
-          focused={
-            navigationStep === index - 1 &&
-            focus === FocusItems.Member.items.Contract
-          }
-          selected={focusedItem === index}
           key={contract.id}
           contract={contract}
           refetch={refetch}

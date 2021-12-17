@@ -1,14 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
-import React, {
-  HTMLAttributes,
-  TableHTMLAttributes,
-  useEffect,
-  useRef,
-} from 'react'
+import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
+import React, { TableHTMLAttributes, useEffect, useRef } from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 const range = (start, end) =>
   start >= 0 && end >= start
@@ -26,37 +20,18 @@ export const TableBody: React.FC<
   {
     onPerformNavigation?: (index) => void
     setActiveRow?: (n: number) => void
-    isActive?: boolean
-    onExit?: () => void
-    onNavigationStep?: (step: number) => void
   } & TableHTMLAttributes<HTMLTableSectionElement>
-> = ({
-  onPerformNavigation,
-  children,
-  setActiveRow,
-  isActive = true,
-  onNavigationStep,
-  onExit,
-  ...props
-}) => {
+> = ({ onPerformNavigation, children, setActiveRow, ...props }) => {
   const numberOfRows = React.Children.count(children)
 
-  const [navigationStep] = useArrowKeyboardNavigation({
-    maxStep: numberOfRows - 2,
+  const [navigationStep] = useVerticalKeyboardNavigation({
+    maxStep: numberOfRows - 1,
     onPerformNavigation: (index) => {
       if (onPerformNavigation) {
-        onPerformNavigation(index + 1)
+        onPerformNavigation(index)
       }
     },
-    onNavigationStep: () => {
-      if (onNavigationStep) {
-        onNavigationStep(navigationStep)
-      }
-    },
-    isActive: isActive && !!onPerformNavigation,
-    withNegative: true,
-    direction: 'vertical',
-    onExit,
+    isActive: !!onPerformNavigation,
   })
 
   useEffect(() => {
@@ -67,7 +42,7 @@ export const TableBody: React.FC<
 
   return (
     <StyledTableBody
-      activeRow={onPerformNavigation ? navigationStep + 1 : -1}
+      activeRow={onPerformNavigation ? navigationStep : -1}
       {...props}
     >
       {children}
@@ -198,15 +173,18 @@ interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
 export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
   const rowRef = useRef<HTMLTableRowElement>(null)
 
-  useElementFocus(rowRef, active)
+  useEffect(() => {
+    if (active && rowRef && rowRef.current) {
+      rowRef.current.focus()
+    }
+  }, [active])
 
   return <TableRowStyled ref={rowRef} active={active} {...props} />
 }
 
-export const TableHeader: React.FC<HTMLAttributes<HTMLTableSectionElement>> = ({
-  children,
-  ...props
-}) => (
+export const TableHeader: React.FC<
+  React.HTMLAttributes<HTMLTableSectionElement>
+> = ({ children, ...props }) => (
   <thead style={{ width: '100%' }} {...props}>
     <tr style={{ width: '100%' }}>{children}</tr>
   </thead>

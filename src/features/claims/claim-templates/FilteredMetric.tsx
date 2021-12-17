@@ -4,11 +4,7 @@ import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterModal'
 import { ClaimFilterTemplate } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { useListClaims } from 'features/claims/claims-list/graphql/use-list-claims'
-import {
-  MetricName,
-  MetricNumber,
-  metricStyles,
-} from 'features/dashboard/MetricList'
+import { MetricName, MetricNumber, metricStyles } from 'pages/DashboardPage'
 import React, { useEffect, useState } from 'react'
 import { Files, Pencil, Trash } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
@@ -33,12 +29,11 @@ const Icon = styled.div`
   }
 `
 
-const Metric = styled.div<{ focus: boolean }>`
-  transition: none;
+const Metric = styled.div`
   position: relative;
   cursor: pointer;
   max-width: 200px;
-  ${({ theme, focus }) => metricStyles(theme, focus)};
+  ${({ theme }) => metricStyles(theme)};
 `
 
 interface FilteredMetricProps {
@@ -46,7 +41,6 @@ interface FilteredMetricProps {
   onRemove: (id: string) => void
   onCreate: (filter: ClaimFilterTemplate) => void
   onEdit: (filter: ClaimFilterTemplate) => void
-  focus: boolean
 }
 
 export const FilteredMetric: React.FC<FilteredMetricProps> = ({
@@ -54,7 +48,6 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
   onRemove,
   onCreate,
   onEdit,
-  focus,
 }) => {
   const history = useHistory()
   const [edit, setEdit] = useState(false)
@@ -85,7 +78,6 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
 
   return (
     <Metric
-      focus={focus}
       tabIndex={0}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}

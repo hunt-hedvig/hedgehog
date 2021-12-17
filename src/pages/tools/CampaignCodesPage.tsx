@@ -5,8 +5,9 @@ import { CreateCampaignCode } from 'features/tools/campaign-codes/components/Cre
 import { initialCampaignFilter } from 'features/tools/campaign-codes/utils'
 import React from 'react'
 import { CampaignFilter } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
-const CampaignCodesPage: React.FC = () => {
+const CampaignCodesPage: Page = () => {
   const [campaignFilter, setCampaignFilter] = React.useState<CampaignFilter>(
     initialCampaignFilter,
   )

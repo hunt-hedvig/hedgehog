@@ -9,7 +9,6 @@ import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
 import { CommandLineProvider } from 'features/commands/use-command-line'
-import { NavigationProvider } from 'features/navigation/hooks/use-navigation'
 import { Logo, LogoIcon } from 'features/navigation/sidebar/elements'
 import { VerticalMenu } from 'features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'features/navigation/topbar/TopBar'
@@ -153,46 +152,42 @@ const App: React.FC = () => {
       <Global styles={globalCss} />
       <TrackingProvider>
         <ThemeProvider theme={isDarkmode ? darkTheme : lightTheme}>
-          <NavigationProvider>
-            <MemberHistoryProvider>
-              <NumberMemberGroupsProvider>
-                <Router history={history}>
-                  <MeProvider me={me}>
-                    <CommandLineProvider>
-                      <ConfirmDialogProvider>
-                        <Layout>
-                          <Tracker />
-                          {!history.location.pathname.startsWith('/login') && (
-                            <VerticalMenu history={history} />
-                          )}
-                          <Main
-                            dark={history.location.pathname.startsWith(
-                              '/login',
-                            )}
-                          >
-                            <TopBar />
-                            <MainContent>
-                              <Switch>
-                                <Routes />
-                              </Switch>
-                              <Toaster
-                                position="top-center"
-                                toastOptions={{
-                                  style: {
-                                    padding: '20px 25px',
-                                  },
-                                }}
-                              />
-                            </MainContent>
-                          </Main>
-                        </Layout>
-                      </ConfirmDialogProvider>
-                    </CommandLineProvider>
-                  </MeProvider>
-                </Router>
-              </NumberMemberGroupsProvider>
-            </MemberHistoryProvider>
-          </NavigationProvider>
+          <MemberHistoryProvider>
+            <NumberMemberGroupsProvider>
+              <Router history={history}>
+                <MeProvider me={me}>
+                  <CommandLineProvider>
+                    <ConfirmDialogProvider>
+                      <Layout>
+                        <Tracker />
+                        {!history.location.pathname.startsWith('/login') && (
+                          <VerticalMenu history={history} />
+                        )}
+                        <Main
+                          dark={history.location.pathname.startsWith('/login')}
+                        >
+                          <TopBar />
+                          <MainContent>
+                            <Switch>
+                              <Routes />
+                            </Switch>
+                            <Toaster
+                              position="top-center"
+                              toastOptions={{
+                                style: {
+                                  padding: '20px 25px',
+                                },
+                              }}
+                            />
+                          </MainContent>
+                        </Main>
+                      </Layout>
+                    </ConfirmDialogProvider>
+                  </CommandLineProvider>
+                </MeProvider>
+              </Router>
+            </NumberMemberGroupsProvider>
+          </MemberHistoryProvider>
         </ThemeProvider>
       </TrackingProvider>
     </UseDarkmode.Provider>

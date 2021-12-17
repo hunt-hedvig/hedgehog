@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { FileEarmark, FileEarmarkArrowUpFill } from 'react-bootstrap-icons'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 const UploadClaimFileWrapper = styled('div')`
   padding: 1rem 1rem;
@@ -67,7 +66,11 @@ export const FileUpload: React.FC<{
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useElementFocus(inputRef, focus)
+  useEffect(() => {
+    if (focus && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [focus])
 
   return (
     <UploadClaimFileWrapper>

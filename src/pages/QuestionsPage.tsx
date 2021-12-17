@@ -7,11 +7,6 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
@@ -20,6 +15,7 @@ import { useMe } from 'features/user/hooks/use-me'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
 const ListPage = styled.div`
   display: flex;
@@ -44,7 +40,7 @@ const ConversationsMessage = styled.div`
   }
 `
 
-const QuestionsPage: React.FC = () => {
+const QuestionsPage: Page = () => {
   const history = useHistory()
   const { me, settings, updateSetting } = useMe()
 
@@ -59,9 +55,6 @@ const QuestionsPage: React.FC = () => {
   ])
 
   const [questionGroups, { loading }] = useQuestionGroups()
-
-  const { focus } = useNavigation()
-  useFocus(FocusItems.Questions.name)
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
@@ -139,7 +132,6 @@ const QuestionsPage: React.FC = () => {
       </Spacing>
 
       <QuestionGroups
-        navigationAvailable={focus === FocusItems.Questions.name}
         selectedFilters={selectedFilters}
         questionGroups={questionGroups}
       />
