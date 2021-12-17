@@ -82,10 +82,9 @@ const EmptyWrapper = styled.div`
 export const LargeClaimsList: React.FC<{
   page: number
   date: string | null
-  navigationAvailable: boolean
   templated?: boolean
   filters?: ClaimsFiltersType
-}> = ({ page, date, templated, filters, navigationAvailable }) => {
+}> = ({ page, date, templated, filters }) => {
   const { settings } = useMe()
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -167,7 +166,6 @@ export const LargeClaimsList: React.FC<{
           <TableHeaderColumn>Reserves</TableHeaderColumn>
         </TableHeader>
         <TableBody
-          isActive={navigationAvailable}
           setActiveRow={(num) => setActiveRow(num)}
           onPerformNavigation={(index) => {
             const claimId = claims[index].id

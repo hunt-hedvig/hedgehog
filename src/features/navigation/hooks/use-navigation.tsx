@@ -40,9 +40,6 @@ export const FocusItems: IFocusItems = {
   Claims: {
     name: 'CLAIMS_PAGE',
   },
-  ClaimsFilters: {
-    name: 'CLAIMS_FILTERS',
-  },
   Claim: {
     name: 'CLAIM_PAGE',
   },
@@ -54,11 +51,15 @@ export const FocusItems: IFocusItems = {
 interface NavigationContextProps {
   focus?: string
   setFocus: (e?: string) => void
+  secondaryFocus?: string
+  setSecondaryFocus
 }
 
 const NavigationContext = createContext<NavigationContextProps>({
   focus: undefined,
   setFocus: (_?: string) => void 0,
+  secondaryFocus: undefined,
+  setSecondaryFocus: (_?: string) => void 0,
 })
 
 export const useNavigation = () => useContext(NavigationContext)
@@ -66,6 +67,7 @@ export const useNavigation = () => useContext(NavigationContext)
 export const NavigationProvider = ({ children }) => {
   const [_, setPrevFocus] = useState<string>()
   const [mainFocus, setMainFocus] = useState<string>()
+  const [secondaryFocus, setSecondaryFocus] = useState<string>()
 
   useEffect(() => {
     console.log('Prev: ' + prevFocus)
@@ -75,7 +77,15 @@ export const NavigationProvider = ({ children }) => {
     console.log('Main: ' + mainFocus)
   }, [mainFocus])
 
+  useEffect(() => {
+    console.log('Secondary: ' + secondaryFocus)
+  }, [secondaryFocus])
+
   const changeFocusHandler = (value?: string) => {
+    // if (secondaryFocus) {
+    //   return
+    // }
+
     setMainFocus((prev) => {
       if (prev) {
         setPrevFocus(prev)
@@ -87,6 +97,10 @@ export const NavigationProvider = ({ children }) => {
     })
   }
 
+  const changeSecondaryFocusHandler = (value?: string) => {
+    setSecondaryFocus(value)
+  }
+
   useKeyIsPressed(Keys.Escape, () => {
     changeFocusHandler(undefined)
   })
@@ -96,6 +110,7 @@ export const NavigationProvider = ({ children }) => {
       value={{
         focus: mainFocus,
         setFocus: changeFocusHandler,
+        setSecondaryFocus: changeSecondaryFocusHandler,
       }}
     >
       {children}

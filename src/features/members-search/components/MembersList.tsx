@@ -98,8 +98,7 @@ const countContractsByStatus = (contracts: Contract[]): NumberOfContracts =>
 
 export const MembersList: React.FC<{
   members: Member[]
-  navigationAvailable: boolean
-}> = ({ members, navigationAvailable }) => {
+}> = ({ members }) => {
   const [activeRow, setActiveRow] = useState<number | null>(null)
   const history = useHistory()
   const isCommandPressed = useKeyIsPressed(Keys.Command)
@@ -127,7 +126,6 @@ export const MembersList: React.FC<{
           <TableHeaderColumn>Contracts</TableHeaderColumn>
         </TableHeader>
         <TableBody
-          isActive={navigationAvailable}
           setActiveRow={(num) => setActiveRow(num)}
           onPerformNavigation={(index) => {
             const memberId = members[index].memberId

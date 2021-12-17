@@ -1,13 +1,5 @@
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { ClaimsTemplates } from 'features/claims/claim-templates/ClaimsTemplatesList'
-import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
-import { ClaimListFilters } from 'features/claims/claims-list/filters/ClaimListFilters'
-import { ClaimListTemplateFilters } from 'features/claims/claims-list/filters/ClaimListTemplateFilters'
 import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
 import {
   FocusItems,
@@ -17,6 +9,10 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 import { Page } from 'pages/routes'
+import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
+import { ClaimsTemplates } from 'features/claims/claim-templates/ClaimsTemplatesList'
+import { ClaimListTemplateFilters } from 'features/claims/claims-list/filters/ClaimListTemplateFilters'
+import { ClaimListFilters } from 'features/claims/claims-list/filters/ClaimListFilters'
 
 const ListPage = styled.div`
   display: flex;
@@ -86,12 +82,6 @@ const ClaimsListPage: Page<
     }
   }, [focus])
 
-  const focusHandler = () => {
-    setFocus(FocusItems.ClaimsFilters.name)
-  }
-
-  useKeyIsPressed(Keys.F, focusHandler)
-
   return (
     <ListPage>
       <FadeIn>
@@ -112,18 +102,12 @@ const ClaimsListPage: Page<
           editTemplate={editTemplate}
         />
       ) : (
-        <ClaimListFilters
-          date={date}
-          setDate={setDate}
-          page={page}
-          navigationAvailable={focus === FocusItems.ClaimsFilters.name}
-        />
+        <ClaimListFilters date={date} setDate={setDate} page={page} />
       )}
 
       <LargeClaimsList
         page={selectedPage}
         date={date}
-        navigationAvailable={focus === FocusItems.Claims.name}
         templated={templateActive}
         filters={templateActive ? localFilter : undefined}
       />

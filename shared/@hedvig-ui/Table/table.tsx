@@ -20,15 +20,8 @@ export const TableBody: React.FC<
   {
     onPerformNavigation?: (index) => void
     setActiveRow?: (n: number) => void
-    isActive?: boolean
   } & TableHTMLAttributes<HTMLTableSectionElement>
-> = ({
-  onPerformNavigation,
-  children,
-  setActiveRow,
-  isActive = true,
-  ...props
-}) => {
+> = ({ onPerformNavigation, children, setActiveRow, ...props }) => {
   const numberOfRows = React.Children.count(children)
 
   const [navigationStep] = useVerticalKeyboardNavigation({
@@ -38,7 +31,7 @@ export const TableBody: React.FC<
         onPerformNavigation(index)
       }
     },
-    isActive: isActive && !!onPerformNavigation,
+    isActive: !!onPerformNavigation,
   })
 
   useEffect(() => {

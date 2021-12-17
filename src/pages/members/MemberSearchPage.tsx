@@ -23,7 +23,7 @@ const MemberSearchPage: Page = () => {
   const [includeAll, setIncludeAll] = React.useState(false)
   const [luckySearch, setLuckySearch] = React.useState(false)
   const history = useHistory()
-  const searchField = useRef<HTMLInputElement>(null)
+  const searchField = useRef<React.ReactElement>()
 
   const [{ members, totalPages, page }, memberSearch, { loading }] =
     useMemberSearch()
@@ -42,11 +42,12 @@ const MemberSearchPage: Page = () => {
 
   useTitle('Members')
 
-  const { focus, setFocus } = useNavigation()
+  const { focus, setFocus, setSecondaryFocus } = useNavigation()
 
   useEffect(() => {
     if (!focus) {
       setFocus(FocusItems.Members.name)
+      setSecondaryFocus(FocusItems.Members.items?.Search)
     }
   }, [focus])
 
@@ -66,15 +67,11 @@ const MemberSearchPage: Page = () => {
         currentResultSize={members.length}
         searchFieldRef={searchField as any}
         setLuckySearch={setLuckySearch}
-        focus={focus === FocusItems.Members.name}
       />
       {members.length > 0 && (
         <>
           <FadeIn>
-            <MembersList
-              members={members}
-              navigationAvailable={focus === FocusItems.Members.name}
-            />
+            <MembersList members={members} />
             <TablePageSelect
               currentPage={page}
               totalPages={totalPages}
