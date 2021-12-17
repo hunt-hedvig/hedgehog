@@ -12,11 +12,7 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { useCommandLine } from 'features/commands/use-command-line'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router'
 import { Page } from 'pages/routes'
 
@@ -109,14 +105,6 @@ const ToolsPage: Page = () => {
       },
     },
   ])
-
-  const { focus, setFocus } = useNavigation()
-
-  useEffect(() => {
-    if (!focus) {
-      setFocus(FocusItems.Tools.name)
-    }
-  }, [focus])
 
   return (
     <FadeIn>

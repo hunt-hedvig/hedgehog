@@ -13,10 +13,6 @@ import {
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import {
@@ -163,14 +159,6 @@ const ConversationsPage: Page<
 
     history.push(`/conversations/${filteredGroups[0].memberId}`)
   }, [filteredGroups])
-
-  const { focus, setFocus } = useNavigation()
-
-  useEffect(() => {
-    if (!focus) {
-      setFocus(FocusItems.Conversations.name)
-    }
-  }, [focus])
 
   return (
     <>

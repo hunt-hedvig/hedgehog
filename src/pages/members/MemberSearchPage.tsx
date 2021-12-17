@@ -10,11 +10,7 @@ import {
   MemberSuggestionsWrapper,
   NoMembers,
 } from 'features/members-search/styles'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useHistory } from 'react-router'
 import { Page } from 'pages/routes'
 
@@ -41,15 +37,6 @@ const MemberSearchPage: Page = () => {
   }
 
   useTitle('Members')
-
-  const { focus, setFocus, setSecondaryFocus } = useNavigation()
-
-  useEffect(() => {
-    if (!focus) {
-      setFocus(FocusItems.Members.name)
-      setSecondaryFocus(FocusItems.Members.items?.Search)
-    }
-  }, [focus])
 
   return (
     <>

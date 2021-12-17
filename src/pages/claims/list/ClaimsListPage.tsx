@@ -1,10 +1,6 @@
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
 import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
@@ -73,14 +69,6 @@ const ClaimsListPage: Page<
   }, [])
 
   const selectedPage = parseInt(page, 10)
-
-  const { focus, setFocus } = useNavigation()
-
-  useEffect(() => {
-    if (!focus) {
-      setFocus(FocusItems.Claims.name)
-    }
-  }, [focus])
 
   return (
     <ListPage>

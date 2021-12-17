@@ -3,7 +3,7 @@ import { Hotkey } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useCommandLine } from 'features/commands/use-command-line'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { ArrowUpRight, Icon } from 'react-bootstrap-icons'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 
@@ -23,13 +23,17 @@ const MenuItemStyled = styled<
   border-radius: 0.5rem;
   transition: background 500ms, font-size 300ms, width 300ms;
 
+  &:hover,
+  &:focus,
   &.active {
+    color: ${() => colorsV3.gray100} !important;
+    text-decoration: none;
     background: ${({ theme }) =>
       theme.type === 'dark' ? colorsV3.gray900 : colorsV3.gray700};
   }
-
-  &:focus {
-    background: ${({ theme }) => theme.accent};
+  &:hover:not(.active),
+  &:focus:not(.active) {
+    background: ${() => colorsV3.gray900};
   }
 
   opacity: ${({ transparent }) => (transparent ? 0.5 : 1)};
@@ -60,7 +64,6 @@ interface MenuItemProps extends NavLinkProps {
   isCollapsed: boolean
   hotkeyHandler: () => void
   transparent?: boolean
-  focus: boolean
 }
 
 interface ExternalMenuItemProps
@@ -72,7 +75,6 @@ interface ExternalMenuItemProps
   shouldAlwaysCollapse: boolean
   isCollapsed: boolean
   hotkeyHandler: () => void
-  focus: boolean
 }
 
 export const MenuItem: React.FC<MenuItemProps> = ({
@@ -83,10 +85,8 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   shouldAlwaysCollapse,
   isCollapsed,
   hotkeyHandler,
-  focus,
   ...props
 }) => {
-  const itemRef = useRef<HTMLAnchorElement>(null)
   const { registerActions, isHintingOption } = useCommandLine()
 
   registerActions([
@@ -99,18 +99,8 @@ export const MenuItem: React.FC<MenuItemProps> = ({
 
   const ItemIcon = icon
 
-  useEffect(() => {
-    if (itemRef?.current) {
-      if (focus) {
-        itemRef.current.focus()
-      } else {
-        itemRef.current.blur()
-      }
-    }
-  }, [focus])
-
   return (
-    <MenuItemStyled innerRef={itemRef} to={to} {...props}>
+    <MenuItemStyled to={to} {...props}>
       <ItemIcon />
       <Hotkey hotkey={hotkey} hinting={isHintingOption}>
         {!(shouldAlwaysCollapse || isCollapsed) && title}
@@ -127,10 +117,8 @@ export const ExternalMenuItem: React.FC<ExternalMenuItemProps> = ({
   shouldAlwaysCollapse,
   isCollapsed,
   hotkeyHandler,
-  focus,
   ...props
 }) => {
-  const itemRef = useRef<HTMLAnchorElement>(null)
   const { isHintingOption, registerActions } = useCommandLine()
 
   registerActions([
@@ -143,18 +131,8 @@ export const ExternalMenuItem: React.FC<ExternalMenuItemProps> = ({
 
   const ItemIcon = icon
 
-  useEffect(() => {
-    if (itemRef?.current) {
-      if (focus) {
-        itemRef.current.focus()
-      } else {
-        itemRef.current.blur()
-      }
-    }
-  }, [focus])
-
   return (
-    <MenuItemExternalLink ref={itemRef} href={href} target="_blank" {...props}>
+    <MenuItemExternalLink href={href} target="_blank" {...props}>
       {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
       <ItemIcon />
       <Hotkey hotkey={hotkey} hinting={isHintingOption}>

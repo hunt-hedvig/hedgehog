@@ -1,18 +1,11 @@
 import styled from '@emotion/styled'
-import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
-import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { colorsV3 } from '@hedviginsurance/brand'
 import {
   FocusItems,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Chat,
   ChevronLeft,
@@ -284,31 +277,10 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
     },
   ]
 
-  const sidebarRef = useRef<HTMLDivElement>(null)
-  const { focus, setFocus } = useNavigation()
-
-  const focusHandler = () => {
-    setFocus(FocusItems.Main.items?.Sidebar)
-  }
-
-  useKeyIsPressed(Keys.S, focusHandler)
-
-  const [navigationStep, reset] = useVerticalKeyboardNavigation({
-    maxStep: MenuItemsList.length,
-    isActive: focus === FocusItems.Main.items?.Sidebar,
-  })
-
-  useClickOutside(sidebarRef, () =>
-    focus === FocusItems.Main.items?.Sidebar ? setFocus() : {},
-  )
-
   return (
     <MediaQuery query="(max-width: 1300px)">
       {(shouldAlwaysCollapse) => (
-        <Wrapper
-          collapsed={shouldAlwaysCollapse || isCollapsed}
-          ref={sidebarRef}
-        >
+        <Wrapper collapsed={shouldAlwaysCollapse || isCollapsed}>
           <CollapseToggle
             onClick={toggleOpen}
             collapsed={shouldAlwaysCollapse || isCollapsed}
@@ -323,13 +295,9 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
             </Header>
 
             <Menu>
-              {MenuItemsList.map(({ external, single, ...item }, index) =>
+              {MenuItemsList.map(({ external, single, ...item }) =>
                 !external ? (
                   <MenuItem
-                    focus={
-                      focus === FocusItems.Main.items?.Sidebar &&
-                      navigationStep + 1 === index
-                    }
                     key={item.route}
                     style={{ marginBottom: single ? '4rem' : 0 }}
                     isActive={(_match, location) =>
@@ -342,35 +310,15 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                     }
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
                     isCollapsed={isCollapsed}
-                    onKeyDown={(e) => {
-                      if (isPressing(e, Keys.Enter)) {
-                        e.preventDefault()
-                        setFocus()
-                        reset()
-                        MenuItemsList[index].hotkeyHandler()
-                      }
-                    }}
                     {...item}
                   />
                 ) : (
                   <ExternalMenuItem
-                    focus={
-                      focus === FocusItems.Main.items?.Sidebar &&
-                      navigationStep + 1 === index
-                    }
                     key={item.route}
                     style={{ marginBottom: single ? '4rem' : 0 }}
                     href={item.route}
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
                     isCollapsed={isCollapsed}
-                    onKeyDown={(e) => {
-                      if (isPressing(e, Keys.Enter)) {
-                        e.preventDefault()
-                        setFocus()
-                        reset()
-                        MenuItemsList[index].hotkeyHandler()
-                      }
-                    }}
                     {...item}
                   />
                 ),

@@ -18,12 +18,8 @@ import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterM
 import { FilteredMetric } from 'features/claims/claim-templates/FilteredMetric'
 import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
 import { Greeting } from 'features/dashboard/Greeting'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
@@ -148,14 +144,6 @@ const DashboardPage: Page = () => {
     | undefined
 
   useTitle('Dashboard')
-
-  const { focus, setFocus } = useNavigation()
-
-  useEffect(() => {
-    if (!focus) {
-      setFocus(FocusItems.Dashborad.name)
-    }
-  }, [focus])
 
   const {
     templateFilters,
