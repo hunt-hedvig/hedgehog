@@ -15,7 +15,7 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useGetMemberClaims } from 'features/member/tabs/claims-tab/hooks/use-get-member-claims'
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
 
@@ -41,12 +41,10 @@ const FlexVertically = styled.div`
   flex-direction: column;
 `
 
-export const MemberClaimsList: React.FC<{
-  memberId: string
-  navigationAvailable: boolean
-}> = ({ memberId, navigationAvailable }) => {
+export const MemberClaimsList: React.FC<{ memberId: string }> = ({
+  memberId,
+}) => {
   const history = useHistory()
-  const [activeRow, setActiveRow] = useState<number | null>(null)
   const [memberClaims, { loading }] = useGetMemberClaims(memberId)
 
   const claims = memberClaims ?? []
@@ -72,20 +70,8 @@ export const MemberClaimsList: React.FC<{
           <TableHeaderColumn>Claim State</TableHeaderColumn>
           <TableHeaderColumn>Claim Reserves</TableHeaderColumn>
         </TableHeader>
-        <TableBody
-          isActive={navigationAvailable}
-          setActiveRow={(num) => setActiveRow(num)}
-          onPerformNavigation={(index) => {
-            const claimId = claims[index].id
-
-            if (!claimId || !navigationAvailable) {
-              return
-            }
-
-            history.push(`/claims/${claimId}`)
-          }}
-        >
-          {claims.map((claim, index) => {
+        <TableBody>
+          {claims.map((claim) => {
             const registrationDateString = formatDate(
               parseISO(claim.registrationDate),
               'dd MMMM, yyyy',
@@ -97,7 +83,6 @@ export const MemberClaimsList: React.FC<{
 
             return (
               <TableRow
-                active={activeRow === index}
                 key={claim.id}
                 onClick={() => history.push(`/claims/${claim.id}`)}
               >

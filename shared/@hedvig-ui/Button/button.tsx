@@ -1,8 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import _chroma from 'chroma-js'
-import React, { ButtonHTMLAttributes, useRef } from 'react'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
+import React, { ButtonHTMLAttributes } from 'react'
 
 // Necessary for tests to run - if not, theme colors used might be undefined at test-time
 const chroma = (c: string) => _chroma(c ?? 'white')
@@ -168,13 +167,12 @@ const cursor = ({ disabled = false }) => {
   `
 }
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'tertiary'
   status?: 'success' | 'warning' | 'danger'
   size?: 'small' | 'medium' | 'large'
   disabled?: boolean
   icon?: React.ReactNode
-  focus?: boolean
   children: React.ReactNode
 }
 
@@ -191,27 +189,20 @@ const ButtonIconWrapper = styled.div`
 `
 
 export const Button = styled(
-  React.forwardRef(
-    (
-      { icon, children, focus, ...props }: ButtonProps,
-      ref: React.ForwardedRef<HTMLButtonElement>,
-    ) => {
-      const internalRef = useRef<HTMLButtonElement>(null)
-      useElementFocus(
-        (ref as React.RefObject<HTMLElement>) ?? internalRef,
-        focus,
-      )
-
-      return (
-        <button {...props} ref={ref ?? internalRef}>
-          <ButtonIconWrapper>
-            {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
-            <div>{children}</div>
-          </ButtonIconWrapper>
-        </button>
-      )
-    },
-  ),
+  ({
+    icon,
+    children,
+    ...props
+  }: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) => {
+    return (
+      <button {...props}>
+        <ButtonIconWrapper>
+          {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
+          <div>{children}</div>
+        </ButtonIconWrapper>
+      </button>
+    )
+  },
 )`
   font-family: inherit;
   transition: all 200ms;

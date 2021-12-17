@@ -1,9 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { InputHTMLAttributes, useRef } from 'react'
+import React, { InputHTMLAttributes, useEffect, useRef } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { Spinner } from '../Spinner/spinner'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 export type InputSize = 'small' | 'medium' | 'large'
 const paddingSize: Record<InputSize, string> = {
@@ -200,7 +199,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const isSuccess = success && !error && !loading
     const isError = error && !success && !loading
 
-    useElementFocus(inputRef, focus)
+    useEffect(() => {
+      if (focus && inputRef.current) {
+        inputRef.current.focus()
+      }
+    }, [focus])
 
     return (
       <InputWrapper style={style}>

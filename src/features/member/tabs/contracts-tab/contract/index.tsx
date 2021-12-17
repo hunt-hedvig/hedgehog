@@ -13,20 +13,9 @@ import { AgreementsTable } from 'features/member/tabs/contracts-tab/agreement/Ag
 import { MasterInception } from 'features/member/tabs/contracts-tab/contract/master-inception'
 import { TerminationDate } from 'features/member/tabs/contracts-tab/contract/termination-date'
 import { getSignSource } from 'features/member/tabs/contracts-tab/utils'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { ExclamationCircle } from 'react-bootstrap-icons'
 import { Contract as ContractType } from 'types/generated/graphql'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
-
-const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
-  border-radius: 0.5rem;
-  border: ${({ focused, theme }) =>
-    focused ? `1px solid ${theme.accent}` : 'none'};
-`
 
 const Blockers = styled.div`
   margin: 0;
@@ -62,10 +51,8 @@ export const Contract: React.FC<{
   contract: ContractType
   refetch: () => Promise<any>
   shouldPreSelectAgreement: boolean
-  focused: boolean
-  selected: boolean
-}> = ({ contract, refetch, shouldPreSelectAgreement, focused, selected }) => {
-  const [selectedAgreement, setSelectedAgreement] = useState<
+}> = ({ contract, refetch, shouldPreSelectAgreement }) => {
+  const [selectedAgreement, setSelectedAgreement] = React.useState<
     string | undefined
   >(shouldPreSelectAgreement ? contract.currentAgreementId : undefined)
 
@@ -73,21 +60,9 @@ export const Contract: React.FC<{
     (agreement) => agreement.id === selectedAgreement,
   )
 
-  const cardsRef = useRef<HTMLDivElement>(null)
-
-  const { focus, setFocus } = useNavigation()
-  useElementFocus(cardsRef, focused)
-
-  const selectAgreementHandler = (agreementId: string | undefined) => {
-    setSelectedAgreement(agreementId)
-    if (agreementId) {
-      setFocus(FocusItems.Member.items.ContractForm)
-    }
-  }
-
   return (
     <ContractWrapper>
-      <ContractsCardsWrapper ref={cardsRef} focused={focused}>
+      <CardsWrapper>
         <Card locked={contract.isLocked} span={3}>
           <InfoContainer>
             <ThirdLevelHeadline>
@@ -123,14 +98,11 @@ export const Contract: React.FC<{
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
         </Card>
-      </ContractsCardsWrapper>
+      </CardsWrapper>
       <AgreementsTable
         agreements={contract.genericAgreements}
         selectedAgreement={selectedAgreement}
-        setSelectedAgreement={selectAgreementHandler}
-        navigationAvailable={
-          selected && focus === FocusItems.Member.items.ContractTable
-        }
+        setSelectedAgreement={setSelectedAgreement}
       />
       {!!contract.selfChangeBlockers.length && (
         <Blockers>
@@ -151,9 +123,6 @@ export const Contract: React.FC<{
           agreement={agreementToShow}
           contract={contract}
           refetch={refetch}
-          navigationAvailable={
-            focus === FocusItems.Member.items.ContractForm && selected
-          }
         />
       )}
     </ContractWrapper>

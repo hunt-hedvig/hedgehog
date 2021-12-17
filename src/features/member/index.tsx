@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { Capitalized } from '@hedvig-ui'
-import { memberPagePanes, MemberTabsList } from 'features/member/tabs'
+import { Capitalized, Tabs } from '@hedvig-ui'
+import { memberPagePanes } from 'features/member/tabs'
 import { ChatPane } from 'features/member/tabs/ChatPane'
 import { FraudulentStatus } from 'features/member/tabs/member-tab/FraudulentStatus'
 import {
@@ -9,9 +9,10 @@ import {
   getMemberIdColor,
   MemberAge,
 } from 'features/member/utils'
+import { useMemberHistory } from 'features/user/hooks/use-member-history'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
-import React from 'react'
-import { Route, RouteComponentProps } from 'react-router'
+import React, { useEffect } from 'react'
+import { Route, RouteComponentProps, useHistory } from 'react-router'
 import { Member } from 'types/generated/graphql'
 import { MemberDetails } from './MemberDetails'
 
@@ -56,12 +57,30 @@ const Flag = styled('div')`
   margin-left: 0.5rem;
 `
 
-export const MemberTabs: React.FC<RouteComponentProps<{
-  memberId: string
-}> & {
-  member: Member
-}> = ({ match, member }) => {
+export const MemberTabs: React.FC<
+  RouteComponentProps<{
+    memberId: string
+  }> & {
+    member: Member
+  }
+> = ({ match, member }) => {
+  const history = useHistory()
+  const pathname = history.location.pathname.split('/')
+  const path =
+    pathname.length === 4 ? pathname[pathname.length - 1] : 'contracts'
   const memberId = match.params.memberId
+
+  const panes = memberPagePanes(memberId, member)
+
+  const navigateToTab = (tabName) =>
+    history.replace(`/members/${memberId}/${tabName}`)
+
+  const { pushToMemberHistory } = useMemberHistory()
+
+  useEffect(() => {
+    pushToMemberHistory(memberId)
+    navigateToTab(path)
+  }, [])
 
   const { numberMemberGroups } = useNumberMemberGroups()
 
@@ -97,11 +116,16 @@ export const MemberTabs: React.FC<RouteComponentProps<{
           )}
         </Header>
         <MemberDetails memberId={memberId} member={member} />
-
-        <MemberTabsList memberId={memberId} member={member} />
-
+        <Tabs
+          list={panes.map((pane) => ({
+            title: pane.tabTitle,
+            active: path === pane.tabName,
+            action: () => navigateToTab(pane.tabName),
+            hotkey: pane.hotkey,
+          }))}
+        />
         <div style={{ marginTop: '4rem' }}>
-          {memberPagePanes(memberId, member).map((pane, id) => (
+          {panes.map((pane, id) => (
             <Route
               key={`${pane.tabName}-${id}`}
               path={`${match.path}/${pane.tabName}`}
