@@ -13,15 +13,9 @@ import {
   TableColumn,
   TableRow,
 } from '@hedvig-ui'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
 import { FraudulentStatusEdit } from 'features/member/tabs/member-tab/FraudulentStatus'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
+import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
 import React, { useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -157,20 +151,6 @@ export const MemberTab: React.FC<{
   delete memberInfoWithoutSsn.__typename
   delete memberInfoWithoutSsn.contractMarketInfo
 
-  const { focus } = useNavigation()
-
-  useFocus(FocusItems.Member.items.Member)
-
-  const [navigationStep] = useArrowKeyboardNavigation({
-    maxStep: Object.keys(memberInfoWithoutSsn).length - 1,
-    isActive: focus === FocusItems.Main.items.Modal,
-    onPerformNavigation: () => {
-      return
-    },
-    withNegative: true,
-    direction: 'vertical',
-  })
-
   return memberInfoWithoutSsn ? (
     <FadeIn>
       <Table>
@@ -223,12 +203,7 @@ export const MemberTab: React.FC<{
       </Table>
 
       <ButtonWrapper style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          variant="primary"
-          size="medium"
-          onClick={handleOpen}
-          focus={focus === FocusItems.Member.items.Member}
-        >
+        <Button variant="primary" size="medium" onClick={handleOpen}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <PencilSquare /> <span style={{ marginLeft: 10 }}>Edit Member</span>
           </div>
@@ -245,20 +220,13 @@ export const MemberTab: React.FC<{
           <FormProvider {...form}>
             <Form onSubmit={handleSubmit} onChange={handleChange}>
               <>
-                {Object.keys(memberInfoWithoutSsn).map((field, index) => (
+                {Object.keys(memberInfoWithoutSsn).map((field) => (
                   <React.Fragment key={field}>
                     <Label>{getFieldName(field)}</Label>
                     <FormInput
-                      style={{
-                        border:
-                          navigationStep === index - 1
-                            ? '1px solid blue'
-                            : 'none',
-                      }}
                       name={field}
                       key={field}
                       disabled={isDisabled(field)}
-                      focus={!isDisabled(field) && navigationStep === index - 1}
                       defaultValue={getFieldValue(member[field])}
                     />
                   </React.Fragment>
@@ -272,19 +240,7 @@ export const MemberTab: React.FC<{
                 >
                   Cancel
                 </Button>
-                <SubmitButton
-                  onKeyDown={(e) => {
-                    if (isPressing(e, Keys.Enter)) {
-                      handleSubmit()
-                    }
-                  }}
-                  focus={
-                    navigationStep ===
-                    Object.keys(memberInfoWithoutSsn).length - 1
-                  }
-                >
-                  Submit
-                </SubmitButton>
+                <SubmitButton>Submit</SubmitButton>
               </ButtonsGroup>
             </Form>
           </FormProvider>
