@@ -64,14 +64,17 @@ const ShowLess = styled.div`
   font-size: 0.95rem;
 `
 
-export const MemberCard: React.FC<{ fullName: string }> = ({ fullName }) => {
+export const MemberCard: React.FC<{ fullName: string; memberId: string }> = ({
+  fullName,
+  memberId,
+}) => {
   const [extended, setExtended] = useState(false)
 
   return (
     <Card extended={extended} onClick={() => setExtended(true)}>
       <div>
         <div id="member-name">{fullName}</div>
-        <div id="member-id">123456789</div>
+        <div id="member-id">{memberId}</div>
       </div>
       <div id="member-extra">
         <Group>

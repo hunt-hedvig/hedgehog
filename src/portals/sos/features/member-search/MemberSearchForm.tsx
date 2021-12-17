@@ -148,6 +148,7 @@ export const MemberSearchForm: React.FC = () => {
       <ResultWrapper show={showResult}>
         <MemberCard
           fullName={`${member?.firstName ?? ''} ${member?.lastName ?? ''}`}
+          memberId={member?.memberId ?? ''}
         />
         <Spacing top="small" />
         <InsuranceCard />

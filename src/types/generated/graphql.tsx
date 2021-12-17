@@ -3997,7 +3997,7 @@ export type SosMemberLookupQueryVariables = Exact<{
 export type SosMemberLookupQuery = { __typename?: 'QueryType' } & {
   SOSMemberLookup: { __typename?: 'SOSMemberLookupResult' } & Pick<
     SosMemberLookupResult,
-    'memberId'
+    'memberId' | 'firstName' | 'lastName'
   >
 }
 
@@ -11029,6 +11029,8 @@ export const SosMemberLookupDocument = gql`
   query SOSMemberLookup($ssn: String!) {
     SOSMemberLookup(ssn: $ssn) {
       memberId
+      firstName
+      lastName
     }
   }
 `
