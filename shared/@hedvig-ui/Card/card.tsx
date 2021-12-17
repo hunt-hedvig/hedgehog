@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 import { InfoTag, InfoTagStatus, ThirdLevelHeadline } from '@hedvig-ui'
 import { colorsV3 } from '@hedviginsurance/brand'
-import React, { useRef } from 'react'
+import React from 'react'
 import { LockFill } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 export const CardsWrapper = styled.div<{
   contentWrap?: string
@@ -42,7 +41,6 @@ export interface CardProps {
   span?: number
   padding?: PaddingSize
   locked?: boolean
-  focus?: boolean
   children: any
 }
 
@@ -63,22 +61,17 @@ const CardContainer = styled.div<CardProps>`
 
 export const CardLink = CardContainer.withComponent(Link)
 
-export const Card = ({ children, locked, focus, ...cardProps }: CardProps) => {
-  const cardRef = useRef<HTMLDivElement>(null)
-  useElementFocus(cardRef, focus || false)
-
-  return (
-    <CardContainer ref={cardRef} {...cardProps}>
-      {children}
-      {locked && (
-        <LockedOverlay>
-          Locked
-          <LockFill />
-        </LockedOverlay>
-      )}
-    </CardContainer>
-  )
-}
+export const Card = ({ children, locked, ...cardProps }: CardProps) => (
+  <CardContainer {...cardProps}>
+    {children}
+    {locked && (
+      <LockedOverlay>
+        Locked
+        <LockFill />
+      </LockedOverlay>
+    )}
+  </CardContainer>
+)
 
 export const DangerCard = styled(Card)<CardProps>`
   background-color: ${({ theme }) => theme.danger ?? colorsV3.white};

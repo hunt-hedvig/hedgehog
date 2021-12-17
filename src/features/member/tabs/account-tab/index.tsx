@@ -64,7 +64,7 @@ export const AccountTab: React.FC<{
   useFocus(FocusItems.Member.items.Account)
 
   const [navigationStep] = useArrowKeyboardNavigation({
-    maxStep: 2,
+    maxStep: 3,
     onPerformNavigation: (index) => {
       if (index === 1) {
         setFocus(FocusItems.Member.items.AccountEntries)
@@ -98,10 +98,6 @@ export const AccountTab: React.FC<{
       </MainHeadline>
       <CardsWrapper>
         <AccountCard
-          focus={
-            navigationStep + 1 === 0 &&
-            focus === FocusItems.Member.items.Account
-          }
           focused={
             navigationStep + 1 === 0 &&
             focus === FocusItems.Member.items.Account
@@ -129,10 +125,6 @@ export const AccountTab: React.FC<{
           </InfoContainer>
         </AccountCard>
         <AccountCard
-          focus={
-            navigationStep + 1 === 1 &&
-            focus === FocusItems.Member.items.Account
-          }
           focused={
             navigationStep + 1 === 1 &&
             focus === FocusItems.Member.items.Account
@@ -196,10 +188,6 @@ export const AccountTab: React.FC<{
 
       <CardsWrapper>
         <AccountCard
-          focus={
-            navigationStep + 1 === 2 &&
-            focus === FocusItems.Member.items.Account
-          }
           focused={
             navigationStep + 1 === 2 &&
             focus === FocusItems.Member.items.Account
@@ -263,10 +251,6 @@ export const AccountTab: React.FC<{
       </CardsWrapper>
       <CardsWrapper>
         <AccountCard
-          focus={
-            navigationStep + 1 === 3 &&
-            focus === FocusItems.Member.items.Account
-          }
           focused={
             navigationStep + 1 === 3 &&
             focus === FocusItems.Member.items.Account

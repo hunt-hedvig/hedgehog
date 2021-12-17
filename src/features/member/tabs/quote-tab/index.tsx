@@ -23,9 +23,8 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   const [activeTab, setActiveTab] = React.useState(
     InsuranceType.SwedishApartment,
   )
-  const [{ quotes, contractMarket, pickedLocale }, { loading }] = useQuotes(
-    memberId,
-  )
+  const [{ quotes, contractMarket, pickedLocale }, { loading }] =
+    useQuotes(memberId)
 
   const { focus, setFocus } = useNavigation()
 
