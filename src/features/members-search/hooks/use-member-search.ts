@@ -28,7 +28,11 @@ export const useMemberSearch = (): MemberSearchReturnTuple => {
       },
     })
   }
-  const { members = [], page = 0, totalPages = 0 } = {
+  const {
+    members = [],
+    page = 0,
+    totalPages = 0,
+  } = {
     ...queryResult?.data?.memberSearch,
   }
 
