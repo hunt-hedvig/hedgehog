@@ -30,7 +30,6 @@ interface FocusItemsType {
       Chat: string
       Tabs: string
       ContractTable: string
-      QuoteTabs: string
     }
   }
   Conversations: {
@@ -76,7 +75,6 @@ export const FocusItems: FocusItemsType = {
       Chat: 'MEMBER_CHAT',
       Tabs: 'MEMBER_TABS',
       ContractTable: 'MEMBER_CONTRACT_TABLE',
-      QuoteTabs: 'MEMBER_QUOTE_TABS',
     },
   },
   Conversations: {
