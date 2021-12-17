@@ -1,8 +1,5 @@
 import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MembersList } from 'features/members-search/components/MembersList'
 import { MemberSuggestions } from 'features/members-search/components/MemberSuggestions'
@@ -48,28 +45,26 @@ const MemberSearchPage: Page = () => {
 
   useTitle('Members')
 
-  const isEnterPressed = useKeyIsPressed(Keys.Enter)
-  const isDownPressed = useKeyIsPressed(Keys.Down)
   const { focus, setFocus } = useNavigation()
 
   useEffect(() => {
-    setFocus(FocusItems.Members.items?.Search)
-  }, [])
-
-  useEffect(() => {
-    if (isEnterPressed && !focus) {
-      setFocus(FocusItems.Members.items?.Search)
+    if (!focus) {
+      setFocus(FocusItems.Members.name)
     }
-  }, [isEnterPressed])
-
-  useEffect(() => {
-    if (isDownPressed && !focus) {
-      setFocus(FocusItems.Members.items?.Suggestions)
-    }
-  }, [isDownPressed])
+  }, [focus])
 
   return (
-    <div>
+    <div
+      onKeyDown={(e) => {
+        if (
+          isPressing(e, Keys.Down) &&
+          focus === FocusItems.Members.name &&
+          !members.length
+        ) {
+          setFocus(FocusItems.Members.items?.Suggestions)
+        }
+      }}
+    >
       <SearchForm
         onSubmit={() => {
           memberSearch(query || '%', {
@@ -84,7 +79,7 @@ const MemberSearchPage: Page = () => {
         currentResultSize={members.length}
         searchFieldRef={searchField as any}
         setLuckySearch={setLuckySearch}
-        focus={focus === FocusItems.Members.items?.Search}
+        focus={focus === FocusItems.Members.name}
       />
       {members.length > 0 && (
         <>

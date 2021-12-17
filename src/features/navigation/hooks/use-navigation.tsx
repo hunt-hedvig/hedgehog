@@ -60,7 +60,7 @@ export const FocusItems: IFocusItems = {
 
 interface NavigationContextProps {
   focus?: string
-  setFocus: (focus?: string) => void
+  setFocus: (e?: string) => void
 }
 
 export const NavigationContext = createContext<NavigationContextProps>({
@@ -71,13 +71,18 @@ export const NavigationContext = createContext<NavigationContextProps>({
 export const useNavigation = () => useContext(NavigationContext)
 
 export const NavigationProvider = ({ children }) => {
-  const isEscapePressed = useKeyIsPressed(Keys.Escape)
-  const [focus, setFocus] = useState<string>()
-  const [_, setPrevFocus] = useState<string>()
+  // const [prevFocus, setPrevFocus] = useState<string>()
+  const [mainFocus, setMainFocus] = useState<string>()
+
+  useEffect(() => {
+    console.log(mainFocus)
+  }, [mainFocus])
 
   const changeFocusHandler = (value?: string) => {
-    setFocus((prev) => {
-      setPrevFocus(prev)
+    setMainFocus(() => {
+      // if (prev) {
+      //   setPrevFocus(prev)
+      // }
 
       PushKeyboardNavigation(`focus: ${value}` ?? 'focus: reset', [])
 
@@ -85,16 +90,12 @@ export const NavigationProvider = ({ children }) => {
     })
   }
 
-  useEffect(() => {
-    if (isEscapePressed) {
-      changeFocusHandler(undefined)
-    }
-  }, [isEscapePressed])
+  useKeyIsPressed(Keys.Escape, () => changeFocusHandler(undefined))
 
   return (
     <NavigationContext.Provider
       value={{
-        focus,
+        focus: mainFocus,
         setFocus: changeFocusHandler,
       }}
     >
