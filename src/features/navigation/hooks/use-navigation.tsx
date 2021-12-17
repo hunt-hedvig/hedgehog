@@ -29,9 +29,7 @@ interface FocusItemsType {
     items: {
       Chat: string
       Tabs: string
-      Contract: string
       ContractTable: string
-      ContractForm: string
       QuoteTabs: string
     }
   }
@@ -77,9 +75,7 @@ export const FocusItems: FocusItemsType = {
     items: {
       Chat: 'MEMBER_CHAT',
       Tabs: 'MEMBER_TABS',
-      Contract: 'MEMBER_CONTRACT',
       ContractTable: 'MEMBER_CONTRACT_TABLE',
-      ContractForm: 'MEMBER_CONTRACT_FORM',
       QuoteTabs: 'MEMBER_QUOTE_TABS',
     },
   },
@@ -127,10 +123,6 @@ export const NavigationProvider = ({ children }) => {
       return value
     })
   }
-
-  // useEffect(() => {
-  //   console.log(focus)
-  // }, [focus])
 
   useEffect(() => {
     if (isEscapePressed) {
