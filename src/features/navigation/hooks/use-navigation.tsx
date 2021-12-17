@@ -154,6 +154,10 @@ export const NavigationProvider = ({ children }) => {
   const [focus, setFocus] = useState<string | null>(null)
   const [_, setPrevFocus] = useState<string | null>(null)
 
+  useEffect(() => {
+    console.log(focus)
+  }, [focus])
+
   const changeFocusHandler = (value: string | null) => {
     setFocus((prev) => {
       setPrevFocus(prev)
