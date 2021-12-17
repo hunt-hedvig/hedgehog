@@ -95,10 +95,7 @@ export const EmptyState = styled.div`
   color: ${({ theme }) => theme.mutedText};
 `
 
-export const MemberHistoryCardWrapper = styled(Link)<{
-  muted: boolean
-  active: boolean
-}>`
+export const MemberHistoryCardWrapper = styled(Link)<{ muted: boolean }>`
   display: flex;
   flex-direction: column;
   width: calc((100% / 3) - 1rem);
@@ -107,10 +104,6 @@ export const MemberHistoryCardWrapper = styled(Link)<{
   margin-left: 1rem;
   min-height: 5rem;
   margin-bottom: 1rem;
-
-  border: ${({ theme, active }) =>
-    active ? `5px solid ${theme.accentLight}` : 'none'};
-
   & {
     ${({ theme, muted }) => css`
       background: ${theme.foreground};

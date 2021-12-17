@@ -30,7 +30,6 @@ export const FocusItems: IFocusItems = {
     name: 'MEMBERS_PAGE',
     items: {
       Search: 'MEMBERS_SEARCH',
-      Suggestions: 'MEMBERS_SUGGESTIONS',
     },
   },
   Member: {
