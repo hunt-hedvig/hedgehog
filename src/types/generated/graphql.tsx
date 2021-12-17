@@ -1508,6 +1508,8 @@ export type SetContractForClaim = {
 export type SosMemberLookupResult = {
   __typename?: 'SOSMemberLookupResult'
   memberId: Scalars['String']
+  firstName: Scalars['String']
+  lastName: Scalars['String']
 }
 
 export type SwitchableSwitcherEmail = {

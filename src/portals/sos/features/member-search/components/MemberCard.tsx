@@ -64,13 +64,13 @@ const ShowLess = styled.div`
   font-size: 0.95rem;
 `
 
-export const MemberCard: React.FC = () => {
+export const MemberCard: React.FC<{ fullName: string }> = ({ fullName }) => {
   const [extended, setExtended] = useState(false)
 
   return (
     <Card extended={extended} onClick={() => setExtended(true)}>
       <div>
-        <div id="member-name">Rasmus Guterstam</div>
+        <div id="member-name">{fullName}</div>
         <div id="member-id">123456789</div>
       </div>
       <div id="member-extra">

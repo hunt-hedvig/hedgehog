@@ -61,7 +61,7 @@ const ResultWrapper = styled.div<{ show: boolean }>`
 `
 
 export const MemberSearchForm: React.FC = () => {
-  const [memberLookup, { loading }] = useSosMemberLookupLazyQuery()
+  const [memberLookup, { loading, data }] = useSosMemberLookupLazyQuery()
   const [ssn, setSsn] = useState('')
   const [showResult, setShowResult] = useState(false)
   const [error, setError] = useState('')
@@ -96,15 +96,17 @@ export const MemberSearchForm: React.FC = () => {
       return
     }
 
-    memberLookup({ variables: { ssn } })
-      .then(() => {
-        setShowResult(true)
-        inputRef?.current?.blur()
-      })
-      .catch(() => {
+    memberLookup({ variables: { ssn } }).then((response) => {
+      if (response.error) {
         setError('No member found for SSN')
-      })
+        return
+      }
+      setShowResult(true)
+      inputRef?.current?.blur()
+    })
   }
+
+  const member = data?.SOSMemberLookup
 
   return (
     <Container pushTop={showResult}>
@@ -144,7 +146,9 @@ export const MemberSearchForm: React.FC = () => {
       </FormContainer>
       <Spacing top="medium" />
       <ResultWrapper show={showResult}>
-        <MemberCard />
+        <MemberCard
+          fullName={`${member?.firstName ?? ''} ${member?.lastName ?? ''}`}
+        />
         <Spacing top="small" />
         <InsuranceCard />
         <Spacing top="small" />
