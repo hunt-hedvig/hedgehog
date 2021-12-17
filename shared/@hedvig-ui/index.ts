@@ -73,7 +73,7 @@ export { OrbIndicator } from './OrbIndicator/orb-indicator'
 export type OrbFlagsType = _FlagProp
 
 export { Popover } from './Popover/popover'
-export { RadioGroup } from './Radio/radio'
+export { RadioGroup, Radio } from './Radio/radio'
 export {
   SearchableDropdown,
   SearchableDropdownWithRef,
