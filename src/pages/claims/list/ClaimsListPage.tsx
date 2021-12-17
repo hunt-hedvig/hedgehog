@@ -83,20 +83,10 @@ const ClaimsListPage: Page<
 
   useFocus(FocusItems.Claims.name)
 
-  const isFPressed = useKeyIsPressed(Keys.F)
-  const isTPressed = useKeyIsPressed(Keys.T)
-
-  useEffect(() => {
-    if (isFPressed) {
-      setFocus(FocusItems.Claims.items.ClaimsFilters)
-    }
-  }, [isFPressed])
-
-  useEffect(() => {
-    if (isTPressed) {
-      setFocus(FocusItems.Claims.items.ClaimsTemplates)
-    }
-  }, [isTPressed])
+  useKeyIsPressed(Keys.F, () => setFocus(FocusItems.Claims.items.ClaimsFilters))
+  useKeyIsPressed(Keys.T, () =>
+    setFocus(FocusItems.Claims.items.ClaimsTemplates),
+  )
 
   return (
     <ListPage>
