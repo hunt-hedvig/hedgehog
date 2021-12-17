@@ -183,7 +183,7 @@ export const ChatPanel = ({ memberId, focus }) => {
     <MessagesPanelContainer>
       <ChatForm onSubmit={handleSubmit}>
         <ChatTextArea
-          focus={focus === FocusItems.Member.items.Chat}
+          focus={focus === FocusItems.Member.items?.Chat}
           autoResize={true}
           maxHeight="350px"
           error={error}

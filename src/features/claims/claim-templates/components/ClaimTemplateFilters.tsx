@@ -15,7 +15,7 @@ import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
-import { FilterElementStyled as FilterElement } from '../../claims-list/FilterElements'
+import { FilterElementStyled } from '../../claims-list/FilterElements'
 
 interface ClaimTemplateFiltersProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -84,7 +84,7 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
 
   return (
     <FilterWrapper {...props}>
-      <FilterElement>
+      <FilterElementStyled>
         <Label>States</Label>
         {Object.keys(ClaimState).map((key) => (
           <Flex key={key} direction="row" align="center">
@@ -104,9 +104,9 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
             />
           </Flex>
         ))}
-      </FilterElement>
+      </FilterElementStyled>
 
-      <FilterElement>
+      <FilterElementStyled>
         <LabelWithPopover
           label="Complexities"
           popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
@@ -123,9 +123,9 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
             <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
           </Flex>
         ))}
-      </FilterElement>
+      </FilterElementStyled>
 
-      <FilterElement>
+      <FilterElementStyled>
         <Label>Number of member groups</Label>
         <Flex>
           <NumberMemberGroupsRadioButtons
@@ -135,9 +135,9 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
             }
           />
         </Flex>
-      </FilterElement>
+      </FilterElementStyled>
 
-      <FilterElement>
+      <FilterElementStyled>
         <Label>Groups</Label>
         {range(filters?.filterNumberOfMemberGroups || numberMemberGroups).map(
           (filterNumber) => (
@@ -159,9 +159,9 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
             </Flex>
           ),
         )}
-      </FilterElement>
+      </FilterElementStyled>
 
-      <FilterElement>
+      <FilterElementStyled>
         <Label>Markets</Label>
         {Object.keys(Market).map((key) => (
           <Flex key={key} direction="row" align="center">
@@ -175,7 +175,7 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
             </span>
           </Flex>
         ))}
-      </FilterElement>
+      </FilterElementStyled>
     </FilterWrapper>
   )
 }

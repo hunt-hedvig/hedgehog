@@ -4,7 +4,7 @@ import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-
 import { Radio } from '@hedvig-ui/Radio/radio'
 import { numberMemberGroupsOptions } from 'features/questions/number-member-groups-radio-buttons'
 import React, { useEffect } from 'react'
-import { FilterGroupState, LabelWithPopover } from './filters/ClaimListFilters'
+import { LabelWithPopover } from './filters/ClaimListFilters'
 
 export const Filters = styled(Flex)<{ active: boolean }>`
   width: fit-content;
@@ -28,10 +28,10 @@ interface FilterElementProps {
   onChange: (key: string) => void
   onPerfom: (index: number) => void
   label: string
-  values: string[] | number[]
+  values: any
   popover?: string
-  checkboxLabel?: typeof FilterGroupState
-  onRender: (key: string) => React.ReactNode
+  CheckboxLabel?: any
+  getContent: (key: string) => React.ReactNode
   maxStep: number
 }
 
@@ -43,8 +43,8 @@ export const FilterElement: React.FC<FilterElementProps> = ({
   values,
   label,
   popover,
-  checkboxLabel,
-  onRender,
+  CheckboxLabel,
+  getContent,
   maxStep,
 }) => {
   const [navigationStep, reset] = useArrowKeyboardNavigation({
@@ -75,14 +75,14 @@ export const FilterElement: React.FC<FilterElementProps> = ({
           key={key}
           direction="row"
           align="center"
-          active={active && navigationStep === index - 1}
+          active={active && navigationStep + 1 === index}
         >
           <Checkbox
-            label={!checkboxLabel ? key : checkboxLabel[key]}
+            label={!CheckboxLabel ? key : CheckboxLabel[key]}
             checked={checked(key)}
             onChange={() => onChange(key)}
           />
-          {onRender(key)}
+          {getContent(key)}
         </Filters>
       ))}
     </FilterElementStyled>
@@ -112,16 +112,16 @@ export const FilterNumberMemberGroups = ({
   return (
     <FilterElementStyled>
       <Label>Number of member groups</Label>
-      {numberMemberGroupsOptions.map((option, index) => (
+      {numberMemberGroupsOptions.map((option, idx) => (
         <Filters
-          key={index}
+          key={idx}
           direction="row"
           align="center"
-          active={active && navigationStep === index - 1}
+          active={active && navigationStep + 1 === idx}
         >
           <Radio
-            key={`${option.value}` + index}
-            id={`${option.value}` + index}
+            key={`${option.value}` + idx}
+            id={`${option.value}` + idx}
             value={option.value}
             label={option.label}
             onChange={() => setNumberMemberGroups(option.value)}

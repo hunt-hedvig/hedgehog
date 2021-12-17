@@ -5,51 +5,16 @@ import {
 import { PushKeyboardNavigation } from 'features/tracking/utils/tags'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-interface FocusItemsType {
-  Main: {
+interface IFocusItems {
+  [key: string]: {
     name: string
-    items: {
-      Sidebar: string
-      Topbar: string
-      Modal: string
+    items?: {
+      [key: string]: string
     }
-  }
-  Dashborad: {
-    name: string
-  }
-  Members: {
-    name: string
-    items: {
-      Search: string
-      Suggestions: string
-    }
-  }
-  Member: {
-    name: string
-    items: {
-      Chat: string
-      Tabs: string
-    }
-  }
-  Conversations: {
-    name: string
-  }
-  Claims: {
-    name: string
-    items: {
-      ClaimsTemplates: string
-      ClaimsFilters: string
-    }
-  }
-  Claim: {
-    name: string
-  }
-  Tools: {
-    name: string
   }
 }
 
-export const FocusItems: FocusItemsType = {
+export const FocusItems: IFocusItems = {
   Main: {
     name: 'MAIN_SECTION',
     items: {
@@ -94,23 +59,23 @@ export const FocusItems: FocusItemsType = {
 }
 
 interface NavigationContextProps {
-  focus: string | null
-  setFocus: (focus: string | null) => void
+  focus?: string
+  setFocus: (focus?: string) => void
 }
 
 export const NavigationContext = createContext<NavigationContextProps>({
-  focus: null,
-  setFocus: (_: string | null) => void 0,
+  focus: undefined,
+  setFocus: (_?: string) => void 0,
 })
 
 export const useNavigation = () => useContext(NavigationContext)
 
 export const NavigationProvider = ({ children }) => {
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
-  const [focus, setFocus] = useState<string | null>(null)
-  const [_, setPrevFocus] = useState<string | null>(null)
+  const [focus, setFocus] = useState<string>()
+  const [_, setPrevFocus] = useState<string>()
 
-  const changeFocusHandler = (value: string | null) => {
+  const changeFocusHandler = (value?: string) => {
     setFocus((prev) => {
       setPrevFocus(prev)
 
@@ -122,7 +87,7 @@ export const NavigationProvider = ({ children }) => {
 
   useEffect(() => {
     if (isEscapePressed) {
-      changeFocusHandler(null)
+      changeFocusHandler(undefined)
     }
   }, [isEscapePressed])
 
@@ -138,7 +103,7 @@ export const NavigationProvider = ({ children }) => {
   )
 }
 
-export const useFocus = (value: string | null) => {
+export const useFocus = (value?: string) => {
   const { focus, setFocus } = useNavigation()
 
   useEffect(() => {
@@ -147,5 +112,5 @@ export const useFocus = (value: string | null) => {
     }
   }, [focus])
 
-  return () => setFocus(null)
+  return () => setFocus()
 }

@@ -43,7 +43,7 @@ export const MemberSuggestions: React.FC<{
 
       {memberHistory.map((memberId, index) => (
         <MemberHistoryCard
-          active={navigationAvailable && navigationStep === index - 1}
+          active={navigationAvailable && index === navigationStep + 1}
           key={memberId}
           memberId={memberId}
           orderNumber={index + 1}

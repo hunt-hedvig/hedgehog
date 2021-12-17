@@ -101,16 +101,13 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   const ItemIcon = icon
 
   useEffect(() => {
-    if (!itemRef?.current) {
-      return
+    if (itemRef?.current) {
+      if (focus) {
+        itemRef.current.focus()
+      } else {
+        itemRef.current.blur()
+      }
     }
-
-    if (focus) {
-      itemRef.current.focus()
-      return
-    }
-
-    itemRef.current.blur()
   }, [focus])
 
   return (
@@ -148,16 +145,13 @@ export const ExternalMenuItem: React.FC<ExternalMenuItemProps> = ({
   const ItemIcon = icon
 
   useEffect(() => {
-    if (!itemRef?.current) {
-      return
+    if (itemRef?.current) {
+      if (focus) {
+        itemRef.current.focus()
+      } else {
+        itemRef.current.blur()
+      }
     }
-
-    if (focus) {
-      itemRef.current.focus()
-      return
-    }
-
-    itemRef.current.blur()
   }, [focus])
 
   return (

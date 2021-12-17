@@ -63,7 +63,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
 
   useKeyIsPressed(Keys.Enter, createFilterHandler)
 
-  useFocus(FocusItems.Main.items.Modal)
+  useFocus(FocusItems.Main.items?.Modal)
 
   return (
     <Modal

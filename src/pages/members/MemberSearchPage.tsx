@@ -53,18 +53,18 @@ const MemberSearchPage: Page = () => {
   const { focus, setFocus } = useNavigation()
 
   useEffect(() => {
-    setFocus(FocusItems.Members.items.Search)
+    setFocus(FocusItems.Members.items?.Search)
   }, [])
 
   useEffect(() => {
     if (isEnterPressed && !focus) {
-      setFocus(FocusItems.Members.items.Search)
+      setFocus(FocusItems.Members.items?.Search)
     }
   }, [isEnterPressed])
 
   useEffect(() => {
     if (isDownPressed && !focus && !!memberHistory.length && !members.length) {
-      setFocus(FocusItems.Members.items.Suggestions)
+      setFocus(FocusItems.Members.items?.Suggestions)
     }
   }, [isDownPressed])
 
@@ -84,7 +84,7 @@ const MemberSearchPage: Page = () => {
         currentResultSize={members.length}
         searchFieldRef={searchField as any}
         setLuckySearch={setLuckySearch}
-        focus={focus === FocusItems.Members.items.Search}
+        focus={focus === FocusItems.Members.items?.Search}
       />
       {members.length > 0 && (
         <>
@@ -128,7 +128,7 @@ const MemberSearchPage: Page = () => {
             <MemberSuggestions
               memberHistory={memberHistory}
               navigationAvailable={
-                focus === FocusItems.Members.items.Suggestions
+                focus === FocusItems.Members.items?.Suggestions
               }
             />
           </MemberSuggestionsWrapper>

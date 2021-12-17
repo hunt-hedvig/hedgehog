@@ -309,10 +309,9 @@ export const shouldIgnoreInput = (key: string) => IllegalCharacters.has(key)
 export const isPressing = (
   e: KeyboardEvent | React.KeyboardEvent<any>,
   key: Key | ReadonlyArray<Key> | ReadonlyArray<string>,
-  disableOnInput: boolean = true,
 ): boolean => {
   if (!('length' in key)) {
-    return isPressingKey(e, key.code, disableOnInput, key.codeAlternative)
+    return isPressingKey(e, key.code, key.codeAlternative)
   }
 
   if (typeof key[0] === 'string') {
@@ -326,21 +325,13 @@ export const isPressing = (
 const isPressingKey = (
   e: KeyboardEvent | React.KeyboardEvent<any>,
   code: string,
-  disableOnInput: boolean = true,
   codeAlternative?: string,
-): boolean =>
-  ((disableOnInput && !isPressing(e, Keys.Escape)
-    ? e.currentTarget?.nodeName !== 'INPUT' &&
-      e.currentTarget?.nodeName !== 'TEXTAREA'
-    : true) &&
-    e.code === code) ||
-  e.code === codeAlternative
+): boolean => e.code === code || e.code === codeAlternative
 
 // tslint:disable:no-unused-expression
 const isPressingKeys = (
   e: KeyboardEvent | React.KeyboardEvent<any>,
   keys: ReadonlyArray<string>,
-  disableOnInput: boolean = true,
 ): boolean => {
   if (keys.length <= 1) {
     throw Error(
@@ -356,10 +347,7 @@ const isPressingKeys = (
     return false
   }
   return keys.reduce<boolean>((prev, current) => {
-    return (
-      prev &&
-      (isPressingKey(e, current, disableOnInput) || modifiers.includes(current))
-    )
+    return prev && (isPressingKey(e, current) || modifiers.includes(current))
   }, true)
 }
 

@@ -20,13 +20,13 @@ const List = styled.div`
   margin-top: 0.5rem;
 `
 
-const TemplateCardStyled = styled.div<{ active: boolean; focused: boolean }>`
+const TemplateCardStyled = styled.div<{ active: boolean; navigated: boolean }>`
   margin-right: 1rem;
   margin-bottom: 1rem;
   padding: 5px 13px;
   border-radius: 8px;
-  background-color: ${({ focused, theme }) =>
-    !focused ? theme.accent : theme.accentLight};
+  background-color: ${({ navigated, theme }) =>
+    !navigated ? theme.accent : theme.accentLight};
   cursor: pointer;
   opacity: ${({ active }) => (active ? 0.4 : 1)};
 
@@ -40,22 +40,22 @@ const TemplateName = styled.span`
   color: ${({ theme }) => theme.accentContrast};
 `
 
-const AddTemplateCard = styled.div<{ focused: boolean }>`
+const AddTemplateCard = styled.div<{ navigated: boolean }>`
   display: flex;
   align-items: center;
   height: fit-content;
   padding: 5px 13px;
   border-radius: 8px;
   border: 2px dashed
-    ${({ theme, focused }) => (!focused ? theme.accent : theme.accentLight)};
+    ${({ theme, navigated }) => (!navigated ? theme.accent : theme.accentLight)};
   cursor: pointer;
   outline: none;
 
   & span {
     margin-left: 0.5rem;
     font-size: 14px;
-    color: ${({ theme, focused }) =>
-      !focused ? theme.accent : theme.accentLight};
+    color: ${({ theme, navigated }) =>
+      !navigated ? theme.accent : theme.accentLight};
   }
 
   &:hover,
@@ -118,7 +118,7 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
       <List>
         {templates.map((filter, index) => (
           <TemplateCard
-            focused={navigationAvailable && navigationStep === index - 1}
+            navigated={navigationAvailable && index === navigationStep + 1}
             key={filter.id}
             active={
               templates.length === 1 && !!activeId
@@ -132,8 +132,8 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
           />
         ))}
         <AddTemplateCard
-          focused={
-            navigationAvailable && navigationStep === templates.length - 1
+          navigated={
+            navigationAvailable && navigationStep + 1 === templates.length
           }
           onClick={() => setCreateFilter(true)}
           tabIndex={0}
@@ -162,14 +162,14 @@ interface TemplateCardProps {
   template: ClaimFilterTemplate
   onSelect: (id: string) => void
   active: boolean
-  focused: boolean
+  navigated: boolean
 }
 
 const TemplateCard: React.FC<TemplateCardProps> = ({
   template,
   onSelect,
   active,
-  focused,
+  navigated,
 }) => {
   const [{ totalClaims }, listClaims] = useListClaims()
 
@@ -181,7 +181,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
 
   return (
     <TemplateCardStyled
-      focused={focused}
+      navigated={navigated}
       onClick={() => onSelect(template.id)}
       active={active}
       tabIndex={0}

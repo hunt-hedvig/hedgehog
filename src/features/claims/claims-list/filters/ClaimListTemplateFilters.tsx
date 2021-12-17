@@ -25,13 +25,9 @@ interface ClaimListTemplateFiltersProps
   navigationAvailable: boolean
 }
 
-export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> = ({
-  template,
-  editTemplate,
-  templateId,
-  navigationAvailable,
-  ...props
-}) => {
+export const ClaimListTemplateFilters: React.FC<
+  ClaimListTemplateFiltersProps
+> = ({ template, editTemplate, templateId, navigationAvailable, ...props }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
 
   const filterExists = (state: string | number, field: string) => {
@@ -79,9 +75,8 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
         {
           ...template,
           [field]: numberOfMemberGroups,
-          filterSelectedMemberGroups: template.filterSelectedMemberGroups.filter(
-            (num) => num !== 2,
-          ),
+          filterSelectedMemberGroups:
+            template.filterSelectedMemberGroups.filter((num) => num !== 2),
         },
         templateId,
       )
@@ -126,7 +121,7 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
         maxStep={Object.keys(ClaimState).length - 2}
         label="States"
         values={Object.keys(ClaimState)}
-        onRender={(key) => (
+        getContent={(key) => (
           <MemberGroupColorBadge
             style={{
               height: '0.7em',
@@ -155,7 +150,7 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
         label="Complexities"
         popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
         values={Object.keys(ClaimComplexity)}
-        onRender={(key) => (
+        getContent={(key) => (
           <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
         )}
       />
@@ -184,12 +179,12 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
             ? template.filterNumberOfMemberGroups - 2
             : numberMemberGroups - 2
         }
-        checkboxLabel={FilterGroupState}
+        CheckboxLabel={FilterGroupState}
         label="Groups"
         values={range(
           template?.filterNumberOfMemberGroups || numberMemberGroups,
         )}
-        onRender={(filterNumber) => (
+        getContent={(filterNumber) => (
           <MemberGroupColorBadge
             filter={+filterNumber}
             style={{ height: '0.7em', width: '0.7em' }}
@@ -210,7 +205,7 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
         maxStep={Object.keys(Market).length - 2}
         values={Object.keys(Market)}
         label="Markets"
-        onRender={(key) => (
+        getContent={(key) => (
           <span style={{ marginLeft: '0.5rem' }}>
             {MarketFlags[key.toUpperCase()]}
           </span>

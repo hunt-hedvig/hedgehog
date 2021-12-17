@@ -36,7 +36,7 @@ const MemberPage: Page<
       {...props}
       member={member}
       navigationAvailable={focus === FocusItems.Member.name}
-      setFocus={(value: string | null) => setFocus(value)}
+      setFocus={(value?: string) => setFocus(value)}
       focus={focus}
     />
   )
