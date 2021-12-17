@@ -63,31 +63,22 @@ const CardContainer = styled.div<CardProps>`
 
 export const CardLink = CardContainer.withComponent(Link)
 
-export const Card = React.forwardRef(
-  (
-    { children, locked, focus, ...cardProps }: CardProps,
-    ref: React.ForwardedRef<HTMLDivElement>,
-  ) => {
-    const internalRef = useRef<HTMLDivElement>(null)
+export const Card = ({ children, locked, focus, ...cardProps }: CardProps) => {
+  const cardRef = useRef<HTMLDivElement>(null)
+  useElementFocus(cardRef, focus || false)
 
-    useElementFocus(
-      (ref as React.RefObject<HTMLElement>) ?? internalRef,
-      focus || false,
-    )
-
-    return (
-      <CardContainer ref={ref ?? internalRef} {...cardProps}>
-        {children}
-        {locked && (
-          <LockedOverlay>
-            Locked
-            <LockFill />
-          </LockedOverlay>
-        )}
-      </CardContainer>
-    )
-  },
-)
+  return (
+    <CardContainer ref={cardRef} {...cardProps}>
+      {children}
+      {locked && (
+        <LockedOverlay>
+          Locked
+          <LockFill />
+        </LockedOverlay>
+      )}
+    </CardContainer>
+  )
+}
 
 export const DangerCard = styled(Card)<CardProps>`
   background-color: ${({ theme }) => theme.danger ?? colorsV3.white};
