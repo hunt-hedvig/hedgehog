@@ -207,6 +207,16 @@ export const PaymentsTab: React.FC<{
   const { focus, setFocus } = useNavigation()
   useFocus(FocusItems.Member.items.Payments)
 
+  const [navigationStep] = useArrowKeyboardNavigation({
+    // maxStep: cardsRef.current?.children.length || 0,
+    maxStep: 3,
+    onPerformNavigation: () => {
+      setFocus(FocusItems.Member.items.PaymentsForm)
+    },
+    direction: 'horizontal',
+    isActive: focus === FocusItems.Member.items.Payments,
+  })
+
   const { data: quotesData } = useGetQuotesQuery({
     variables: {
       memberId,
@@ -231,24 +241,6 @@ export const PaymentsTab: React.FC<{
   const [account] = useGetAccount(memberId)
 
   const { confirm } = useConfirmDialog()
-
-  const generateLinkHandler = () => {
-    toast.promise(createPaymentCompletionLink(), {
-      loading: 'Generating payment link...',
-      success: ({ data: response }) => {
-        if (!response?.createPaymentCompletionLink?.url) {
-          return null
-        }
-
-        copy(response?.createPaymentCompletionLink?.url, {
-          format: 'text/plain',
-        })
-
-        return 'Payment link copied to clipboard'
-      },
-      error: 'Could not generate payment link',
-    })
-  }
 
   const handleChargeSubmit = () => {
     const chargeAmount = allowManualCharge
@@ -282,26 +274,6 @@ export const PaymentsTab: React.FC<{
         .then(() => refetch())
     })
   }
-
-  const [navigationStep] = useArrowKeyboardNavigation({
-    maxStep: 3,
-    onPerformNavigation: (index) => {
-      if (index === 0) {
-        generateLinkHandler()
-      }
-
-      if (index === 1) {
-        handleChargeSubmit()
-      }
-
-      if (index === 2) {
-        setFocus(FocusItems.Member.items.PaymentsForm)
-      }
-    },
-    direction: 'horizontal',
-    isActive: focus === FocusItems.Member.items.Payments,
-    withNegative: true,
-  })
 
   if (error) {
     return (
@@ -360,7 +332,21 @@ export const PaymentsTab: React.FC<{
           <Button
             onClick={(e) => {
               e.preventDefault()
-              generateLinkHandler()
+              toast.promise(createPaymentCompletionLink(), {
+                loading: 'Generating payment link...',
+                success: ({ data: response }) => {
+                  if (!response?.createPaymentCompletionLink?.url) {
+                    return null
+                  }
+
+                  copy(response?.createPaymentCompletionLink?.url, {
+                    format: 'text/plain',
+                  })
+
+                  return 'Payment link copied to clipboard'
+                },
+                error: 'Could not generate payment link',
+              })
             }}
           >
             Generate payments link

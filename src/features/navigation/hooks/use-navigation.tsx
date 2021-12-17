@@ -197,9 +197,6 @@ export const useElementFocus = (
 
     if (focus) {
       ref.current.focus()
-      ref.current.scrollIntoView({
-        block: 'center',
-      })
       return
     }
 
