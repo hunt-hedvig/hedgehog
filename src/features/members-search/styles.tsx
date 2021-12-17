@@ -108,7 +108,7 @@ export const MemberHistoryCardWrapper = styled(Link)<{
   min-height: 5rem;
   margin-bottom: 1rem;
 
-  border: ${({ active }) => (active ? `0.5rem solid red` : 'none')};
+  border: ${({ theme, active }) => (active ? `0.5rem solid red` : 'none')};
 
   & {
     ${({ theme, muted }) => css`

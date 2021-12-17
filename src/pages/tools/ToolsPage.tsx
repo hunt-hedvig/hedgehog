@@ -1,12 +1,11 @@
 import styled from '@emotion/styled'
 import {
-  CardLink as CardWithLink,
+  CardLink,
   CardsWrapper,
   FadeIn,
   HotkeyStyled,
   MainHeadline,
 } from '@hedvig-ui'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import {
   Keys,
   useKeyIsPressed,
@@ -31,16 +30,8 @@ const Icon = styled('div')`
   padding-bottom: 1rem;
 `
 
-const Card = styled(CardWithLink)<{ active?: boolean }>`
+const Card = styled(CardLink)`
   position: relative;
-
-  padding: ${({ active }) => (!active ? '2rem' : '1.5rem')};
-  border: ${({ active }) => (active ? '0.5rem solid red' : 'none')};
-`
-
-const CardLink = styled(CardWithLink)<{ active?: boolean }>`
-  padding: ${({ active }) => (!active ? '2rem' : '1.5rem')};
-  border: ${({ active }) => (active ? '0.5rem solid red' : 'none')};
 `
 
 const Hotkey = styled(HotkeyStyled)`
@@ -119,15 +110,6 @@ const ToolsPage: Page = () => {
     },
   ])
 
-  const paths = [
-    '/tools/charges',
-    '/tools/switcher-automation',
-    '/tools/perils-editor',
-    '/tools/campaign-codes',
-    '/tools/employees',
-    '/tools/claim-types',
-  ]
-
   const { focus, setFocus } = useNavigation()
 
   useEffect(() => {
@@ -136,50 +118,21 @@ const ToolsPage: Page = () => {
     }
   }, [focus])
 
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
-    maxStep: 4,
-    isActive: focus === FocusItems.Tools.name,
-    onPerformNavigation: (index) => {
-      const currentIndex = index + 1
-      history.push(paths[currentIndex])
-    },
-    vertical: false,
-    withNegative: true,
-  })
-
-  useEffect(() => {
-    if (focus !== FocusItems.Tools.name) {
-      reset()
-    }
-  }, [focus])
-
   return (
     <FadeIn>
       <CardsWrapper style={{ flexDirection: 'column' }}>
         <Row columns={3}>
-          <Card
-            to="/tools/charges"
-            span={4}
-            active={focus === FocusItems.Tools.name && navigationStep + 1 === 0}
-          >
+          <Card to="/tools/charges" span={4}>
             <Icon>💰</Icon>
             Approve Charges
             {isControlPressed && <Hotkey dark>1</Hotkey>}
           </Card>
-          <Card
-            to="/tools/switcher-automation"
-            span={4}
-            active={focus === FocusItems.Tools.name && navigationStep + 1 === 1}
-          >
+          <Card to="/tools/switcher-automation" span={4}>
             <Icon>🏡</Icon>
             {isControlPressed && <Hotkey dark>2</Hotkey>}
             Switcher Automation
           </Card>
-          <Card
-            to="/tools/perils-editor"
-            span={4}
-            active={focus === FocusItems.Tools.name && navigationStep + 1 === 2}
-          >
+          <Card to="/tools/perils-editor" span={4}>
             <Icon>📝</Icon>
             {isControlPressed && <Hotkey dark>3</Hotkey>}
             Perils Editor
@@ -187,29 +140,17 @@ const ToolsPage: Page = () => {
         </Row>
 
         <Row columns={3}>
-          <CardLink
-            to="/tools/campaign-codes"
-            span={4}
-            active={focus === FocusItems.Tools.name && navigationStep + 1 === 3}
-          >
+          <CardLink to="/tools/campaign-codes" span={4}>
             <Icon>💵</Icon>
             {isControlPressed && <Hotkey dark>4</Hotkey>}
             Campaign Codes
           </CardLink>
-          <CardLink
-            to="/tools/employees"
-            span={4}
-            active={focus === FocusItems.Tools.name && navigationStep + 1 === 4}
-          >
+          <CardLink to="/tools/employees" span={4}>
             <Icon>👩🏼‍🦰</Icon>
             {isControlPressed && <Hotkey dark>5</Hotkey>}
             Employees
           </CardLink>
-          <CardLink
-            to="/tools/claim-types"
-            span={4}
-            active={focus === FocusItems.Tools.name && navigationStep + 1 === 5}
-          >
+          <CardLink to="/tools/claim-types" span={4}>
             <Icon>🧠</Icon>
             {isControlPressed && <Hotkey dark>6</Hotkey>}
             Claim Types
