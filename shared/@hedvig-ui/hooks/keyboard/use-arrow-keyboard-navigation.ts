@@ -53,10 +53,7 @@ export const useArrowKeyboardNavigation = ({
 
     if (isPressing(e, direction === 'vertical' ? Keys.Up : Keys.Left)) {
       e.preventDefault()
-      if (
-        (withNegative ? navigationIndex === -1 : navigationIndex === 0) &&
-        onExit
-      ) {
+      if (navigationIndex === 0 && onExit) {
         onExit()
       }
       handleStepChange(setNavigationIndex, (i) => i > -1, -1)

@@ -26,7 +26,6 @@ export const TableBody: React.FC<
     onPerformNavigation?: (index) => void
     setActiveRow?: (n: number) => void
     isActive?: boolean
-    onExit?: () => void
     onNavigationStep?: (step: number) => void
   } & TableHTMLAttributes<HTMLTableSectionElement>
 > = ({
@@ -35,7 +34,6 @@ export const TableBody: React.FC<
   setActiveRow,
   isActive = true,
   onNavigationStep,
-  onExit,
   ...props
 }) => {
   const numberOfRows = React.Children.count(children)
@@ -54,7 +52,6 @@ export const TableBody: React.FC<
     },
     isActive: isActive && !!onPerformNavigation,
     withNegative: true,
-    onExit,
   })
 
   useEffect(() => {
