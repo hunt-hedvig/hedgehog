@@ -47,15 +47,7 @@ export const AgreementsTable: React.FC<{
   const [activeRow, setActiveRow] = useState<number | null>(null)
 
   return (
-    <Table
-      style={{
-        margin: '1em 0',
-        borderRadius: '0.5rem',
-        boxShadow: navigationAvailable
-          ? '0px 0px 10px 6px rgba(34, 60, 80, 0.2)'
-          : 'none',
-      }}
-    >
+    <Table style={{ margin: '1em 0' }}>
       <TableHeader>
         <TableHeaderColumn>Line of Business</TableHeaderColumn>
         <TableHeaderColumn>Carrier</TableHeaderColumn>

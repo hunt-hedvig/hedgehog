@@ -69,10 +69,7 @@ export const ContractTab: React.FC<{
       )}
       {contracts.map((contract, index) => (
         <Contract
-          focused={
-            navigationStep === index - 1 &&
-            focus === FocusItems.Member.items.Contract
-          }
+          focused={navigationStep === index - 1}
           selected={focusedItem === index}
           key={contract.id}
           contract={contract}

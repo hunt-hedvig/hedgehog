@@ -11,12 +11,12 @@ export const useElementsInsideParent = (
       return
     }
 
-    const elementsHTMLCollection = parentRef.current.getElementsByTagName(tag)
-    const elementsList = Array.prototype.slice
-      .call(elementsHTMLCollection)
+    const buttonsHTMLCollection = parentRef.current.getElementsByTagName(tag)
+    const buttonsList = Array.prototype.slice
+      .call(buttonsHTMLCollection)
       .map((btn) => btn as HTMLElement)
 
-    setElements(elementsList)
+    setElements(buttonsList)
   }, [parentRef.current])
 
   return elements
