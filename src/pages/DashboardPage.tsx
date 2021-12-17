@@ -76,7 +76,6 @@ const DashboardPage: Page = () => {
       {dashboardNumbers && (
         <FadeIn>
           <MetricList
-            setFocus={(value: string) => setFocus(value)}
             dashboardNumbers={dashboardNumbers}
             navigationAvailable={focus === FocusItems.Dashborad.name}
           />

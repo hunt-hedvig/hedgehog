@@ -96,11 +96,7 @@ export const MetricName = styled.span`
   opacity: 0.66;
 `
 
-export const MetricList = ({
-  dashboardNumbers,
-  navigationAvailable,
-  setFocus,
-}) => {
+export const MetricList = ({ dashboardNumbers, navigationAvailable }) => {
   const [createFilter, setCreateFilter] = useState(false)
   const { settings } = useMe()
   const history = useHistory()
@@ -137,7 +133,6 @@ export const MetricList = ({
         return
       }
 
-      setFocus(FocusItems.Claims.name)
       history.push(
         `/claims/list/1?template=${templateFilters[itemIndex - 2].id}`,
       )

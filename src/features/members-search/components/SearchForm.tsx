@@ -74,6 +74,7 @@ export const SearchForm: React.FC<SearchFieldProps> = ({
             loading={loading}
             size="large"
             type="search"
+            autoFocus
             focus={focus}
             muted={!query}
             ref={searchFieldRef}
