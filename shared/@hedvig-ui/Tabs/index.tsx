@@ -134,7 +134,7 @@ const TabsWrapper = styled.ul<{ tabCount: number }>`
 
 export interface TabsProps extends React.HTMLAttributes<HTMLUListElement> {
   list: TabProps[]
-  navigationAvailable?: boolean
+  navigationAvailable: boolean
 }
 
 export const Tabs: React.FC<TabsProps> = ({
