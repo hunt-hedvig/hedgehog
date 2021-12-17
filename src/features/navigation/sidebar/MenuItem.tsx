@@ -23,14 +23,13 @@ const MenuItemStyled = styled<
   border-radius: 0.5rem;
   transition: background 500ms, font-size 300ms, width 300ms;
 
-  &.active,
-  &:focus {
+  &.active {
     background: ${({ theme }) =>
       theme.type === 'dark' ? colorsV3.gray900 : colorsV3.gray700};
   }
 
-  &:focus.active {
-    background: ${colorsV3.gray500};
+  &:focus {
+    background: ${({ theme }) => theme.accent};
   }
 
   opacity: ${({ transparent }) => (transparent ? 0.5 : 1)};
