@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import {
   isPressing,
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { colorsV3 } from '@hedviginsurance/brand'
 import {
@@ -293,7 +293,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
 
   useKeyIsPressed(Keys.S, focusHandler)
 
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
+  const [navigationStep, reset] = useVerticalKeyboardNavigation({
     maxStep: MenuItemsList.length,
     isActive: focus === FocusItems.Main.items?.Sidebar,
   })

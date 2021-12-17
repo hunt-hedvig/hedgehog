@@ -1,12 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
-import React, {
-  HTMLAttributes,
-  TableHTMLAttributes,
-  useEffect,
-  useRef,
-} from 'react'
+import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
+import React, { TableHTMLAttributes, useEffect, useRef } from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
 
 const range = (start, end) =>
@@ -36,7 +31,7 @@ export const TableBody: React.FC<
 }) => {
   const numberOfRows = React.Children.count(children)
 
-  const [navigationStep] = useArrowKeyboardNavigation({
+  const [navigationStep] = useVerticalKeyboardNavigation({
     maxStep: numberOfRows - 1,
     onPerformNavigation: (index) => {
       if (onPerformNavigation) {
@@ -194,10 +189,9 @@ export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
   return <TableRowStyled ref={rowRef} active={active} {...props} />
 }
 
-export const TableHeader: React.FC<HTMLAttributes<HTMLTableSectionElement>> = ({
-  children,
-  ...props
-}) => (
+export const TableHeader: React.FC<
+  React.HTMLAttributes<HTMLTableSectionElement>
+> = ({ children, ...props }) => (
   <thead style={{ width: '100%' }} {...props}>
     <tr style={{ width: '100%' }}>{children}</tr>
   </thead>

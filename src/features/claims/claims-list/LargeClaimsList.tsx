@@ -172,7 +172,7 @@ export const LargeClaimsList: React.FC<{
           onPerformNavigation={(index) => {
             const claimId = claims[index].id
 
-            if (!claimId || !navigationAvailable) {
+            if (!claimId) {
               return
             }
 
@@ -195,7 +195,7 @@ export const LargeClaimsList: React.FC<{
                 key={claim.id}
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (isPressing(e, Keys.Enter) && navigationAvailable) {
+                  if (isPressing(e, Keys.Enter)) {
                     e.preventDefault()
                     history.push(`/claims/${claim.id}`)
                   }
