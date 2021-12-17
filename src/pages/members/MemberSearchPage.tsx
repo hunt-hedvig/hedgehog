@@ -1,5 +1,8 @@
 import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MembersList } from 'features/members-search/components/MembersList'
 import { MemberSuggestions } from 'features/members-search/components/MemberSuggestions'
@@ -15,7 +18,6 @@ import {
   FocusItems,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
-import { useMemberHistory } from 'features/user/hooks/use-member-history'
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router'
 import { Page } from 'pages/routes'
@@ -27,7 +29,6 @@ const MemberSearchPage: Page = () => {
   const history = useHistory()
   const searchField = useRef<HTMLInputElement>(null)
 
-  const { memberHistory } = useMemberHistory()
   const [{ members, totalPages, page }, memberSearch, { loading }] =
     useMemberSearch()
 
@@ -53,18 +54,14 @@ const MemberSearchPage: Page = () => {
     }
   }, [focus])
 
+  useKeyIsPressed(Keys.Down, () => {
+    if (!members.length) {
+      setFocus(FocusItems.Members.items?.Suggestions)
+    }
+  })
+
   return (
-    <div
-      onKeyDown={(e) => {
-        if (
-          isPressing(e, Keys.Down) &&
-          focus === FocusItems.Members.name &&
-          !members.length
-        ) {
-          setFocus(FocusItems.Members.items?.Suggestions)
-        }
-      }}
-    >
+    <>
       <SearchForm
         onSubmit={() => {
           memberSearch(query || '%', {
@@ -121,7 +118,6 @@ const MemberSearchPage: Page = () => {
           <MemberSuggestionsWrapper>
             <MainHeadline>Suggestions</MainHeadline>
             <MemberSuggestions
-              memberHistory={memberHistory}
               navigationAvailable={
                 focus === FocusItems.Members.items?.Suggestions
               }
@@ -135,7 +131,7 @@ const MemberSearchPage: Page = () => {
           <div>D*shborad! No members found</div>
         </NoMembers>
       )}
-    </div>
+    </>
   )
 }
 

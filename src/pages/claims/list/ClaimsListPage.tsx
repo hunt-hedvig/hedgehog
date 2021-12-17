@@ -102,10 +102,7 @@ const ClaimsListPage: Page<
       <ClaimsTemplates
         activeId={selectedTemplate}
         templates={templateFilters}
-        onSelect={(id) => {
-          setFocus()
-          selectTemplate(id)
-        }}
+        onSelect={selectTemplate}
         onCreate={createTemplate}
         navigationAvailable={focus === FocusItems.Claims.items?.ClaimsTemplates}
       />
