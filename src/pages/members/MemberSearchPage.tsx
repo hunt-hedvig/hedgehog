@@ -75,7 +75,6 @@ const MemberSearchPage: Page = () => {
           memberSearch(query || '%', {
             includeAll,
           })
-          setFocus(null)
         }}
         loading={loading}
         query={query}
@@ -91,9 +90,8 @@ const MemberSearchPage: Page = () => {
         <>
           <FadeIn>
             <MembersList
-              setFocus={setFocus}
               members={members}
-              navigationAvailable={focus === null}
+              navigationAvailable={focus === FocusItems.Members.name}
             />
             <TablePageSelect
               currentPage={page}
