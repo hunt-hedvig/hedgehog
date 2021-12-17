@@ -83,8 +83,6 @@ export const MemberTab: React.FC<{
   const [editMemberInfo] = useEditMemberInfoMutation()
   const [setFraudulentStatus] = useSetFraudulentStatusMutation()
 
-  const { focus } = useNavigation()
-
   useFocus(FocusItems.Member.items.Member)
 
   const form = useForm()
@@ -159,6 +157,10 @@ export const MemberTab: React.FC<{
   delete memberInfoWithoutSsn.__typename
   delete memberInfoWithoutSsn.contractMarketInfo
 
+  const { focus } = useNavigation()
+
+  useFocus(FocusItems.Member.items.Member)
+
   const [navigationStep] = useArrowKeyboardNavigation({
     maxStep: Object.keys(memberInfoWithoutSsn).length - 1,
     isActive: focus === FocusItems.Main.items.Modal,
@@ -204,7 +206,8 @@ export const MemberTab: React.FC<{
                     memberId: memberInfo.memberId,
                     request: {
                       fraudulentStatus: newFraudulentStatus,
-                      fraudulentStatusDescription: newFraudulentStatusDescription,
+                      fraudulentStatusDescription:
+                        newFraudulentStatusDescription,
                     },
                   },
                 }),

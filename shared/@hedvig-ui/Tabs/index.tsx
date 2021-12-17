@@ -137,39 +137,35 @@ export interface TabsProps extends React.HTMLAttributes<HTMLUListElement> {
   navigationAvailable?: boolean
 }
 
-export const Tabs = React.forwardRef(
-  (
-    { list, navigationAvailable, ...props }: TabsProps,
-    ref: React.ForwardedRef<HTMLUListElement>,
-  ) => {
-    const internalRef = useRef<HTMLUListElement>(null)
+export const Tabs: React.FC<TabsProps> = ({
+  list,
+  navigationAvailable,
+  ...props
+}) => {
+  const tabsRef = useRef<HTMLUListElement>(null)
 
-    useElementFocus(
-      (ref as React.RefObject<HTMLElement>) ?? internalRef,
-      navigationAvailable || false,
-    )
+  const [navigationStep] = useArrowKeyboardNavigation({
+    maxStep: list.length - 2,
+    isActive: navigationAvailable,
+    onPerformNavigation: (index) => {
+      const currentTab = index + 1
+      list[currentTab].action()
+    },
+    direction: 'horizontal',
+    withNegative: true,
+  })
 
-    const [navigationStep] = useArrowKeyboardNavigation({
-      maxStep: list.length - 2,
-      isActive: navigationAvailable,
-      onPerformNavigation: (index) => {
-        const currentTab = index + 1
-        list[currentTab].action()
-      },
-      direction: 'horizontal',
-      withNegative: true,
-    })
+  useElementFocus(tabsRef, navigationAvailable || false)
 
-    return (
-      <TabsWrapper tabCount={list.length} ref={ref ?? internalRef} {...props}>
-        {list.map((tab, index) => (
-          <Tab
-            key={tab.title}
-            focused={navigationAvailable && navigationStep === index - 1}
-            {...tab}
-          />
-        ))}
-      </TabsWrapper>
-    )
-  },
-)
+  return (
+    <TabsWrapper tabCount={list.length} ref={tabsRef} {...props}>
+      {list.map((tab, index) => (
+        <Tab
+          key={tab.title}
+          focused={navigationAvailable && navigationStep === index - 1}
+          {...tab}
+        />
+      ))}
+    </TabsWrapper>
+  )
+}

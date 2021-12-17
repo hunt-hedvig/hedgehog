@@ -22,7 +22,7 @@ const sortFileDate = (a, b) => {
   const aDate = new Date(a.timestamp)
   const bDate = new Date(b.timestamp)
 
-  return ((bDate as any) as number) - ((aDate as any) as number)
+  return (bDate as any as number) - (aDate as any as number)
 }
 
 const Image = styled.img`
@@ -97,7 +97,7 @@ export const MemberFile: React.FC<{
     </StandaloneMessage>
   ) : (
     <MemberFileTable
-      memberFiles={data.member.fileUploads}
+      memberFiles={data.member!.fileUploads}
       navigationAvailable={focus === FocusItems.Member.items.Files}
     />
   )

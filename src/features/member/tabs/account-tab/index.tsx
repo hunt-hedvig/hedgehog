@@ -33,10 +33,10 @@ import {
 import React, { useState } from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
 
-const AccountCard = styled(Card)<{ active: boolean }>`
+const AccountCard = styled(Card)<{ focused: boolean }>`
   border-radius: 0.5rem;
-  border: ${({ active, theme }) =>
-    active ? `1px solid ${theme.accent}` : 'none'};
+  border: ${({ focused, theme }) =>
+    focused ? `1px solid ${theme.accent}` : 'none'};
 `
 
 const CardTop = styled(Flex)`
@@ -102,7 +102,7 @@ export const AccountTab: React.FC<{
             navigationStep + 1 === 0 &&
             focus === FocusItems.Member.items.Account
           }
-          active={
+          focused={
             navigationStep + 1 === 0 &&
             focus === FocusItems.Member.items.Account
           }
@@ -133,7 +133,7 @@ export const AccountTab: React.FC<{
             navigationStep + 1 === 1 &&
             focus === FocusItems.Member.items.Account
           }
-          active={
+          focused={
             navigationStep + 1 === 1 &&
             focus === FocusItems.Member.items.Account
           }
@@ -200,7 +200,7 @@ export const AccountTab: React.FC<{
             navigationStep + 1 === 2 &&
             focus === FocusItems.Member.items.Account
           }
-          active={
+          focused={
             navigationStep + 1 === 2 &&
             focus === FocusItems.Member.items.Account
           }
@@ -267,7 +267,7 @@ export const AccountTab: React.FC<{
             navigationStep + 1 === 3 &&
             focus === FocusItems.Member.items.Account
           }
-          active={
+          focused={
             navigationStep + 1 === 3 &&
             focus === FocusItems.Member.items.Account
           }

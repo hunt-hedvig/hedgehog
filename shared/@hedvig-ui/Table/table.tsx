@@ -8,7 +8,6 @@ import React, {
   useRef,
 } from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 const range = (start, end) =>
   start >= 0 && end >= start
@@ -197,7 +196,13 @@ interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
 export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
   const rowRef = useRef<HTMLTableRowElement>(null)
 
-  useElementFocus(rowRef, active || false)
+  useEffect(() => {
+    if (active && rowRef?.current) {
+      rowRef.current.scrollIntoView({
+        block: 'center',
+      })
+    }
+  }, [active])
 
   return <TableRowStyled ref={rowRef} active={active} {...props} />
 }
