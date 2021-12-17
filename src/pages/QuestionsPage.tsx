@@ -7,11 +7,6 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { FilterSelect, FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
@@ -60,9 +55,6 @@ const QuestionsPage: Page = () => {
   ])
 
   const [questionGroups, { loading }] = useQuestionGroups()
-
-  const { focus } = useNavigation()
-  useFocus(FocusItems.Questions.name)
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
@@ -140,7 +132,6 @@ const QuestionsPage: Page = () => {
       </Spacing>
 
       <QuestionGroups
-        navigationAvailable={focus === FocusItems.Questions.name}
         selectedFilters={selectedFilters}
         questionGroups={questionGroups}
       />

@@ -46,9 +46,6 @@ interface FocusItemsType {
       Campaigns: string
     }
   }
-  Questions: {
-    name: string
-  }
   Conversations: {
     name: string
   }
@@ -107,9 +104,6 @@ export const FocusItems: FocusItemsType = {
       Debt: 'MEMBER_DEBT',
       Campaigns: 'MEMBER_CAMPAIGNS',
     },
-  },
-  Questions: {
-    name: 'QUESTIONS_PAGE',
   },
   Conversations: {
     name: 'CONVERSATIONS_PAGE',

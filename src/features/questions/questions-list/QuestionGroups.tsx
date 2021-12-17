@@ -15,17 +15,12 @@ const ListContainer = styled.div`
   margin: 0;
 `
 
-export const QuestionGroups = ({
-  selectedFilters,
-  questionGroups,
-  navigationAvailable,
-}) => {
+export const QuestionGroups = ({ selectedFilters, questionGroups }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
     <ListContainer>
       <FilteredQuestionGroups
-        navigationAvailable={navigationAvailable}
         filterQuestionGroups={
           selectedFilters.length > 0
             ? questionGroups
