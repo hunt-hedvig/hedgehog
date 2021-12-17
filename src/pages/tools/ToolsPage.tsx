@@ -12,7 +12,6 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
-import chroma from 'chroma-js'
 import { useCommandLine } from 'features/commands/use-command-line'
 import {
   FocusItems,
@@ -33,20 +32,16 @@ const Icon = styled('div')`
   padding-bottom: 1rem;
 `
 
-const Card = styled(CardWithLink)<{ focus?: boolean }>`
+const Card = styled(CardWithLink)<{ active?: boolean }>`
   position: relative;
 
-  padding: 2rem;
-
-  ${({ theme, focus }) =>
-    focus && `background: ${chroma(theme.accentLight).alpha(0.1).hex()};`}
+  padding: ${({ active }) => (!active ? '2rem' : '1.5rem')};
+  border: ${({ active }) => (active ? '0.5rem solid red' : 'none')};
 `
 
-const CardLink = styled(CardWithLink)<{ focus?: boolean }>`
-  padding: 2rem;
-
-  ${({ theme, focus }) =>
-    focus && `background: ${chroma(theme.accentLight).alpha(0.1).hex()};`}
+const CardLink = styled(CardWithLink)<{ active?: boolean }>`
+  padding: ${({ active }) => (!active ? '2rem' : '1.5rem')};
+  border: ${({ active }) => (active ? '0.5rem solid red' : 'none')};
 `
 
 const Hotkey = styled(HotkeyStyled)`
@@ -162,7 +157,7 @@ const ToolsPage: Page = () => {
           <Card
             to="/tools/charges"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 0}
+            active={focus === FocusItems.Tools.name && navigationStep + 1 === 0}
           >
             <Icon>💰</Icon>
             Approve Charges
@@ -171,7 +166,7 @@ const ToolsPage: Page = () => {
           <Card
             to="/tools/switcher-automation"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 1}
+            active={focus === FocusItems.Tools.name && navigationStep + 1 === 1}
           >
             <Icon>🏡</Icon>
             {isControlPressed && <Hotkey dark>2</Hotkey>}
@@ -180,7 +175,7 @@ const ToolsPage: Page = () => {
           <Card
             to="/tools/perils-editor"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 2}
+            active={focus === FocusItems.Tools.name && navigationStep + 1 === 2}
           >
             <Icon>📝</Icon>
             {isControlPressed && <Hotkey dark>3</Hotkey>}
@@ -192,7 +187,7 @@ const ToolsPage: Page = () => {
           <CardLink
             to="/tools/campaign-codes"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 3}
+            active={focus === FocusItems.Tools.name && navigationStep + 1 === 3}
           >
             <Icon>💵</Icon>
             {isControlPressed && <Hotkey dark>4</Hotkey>}
@@ -201,7 +196,7 @@ const ToolsPage: Page = () => {
           <CardLink
             to="/tools/employees"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 4}
+            active={focus === FocusItems.Tools.name && navigationStep + 1 === 4}
           >
             <Icon>👩🏼‍🦰</Icon>
             {isControlPressed && <Hotkey dark>5</Hotkey>}
@@ -210,7 +205,7 @@ const ToolsPage: Page = () => {
           <CardLink
             to="/tools/claim-types"
             span={4}
-            focus={focus === FocusItems.Tools.name && navigationStep + 1 === 5}
+            active={focus === FocusItems.Tools.name && navigationStep + 1 === 5}
           >
             <Icon>🧠</Icon>
             {isControlPressed && <Hotkey dark>6</Hotkey>}

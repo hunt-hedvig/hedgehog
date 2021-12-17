@@ -62,14 +62,16 @@ const Flag = styled('div')`
   margin-left: 0.5rem;
 `
 
-export const MemberTabs: React.FC<RouteComponentProps<{
-  memberId: string
-}> & {
-  member: Member
-  navigationAvailable: boolean
-  setFocus: (value: string | null) => void
-  focus: string | null
-}> = ({ match, member, setFocus, focus }) => {
+export const MemberTabs: React.FC<
+  RouteComponentProps<{
+    memberId: string
+  }> & {
+    member: Member
+    navigationAvailable: boolean
+    setFocus: (value: string | null) => void
+    focus: string | null
+  }
+> = ({ match, member, setFocus, focus }) => {
   const history = useHistory()
   const pathname = history.location.pathname.split('/')
   const path =

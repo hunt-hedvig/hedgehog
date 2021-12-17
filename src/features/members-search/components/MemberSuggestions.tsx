@@ -43,7 +43,7 @@ export const MemberSuggestions: React.FC<{
 
       {memberHistory.map((memberId, index) => (
         <MemberHistoryCard
-          focus={navigationAvailable && navigationStep === index - 1}
+          active={navigationAvailable && navigationStep === index - 1}
           key={memberId}
           memberId={memberId}
           orderNumber={index + 1}
@@ -56,8 +56,8 @@ export const MemberSuggestions: React.FC<{
 const MemberHistoryCard: React.FC<{
   memberId: string
   orderNumber: number
-  focus: boolean
-}> = ({ memberId, orderNumber, focus }) => {
+  active: boolean
+}> = ({ memberId, orderNumber, active }) => {
   const { data } = useMemberNameAndContractMarketInfoQuery({
     variables: { memberId },
   })
@@ -78,7 +78,7 @@ const MemberHistoryCard: React.FC<{
     <MemberHistoryCardWrapper
       muted={!data?.member}
       to={targetLocation}
-      focus={focus}
+      active={active}
     >
       <MemberName>
         {data?.member?.firstName} {data?.member?.lastName}&nbsp;
