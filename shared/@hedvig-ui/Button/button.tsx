@@ -199,7 +199,7 @@ export const Button = styled(
       const internalRef = useRef<HTMLButtonElement>(null)
       useElementFocus(
         (ref as React.RefObject<HTMLElement>) ?? internalRef,
-        focus,
+        focus || false,
       )
 
       return (

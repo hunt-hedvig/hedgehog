@@ -55,7 +55,6 @@ export const TableBody: React.FC<
     },
     isActive: isActive && !!onPerformNavigation,
     withNegative: true,
-    direction: 'vertical',
     onExit,
   })
 
@@ -198,7 +197,7 @@ interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
 export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
   const rowRef = useRef<HTMLTableRowElement>(null)
 
-  useElementFocus(rowRef, active)
+  useElementFocus(rowRef, active || false)
 
   return <TableRowStyled ref={rowRef} active={active} {...props} />
 }

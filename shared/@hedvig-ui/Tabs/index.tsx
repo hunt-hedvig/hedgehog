@@ -146,7 +146,7 @@ export const Tabs = React.forwardRef(
 
     useElementFocus(
       (ref as React.RefObject<HTMLElement>) ?? internalRef,
-      navigationAvailable,
+      navigationAvailable || false,
     )
 
     const [navigationStep] = useArrowKeyboardNavigation({

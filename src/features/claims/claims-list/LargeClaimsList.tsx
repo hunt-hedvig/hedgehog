@@ -94,11 +94,8 @@ export const LargeClaimsList: React.FC<{
 
   useTitle('Claims')
 
-  const [
-    { claims, page: currentPage, totalPages },
-    listClaims,
-    { loading },
-  ] = useListClaims()
+  const [{ claims, page: currentPage, totalPages }, listClaims, { loading }] =
+    useListClaims()
 
   const getClaimFilter = (field: UserSettingKey, isClaims: boolean = true) =>
     (settings[field] &&
@@ -194,7 +191,7 @@ export const LargeClaimsList: React.FC<{
 
             return (
               <TableRow
-                active={activeRow === index - 1}
+                active={activeRow === index}
                 key={claim.id}
                 tabIndex={0}
                 onKeyDown={(e) => {

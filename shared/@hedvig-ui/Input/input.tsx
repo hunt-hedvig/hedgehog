@@ -200,7 +200,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const isSuccess = success && !error && !loading
     const isError = error && !success && !loading
 
-    useElementFocus(inputRef, focus)
+    useElementFocus(inputRef, focus || false)
 
     return (
       <InputWrapper style={style}>

@@ -155,7 +155,7 @@ export const MembersList: React.FC<{
               <TableRow
                 key={member.memberId}
                 tabIndex={0}
-                active={activeRow === index - 1}
+                active={activeRow === index}
                 onClick={() => redirectMemberHandler(member.memberId)}
               >
                 <TableColumn>
