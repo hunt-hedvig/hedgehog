@@ -6,7 +6,6 @@ import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-gro
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router'
 import { QuestionGroup } from 'types/generated/graphql'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 const Item = styled(Flex)<{ selected: boolean }>`
   background-color: ${({ theme, selected }) =>

@@ -15,7 +15,6 @@ import { TerminationDate } from 'features/member/tabs/contracts-tab/contract/ter
 import { getSignSource } from 'features/member/tabs/contracts-tab/utils'
 import React from 'react'
 import { Contract as ContractType } from 'types/generated/graphql'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 const ContractWrapper = styled('div')`
   &:not(:first-of-type) {

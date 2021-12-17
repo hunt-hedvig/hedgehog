@@ -1,9 +1,5 @@
 import styled from '@emotion/styled'
 import { colorsV3 } from '@hedviginsurance/brand'
-import {
-  FocusItems,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
 import React, { useState } from 'react'
 import {

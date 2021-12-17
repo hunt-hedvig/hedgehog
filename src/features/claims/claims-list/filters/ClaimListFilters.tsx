@@ -22,7 +22,7 @@ import {
   UserSettingKey,
 } from 'types/generated/graphql'
 
-const FilterWrapper = styled.div`
+export const FilterWrapper = styled.div`
   width: 100%;
   max-width: 1500px;
 
@@ -32,7 +32,7 @@ const FilterWrapper = styled.div`
   margin: 2rem 0;
 `
 
-const FilterElement = styled.div`
+export const FilterElement = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
@@ -60,18 +60,18 @@ export const StyledLabel = styled(Label)`
   }
 `
 
-const complexityIcons = {
+export const complexityIcons = {
   Simple: '📱',
   Complex: '🌊',
 }
 
-const stateColors = {
+export const stateColors = {
   Open: lightTheme.accent,
   Closed: lightTheme.activeInsuranceBackground,
   Reopened: lightTheme.accentLight,
 }
 
-const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
+export const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
   label,
   popover,
 }) => (

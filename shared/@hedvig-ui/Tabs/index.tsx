@@ -7,7 +7,6 @@ import {
   Keys,
   useKeyIsPressed,
 } from '../hooks/keyboard/use-key-is-pressed'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 const TabStyled = styled.li<{ active?: boolean }>`
   transition: all 0.3s;
