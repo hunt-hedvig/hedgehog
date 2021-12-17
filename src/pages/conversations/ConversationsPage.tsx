@@ -15,7 +15,6 @@ import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
 import {
   FocusItems,
-  useFocus,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
 import { FilterStateType } from 'features/questions/FilterSelect'
@@ -101,9 +100,13 @@ const ConversationsPage: Page<
     }
   }
 
-  const { focus } = useNavigation()
+  const { focus, setFocus } = useNavigation()
 
-  useFocus(FocusItems.Claims.name)
+  useEffect(() => {
+    if (!focus) {
+      setFocus(FocusItems.Conversations.name)
+    }
+  }, [focus])
 
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)

@@ -15,7 +15,6 @@ import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { useCommandLine } from 'features/commands/use-command-line'
 import {
   FocusItems,
-  useFocus,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
 import React, { useEffect } from 'react'
@@ -129,9 +128,13 @@ const ToolsPage: Page = () => {
     '/tools/claim-types',
   ]
 
-  const { focus } = useNavigation()
+  const { focus, setFocus } = useNavigation()
 
-  useFocus(FocusItems.Tools.name)
+  useEffect(() => {
+    if (!focus) {
+      setFocus(FocusItems.Tools.name)
+    }
+  }, [focus])
 
   const [navigationStep, reset] = useArrowKeyboardNavigation({
     maxStep: 4,

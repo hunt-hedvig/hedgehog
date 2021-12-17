@@ -15,11 +15,10 @@ import { Greeting } from 'features/dashboard/Greeting'
 import { MetricList } from 'features/dashboard/MetricList'
 import {
   FocusItems,
-  useFocus,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { DashboardNumbers } from 'types/generated/graphql'
 import { Page } from 'pages/routes'
 import gql from 'graphql-tag'
@@ -63,7 +62,11 @@ const DashboardPage: Page = () => {
 
   const { focus, setFocus } = useNavigation()
 
-  useFocus(FocusItems.Dashborad.name)
+  useEffect(() => {
+    if (!focus) {
+      setFocus(FocusItems.Dashborad.name)
+    }
+  }, [focus])
 
   return (
     <Wrapper>
