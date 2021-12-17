@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Label } from '@hedvig-ui'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { CreateFilterModal } from 'features/claims/claim-templates/CreateFilterModal'
 import { ClaimFilterTemplate } from 'features/claims/claim-templates/hooks/use-template-claims'
@@ -20,13 +19,12 @@ const List = styled.div`
   margin-top: 0.5rem;
 `
 
-const TemplateCardStyled = styled.div<{ active: boolean; navigated: boolean }>`
+const TemplateCardStyled = styled.div<{ active: boolean }>`
   margin-right: 1rem;
   margin-bottom: 1rem;
   padding: 5px 13px;
   border-radius: 8px;
-  background-color: ${({ navigated, theme }) =>
-    !navigated ? theme.accent : theme.accentLight};
+  background-color: ${({ theme }) => theme.accent};
   cursor: pointer;
   opacity: ${({ active }) => (active ? 0.4 : 1)};
 
@@ -40,22 +38,20 @@ const TemplateName = styled.span`
   color: ${({ theme }) => theme.accentContrast};
 `
 
-const AddTemplateCard = styled.div<{ navigated: boolean }>`
+const AddTemplateCard = styled.div`
   display: flex;
   align-items: center;
   height: fit-content;
   padding: 5px 13px;
   border-radius: 8px;
-  border: 2px dashed
-    ${({ theme, navigated }) => (!navigated ? theme.accent : theme.accentLight)};
+  border: 2px dashed ${({ theme }) => theme.accent};
   cursor: pointer;
   outline: none;
 
   & span {
     margin-left: 0.5rem;
     font-size: 14px;
-    color: ${({ theme, navigated }) =>
-      !navigated ? theme.accent : theme.accentLight};
+    color: ${({ theme }) => theme.accent};
   }
 
   &:hover,
@@ -74,7 +70,6 @@ interface ClaimsTemplatesProps {
   templates: ClaimFilterTemplate[]
   onSelect: (id: string) => void
   onCreate: (filter: ClaimFilterTemplate) => void
-  navigationAvailable: boolean
 }
 
 export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
@@ -82,7 +77,6 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
   templates,
   onSelect,
   onCreate,
-  navigationAvailable,
 }) => {
   const [createFilter, setCreateFilter] = useState(false)
 
@@ -90,35 +84,12 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
     return null
   }
 
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
-    maxStep: templates.length - 1,
-    isActive: navigationAvailable,
-    onPerformNavigation: (index) => {
-      const currentIndex = index + 1
-      if (currentIndex === templates.length) {
-        setCreateFilter(true)
-        return
-      }
-
-      onSelect(templates[currentIndex].id)
-    },
-    vertical: false,
-    withNegative: true,
-  })
-
-  useEffect(() => {
-    if (!navigationAvailable) {
-      reset()
-    }
-  }, [navigationAvailable])
-
   return (
     <Wrapper>
       <Label>Templates</Label>
       <List>
-        {templates.map((filter, index) => (
+        {templates.map((filter) => (
           <TemplateCard
-            navigated={navigationAvailable && index === navigationStep + 1}
             key={filter.id}
             active={
               templates.length === 1 && !!activeId
@@ -132,9 +103,6 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
           />
         ))}
         <AddTemplateCard
-          navigated={
-            navigationAvailable && navigationStep + 1 === templates.length
-          }
           onClick={() => setCreateFilter(true)}
           tabIndex={0}
           onKeyDown={(e) => {
@@ -162,14 +130,12 @@ interface TemplateCardProps {
   template: ClaimFilterTemplate
   onSelect: (id: string) => void
   active: boolean
-  navigated: boolean
 }
 
 const TemplateCard: React.FC<TemplateCardProps> = ({
   template,
   onSelect,
   active,
-  navigated,
 }) => {
   const [{ totalClaims }, listClaims] = useListClaims()
 
@@ -181,7 +147,6 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
 
   return (
     <TemplateCardStyled
-      navigated={navigated}
       onClick={() => onSelect(template.id)}
       active={active}
       tabIndex={0}

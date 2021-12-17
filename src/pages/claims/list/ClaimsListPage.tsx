@@ -86,12 +86,11 @@ const ClaimsListPage: Page<
     }
   }, [focus])
 
-  useKeyIsPressed(Keys.F, () =>
-    setFocus(FocusItems.Claims.items?.ClaimsFilters),
-  )
-  useKeyIsPressed(Keys.T, () =>
-    setFocus(FocusItems.Claims.items?.ClaimsTemplates),
-  )
+  const focusHandler = () => {
+    setFocus(FocusItems.ClaimsFilters.name)
+  }
+
+  useKeyIsPressed(Keys.F, focusHandler)
 
   return (
     <ListPage>
@@ -104,7 +103,6 @@ const ClaimsListPage: Page<
         templates={templateFilters}
         onSelect={selectTemplate}
         onCreate={createTemplate}
-        navigationAvailable={focus === FocusItems.Claims.items?.ClaimsTemplates}
       />
 
       {templateActive && selectedTemplate ? (
@@ -112,14 +110,13 @@ const ClaimsListPage: Page<
           templateId={selectedTemplate}
           template={localFilter}
           editTemplate={editTemplate}
-          navigationAvailable={focus === FocusItems.Claims.items?.ClaimsFilters}
         />
       ) : (
         <ClaimListFilters
           date={date}
           setDate={setDate}
           page={page}
-          navigationAvailable={focus === FocusItems.Claims.items?.ClaimsFilters}
+          navigationAvailable={focus === FocusItems.ClaimsFilters.name}
         />
       )}
 
