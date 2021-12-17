@@ -39,10 +39,10 @@ export const TableBody: React.FC<
   const numberOfRows = React.Children.count(children)
 
   const [navigationStep] = useArrowKeyboardNavigation({
-    maxStep: numberOfRows - 2,
+    maxStep: numberOfRows - 1,
     onPerformNavigation: (index) => {
       if (onPerformNavigation) {
-        onPerformNavigation(index + 1)
+        onPerformNavigation(index)
       }
     },
     onNavigationStep: () => {
@@ -62,7 +62,7 @@ export const TableBody: React.FC<
 
   return (
     <StyledTableBody
-      activeRow={onPerformNavigation ? navigationStep + 1 : -1}
+      activeRow={onPerformNavigation ? navigationStep : -1}
       {...props}
     >
       {children}
