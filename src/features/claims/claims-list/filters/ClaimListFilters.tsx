@@ -53,9 +53,7 @@ export const StyledLabel = styled(Label)`
 `
 
 const OutcomeFilter = styled(OutcomeDropdown)`
-  & > li {
-    padding: 8px 1rem;
-  }
+  padding: 0.5rem;
 `
 
 export const complexityIcons = {
@@ -114,6 +112,12 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       : false
   }
 
+  useEffect(() => {
+    updateSetting(UserSettingKey.OutcomeFilter, {
+      claims: [],
+    })
+  }, [])
+
   const updateFilterHandler = (
     field: UserSettingKey,
     value: string | number,
@@ -147,7 +151,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
     if (!settings[field] || !settings[field].claims) {
       updateSetting(field, {
         ...settings[field],
-        claims: [value],
+        claims: value ? [value] : [],
       })
 
       return
@@ -155,7 +159,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
 
     updateSetting(field, {
       ...settings[field],
-      claims: settings[field].claims.includes(value)
+      claims: !value
+        ? []
+        : settings[field].claims.includes(value)
         ? settings[field].claims.filter(
             (currentValue) => currentValue !== value,
           )

@@ -1,4 +1,4 @@
-import { Dropdown, DropdownOption } from '@hedvig-ui'
+import { Dropdown, DropdownOption, MultiDropdown } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -64,24 +64,35 @@ export const OutcomeDropdown: React.FC<OutcomeDropdownProps> = ({
     }
   }
 
+  const outcomeOptions = [
+    ...Object.keys(ClaimOutcomes).map((value) => ({
+      value,
+      text: convertEnumToTitle(value),
+    })),
+    { value: 'not_specified', text: 'Not specified' },
+  ]
+
+  if (multi && typeof outcome === 'object' && onSelect) {
+    return (
+      <MultiDropdown
+        {...props}
+        value={outcome?.map((item) => convertEnumToTitle(item)) || null}
+        options={outcomeOptions.map((opt) => opt.text)}
+        placeholder="Outcome filter"
+        onChange={(value) => {
+          const selectedValue = outcomeOptions.filter(
+            (opt) => opt.text === value,
+          )[0]
+          onSelect(selectedValue.value)
+        }}
+        clearHandler={() => onSelect(null)}
+      />
+    )
+  }
+
   return (
-    <Dropdown
-      placeholder="Not specified"
-      focus={focus}
-      selectedValue={
-        multi && !!outcome && typeof outcome === 'object'
-          ? outcome.map((item) => convertEnumToTitle(item)).join(', ')
-          : undefined
-      }
-      {...props}
-    >
-      {[
-        ...Object.keys(ClaimOutcomes).map((value) => ({
-          value,
-          text: convertEnumToTitle(value),
-        })),
-        { value: 'not_specified', text: 'Not specified' },
-      ].map((opt) => (
+    <Dropdown placeholder="Not specified" focus={focus} {...props}>
+      {outcomeOptions.map((opt) => (
         <DropdownOption
           key={opt.value}
           onClick={() => {
@@ -90,10 +101,8 @@ export const OutcomeDropdown: React.FC<OutcomeDropdownProps> = ({
             )
           }}
           selected={
-            !multi
-              ? outcome === opt.value
-              : outcome?.includes(opt.value) ||
-                (outcome === null && opt.value === 'not_specified' && false)
+            outcome === opt.value ||
+            (outcome === null && opt.value === 'not_specified' && false)
           }
         >
           {opt.text}

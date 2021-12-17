@@ -126,7 +126,7 @@ const TriangleIcon = styled(TriangleFill)<{ active: number }>`
 export interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
   focus?: boolean
   placeholder?: string
-  selectedValue?: string
+  value?: string
   children: any
 }
 
@@ -134,7 +134,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   focus,
   placeholder,
   children,
-  selectedValue,
+  value,
   ...props
 }) => {
   const numberOfOptions = React.Children.count(children)
@@ -214,7 +214,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
           <Placeholder>{placeholder || 'Dropdown'}</Placeholder>
         </OptionStyled>
-      ) : !selectedValue ? (
+      ) : !value ? (
         {
           ...children[selectedIdx - 1],
           props: {
@@ -228,7 +228,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         }
       ) : (
         <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
-          {selectedValue}
+          {value}
         </OptionStyled>
       )}
 
