@@ -74,12 +74,23 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
   }, [])
 
   const isEnterPressed = useKeyIsPressed(Keys.Enter)
+  const isUpPressed = useKeyIsPressed(Keys.Up)
+  const isLeftPressed = useKeyIsPressed(Keys.Left)
 
   useEffect(() => {
     if (isEnterPressed && focus === FocusItems.Main.items.ModalSubmit) {
       createFilterHandler()
     }
   }, [isEnterPressed])
+
+  useEffect(() => {
+    if (
+      (isUpPressed || isLeftPressed) &&
+      focus === FocusItems.Main.items.ModalSubmit
+    ) {
+      setFocus(FocusItems.Main.items.ModalFilters)
+    }
+  }, [isUpPressed, isLeftPressed])
 
   return (
     <Modal
@@ -111,12 +122,9 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
         />
 
         <Button
-          focus={focus === FocusItems.Main.items.ModalSubmit}
           onClick={createFilterHandler}
-          onKeyDown={(e) => {
-            if (isPressing(e, Keys.Up) || isPressing(e, Keys.Left)) {
-              setFocus(FocusItems.Main.items.ModalFilters)
-            }
+          style={{
+            opacity: focus === FocusItems.Main.items.ModalSubmit ? '0.8' : '1',
           }}
         >
           {!editableTemplate ? 'Create' : 'Save'}

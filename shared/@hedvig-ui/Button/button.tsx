@@ -199,13 +199,16 @@ export const Button = styled(
     const btnRef = useRef<HTMLButtonElement>(null)
 
     useEffect(() => {
+      console.log(focus)
+    }, [focus])
+
+    useEffect(() => {
       if (!btnRef.current) {
         return
       }
 
       if (focus) {
         btnRef.current.focus()
-        return
       }
 
       btnRef.current.blur()
