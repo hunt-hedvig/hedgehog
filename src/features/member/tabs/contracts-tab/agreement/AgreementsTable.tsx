@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
-  Table as DefaultTable,
+  Table,
   TableBody,
   TableColumn,
   TableHeader,
@@ -15,12 +15,6 @@ import { InsuranceStatusBadge } from 'features/member/tabs/contracts-tab/agreeme
 import { getCarrierText } from 'features/member/tabs/contracts-tab/utils'
 import React, { useState } from 'react'
 import { AgreementStatus, GenericAgreement } from 'types/generated/graphql'
-
-const Table = styled(DefaultTable)<{ focused: boolean }>`
-  margin: 1em 0;
-  border: ${({ focused, theme }) =>
-    focused ? `1px solid ${theme.accent}` : 'none'};
-`
 
 const SelectableTableCell = styled(TableColumn)<{
   selected: boolean
@@ -55,7 +49,15 @@ export const AgreementsTable: React.FC<{
   const [activeRow, setActiveRow] = useState<number | null>(null)
 
   return (
-    <Table focused={navigationAvailable}>
+    <Table
+      style={{
+        margin: '1em 0',
+        borderRadius: '0.5rem',
+        boxShadow: navigationAvailable
+          ? '0px 0px 10px 6px rgba(34, 60, 80, 0.2)'
+          : 'none',
+      }}
+    >
       <TableHeader>
         <TableHeaderColumn>Line of Business</TableHeaderColumn>
         <TableHeaderColumn>Carrier</TableHeaderColumn>

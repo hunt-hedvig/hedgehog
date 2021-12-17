@@ -57,7 +57,11 @@ export const FilterElement: React.FC<FilterElementProps> = ({
     onPerformNavigation: (index) => {
       onPerfom(index)
     },
-    onNavigationStep: () => onNavigationStep?.(navigationStep),
+    onNavigationStep: () => {
+      if (onNavigationStep) {
+        onNavigationStep(navigationStep)
+      }
+    },
     isActive: active,
     withNegative: true,
   })

@@ -17,14 +17,14 @@ import {
   FocusItems,
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Contract as ContractType } from 'types/generated/graphql'
 import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 
 const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
   border-radius: 0.5rem;
-  border: ${({ focused, theme }) =>
-    focused ? `1px solid ${theme.accent}` : 'none'};
+  box-shadow: ${({ focused }) =>
+    focused ? '0px 0px 10px 6px rgba(34, 60, 80, 0.2)' : 'none'};
 `
 
 const ContractCard = styled(Card)`
@@ -63,10 +63,24 @@ export const Contract: React.FC<{
     (agreement) => agreement.id === selectedAgreement,
   )
 
+  const { focus, setFocus } = useNavigation()
+
   const cardsRef = useRef<HTMLDivElement>(null)
 
-  const { focus, setFocus } = useNavigation()
-  useElementFocus(cardsRef, focused)
+  useEffect(() => {
+    if (!cardsRef?.current) {
+      return
+    }
+
+    if (focused) {
+      cardsRef.current.scrollIntoView({
+        block: 'center',
+      })
+      return
+    }
+
+    cardsRef.current.blur()
+  }, [focused])
 
   const selectAgreementHandler = (agreementId: string | undefined) => {
     setSelectedAgreement(agreementId)

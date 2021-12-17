@@ -155,7 +155,15 @@ export const Tabs: React.FC<TabsProps> = ({
     withNegative: true,
   })
 
-  useElementFocus(tabsRef, navigationAvailable || false)
+  useEffect(() => {
+    if (!tabsRef?.current) {
+      return
+    }
+
+    if (navigationAvailable) {
+      tabsRef.current.scrollIntoView(false)
+    }
+  }, [navigationAvailable])
 
   return (
     <TabsWrapper tabCount={list.length} ref={tabsRef} {...props}>

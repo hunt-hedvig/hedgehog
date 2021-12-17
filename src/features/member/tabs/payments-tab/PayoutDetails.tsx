@@ -130,15 +130,6 @@ export const PayoutDetails: React.FC<{
       focus === FocusItems.Member.items.PaymentsForm && navigationAvailable,
   })
 
-  const getStyles = (step: number) => ({
-    border:
-      (focus === FocusItems.Member.items.PaymentsForm ||
-        focus === FocusItems.Member.items.PaymentsFormField) &&
-      navigationStep + 1 === step
-        ? '1px solid blue'
-        : 'none',
-  })
-
   return (
     <FormProvider {...form}>
       <Form onSubmit={onSubmitHandler}>
@@ -147,7 +138,14 @@ export const PayoutDetails: React.FC<{
             focus === FocusItems.Member.items.PaymentsFormField &&
             navigationStep + 1 === 0
           }
-          style={getStyles(0)}
+          style={{
+            border:
+              (focus === FocusItems.Member.items.PaymentsForm ||
+                focus === FocusItems.Member.items.PaymentsFormField) &&
+              navigationStep + 1 === 0
+                ? '2px solid red'
+                : 'none',
+          }}
           label="Category"
           options={entryTypeOptions}
           name="category"
@@ -161,7 +159,14 @@ export const PayoutDetails: React.FC<{
             focus === FocusItems.Member.items.PaymentsFormField &&
             navigationStep + 1 === 1
           }
-          style={getStyles(1)}
+          style={{
+            border:
+              (focus === FocusItems.Member.items.PaymentsForm ||
+                focus === FocusItems.Member.items.PaymentsFormField) &&
+              navigationStep + 1 === 1
+                ? '2px solid red'
+                : 'none',
+          }}
           label="Payout amount"
           name="amount"
           defaultValue=""
@@ -182,7 +187,14 @@ export const PayoutDetails: React.FC<{
             focus === FocusItems.Member.items.PaymentsFormField &&
             navigationStep + 1 === 2
           }
-          style={getStyles(2)}
+          style={{
+            border:
+              (focus === FocusItems.Member.items.PaymentsForm ||
+                focus === FocusItems.Member.items.PaymentsFormField) &&
+              navigationStep + 1 === 2
+                ? '2px solid red'
+                : 'none',
+          }}
           label="Reference Id"
           name="referenceId"
           defaultValue=""
@@ -202,7 +214,14 @@ export const PayoutDetails: React.FC<{
           label="Note"
           name="note"
           defaultValue=""
-          style={getStyles(3)}
+          style={{
+            border:
+              (focus === FocusItems.Member.items.PaymentsForm ||
+                focus === FocusItems.Member.items.PaymentsFormField) &&
+              navigationStep + 1 === 3
+                ? '2px solid red'
+                : 'none',
+          }}
         />
 
         <SubmitButton
@@ -210,7 +229,14 @@ export const PayoutDetails: React.FC<{
             focus === FocusItems.Member.items.PaymentsFormField &&
             navigationStep + 1 === 4
           }
-          style={getStyles(4)}
+          style={{
+            border:
+              (focus === FocusItems.Member.items.PaymentsForm ||
+                focus === FocusItems.Member.items.PaymentsFormField) &&
+              navigationStep + 1 === 4
+                ? '2px solid red'
+                : 'none',
+          }}
         >
           Create payout
         </SubmitButton>
