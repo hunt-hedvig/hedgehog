@@ -46,7 +46,6 @@ interface FocusItemsType {
       Member: string
       Debt: string
       Campaigns: string
-      CampaignsRedeem: string
     }
   }
   Questions: {
@@ -111,7 +110,6 @@ export const FocusItems: FocusItemsType = {
       Member: 'MEMBER_MEMBER_TAB',
       Debt: 'MEMBER_DEBT',
       Campaigns: 'MEMBER_CAMPAIGNS',
-      CampaignsRedeem: 'MEMBER_CAMPAIGNS_REDEEM',
     },
   },
   Questions: {
