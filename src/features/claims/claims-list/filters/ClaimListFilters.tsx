@@ -160,7 +160,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   const [navigationStep, reset] = useArrowKeyboardNavigation({
     maxStep: 4,
     isActive: navigationAvailable,
-    direction: 'horizontal',
+    vertical: false,
     withNegative: true,
   })
 

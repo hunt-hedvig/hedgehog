@@ -29,6 +29,6 @@ export interface UseVerticalKeyboardNavigationProps {
   onNavigationStep?: NavigationStepHandler
   onExit?: () => void
   isActive?: boolean
-  direction?: 'vertical' | 'horizontal'
+  vertical?: boolean
   withNegative?: boolean
 }

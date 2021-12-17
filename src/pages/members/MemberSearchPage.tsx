@@ -63,7 +63,7 @@ const MemberSearchPage: Page = () => {
   }, [isEnterPressed])
 
   useEffect(() => {
-    if (isDownPressed && !focus && !!memberHistory.length && !members.length) {
+    if (isDownPressed && !focus) {
       setFocus(FocusItems.Members.items?.Suggestions)
     }
   }, [isDownPressed])

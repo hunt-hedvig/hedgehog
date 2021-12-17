@@ -354,14 +354,14 @@ const isPressingKeys = (
 export const useKeyIsPressed = (
   key: Key,
   callback?: (e) => void,
-  disableOnInput: boolean = true,
+  disableInInput: boolean = true,
 ): boolean => {
   const [keyPressed, setKeyPressed] = useState(false)
 
   const handleKeydown = (e: any) => {
     if (
       isPressing(e, key) &&
-      (disableOnInput && !isPressing(e, Keys.Escape)
+      (disableInInput && !isPressing(e, Keys.Escape)
         ? e.target?.nodeName !== 'INPUT' && e.target?.nodeName !== 'TEXTAREA'
         : true)
     ) {

@@ -140,7 +140,7 @@ const ToolsPage: Page = () => {
       const currentIndex = index + 1
       history.push(paths[currentIndex])
     },
-    direction: 'horizontal',
+    vertical: false,
     withNegative: true,
   })
 
