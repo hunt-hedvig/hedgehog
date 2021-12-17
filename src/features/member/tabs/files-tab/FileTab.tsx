@@ -10,7 +10,6 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
-import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
 import React from 'react'
 import { FileUpload, useFileUploadsQueryQuery } from 'types/generated/graphql'
 
@@ -56,9 +55,6 @@ export const MemberFile: React.FC<{
   const { data, loading, error } = useFileUploadsQueryQuery({
     variables: { memberId },
   })
-
-  useFocus(FocusItems.Member.items.Files)
-
   if (error) {
     return (
       <div>

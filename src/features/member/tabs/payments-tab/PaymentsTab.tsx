@@ -28,7 +28,6 @@ import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import { Market } from 'features/config/constants'
 import { useGetAccount } from 'features/member/tabs/account-tab/hooks/use-get-account'
-import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
 import gql from 'graphql-tag'
 import React, { useMemo, useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -192,8 +191,6 @@ export const PaymentsTab: React.FC<{
   })
 
   const [manualAmount, setManualAmount] = useState('0')
-
-  useFocus(FocusItems.Member.items.Payments)
 
   const { data: quotesData } = useGetQuotesQuery({
     variables: {

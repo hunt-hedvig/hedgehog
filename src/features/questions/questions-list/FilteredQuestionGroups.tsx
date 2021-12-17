@@ -8,9 +8,8 @@ import React, { useEffect, useState } from 'react'
 import { QuestionGroup } from 'types/generated/graphql'
 import { QuestionGroupItem, QuestionGroupItemProps } from './QuestionGroupItem'
 
-const FadeInQuestionGroup = withFadeIn<QuestionGroupItemProps>(
-  QuestionGroupItem,
-)
+const FadeInQuestionGroup =
+  withFadeIn<QuestionGroupItemProps>(QuestionGroupItem)
 
 export const FilteredQuestionGroups: React.FC<{
   filterQuestionGroups: ReadonlyArray<QuestionGroup>

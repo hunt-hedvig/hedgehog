@@ -15,7 +15,6 @@ import {
 } from '@hedvig-ui'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
 import { FraudulentStatusEdit } from 'features/member/tabs/member-tab/FraudulentStatus'
-import { FocusItems, useFocus } from 'features/navigation/hooks/use-navigation'
 import React, { useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -76,8 +75,6 @@ export const MemberTab: React.FC<{
   const [fraudDescription, setFraudDescription] = useState(null)
   const [editMemberInfo] = useEditMemberInfoMutation()
   const [setFraudulentStatus] = useSetFraudulentStatusMutation()
-
-  useFocus(FocusItems.Member.items.Member)
 
   const form = useForm()
 

@@ -122,10 +122,8 @@ export const MemberTabsList = ({ memberId, member }) => {
   const path =
     pathname.length === 4 ? pathname[pathname.length - 1] : 'contracts'
 
-  const navigateToTab = (tabName) => {
+  const navigateToTab = (tabName) =>
     history.replace(`/members/${memberId}/${tabName}`)
-    setFocus(null)
-  }
 
   useEffect(() => {
     pushToMemberHistory(memberId)

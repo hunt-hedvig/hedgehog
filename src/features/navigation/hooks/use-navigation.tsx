@@ -33,13 +33,6 @@ interface FocusItemsType {
       ContractTable: string
       ContractForm: string
       QuoteTabs: string
-      Files: string
-      Claims: string
-      Payments: string
-      Account: string
-      Member: string
-      Debt: string
-      Campaigns: string
     }
   }
   Conversations: {
@@ -88,13 +81,6 @@ export const FocusItems: FocusItemsType = {
       ContractTable: 'MEMBER_CONTRACT_TABLE',
       ContractForm: 'MEMBER_CONTRACT_FORM',
       QuoteTabs: 'MEMBER_QUOTE_TABS',
-      Files: 'MEMBER_FILES',
-      Claims: 'MEMBER_CLAIMS',
-      Payments: 'MEMBER_PAYMENTS',
-      Account: 'MEMBER_ACCOUNT',
-      Member: 'MEMBER_MEMBER_TAB',
-      Debt: 'MEMBER_DEBT',
-      Campaigns: 'MEMBER_CAMPAIGNS',
     },
   },
   Conversations: {
@@ -131,10 +117,6 @@ export const NavigationProvider = ({ children }) => {
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
   const [focus, setFocus] = useState<string | null>(null)
   const [_, setPrevFocus] = useState<string | null>(null)
-
-  useEffect(() => {
-    console.log(focus)
-  }, [focus])
 
   const changeFocusHandler = (value: string | null) => {
     setFocus((prev) => {
