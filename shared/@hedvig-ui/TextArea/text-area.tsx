@@ -58,16 +58,9 @@ export const TextArea: React.FC<TextAreaProps> = ({
 
   useEffect(() => {
     setTimeout(() => {
-      if (!textareaRef?.current) {
-        return
-      }
-
-      if (focus) {
+      if (focus && textareaRef.current) {
         textareaRef.current.focus()
-        return
       }
-
-      textareaRef.current.blur()
     }, 0)
   }, [focus])
 

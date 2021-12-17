@@ -13,11 +13,6 @@ import {
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import {
@@ -101,10 +96,6 @@ const ConversationsPage: Page<
     }
   }
 
-  const { focus } = useNavigation()
-
-  useFocus(FocusItems.Conversations.name)
-
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
 
@@ -135,11 +126,7 @@ const ConversationsPage: Page<
       return
     }
 
-    if (
-      isDownKeyPressed &&
-      currentQuestionOrder < filteredGroups.length - 1 &&
-      focus === FocusItems.Conversations.name
-    ) {
+    if (isDownKeyPressed && currentQuestionOrder < filteredGroups.length - 1) {
       fade('up', 'out').then(() => {
         history.push(
           `/conversations/${
@@ -149,11 +136,7 @@ const ConversationsPage: Page<
       })
     }
 
-    if (
-      isUpKeyPressed &&
-      currentQuestionOrder > 0 &&
-      focus === FocusItems.Conversations.name
-    ) {
+    if (isUpKeyPressed && currentQuestionOrder > 0) {
       fade('down', 'out').then(() => {
         history.push(
           `/conversations/${

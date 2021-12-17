@@ -72,20 +72,20 @@ const RadioLabel = styled.div<{ checked?: boolean; disabled?: boolean }>`
 interface RadioGroupProps {
   value?: string | number
   onChange?: any
-  options: Array<{
+  options: {
     value: string | number
     label: string | React.ReactNode
     disabled?: boolean
-  }>
+  }[]
 }
 
 interface RadioProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onKeyDown'> {
   label: string | React.ReactNode
-  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
+  onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void
 }
 
-export const Radio: React.FC<RadioProps> = ({
+const Radio: React.FC<RadioProps> = ({
   value,
   label,
   id,
