@@ -300,20 +300,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
     }
   }, [isSPressed])
 
-  const getActiveMenuItem = () => {
-    const activeMenuItem = MenuItemsList.map((item, index) => {
-      if (location.pathname.startsWith(item.route)) {
-        return index
-      }
-
-      return undefined
-    }).filter((index) => typeof index === 'number')[0]
-
-    return typeof activeMenuItem === 'number' ? activeMenuItem - 1 : -1
-  }
-
   const [navigationStep, reset] = useArrowKeyboardNavigation({
-    defaultNavigationStep: getActiveMenuItem(),
     maxStep: MenuItemsList.length - 2,
     isActive: focus === FocusItems.Main.items.Sidebar,
   })
