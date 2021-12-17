@@ -12,7 +12,7 @@ import {
   useNavigation,
 } from 'features/navigation/hooks/use-navigation'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   Chat,
   ChevronLeft,
@@ -287,18 +287,11 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
   const sidebarRef = useRef<HTMLDivElement>(null)
   const { focus, setFocus } = useNavigation()
 
-  const isSPressed = useKeyIsPressed(Keys.S)
+  const focusHandler = () => {
+    setFocus(FocusItems.Main.items.Sidebar)
+  }
 
-  useEffect(() => {
-    if (
-      isSPressed &&
-      focus !== FocusItems.Main.items.Modal &&
-      focus !== FocusItems.Main.items.ModalFilters &&
-      focus !== FocusItems.Main.items.ModalSubmit
-    ) {
-      setFocus(FocusItems.Main.items.Sidebar)
-    }
-  }, [isSPressed])
+  useKeyIsPressed(Keys.S, focusHandler)
 
   const [navigationStep, reset] = useArrowKeyboardNavigation({
     maxStep: MenuItemsList.length - 2,

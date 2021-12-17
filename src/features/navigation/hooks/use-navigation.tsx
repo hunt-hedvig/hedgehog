@@ -12,8 +12,6 @@ interface FocusItemsType {
       Sidebar: string
       Topbar: string
       Modal: string
-      ModalFilters: string
-      ModalSubmit: string
     }
   }
   Dashborad: {
@@ -71,8 +69,6 @@ export const FocusItems: FocusItemsType = {
       Sidebar: 'SIDEBAR_SECTION',
       Topbar: 'TOPBAR_SECTION',
       Modal: 'MODAL_SECTION',
-      ModalFilters: 'MODAL_FILTERS',
-      ModalSubmit: 'MODAL_SUBMIT',
     },
   },
   Dashborad: {
@@ -139,10 +135,6 @@ export const NavigationProvider = ({ children }) => {
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
   const [focus, setFocus] = useState<string | null>(null)
   const [_, setPrevFocus] = useState<string | null>(null)
-
-  // useEffect(() => {
-  //   console.log(focus)
-  // }, [focus])
 
   const changeFocusHandler = (value: string | null) => {
     setFocus((prev) => {

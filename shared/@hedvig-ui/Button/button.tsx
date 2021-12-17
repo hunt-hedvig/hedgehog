@@ -199,10 +199,6 @@ export const Button = styled(
     const btnRef = useRef<HTMLButtonElement>(null)
 
     useEffect(() => {
-      console.log(focus)
-    }, [focus])
-
-    useEffect(() => {
       if (!btnRef.current) {
         return
       }
@@ -215,7 +211,7 @@ export const Button = styled(
     }, [focus])
 
     return (
-      <button {...props} ref={btnRef}>
+      <button ref={btnRef} {...props}>
         <ButtonIconWrapper>
           {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
           <div>{children}</div>
