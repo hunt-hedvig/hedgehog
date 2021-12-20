@@ -24,7 +24,7 @@ rules:
   - id: pages-use-suffix
     paths:
       include:
-        - "*src/pages/*"
+        - '*src/pages/*'
     patterns:
       - pattern: |
           const $NAME: Page = (...) => { ... }

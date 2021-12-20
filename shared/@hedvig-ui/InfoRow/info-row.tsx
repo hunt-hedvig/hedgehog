@@ -24,10 +24,7 @@ export const InfoText = styled('span')`
 export const InfoSection = styled.div`
   margin: 1.5rem 0;
   background-color: ${({ theme }) =>
-    chroma(theme.accent)
-      .brighten(1)
-      .alpha(0.1)
-      .hex()};
+    chroma(theme.accent).brighten(1).alpha(0.1).hex()};
 
   padding: 0.3rem 1rem;
   border-radius: 0.5rem;
