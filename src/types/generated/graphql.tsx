@@ -2691,6 +2691,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
             | 'contractTypeName'
             | 'createdAt'
             | 'isLocked'
+            | 'selfChangeBlockers'
           > & {
               genericAgreements: Array<
                 { __typename?: 'GenericAgreement' } & Pick<
@@ -6546,6 +6547,7 @@ export const GetContractsDocument = gql`
         contractTypeName
         createdAt
         isLocked
+        selfChangeBlockers
       }
     }
   }

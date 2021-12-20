@@ -1,10 +1,11 @@
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { Button, Input, MainHeadline, Spacing } from '@hedvig-ui'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Page } from 'pages/routes'
+import gql from 'graphql-tag'
 
 const UNSIGN_MEMBER = gql`
   mutation UnsignMember($ssn: String, $email: String) {
