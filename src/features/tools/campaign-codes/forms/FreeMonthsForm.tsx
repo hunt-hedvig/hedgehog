@@ -91,6 +91,7 @@ export const FreeMonthsForm: React.FC = () => {
         <div style={{ width: '100%', paddingRight: '1.0em' }}>
           <Label>Valid from</Label>
           <TextDatePicker
+            withCurrentTime
             onChange={(validFrom) => setFormData({ ...formData, validFrom })}
             value={formData.validFrom}
             placeholder="Beginning of time"
@@ -98,8 +99,8 @@ export const FreeMonthsForm: React.FC = () => {
         </div>
         <div style={{ width: '100%', paddingLeft: '1.0em' }}>
           <Label>Valid to</Label>
-          {/* TODO: Add time */}
           <TextDatePicker
+            withCurrentTime
             onChange={(validUntil) => setFormData({ ...formData, validUntil })}
             value={formData.validUntil}
             placeholder="End of time"
@@ -154,25 +155,24 @@ export const FreeMonthsForm: React.FC = () => {
         <Button
           disabled={loading || !formLooksGood(formData)}
           onClick={() => {
-            console.log(formData as AssignVoucherFreeMonths)
-            // confirm(`Create new campaign code "${formData.code}"?`).then(() => {
-            //   toast.promise(
-            //     setPartnerFreeMonths({
-            //       variables: {
-            //         request: formData as AssignVoucherFreeMonths,
-            //       },
-            //       refetchQueries: () => ['FindPartnerCampaigns'],
-            //     }),
-            //     {
-            //       loading: 'Creating campaign',
-            //       success: () => {
-            //         reset()
-            //         return 'Campaign created'
-            //       },
-            //       error: 'Could not create campaign',
-            //     },
-            //   )
-            // })
+            confirm(`Create new campaign code "${formData.code}"?`).then(() => {
+              toast.promise(
+                setPartnerFreeMonths({
+                  variables: {
+                    request: formData as AssignVoucherFreeMonths,
+                  },
+                  refetchQueries: () => ['FindPartnerCampaigns'],
+                }),
+                {
+                  loading: 'Creating campaign',
+                  success: () => {
+                    reset()
+                    return 'Campaign created'
+                  },
+                  error: 'Could not create campaign',
+                },
+              )
+            })
           }}
         >
           Create Campaign

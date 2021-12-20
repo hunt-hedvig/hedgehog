@@ -41,14 +41,11 @@ const formIsValid = (formData: NoDiscountFormData) => {
 }
 
 export const NoDiscountForm: React.FC = () => {
-  const [formData, setFormData] = React.useState<NoDiscountFormData>(
-    initialFormData,
-  )
+  const [formData, setFormData] =
+    React.useState<NoDiscountFormData>(initialFormData)
 
-  const [
-    setPartnerNoDiscount,
-    { loading },
-  ] = useAssignCampaignToPartnerNoDiscountMutation()
+  const [setPartnerNoDiscount, { loading }] =
+    useAssignCampaignToPartnerNoDiscountMutation()
 
   const codeTypeOptions = getCodeTypeOptions()
 
@@ -84,6 +81,7 @@ export const NoDiscountForm: React.FC = () => {
         <div style={{ width: '100%', paddingRight: '1.0em' }}>
           <Label>Valid from</Label>
           <TextDatePicker
+            withCurrentTime
             onChange={(validFrom) => setFormData({ ...formData, validFrom })}
             value={formData.validFrom}
             placeholder="Beginning of time"
@@ -92,6 +90,7 @@ export const NoDiscountForm: React.FC = () => {
         <div style={{ width: '100%', paddingLeft: '1.0em' }}>
           <Label>Valid to</Label>
           <TextDatePicker
+            withCurrentTime
             onChange={(validUntil) => setFormData({ ...formData, validUntil })}
             value={formData.validUntil}
             placeholder="End of time"

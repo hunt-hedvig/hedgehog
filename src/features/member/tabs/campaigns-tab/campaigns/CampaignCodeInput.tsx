@@ -3,8 +3,6 @@ import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useManualRedeemCampaignMutation } from 'types/generated/graphql'
-import { parseISO } from 'date-fns'
-import formatDate from 'date-fns/format'
 import { getTodayFormatDate } from 'features/member/tabs/contracts-tab/agreement/helpers'
 
 export const CampaignCodeInput: React.FC<{
@@ -32,12 +30,12 @@ export const CampaignCodeInput: React.FC<{
             setCampaignCode(value)
           }}
         />
-        {/* {activationDate && (
+        {activationDate && (
           <>
             <div>
               <Spacing left="small" right="small">
-                TODO: Add time
                 <TextDatePicker
+                  withCurrentTime
                   onChange={setActivationDate}
                   value={activationDate}
                 />
@@ -47,7 +45,7 @@ export const CampaignCodeInput: React.FC<{
               Remove
             </Button>
           </>
-        )} */}
+        )}
       </Flex>
       <Spacing top />
       <Flex>

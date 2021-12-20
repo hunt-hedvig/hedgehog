@@ -88,6 +88,7 @@ interface TextDatePickerProps extends Omit<InputProps, 'value' | 'onChange'> {
   errorMessage?: string
   maxDate?: Date
   showTimePicker?: boolean
+  withCurrentTime?: boolean
 }
 
 export const TextDatePicker: React.FC<TextDatePickerProps> = ({
@@ -97,32 +98,27 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   errorMessage,
   maxDate,
   showTimePicker,
+  withCurrentTime,
   ...props
 }) => {
   const [showOldDatepicker, setShowOldDatepicker] = React.useState(false)
   const [textValue, setTextValue] = React.useState<string | null>()
 
   React.useEffect(() => {
-    // if (value) {
-    //   const isoDate = parseISO(value.toISOString())
-    //   const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
-    //   setTextValue(formattedDate)
-    //   return
-    // }
-
-    setTextValue(value)
+    setTextValue(value?.split('T')[0])
   }, [value])
 
   const formatAndSetDate = (date: Date) => {
     const isoDate = parseISO(date.toISOString())
-    const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
+    let formattedDate: string = formatDate(isoDate, 'yyyy-MM-dd')
 
-    // if (value && formattedDate === formatDate(value, 'yyyy-MM-dd')) {
-    //   return
-    // }
+    if (withCurrentTime) {
+      const isoTime = new Date().toISOString().split('T')[1]
+      formattedDate = formattedDate + 'T' + isoTime
+    }
 
+    setTextValue(value?.split('T')[0])
     onChange(formattedDate)
-    setTextValue(formattedDate)
   }
 
   const setDateHandler = () => {
