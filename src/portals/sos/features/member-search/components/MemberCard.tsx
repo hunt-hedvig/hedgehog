@@ -1,11 +1,9 @@
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import React from 'react'
 import chroma from 'chroma-js'
 import { Flex, Spacing } from '@hedvig-ui'
 
-const Card = styled.div<{ extended: boolean }>`
-  cursor: ${({ extended }) => (extended ? 'default' : 'pointer')};
-
+const Card = styled.div`
   background-color: ${({ theme }) =>
     chroma(theme.foreground).brighten(0.5).hex()};
 
@@ -16,7 +14,6 @@ const Card = styled.div<{ extended: boolean }>`
   transition: height 200ms ease-in-out;
   border: 1px solid ${({ theme }) => theme.foreground};
   padding: 1.5rem;
-  height: ${({ extended }) => (extended ? '22rem' : '12rem')};
   border-radius: 0.75rem;
   width: 25rem;
 
@@ -31,10 +28,7 @@ const Card = styled.div<{ extended: boolean }>`
   }
 
   #member-extra {
-    transition: all 200ms ease-in-out;
-    height: ${({ extended }) => (extended ? '100%' : 0)};
     font-size: 1rem;
-    opacity: ${({ extended }) => (extended ? '1' : '0')};
     color: ${({ theme }) => theme.accentContrast};
     padding-top: 2rem;
   }
@@ -54,14 +48,12 @@ const Card = styled.div<{ extended: boolean }>`
 const Group = styled.div`
   border-radius: 0.5rem;
   padding: 0.4rem 0.7rem;
-  background-color: ${({ theme }) => chroma(theme.background).alpha(0.2).hex()};
+  background-color: ${({ theme }) => chroma(theme.background).alpha(0.1).hex()};
 `
 
-const ShowLess = styled.div`
-  cursor: pointer;
-  color: ${({ theme }) => theme.accentContrast};
-  text-decoration: underline;
-  font-size: 0.95rem;
+const GroupLabel = styled.span`
+  color: ${({ theme }) => chroma(theme.accentContrast).alpha(0.5).hex()};
+  font-size: 0.8rem;
 `
 
 export const MemberCard: React.FC<{
@@ -70,38 +62,30 @@ export const MemberCard: React.FC<{
   email: string
   phoneNumber: string
 }> = ({ fullName, memberId, email, phoneNumber }) => {
-  const [extended, setExtended] = useState(false)
-
   return (
-    <Card extended={extended} onClick={() => setExtended(true)}>
+    <Card>
       <div>
         <div id="member-name">{fullName}</div>
         <div id="member-id">{memberId}</div>
       </div>
       <div id="member-extra">
-        <Group>
-          <div>Crafoords Väg 14</div>
-          <div>113 24 Stockholm</div>
-        </Group>
+        {email && (
+          <Group>
+            <GroupLabel>E-mail</GroupLabel>
+            <div>{email}</div>
+          </Group>
+        )}
         <Spacing top="small" />
-        <Group>
-          <div>{phoneNumber}</div>
-          <div>{email}</div>
-        </Group>
+        {phoneNumber && (
+          <Group>
+            <GroupLabel>Phone</GroupLabel>
+            <div>{phoneNumber}</div>
+          </Group>
+        )}
       </div>
       <Spacing top="small" />
       <Flex justify="space-between" align="flex-end">
         <div id="member-market">🇩🇰 Denmark</div>
-        {extended && (
-          <ShowLess
-            onClick={(e) => {
-              e.stopPropagation()
-              setExtended(false)
-            }}
-          >
-            Show less
-          </ShowLess>
-        )}
       </Flex>
     </Card>
   )
