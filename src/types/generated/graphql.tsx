@@ -1505,13 +1505,21 @@ export type SetContractForClaim = {
   contractId: Scalars['String']
 }
 
+export type SosMemberContract = {
+  __typename?: 'SOSMemberContract'
+  contractId: Scalars['ID']
+  typeOfContract: Scalars['String']
+}
+
 export type SosMemberLookupResult = {
   __typename?: 'SOSMemberLookupResult'
-  memberId: Scalars['String']
+  memberId: Scalars['ID']
   firstName: Scalars['String']
   lastName: Scalars['String']
   email: Scalars['String']
   phoneNumber: Scalars['String']
+  market: Scalars['String']
+  contracts: Array<SosMemberContract>
 }
 
 export type SwitchableSwitcherEmail = {
@@ -4000,8 +4008,15 @@ export type SosMemberLookupQueryVariables = Exact<{
 export type SosMemberLookupQuery = { __typename?: 'QueryType' } & {
   SOSMemberLookup: { __typename?: 'SOSMemberLookupResult' } & Pick<
     SosMemberLookupResult,
-    'memberId' | 'firstName' | 'lastName' | 'email' | 'phoneNumber'
-  >
+    'memberId' | 'firstName' | 'lastName' | 'email' | 'phoneNumber' | 'market'
+  > & {
+      contracts: Array<
+        { __typename?: 'SOSMemberContract' } & Pick<
+          SosMemberContract,
+          'contractId' | 'typeOfContract'
+        >
+      >
+    }
 }
 
 export const SetClaimDateDocument = gql`
@@ -11037,6 +11052,11 @@ export const SosMemberLookupDocument = gql`
       lastName
       email
       phoneNumber
+      market
+      contracts {
+        contractId
+        typeOfContract
+      }
     }
   }
 `

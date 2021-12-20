@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 import chroma from 'chroma-js'
 import { Flex, Spacing } from '@hedvig-ui'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 
 const Card = styled.div`
   background-color: ${({ theme }) =>
@@ -56,12 +57,19 @@ const GroupLabel = styled.span`
   font-size: 0.8rem;
 `
 
+const flags: Record<string, string> = {
+  DENMARK: '🇩🇰',
+  NORWAY: '🇳🇴',
+  SWEDEN: '🇸🇪',
+}
+
 export const MemberCard: React.FC<{
   fullName: string
   memberId: string
   email: string
   phoneNumber: string
-}> = ({ fullName, memberId, email, phoneNumber }) => {
+  market: string
+}> = ({ fullName, memberId, email, phoneNumber, market }) => {
   return (
     <Card>
       <div>
@@ -85,7 +93,11 @@ export const MemberCard: React.FC<{
       </div>
       <Spacing top="small" />
       <Flex justify="space-between" align="flex-end">
-        <div id="member-market">🇩🇰 Denmark</div>
+        {market in flags && (
+          <div id="member-market">
+            {flags[market]} {convertEnumToTitle(market)}
+          </div>
+        )}
       </Flex>
     </Card>
   )

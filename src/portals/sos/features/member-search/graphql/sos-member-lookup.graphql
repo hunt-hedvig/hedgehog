@@ -5,5 +5,10 @@ query SOSMemberLookup($ssn: String!) {
     lastName
     email
     phoneNumber
+    market
+    contracts {
+      contractId
+      typeOfContract
+    }
   }
 }

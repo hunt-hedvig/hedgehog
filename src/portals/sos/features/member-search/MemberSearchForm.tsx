@@ -96,6 +96,8 @@ export const MemberSearchForm: React.FC = () => {
       return
     }
 
+    setError('')
+
     memberLookup({ variables: { ssn } }).then((response) => {
       if (response.error) {
         setError('No member found for SSN')
@@ -107,6 +109,9 @@ export const MemberSearchForm: React.FC = () => {
   }
 
   const member = data?.SOSMemberLookup
+  const contracts = data?.SOSMemberLookup?.contracts ?? []
+
+  console.log(member)
 
   return (
     <Container pushTop={showResult}>
@@ -151,11 +156,16 @@ export const MemberSearchForm: React.FC = () => {
           memberId={member?.memberId ?? ''}
           email={member?.email ?? ''}
           phoneNumber={member?.phoneNumber ?? ''}
+          market={member?.market ?? ''}
         />
-        <Spacing top="small" />
-        <InsuranceCard />
-        <Spacing top="small" />
-        <InsuranceCard />
+        {contracts.map((contract) => {
+          return (
+            <React.Fragment key={contract.contractId}>
+              <Spacing top="small" />
+              <InsuranceCard />
+            </React.Fragment>
+          )
+        })}
       </ResultWrapper>
     </Container>
   )
