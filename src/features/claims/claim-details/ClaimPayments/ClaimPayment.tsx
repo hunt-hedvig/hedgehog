@@ -105,6 +105,7 @@ export const ClaimPayment: React.FC<{
     form.setValue('deductible', '')
     form.setValue('note', '')
     setIsExGratia(false)
+    setDate(null)
     form.setValue(
       'type',
       isPaymentActivated
@@ -194,18 +195,6 @@ export const ClaimPayment: React.FC<{
         },
       )
     }
-  }
-
-  const setDateHandler = (newDate: Date | null) => {
-    if (!newDate) {
-      return
-    }
-
-    const dateString = new Date(newDate.setHours(newDate.getHours() + 2))
-      .toISOString()
-      .split('T')[0]
-
-    setDate(dateString)
   }
 
   return (
@@ -309,9 +298,9 @@ export const ClaimPayment: React.FC<{
 
         <TextDatePicker
           style={{ marginBottom: '2rem' }}
-          placeholder={`Payment performed (${new Date().toDateString()})`}
-          value={date ? new Date(date) : null}
-          onChange={setDateHandler}
+          placeholder="Payment performed"
+          value={date}
+          onChange={setDate}
         />
 
         <div>

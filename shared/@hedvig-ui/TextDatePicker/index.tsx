@@ -55,7 +55,6 @@ export const getDate = (value: string) => {
 const InlineDatePicker = ({
   value,
   setValue,
-  setTextValue,
   setView,
   maxDate,
   showTimePicker,
@@ -71,10 +70,7 @@ const InlineDatePicker = ({
           inline
           date={value || null}
           onChange={(date) => {
-            const newDate = parseISO(date.toISOString())
-            const formattedDate = formatDate(newDate, 'yyyy-MM-dd')
             setValue(date)
-            setTextValue(formattedDate)
             setView(false)
           }}
           showTimeSelect={showTimePicker}
@@ -87,8 +83,8 @@ const InlineDatePicker = ({
 }
 
 interface TextDatePickerProps extends Omit<InputProps, 'value' | 'onChange'> {
-  value?: Date | null
-  onChange: (date: Date | null) => void
+  value?: string | null
+  onChange: (date: string | null) => void
   errorMessage?: string
   maxDate?: Date
   showTimePicker?: boolean
@@ -107,34 +103,39 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   const [textValue, setTextValue] = React.useState<string | null>()
 
   React.useEffect(() => {
-    if (value) {
-      const isoDate = parseISO(value.toISOString())
-      const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
-      setTextValue(formattedDate)
-      return
-    }
+    // if (value) {
+    //   const isoDate = parseISO(value.toISOString())
+    //   const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
+    //   setTextValue(formattedDate)
+    //   return
+    // }
 
-    setTextValue(null)
+    setTextValue(value)
   }, [value])
+
+  const formatAndSetDate = (date: Date) => {
+    const isoDate = parseISO(date.toISOString())
+    const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
+
+    // if (value && formattedDate === formatDate(value, 'yyyy-MM-dd')) {
+    //   return
+    // }
+
+    onChange(formattedDate)
+    setTextValue(formattedDate)
+  }
 
   const setDateHandler = () => {
     const date = getDate(textValue || '')
 
     if (!date) {
+      onChange(null)
       return
     }
 
-    const newDate = date.start
+    const newDate = new Date(date.start)
 
-    const isoDate = parseISO(newDate)
-    const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
-
-    if (value && formattedDate === formatDate(value, 'yyyy-MM-dd')) {
-      return
-    }
-
-    onChange(new Date(newDate))
-    setTextValue(formattedDate)
+    formatAndSetDate(newDate)
   }
 
   return (
@@ -150,7 +151,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
         value={textValue || ''}
         onChange={(e) => setTextValue(e.target.value)}
         onKeyDown={(e) => {
-          if (isPressing(e, Keys.Enter) && textValue) {
+          if (isPressing(e, Keys.Enter)) {
             setDateHandler()
           }
         }}
@@ -160,8 +161,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
       {showOldDatepicker && (
         <InlineDatePicker
           value={value}
-          setValue={onChange}
-          setTextValue={setTextValue}
+          setValue={(dateValue) => formatAndSetDate(dateValue)}
           setView={setShowOldDatepicker}
           maxDate={maxDate}
           showTimePicker={showTimePicker}
