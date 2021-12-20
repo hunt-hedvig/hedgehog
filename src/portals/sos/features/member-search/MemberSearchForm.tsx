@@ -149,6 +149,8 @@ export const MemberSearchForm: React.FC = () => {
         <MemberCard
           fullName={`${member?.firstName ?? ''} ${member?.lastName ?? ''}`}
           memberId={member?.memberId ?? ''}
+          email={member?.email ?? ''}
+          phoneNumber={member?.phoneNumber ?? ''}
         />
         <Spacing top="small" />
         <InsuranceCard />

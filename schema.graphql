@@ -54,6 +54,8 @@ type SOSMemberLookupResult {
   memberId: String!
   firstName: String!
   lastName: String!
+  email: String!
+  phoneNumber: String!
 }
 
 type ResourceAccessInformation {

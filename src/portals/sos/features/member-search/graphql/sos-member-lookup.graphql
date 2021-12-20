@@ -3,5 +3,7 @@ query SOSMemberLookup($ssn: String!) {
     memberId
     firstName
     lastName
+    email
+    phoneNumber
   }
 }

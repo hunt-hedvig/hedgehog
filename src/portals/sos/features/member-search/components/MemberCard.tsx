@@ -64,10 +64,12 @@ const ShowLess = styled.div`
   font-size: 0.95rem;
 `
 
-export const MemberCard: React.FC<{ fullName: string; memberId: string }> = ({
-  fullName,
-  memberId,
-}) => {
+export const MemberCard: React.FC<{
+  fullName: string
+  memberId: string
+  email: string
+  phoneNumber: string
+}> = ({ fullName, memberId, email, phoneNumber }) => {
   const [extended, setExtended] = useState(false)
 
   return (
@@ -83,8 +85,8 @@ export const MemberCard: React.FC<{ fullName: string; memberId: string }> = ({
         </Group>
         <Spacing top="small" />
         <Group>
-          <div>+46702568097</div>
-          <div>rasmus.guterstam@gmail.com</div>
+          <div>{phoneNumber}</div>
+          <div>{email}</div>
         </Group>
       </div>
       <Spacing top="small" />

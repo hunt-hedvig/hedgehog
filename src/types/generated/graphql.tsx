@@ -1510,6 +1510,8 @@ export type SosMemberLookupResult = {
   memberId: Scalars['String']
   firstName: Scalars['String']
   lastName: Scalars['String']
+  email: Scalars['String']
+  phoneNumber: Scalars['String']
 }
 
 export type SwitchableSwitcherEmail = {
@@ -3997,7 +3999,7 @@ export type SosMemberLookupQueryVariables = Exact<{
 export type SosMemberLookupQuery = { __typename?: 'QueryType' } & {
   SOSMemberLookup: { __typename?: 'SOSMemberLookupResult' } & Pick<
     SosMemberLookupResult,
-    'memberId' | 'firstName' | 'lastName'
+    'memberId' | 'firstName' | 'lastName' | 'email' | 'phoneNumber'
   >
 }
 
@@ -11031,6 +11033,8 @@ export const SosMemberLookupDocument = gql`
       memberId
       firstName
       lastName
+      email
+      phoneNumber
     }
   }
 `
