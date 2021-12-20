@@ -1,5 +1,4 @@
 import { Button, TextDatePicker } from '@hedvig-ui'
-import { format } from 'date-fns'
 import { useContracts } from 'features/member/tabs/contracts-tab/hooks/use-contracts'
 import { getContractByAgreementId } from 'features/member/tabs/contracts-tab/utils'
 import React, { useEffect, useState } from 'react'
@@ -11,9 +10,10 @@ import {
   useAddAgreementFromQuoteMutation,
 } from 'types/generated/graphql'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
+import { getTodayFormatDate } from 'features/member/tabs/contracts-tab/agreement/helpers'
 
-const getInitialActiveFrom = (contract: Contract): Date | null =>
-  contract.hasPendingAgreement ? null : new Date()
+const getInitialActiveFrom = (contract: Contract): string | null =>
+  contract.hasPendingAgreement ? null : getTodayFormatDate()
 
 export const QuoteActivation: React.FC<{
   quote: Quote
@@ -31,8 +31,8 @@ export const QuoteActivation: React.FC<{
     return null
   }
   const [contracts, { loading }] = useContracts(memberId)
-  const [activeFrom, setActiveFrom] = useState<Date | null>(null)
-  const [previousAgreementActiveTo] = useState<Date | null>(null)
+  const [activeFrom, setActiveFrom] = useState<string | null>(null)
+  const [previousAgreementActiveTo] = useState<string | null>(null)
 
   useEffect(() => {
     if (!contracts) {
@@ -48,10 +48,8 @@ export const QuoteActivation: React.FC<{
     setActiveFrom(getInitialActiveFrom(originatingContract))
   }, [contracts?.length])
 
-  const [
-    addAgreement,
-    addAgreementMutation,
-  ] = useAddAgreementFromQuoteMutation()
+  const [addAgreement, addAgreementMutation] =
+    useAddAgreementFromQuoteMutation()
 
   if (loading) {
     return null
@@ -83,12 +81,10 @@ export const QuoteActivation: React.FC<{
           addAgreement({
             variables: {
               id: quote.id,
-              activeFrom: activeFrom ? format(activeFrom, 'yyyy-MM-dd') : null,
+              activeFrom: activeFrom || null,
               activeTo: null,
               contractId: contract.id,
-              previousAgreementActiveTo: previousAgreementActiveTo
-                ? format(previousAgreementActiveTo, 'yyy-MM-dd')
-                : null,
+              previousAgreementActiveTo: previousAgreementActiveTo || null,
             },
             refetchQueries: () => [
               {
@@ -134,7 +130,7 @@ export const QuoteActivation: React.FC<{
                     }
                     setActiveFrom(date)
                   }}
-                  value={activeFrom || new Date()}
+                  value={activeFrom}
                 />
               </div>
             )}

@@ -90,8 +90,8 @@ export enum FilterGroupState {
 }
 
 interface ClaimListFiltersProps extends React.HTMLAttributes<HTMLDivElement> {
-  date?: string | null
-  setDate?: (date: string) => void
+  date: string | null
+  setDate: (date: string | null) => void
   page?: string
 }
 
@@ -138,18 +138,6 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           )
         : [...settings[field].claims, value],
     })
-  }
-
-  const setDateHandler = (newDate: Date | null) => {
-    if (!newDate) {
-      return
-    }
-
-    const dateString = new Date(newDate.setHours(newDate.getHours() + 2))
-      .toISOString()
-      .split('T')[0]
-
-    setDate?.(dateString)
   }
 
   return (
@@ -262,10 +250,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           label="Date up until"
           popover="The claim was registered either before or on this date."
         />
-        <TextDatePicker
-          value={date ? new Date(date) : new Date()}
-          onChange={setDateHandler}
-        />
+        <TextDatePicker value={date} onChange={setDate} />
       </FilterElement>
     </FilterWrapper>
   )

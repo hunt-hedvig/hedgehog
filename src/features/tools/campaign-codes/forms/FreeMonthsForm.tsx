@@ -51,14 +51,11 @@ const formLooksGood = (formData: FreeMonthsFormData) => {
 }
 
 export const FreeMonthsForm: React.FC = () => {
-  const [formData, setFormData] = React.useState<FreeMonthsFormData>(
-    initialFormData,
-  )
+  const [formData, setFormData] =
+    React.useState<FreeMonthsFormData>(initialFormData)
 
-  const [
-    setPartnerFreeMonths,
-    { loading },
-  ] = useAssignCampaignToPartnerFreeMonthsMutation()
+  const [setPartnerFreeMonths, { loading }] =
+    useAssignCampaignToPartnerFreeMonthsMutation()
 
   const codeTypeOptions = getCodeTypeOptions()
 
@@ -101,6 +98,7 @@ export const FreeMonthsForm: React.FC = () => {
         </div>
         <div style={{ width: '100%', paddingLeft: '1.0em' }}>
           <Label>Valid to</Label>
+          {/* TODO: Add time */}
           <TextDatePicker
             onChange={(validUntil) => setFormData({ ...formData, validUntil })}
             value={formData.validUntil}
@@ -156,24 +154,25 @@ export const FreeMonthsForm: React.FC = () => {
         <Button
           disabled={loading || !formLooksGood(formData)}
           onClick={() => {
-            confirm(`Create new campaign code "${formData.code}"?`).then(() => {
-              toast.promise(
-                setPartnerFreeMonths({
-                  variables: {
-                    request: formData as AssignVoucherFreeMonths,
-                  },
-                  refetchQueries: () => ['FindPartnerCampaigns'],
-                }),
-                {
-                  loading: 'Creating campaign',
-                  success: () => {
-                    reset()
-                    return 'Campaign created'
-                  },
-                  error: 'Could not create campaign',
-                },
-              )
-            })
+            console.log(formData as AssignVoucherFreeMonths)
+            // confirm(`Create new campaign code "${formData.code}"?`).then(() => {
+            //   toast.promise(
+            //     setPartnerFreeMonths({
+            //       variables: {
+            //         request: formData as AssignVoucherFreeMonths,
+            //       },
+            //       refetchQueries: () => ['FindPartnerCampaigns'],
+            //     }),
+            //     {
+            //       loading: 'Creating campaign',
+            //       success: () => {
+            //         reset()
+            //         return 'Campaign created'
+            //       },
+            //       error: 'Could not create campaign',
+            //     },
+            //   )
+            // })
           }}
         >
           Create Campaign
