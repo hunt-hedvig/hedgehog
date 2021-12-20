@@ -12,19 +12,29 @@ import { Agreement } from 'portals/hope/features/member/tabs/contracts-tab/agree
 import { AgreementsTable } from 'portals/hope/features/member/tabs/contracts-tab/agreement/AgreementsTable'
 import { MasterInception } from 'portals/hope/features/member/tabs/contracts-tab/contract/master-inception'
 import { TerminationDate } from 'portals/hope/features/member/tabs/contracts-tab/contract/termination-date'
-import { getSignSource } from 'portals/hope/features/member/tabs/contracts-tab/utils'
-import {
-  FocusItems,
-  useNavigation,
-} from 'portals/hope/features/navigation/hooks/use-navigation'
-import React, { useRef } from 'react'
+import React from 'react'
+import { ExclamationCircle } from 'react-bootstrap-icons'
 import { Contract as ContractType } from 'types/generated/graphql'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
+import { getSignSource } from 'portals/hope/features/member/tabs/contracts-tab/utils'
 
-const ContractsCardsWrapper = styled(CardsWrapper)<{ focused: boolean }>`
+const Blockers = styled.div`
+  list-style: none;
+
+  display: flex;
+  align-items: center;
+
+  background-color: ${({ theme }) => theme.accentLighter};
+  padding: 0.625rem;
   border-radius: 0.5rem;
-  border: ${({ focused, theme }) =>
-    focused ? `1px solid ${theme.accent}` : 'none'};
+
+  margin: 0 0 0.5rem;
+
+  & span {
+    margin-left: 0.5rem;
+    font-size: 12px;
+    line-height: 0;
+    color: ${({ theme }) => theme.semiStrongForeground};
+  }
 `
 
 const ContractWrapper = styled('div')`
@@ -39,9 +49,7 @@ export const Contract: React.FC<{
   contract: ContractType
   refetch: () => Promise<any>
   shouldPreSelectAgreement: boolean
-  focused: boolean
-  selected: boolean
-}> = ({ contract, refetch, shouldPreSelectAgreement, focused, selected }) => {
+}> = ({ contract, refetch, shouldPreSelectAgreement }) => {
   const [selectedAgreement, setSelectedAgreement] = React.useState<
     string | undefined
   >(shouldPreSelectAgreement ? contract.currentAgreementId : undefined)
@@ -50,21 +58,9 @@ export const Contract: React.FC<{
     (agreement) => agreement.id === selectedAgreement,
   )
 
-  const cardsRef = useRef<HTMLDivElement>(null)
-
-  const { focus, setFocus } = useNavigation()
-  useElementFocus(cardsRef, focused)
-
-  const selectAgreementHandler = (agreementId: string | undefined) => {
-    setSelectedAgreement(agreementId)
-    if (agreementId) {
-      setFocus(FocusItems.Member.items.ContractForm)
-    }
-  }
-
   return (
     <ContractWrapper>
-      <ContractsCardsWrapper ref={cardsRef} focused={focused}>
+      <CardsWrapper>
         <Card locked={contract.isLocked} span={3}>
           <InfoContainer>
             <ThirdLevelHeadline>
@@ -100,23 +96,31 @@ export const Contract: React.FC<{
           <ThirdLevelHeadline>Termination Date</ThirdLevelHeadline>
           <TerminationDate contract={contract} />
         </Card>
-      </ContractsCardsWrapper>
+      </CardsWrapper>
       <AgreementsTable
         agreements={contract.genericAgreements}
         selectedAgreement={selectedAgreement}
-        setSelectedAgreement={selectAgreementHandler}
-        navigationAvailable={
-          selected && focus === FocusItems.Member.items.ContractTable
-        }
+        setSelectedAgreement={setSelectedAgreement}
       />
+      {!!contract.selfChangeBlockers.length && (
+        <Blockers>
+          <ExclamationCircle />
+          <span>
+            Self-change blocker:{' '}
+            {contract.selfChangeBlockers.map((blocker, index) => (
+              <>
+                <strong>{convertEnumToTitle(blocker)}</strong>
+                {index !== contract.selfChangeBlockers.length - 1 ? ' & ' : ''}
+              </>
+            ))}
+          </span>
+        </Blockers>
+      )}
       {agreementToShow && (
         <Agreement
           agreement={agreementToShow}
           contract={contract}
           refetch={refetch}
-          navigationAvailable={
-            focus === FocusItems.Member.items.ContractForm && selected
-          }
         />
       )}
     </ContractWrapper>

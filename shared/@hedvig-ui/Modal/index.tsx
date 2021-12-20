@@ -19,10 +19,10 @@ const ModalWrapperStyled = styled.div<{
   width: 100vw;
   height: 100vh;
 
-  ${({ dim }) =>
+  ${({ dim, theme }) =>
     dim &&
     css`
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: ${theme.backgroundTransparent};
     `};
 
   position: fixed;

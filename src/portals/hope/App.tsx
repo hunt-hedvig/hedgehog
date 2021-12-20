@@ -4,7 +4,6 @@ import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
 import { CommandLineProvider } from 'portals/hope/features/commands/use-command-line'
-import { NavigationProvider } from 'portals/hope/features/navigation/hooks/use-navigation'
 import {
   Logo,
   LogoIcon,
@@ -23,6 +22,7 @@ import TagManager from 'react-gtm-module'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Route, Router, Switch } from 'react-router'
+import { NavigationProvider } from 'portals/hope/features/navigation/hooks/use-navigation'
 
 const Layout = styled(BaseStyle)`
   display: flex;

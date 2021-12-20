@@ -14,7 +14,7 @@ import {
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { formatMoney } from '@hedvig-ui/utils/money'
 import { format, parseISO } from 'date-fns'
-import React, { useState } from 'react'
+import React from 'react'
 import { InfoCircleFill, Trash } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import {
@@ -42,11 +42,9 @@ export const PopoverItem = styled.div`
 export const MonthlyEntriesTable: React.FC<{
   memberId: string
   monthlyEntries: ReadonlyArray<MonthlyEntry>
-  navigationAvailable: boolean
-}> = ({ memberId, monthlyEntries, navigationAvailable }) => {
+}> = ({ memberId, monthlyEntries }) => {
   const [removeMonthlyEntry] = useRemoveMonthlyEntryMutation()
   const { confirm } = useConfirmDialog()
-  const [activeRow, setActiveRow] = useState<number | null>(null)
 
   return (
     <StyledTable>
@@ -61,16 +59,10 @@ export const MonthlyEntriesTable: React.FC<{
         </TableHeaderColumn>
         <TableHeaderColumn style={{ width: 43 }} />
       </TableHeader>
-      <TableBody
-        isActive={navigationAvailable}
-        setActiveRow={(num) => setActiveRow(num)}
-        onPerformNavigation={() => {
-          return
-        }}
-      >
-        {monthlyEntries.map((monthlyEntry, index) => {
+      <TableBody>
+        {monthlyEntries.map((monthlyEntry) => {
           return (
-            <TableRow key={monthlyEntry.id} border active={activeRow === index}>
+            <TableRow key={monthlyEntry.id} border>
               <TableColumn>{monthlyEntry.externalId ?? 'None'}</TableColumn>
               <TableColumn>
                 <Capitalized>{monthlyEntry.source}</Capitalized>

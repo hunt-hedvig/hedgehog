@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client'
+import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
 import {
   Badge,
@@ -8,16 +9,11 @@ import {
   SecondLevelHeadline,
   Spacing,
 } from '@hedvig-ui'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'portals/hope/features/dashboard/Greeting'
-import { MetricList } from 'portals/hope/features/dashboard/MetricList'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'portals/hope/features/navigation/hooks/use-navigation'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React from 'react'
 import { DashboardNumbers } from 'types/generated/graphql'
@@ -27,6 +23,88 @@ import gql from 'graphql-tag'
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+`
+
+const MetricsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
+
+export const metricStyles = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
+  color: ${theme.accentContrast} !important;
+  background: ${theme.accent};
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  min-width: 200px;
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+    color: ${theme.accentContrast}!important;
+  }
+`
+
+const Metric = styled(Link)`
+  ${({ theme }) => metricStyles(theme)}
+`
+
+const AddMetricCard = styled.div`
+  min-height: 111.5px;
+  width: 200px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+
+  outline: none;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  padding: 15px 0;
+
+  border: 2px dotted ${({ theme }) => theme.border};
+
+  & svg {
+    width: 2em;
+    height: 2em;
+    color: ${({ theme }) => theme.border};
+    margin-bottom: 0.5rem;
+    transition: none;
+  }
+
+  & span {
+    font-size: 14px;
+    color: ${({ theme }) => theme.accentLight};
+  }
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+    border-color: ${({ theme }) => theme.accent};
+
+    & svg,
+    & span {
+      color: ${({ theme }) => theme.accent};
+    }
+  }
+`
+
+export const MetricNumber = styled.span`
+  display: block;
+  font-size: 2rem;
+  padding-bottom: 0.25rem;
+`
+export const MetricName = styled.span`
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.66;
 `
 
 const ChangeLogWrapper = styled(CasualList)`
@@ -52,8 +130,9 @@ const DashboardPage: Page = () => {
   const { data: dashboardData } = useQuery(GET_DASHBOARD_NUMBERS, {
     pollInterval: 1000 * 5,
   })
+  const [createFilter, setCreateFilter] = useState(false)
 
-  const { me } = useMe()
+  const { settings, me } = useMe()
 
   const dashboardNumbers = dashboardData?.dashboardNumbers as
     | DashboardNumbers
@@ -61,9 +140,12 @@ const DashboardPage: Page = () => {
 
   useTitle('Dashboard')
 
-  const { focus, setFocus } = useNavigation()
-
-  useFocus(FocusItems.Dashborad.name)
+  const {
+    templateFilters,
+    createTemplate,
+    editTemplateWithName,
+    removeTemplate,
+  } = useTemplateClaims()
 
   return (
     <Wrapper>
@@ -72,11 +154,53 @@ const DashboardPage: Page = () => {
       </Spacing>
       {dashboardNumbers && (
         <FadeIn>
-          <MetricList
-            setFocus={(value: string) => setFocus(value)}
-            dashboardNumbers={dashboardNumbers}
-            navigationAvailable={focus === FocusItems.Dashborad.name}
-          />
+          <MetricsWrapper>
+            <Metric to="/claims/list/1">
+              <MetricNumber>
+                {dashboardNumbers?.numberOfClaims || 0}
+              </MetricNumber>
+              <MetricName>claims</MetricName>
+            </Metric>
+            {settings[UserSettingKey.FeatureFlags] &&
+            settings[UserSettingKey.FeatureFlags]?.conversations ? (
+              <Metric to="/conversations">
+                <MetricNumber>
+                  {dashboardNumbers?.numberOfQuestions || 0}
+                </MetricNumber>
+                <MetricName>conversations</MetricName>
+              </Metric>
+            ) : (
+              <Metric to="/questions">
+                <MetricNumber>
+                  {dashboardNumbers?.numberOfQuestions || 0}
+                </MetricNumber>
+                <MetricName>questions</MetricName>
+              </Metric>
+            )}
+
+            {templateFilters.map((template) => (
+              <FilteredMetric
+                onCreate={createTemplate}
+                onRemove={removeTemplate}
+                onEdit={editTemplateWithName}
+                key={template.id}
+                template={template}
+              />
+            ))}
+
+            <AddMetricCard
+              tabIndex={0}
+              onClick={() => setCreateFilter(true)}
+              onKeyDown={(e) => {
+                if (isPressing(e, Keys.Enter)) {
+                  setCreateFilter(true)
+                }
+              }}
+            >
+              <Plus />
+              <span>Filtered Claim Template</span>
+            </AddMetricCard>
+          </MetricsWrapper>
         </FadeIn>
       )}
       <Spacing top="large">
@@ -117,6 +241,12 @@ const DashboardPage: Page = () => {
           })}
         </ChangeLogWrapper>
       </Spacing>
+      {createFilter && (
+        <CreateFilterModal
+          onClose={() => setCreateFilter(false)}
+          onSave={createTemplate}
+        />
+      )}
     </Wrapper>
   )
 }

@@ -1,9 +1,4 @@
 import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
-import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MembersList } from 'portals/hope/features/members-search/components/MembersList'
 import { MemberSuggestions } from 'portals/hope/features/members-search/components/MemberSuggestions'
@@ -15,12 +10,7 @@ import {
   MemberSuggestionsWrapper,
   NoMembers,
 } from 'portals/hope/features/members-search/styles'
-import {
-  FocusItems,
-  useNavigation,
-} from 'portals/hope/features/navigation/hooks/use-navigation'
-import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useHistory } from 'react-router'
 import { Page } from 'portals/hope/pages/routes'
 
@@ -29,9 +19,8 @@ const MemberSearchPage: Page = () => {
   const [includeAll, setIncludeAll] = React.useState(false)
   const [luckySearch, setLuckySearch] = React.useState(false)
   const history = useHistory()
-  const searchField = useRef<HTMLInputElement>(null)
+  const searchField = useRef<React.ReactElement>()
 
-  const { memberHistory } = useMemberHistory()
   const [{ members, totalPages, page }, memberSearch, { loading }] =
     useMemberSearch()
 
@@ -49,31 +38,13 @@ const MemberSearchPage: Page = () => {
 
   useTitle('Members')
 
-  const isUpPressed = useKeyIsPressed(Keys.Up)
-  const { focus, setFocus } = useNavigation()
-
-  useEffect(() => {
-    setFocus(FocusItems.Members.items.Search)
-  }, [])
-
-  useEffect(() => {
-    if (
-      isUpPressed &&
-      (!focus || focus === FocusItems.Members.items.Suggestions) &&
-      !members.length
-    ) {
-      setFocus(FocusItems.Members.items.Search)
-    }
-  }, [isUpPressed])
-
   return (
-    <div>
+    <>
       <SearchForm
         onSubmit={() => {
           memberSearch(query || '%', {
             includeAll,
           })
-          setFocus(null)
         }}
         loading={loading}
         query={query}
@@ -83,32 +54,11 @@ const MemberSearchPage: Page = () => {
         currentResultSize={members.length}
         searchFieldRef={searchField as any}
         setLuckySearch={setLuckySearch}
-        focus={focus === FocusItems.Members.items.Search}
-        onKeyDown={(e) => {
-          if (isPressing(e, Keys.Down)) {
-            if (!!members.length && focus === FocusItems.Members.items.Search) {
-              setFocus(null)
-              return
-            }
-
-            if (
-              !members.length &&
-              !!memberHistory.length &&
-              focus === FocusItems.Members.items.Search
-            ) {
-              setFocus(FocusItems.Members.items.Suggestions)
-            }
-          }
-        }}
       />
       {members.length > 0 && (
         <>
           <FadeIn>
-            <MembersList
-              setFocus={setFocus}
-              members={members}
-              navigationAvailable={focus === null}
-            />
+            <MembersList members={members} />
             <TablePageSelect
               currentPage={page}
               totalPages={totalPages}
@@ -141,12 +91,7 @@ const MemberSearchPage: Page = () => {
 
           <MemberSuggestionsWrapper>
             <MainHeadline>Suggestions</MainHeadline>
-            <MemberSuggestions
-              memberHistory={memberHistory}
-              navigationAvailable={
-                focus === FocusItems.Members.items.Suggestions
-              }
-            />
+            <MemberSuggestions />
           </MemberSuggestionsWrapper>
         </>
       )}
@@ -156,7 +101,7 @@ const MemberSearchPage: Page = () => {
           <div>D*shborad! No members found</div>
         </NoMembers>
       )}
-    </div>
+    </>
   )
 }
 
