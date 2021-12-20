@@ -83,7 +83,7 @@ const ContractItem: React.FC<{
       <ContractItemDateRange>
         {contract.masterInception}
         {' - '}
-        {contract.terminationDate ? contract.terminationDate : 'Ongoing'}
+        {contract.terminationDate ?? 'Ongoing'}
       </ContractItemDateRange>
     </ContractItemStyled>
   )

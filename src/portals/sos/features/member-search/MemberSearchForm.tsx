@@ -9,6 +9,7 @@ import {
 import { colorsV3 } from '@hedviginsurance/brand'
 import { MemberCard } from 'portals/sos/features/member-search/components/MemberCard'
 import { InsuranceCard } from 'portals/sos/features/member-search/components/InsuranceCard'
+import chroma from 'chroma-js'
 
 const Wrapper = styled.form`
   width: 25rem;
@@ -58,6 +59,12 @@ const ErrorInformation = styled.div`
 const ResultWrapper = styled.div<{ show: boolean }>`
   transition: opacity 300ms ease-in-out;
   opacity: ${({ show }) => (show ? 1 : 0)};
+`
+
+const NoInsuranceMessage = styled.div`
+  margin-top: 2rem;
+  text-align: center;
+  color: ${({ theme }) => chroma(theme.foreground).alpha(0.4).hex()};
 `
 
 export const MemberSearchForm: React.FC = () => {
@@ -111,8 +118,6 @@ export const MemberSearchForm: React.FC = () => {
   const member = data?.SOSMemberLookup
   const contracts = data?.SOSMemberLookup?.contracts ?? []
 
-  console.log(member)
-
   return (
     <Container pushTop={showResult}>
       <LogoContainer>
@@ -151,21 +156,16 @@ export const MemberSearchForm: React.FC = () => {
       </FormContainer>
       <Spacing top="medium" />
       <ResultWrapper show={showResult}>
-        <MemberCard
-          fullName={`${member?.firstName ?? ''} ${member?.lastName ?? ''}`}
-          memberId={member?.memberId ?? ''}
-          email={member?.email ?? ''}
-          phoneNumber={member?.phoneNumber ?? ''}
-          market={member?.market ?? ''}
-        />
-        {contracts.map((contract) => {
-          return (
-            <React.Fragment key={contract.contractId}>
-              <Spacing top="small" />
-              <InsuranceCard />
-            </React.Fragment>
-          )
-        })}
+        {member && <MemberCard member={member} />}
+        {contracts.map((contract) => (
+          <React.Fragment key={contract.contractId}>
+            <Spacing top="small" />
+            <InsuranceCard contract={contract} />
+          </React.Fragment>
+        ))}
+        {!contracts.length && (
+          <NoInsuranceMessage>No active insurances</NoInsuranceMessage>
+        )}
       </ResultWrapper>
     </Container>
   )

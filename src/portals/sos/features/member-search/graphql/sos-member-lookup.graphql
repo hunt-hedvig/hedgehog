@@ -9,6 +9,14 @@ query SOSMemberLookup($ssn: String!) {
     contracts {
       contractId
       typeOfContract
+      masterInception
+      terminationDate
+      numberCoInsured
+      address {
+        street
+        postalCode
+        city
+      }
     }
   }
 }

@@ -1509,6 +1509,10 @@ export type SosMemberContract = {
   __typename?: 'SOSMemberContract'
   contractId: Scalars['ID']
   typeOfContract: Scalars['String']
+  masterInception?: Maybe<Scalars['LocalDate']>
+  terminationDate?: Maybe<Scalars['LocalDate']>
+  numberCoInsured: Scalars['Int']
+  address?: Maybe<Address>
 }
 
 export type SosMemberLookupResult = {
@@ -4013,8 +4017,19 @@ export type SosMemberLookupQuery = { __typename?: 'QueryType' } & {
       contracts: Array<
         { __typename?: 'SOSMemberContract' } & Pick<
           SosMemberContract,
-          'contractId' | 'typeOfContract'
-        >
+          | 'contractId'
+          | 'typeOfContract'
+          | 'masterInception'
+          | 'terminationDate'
+          | 'numberCoInsured'
+        > & {
+            address?: Maybe<
+              { __typename?: 'Address' } & Pick<
+                Address,
+                'street' | 'postalCode' | 'city'
+              >
+            >
+          }
       >
     }
 }
@@ -11056,6 +11071,14 @@ export const SosMemberLookupDocument = gql`
       contracts {
         contractId
         typeOfContract
+        masterInception
+        terminationDate
+        numberCoInsured
+        address {
+          street
+          postalCode
+          city
+        }
       }
     }
   }

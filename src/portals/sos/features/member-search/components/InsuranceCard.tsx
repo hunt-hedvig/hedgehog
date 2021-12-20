@@ -1,7 +1,10 @@
 import styled from '@emotion/styled'
 import React from 'react'
-import { Flex } from '@hedvig-ui'
+import { Flex, Spacing } from '@hedvig-ui'
 import chroma from 'chroma-js'
+import { TypeOfContractType } from 'portals/hope/features/config/constants'
+import { SosMemberContract } from 'types/generated/graphql'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 
 const Card = styled.div`
   display: flex;
@@ -37,20 +40,66 @@ const Card = styled.div`
     font-size: 1rem;
     color: ${({ theme }) => chroma(theme.foreground).brighten(1).hex()};
   }
+
+  #insurance-address {
+    div {
+      span {
+        display: inline-block;
+        margin: 0 0.25rem;
+        color: ${({ theme }) => chroma(theme.foreground).brighten(4).hex()};
+      }
+      border-radius: 0.25rem;
+      padding: 0.3rem 0.6rem;
+      font-size: 1rem;
+      background-color: ${({ theme }) =>
+        chroma(theme.foreground).brighten(1).alpha(0.1).hex()};
+    }
+  }
 `
 
-export const InsuranceCard: React.FC = () => {
+export const InsuranceCard: React.FC<{ contract: SosMemberContract }> = ({
+  contract: {
+    typeOfContract,
+    masterInception,
+    terminationDate,
+    numberCoInsured,
+    address,
+  },
+}) => {
   return (
     <Card>
       <Flex justify="space-between" align="center">
-        <div id="insurance-name">Danish Travel</div>
+        <div id="insurance-name">
+          {convertEnumToTitle(TypeOfContractType[typeOfContract])}
+        </div>
       </Flex>
       <Flex>
-        <div id="insurance-date">2020-01-01 - Ongoing</div>
+        <div id="insurance-date">
+          {masterInception} - {terminationDate ?? 'Ongoing'}
+        </div>
       </Flex>
       <Flex>
-        <div id="insurance-coinsured">Covers holder + 2</div>
+        <div id="insurance-coinsured">
+          Covers holder {numberCoInsured > 0 ? '+ ' + numberCoInsured : ''}
+        </div>
       </Flex>
+      {address && (
+        <>
+          <Spacing top="small" />
+          <Flex>
+            <div id="insurance-address">
+              <div>
+                {address.street} <span>•</span> {address.postalCode}{' '}
+                {!!address?.city && (
+                  <>
+                    <span>•</span> {address.city}
+                  </>
+                )}
+              </div>
+            </div>
+          </Flex>
+        </>
+      )}
     </Card>
   )
 }

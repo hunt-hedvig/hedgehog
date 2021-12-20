@@ -63,6 +63,10 @@ type SOSMemberLookupResult {
 type SOSMemberContract {
   contractId: ID!
   typeOfContract: String!
+  masterInception: LocalDate
+  terminationDate: LocalDate
+  numberCoInsured: Int!
+  address: Address
 }
 
 type ResourceAccessInformation {
