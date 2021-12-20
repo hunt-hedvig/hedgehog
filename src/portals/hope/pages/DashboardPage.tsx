@@ -15,10 +15,15 @@ import { changelog } from 'changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'portals/hope/features/dashboard/Greeting'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
-import React from 'react'
-import { DashboardNumbers } from 'types/generated/graphql'
+import React, { useState } from 'react'
+import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
 import gql from 'graphql-tag'
+import { Link } from 'react-router-dom'
+import { useTemplateClaims } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
+import { FilteredMetric } from 'portals/hope/features/claims/claim-templates/FilteredMetric'
+import { Plus } from 'react-bootstrap-icons'
+import { CreateFilterModal } from 'portals/hope/features/claims/claim-templates/CreateFilterModal'
 
 const Wrapper = styled.div`
   display: flex;

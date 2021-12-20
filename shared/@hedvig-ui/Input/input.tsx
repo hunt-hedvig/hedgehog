@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { InputHTMLAttributes, useEffect, useRef } from 'react'
+import React, { InputHTMLAttributes, useRef } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { Spinner } from '../Spinner/spinner'
 
