@@ -50,10 +50,6 @@ export const FromDate: React.FC<{
     setDatePickerEnabled(false)
   }
 
-  useEffect(() => {
-    console.log(fromDate)
-  }, [fromDate])
-
   const onConfirm = () => {
     let confirmText = (
       <>
