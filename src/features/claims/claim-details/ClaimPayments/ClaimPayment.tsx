@@ -18,6 +18,7 @@ import {
   SanctionStatus,
   useCreateClaimPaymentMutation,
   useCreateSwishClaimPaymentMutation,
+  useGetMemberTransactionsQuery,
 } from 'types/generated/graphql'
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 
@@ -56,7 +57,19 @@ export const ClaimPayment: React.FC<{
   identified: boolean
   market: string
   carrier: string
-}> = ({ focus, sanctionStatus, carrier, claimId, identified, market }) => {
+  memberId: string
+}> = ({
+  focus,
+  sanctionStatus,
+  carrier,
+  claimId,
+  identified,
+  market,
+  memberId,
+}) => {
+  const { data: memberData, loading } = useGetMemberTransactionsQuery({
+    variables: { id: memberId },
+  })
   const [createPayment] = useCreateClaimPaymentMutation()
   const [createSwishPayment] = useCreateSwishClaimPaymentMutation()
 
@@ -65,12 +78,18 @@ export const ClaimPayment: React.FC<{
   const [isOverridden, setIsOverridden] = useState(false)
   const [date, setDate] = useState<string | null>(null)
 
+  const isPaymentActivated =
+    !!memberData?.member?.directDebitStatus?.activated ||
+    !!memberData?.member?.payoutMethodStatus?.activated
+
   const categoryOptions: CategoryOptionsType[] = [
     ...Object.keys(ClaimPaymentType).map((paymentType, index) => ({
       key: index + 1,
       value: paymentType,
       text: paymentType,
-      disabled: paymentType === ClaimPaymentType.Manual,
+      disabled:
+        paymentType === ClaimPaymentType.Manual ||
+        (paymentType === ClaimPaymentType.Automatic && !isPaymentActivated),
     })),
     {
       key: 5,
@@ -86,7 +105,12 @@ export const ClaimPayment: React.FC<{
     form.setValue('deductible', '')
     form.setValue('note', '')
     setIsExGratia(false)
-    form.setValue('type', 'Automatic')
+    form.setValue(
+      'type',
+      isPaymentActivated
+        ? ClaimPaymentType.Automatic
+        : ClaimPaymentType.IndemnityCost,
+    )
     form.reset()
   }
 
@@ -98,10 +122,14 @@ export const ClaimPayment: React.FC<{
     if (isExGratia && form.getValues().type === ClaimPaymentType.Automatic) {
       form.setValue('type', undefined)
     }
-    if (!isExGratia && form.getValues().type === undefined) {
+    if (
+      !isExGratia &&
+      form.getValues().type === undefined &&
+      isPaymentActivated
+    ) {
       form.setValue('type', ClaimPaymentType.Automatic)
     }
-  }, [isExGratia])
+  }, [isExGratia, isPaymentActivated])
 
   const createPaymentHandler = async () => {
     const paymentInput: Partial<ClaimPaymentInput | ClaimSwishPaymentInput> = {
@@ -219,27 +247,35 @@ export const ClaimPayment: React.FC<{
           checked={isExGratia}
           onChange={() => setIsExGratia((prev) => !prev)}
         />
-        <FormDropdown
-          placeholder="Type"
-          options={categoryOptions.filter((opt) => {
-            if (opt.disabled) {
-              return false
+        {!loading && (
+          <FormDropdown
+            placeholder="Type"
+            options={categoryOptions.filter((opt) => {
+              if (opt.disabled) {
+                return false
+              }
+              if (opt.value === 'AutomaticSwish') {
+                return (
+                  areSwishPayoutsEnabled() &&
+                  market === Market.Sweden &&
+                  !isExGratia
+                )
+              }
+              return isExGratia
+                ? opt.value !== ClaimPaymentType.Automatic
+                : true
+            })}
+            name="type"
+            defaultValue={
+              isPaymentActivated
+                ? ClaimPaymentType.Automatic
+                : ClaimPaymentType.IndemnityCost
             }
-            if (opt.value === 'AutomaticSwish') {
-              return (
-                areSwishPayoutsEnabled() &&
-                market === Market.Sweden &&
-                !isExGratia
-              )
-            }
-            return isExGratia ? opt.value !== ClaimPaymentType.Automatic : true
-          })}
-          name="type"
-          defaultValue={ClaimPaymentType.Automatic}
-          rules={{
-            required: 'Category is required',
-          }}
-        />
+            rules={{
+              required: 'Category is required',
+            }}
+          />
+        )}
 
         {isPotentiallySanctioned && (
           <FormCheckbox

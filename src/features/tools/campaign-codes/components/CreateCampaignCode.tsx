@@ -5,12 +5,12 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { FreeMonthsForm } from 'features/tools/campaign-codes/forms/FreeMonthsForm'
+import { MonthlyPercentageForm } from 'features/tools/campaign-codes/forms/MonthlyPercentageForm'
 import { NoDiscountForm } from 'features/tools/campaign-codes/forms/NoDiscountForm'
 import { VisibleNoDiscountForm } from 'features/tools/campaign-codes/forms/VisibleNoDiscountForm'
 import { CreatableIncentiveTypes } from 'features/tools/campaign-codes/utils'
 import React from 'react'
-import { FreeMonthsForm } from '../forms/FreeMonthsForm'
-import { MonthlyPercentageForm } from '../forms/MonthlyPercentageForm'
 
 const getIncentiveTypeForm = (incentiveType: CreatableIncentiveTypes) => {
   switch (incentiveType) {
@@ -28,10 +28,8 @@ const getIncentiveTypeForm = (incentiveType: CreatableIncentiveTypes) => {
 }
 
 export const CreateCampaignCode: React.FC = () => {
-  const [
-    incentiveType,
-    setIncentiveType,
-  ] = React.useState<CreatableIncentiveTypes | null>(null)
+  const [incentiveType, setIncentiveType] =
+    React.useState<CreatableIncentiveTypes | null>(null)
 
   const incentiveTypeOptions = Object.values(CreatableIncentiveTypes).map(
     (value) => {

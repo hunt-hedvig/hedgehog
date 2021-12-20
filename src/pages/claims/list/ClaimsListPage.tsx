@@ -1,22 +1,14 @@
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { ClaimsTemplates } from 'features/claims/claim-templates/ClaimsTemplatesList'
-import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
-import { ClaimListFilters } from 'features/claims/claims-list/filters/ClaimListFilters'
-import { ClaimListTemplateFilters } from 'features/claims/claims-list/filters/ClaimListTemplateFilters'
 import { LargeClaimsList } from 'features/claims/claims-list/LargeClaimsList'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
+import { useTemplateClaims } from 'features/claims/claim-templates/hooks/use-template-claims'
+import { ClaimsTemplates } from 'features/claims/claim-templates/ClaimsTemplatesList'
+import { ClaimListTemplateFilters } from 'features/claims/claims-list/filters/ClaimListTemplateFilters'
+import { ClaimListFilters } from 'features/claims/claims-list/filters/ClaimListFilters'
 
 const ListPage = styled.div`
   display: flex;
@@ -42,9 +34,11 @@ export interface ClaimsFiltersType {
   filterTypesOfContract: string[] | null
 }
 
-const ClaimsListPage: React.FC<RouteComponentProps<{
-  page?: string
-}>> = ({
+const ClaimsListPage: Page<
+  RouteComponentProps<{
+    page?: string
+  }>
+> = ({
   match: {
     params: { page = '1' },
   },
@@ -76,25 +70,6 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
 
   const selectedPage = parseInt(page, 10)
 
-  const { focus, setFocus } = useNavigation()
-
-  useFocus(FocusItems.Claims.name)
-
-  const isFPressed = useKeyIsPressed(Keys.F)
-  const isTPressed = useKeyIsPressed(Keys.T)
-
-  useEffect(() => {
-    if (isFPressed) {
-      setFocus(FocusItems.Claims.items.ClaimsFilters)
-    }
-  }, [isFPressed])
-
-  useEffect(() => {
-    if (isTPressed) {
-      setFocus(FocusItems.Claims.items.ClaimsTemplates)
-    }
-  }, [isTPressed])
-
   return (
     <ListPage>
       <FadeIn>
@@ -104,12 +79,8 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
       <ClaimsTemplates
         activeId={selectedTemplate}
         templates={templateFilters}
-        onSelect={(id) => {
-          setFocus(null)
-          selectTemplate(id)
-        }}
+        onSelect={selectTemplate}
         onCreate={createTemplate}
-        navigationAvailable={focus === FocusItems.Claims.items.ClaimsTemplates}
       />
 
       {templateActive && selectedTemplate ? (
@@ -117,21 +88,14 @@ const ClaimsListPage: React.FC<RouteComponentProps<{
           templateId={selectedTemplate}
           template={localFilter}
           editTemplate={editTemplate}
-          navigationAvailable={focus === FocusItems.Claims.items.ClaimsFilters}
         />
       ) : (
-        <ClaimListFilters
-          date={date}
-          setDate={setDate}
-          page={page}
-          navigationAvailable={focus === FocusItems.Claims.items.ClaimsFilters}
-        />
+        <ClaimListFilters date={date} setDate={setDate} page={page} />
       )}
 
       <LargeClaimsList
         page={selectedPage}
         date={date}
-        navigationAvailable={focus === FocusItems.Claims.name}
         templated={templateActive}
         filters={templateActive ? localFilter : undefined}
       />

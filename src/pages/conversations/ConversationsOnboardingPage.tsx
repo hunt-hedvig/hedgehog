@@ -13,13 +13,14 @@ import { useMe } from 'features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
 const Subtext = styled.span`
   font-size: 0.8em;
   color: ${({ theme }) => theme.placeholderColor};
 `
 
-const ConversationsOnboardingPage: React.FC = () => {
+const ConversationsOnboardingPage: Page = () => {
   const { fade, props: fadeProps } = useFadeAnimation({})
   const [onboardingStep, setOnboardingStep] = useState(0)
   const { settings, updateSetting } = useMe()

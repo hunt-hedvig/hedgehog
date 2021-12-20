@@ -26,6 +26,7 @@ import {
   useGetSwitcherEmailsQuery,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
 export enum SwitcherTypes {
   SwedishHouse = 'SWEDISH_HOUSE',
@@ -65,24 +66,18 @@ export const getSwitcherEmailStatus = (
   return SwitcherEmailStatus.Prepared
 }
 
-const SwitcherAutomationPage: React.FC = () => {
+const SwitcherAutomationPage: Page = () => {
   const switchers = useGetSwitcherEmailsQuery()
 
   const [selectedMarket, setSelectedMarket] = useState<Market | null>(null)
-  const [
-    selectedStatus,
-    setSelectedStatus,
-  ] = useState<SwitcherEmailStatus | null>(null)
+  const [selectedStatus, setSelectedStatus] =
+    useState<SwitcherEmailStatus | null>(null)
 
-  const [
-    activateContract,
-    { loading: activateContractLoading },
-  ] = useActivatePendingAgreementMutation()
+  const [activateContract, { loading: activateContractLoading }] =
+    useActivatePendingAgreementMutation()
 
-  const [
-    terminateContract,
-    { loading: terminateContractLoading },
-  ] = useTerminateContractMutation()
+  const [terminateContract, { loading: terminateContractLoading }] =
+    useTerminateContractMutation()
 
   useTitle('Tools | Switcher Automation')
 

@@ -3,10 +3,13 @@ import { MemberTabs } from 'features/member'
 import { useGetMemberInfo } from 'features/member/tabs/member-tab/hooks/use-get-member-info'
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
+import { Page } from 'pages/routes'
 
-const MemberPage: React.FC<RouteComponentProps<{
-  memberId: string
-}>> = (props) => {
+const MemberPage: Page<
+  RouteComponentProps<{
+    memberId: string
+  }>
+> = (props) => {
   const memberId = props.match.params.memberId
   const [member] = useGetMemberInfo(memberId)
 

@@ -1,14 +1,7 @@
 import styled from '@emotion/styled'
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
-import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useMe } from 'features/user/hooks/use-me'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Chat,
   ChevronLeft,
@@ -25,7 +18,6 @@ import {
 import MediaQuery from 'react-media'
 import { useLocation } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
-import { FocusItems, useNavigation } from '../hooks/use-navigation'
 import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
 
@@ -281,52 +273,10 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
     },
   ]
 
-  const sidebarRef = useRef<HTMLDivElement>(null)
-  const { focus, setFocus } = useNavigation()
-
-  const isSPressed = useKeyIsPressed(Keys.S)
-
-  useEffect(() => {
-    if (
-      isSPressed &&
-      focus !== FocusItems.Main.items.Modal &&
-      focus !== FocusItems.Main.items.ModalFilters &&
-      focus !== FocusItems.Main.items.ModalSubmit
-    ) {
-      setFocus(FocusItems.Main.items.Sidebar)
-    }
-  }, [isSPressed])
-
-  const getActiveMenuItem = () => {
-    const activeMenuItem = MenuItemsList.map((item, index) => {
-      if (location.pathname.startsWith(item.route)) {
-        return index
-      }
-
-      return undefined
-    }).filter((index) => typeof index === 'number')[0]
-
-    return typeof activeMenuItem === 'number' ? activeMenuItem - 1 : -1
-  }
-
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
-    defaultNavigationStep: getActiveMenuItem(),
-    maxStep: MenuItemsList.length - 2,
-    isActive: focus === FocusItems.Main.items.Sidebar,
-  })
-
-  useClickOutside(sidebarRef, () =>
-    focus === FocusItems.Main.items.Sidebar ? setFocus(null) : {},
-  )
-
   return (
     <MediaQuery query="(max-width: 1300px)">
       {(shouldAlwaysCollapse) => (
-        <Wrapper
-          collapsed={shouldAlwaysCollapse || isCollapsed}
-          ref={sidebarRef}
-          onClick={() => setFocus(null)}
-        >
+        <Wrapper collapsed={shouldAlwaysCollapse || isCollapsed}>
           <CollapseToggle
             onClick={toggleOpen}
             collapsed={shouldAlwaysCollapse || isCollapsed}
@@ -341,13 +291,9 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
             </Header>
 
             <Menu>
-              {MenuItemsList.map(({ external, single, ...item }, index) =>
+              {MenuItemsList.map(({ external, single, ...item }) =>
                 !external ? (
                   <MenuItem
-                    focus={
-                      focus === FocusItems.Main.items.Sidebar &&
-                      navigationStep === index - 1
-                    }
                     key={item.route}
                     style={{ marginBottom: single ? '4rem' : 0 }}
                     isActive={(_match, location) =>
@@ -360,35 +306,15 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                     }
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
                     isCollapsed={isCollapsed}
-                    onKeyDown={(e) => {
-                      if (isPressing(e, Keys.Enter)) {
-                        e.preventDefault()
-                        setFocus(null)
-                        reset()
-                        MenuItemsList[index].hotkeyHandler()
-                      }
-                    }}
                     {...item}
                   />
                 ) : (
                   <ExternalMenuItem
-                    focus={
-                      focus === FocusItems.Main.items.Sidebar &&
-                      navigationStep === index - 1
-                    }
                     key={item.route}
                     style={{ marginBottom: single ? '4rem' : 0 }}
                     href={item.route}
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
                     isCollapsed={isCollapsed}
-                    onKeyDown={(e) => {
-                      if (isPressing(e, Keys.Enter)) {
-                        e.preventDefault()
-                        setFocus(null)
-                        reset()
-                        MenuItemsList[index].hotkeyHandler()
-                      }
-                    }}
                     {...item}
                   />
                 ),

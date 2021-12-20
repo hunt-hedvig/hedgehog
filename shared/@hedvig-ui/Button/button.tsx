@@ -1,8 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import _chroma from 'chroma-js'
-import { useElementFocus } from 'features/navigation/hooks/use-navigation'
-import React, { ButtonHTMLAttributes, useRef } from 'react'
+import React, { ButtonHTMLAttributes } from 'react'
 
 // Necessary for tests to run - if not, theme colors used might be undefined at test-time
 const chroma = (c: string) => _chroma(c ?? 'white')
@@ -15,9 +14,7 @@ const color = ({
 }) => {
   if (disabled) {
     return css`
-      color: ${chroma(theme.semiStrongForeground)
-        .brighten(0.5)
-        .hex()};
+      color: ${chroma(theme.semiStrongForeground).brighten(0.5).hex()};
     `
   }
 
@@ -64,9 +61,7 @@ const backgroundColor = ({
 }) => {
   if (disabled) {
     return css`
-      background-color: ${chroma(theme.mutedBackground)
-        .darken(0.4)
-        .hex()};
+      background-color: ${chroma(theme.mutedBackground).darken(0.4).hex()};
     `
   }
 
@@ -74,9 +69,7 @@ const backgroundColor = ({
     return css`
       background-color: ${theme.success};
       :hover {
-        background-color: ${chroma(theme.success)
-          .brighten(0.5)
-          .hex()};
+        background-color: ${chroma(theme.success).brighten(0.5).hex()};
       }
     `
   }
@@ -85,9 +78,7 @@ const backgroundColor = ({
     return css`
       background-color: ${theme.warning};
       :hover {
-        background-color: ${chroma(theme.warning)
-          .brighten(0.5)
-          .hex()};
+        background-color: ${chroma(theme.warning).brighten(0.5).hex()};
       }
     `
   }
@@ -96,9 +87,7 @@ const backgroundColor = ({
     return css`
       background-color: ${theme.danger};
       :hover {
-        background-color: ${chroma(theme.danger)
-          .brighten(0.5)
-          .hex()};
+        background-color: ${chroma(theme.danger).brighten(0.5).hex()};
       }
     `
   }
@@ -107,9 +96,7 @@ const backgroundColor = ({
     return css`
       background-color: ${theme.accent};
       :hover {
-        background-color: ${chroma(theme.accent)
-          .brighten(0.5)
-          .hex()};
+        background-color: ${chroma(theme.accent).brighten(0.5).hex()};
       }
     `
   }
@@ -118,9 +105,7 @@ const backgroundColor = ({
     return css`
       background-color: ${theme.accentLight};
       :hover {
-        background-color: ${chroma(theme.accentLight)
-          .brighten(0.2)
-          .hex()};
+        background-color: ${chroma(theme.accentLight).brighten(0.2).hex()};
       }
     `
   }
@@ -129,9 +114,7 @@ const backgroundColor = ({
     return css`
       background-color: transparent;
       :hover {
-        background-color: ${chroma(theme.accentLight)
-          .brighten(0.2)
-          .hex()};
+        background-color: ${chroma(theme.accentLight).brighten(0.2).hex()};
       }
     `
   }
@@ -184,13 +167,12 @@ const cursor = ({ disabled = false }) => {
   `
 }
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'tertiary'
   status?: 'success' | 'warning' | 'danger'
   size?: 'small' | 'medium' | 'large'
   disabled?: boolean
   icon?: React.ReactNode
-  focus?: boolean
   children: React.ReactNode
 }
 
@@ -207,27 +189,20 @@ const ButtonIconWrapper = styled.div`
 `
 
 export const Button = styled(
-  React.forwardRef(
-    (
-      { icon, children, focus, ...props }: ButtonProps,
-      ref: React.ForwardedRef<HTMLButtonElement>,
-    ) => {
-      const internalRef = useRef<HTMLButtonElement>(null)
-      useElementFocus(
-        (ref as React.RefObject<HTMLElement>) ?? internalRef,
-        focus,
-      )
-
-      return (
-        <button {...props} ref={ref ?? internalRef}>
-          <ButtonIconWrapper>
-            {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
-            <div>{children}</div>
-          </ButtonIconWrapper>
-        </button>
-      )
-    },
-  ),
+  ({
+    icon,
+    children,
+    ...props
+  }: ButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) => {
+    return (
+      <button {...props}>
+        <ButtonIconWrapper>
+          {!!icon && <ButtonIcon size={props.size}>{icon}</ButtonIcon>}
+          <div>{children}</div>
+        </ButtonIconWrapper>
+      </button>
+    )
+  },
 )`
   font-family: inherit;
   transition: all 200ms;

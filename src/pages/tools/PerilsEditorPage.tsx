@@ -13,6 +13,7 @@ import { PerilIconOptions } from 'features/tools/perils-editor/peril-icons'
 import React from 'react'
 import ReactDropZone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
+import { Page } from 'pages/routes'
 
 const Wrapper = styled.div``
 
@@ -60,16 +61,15 @@ interface Peril {
   iconName: string
 }
 
-const PerilsEditorPage: React.FC = () => {
+const PerilsEditorPage: Page = () => {
   const [fileName, setFileName] = React.useState(() =>
     localStorage.getItem(PERIL_FILE_KEY),
   )
   const [contents, setContents] = React.useState(() =>
     localStorage.getItem(PERIL_CONTENTS_KEY),
   )
-  const [parsedPerils, reallySetParsedPerils] = React.useState<ReadonlyArray<
-    Peril
-  > | null>(null)
+  const [parsedPerils, reallySetParsedPerils] =
+    React.useState<ReadonlyArray<Peril> | null>(null)
   const setParsedPerils = (perils: ReadonlyArray<Peril>) => {
     reallySetParsedPerils(perils)
     localStorage.setItem(PERIL_CONTENTS_KEY, JSON.stringify(perils))
@@ -268,7 +268,7 @@ const PerilsEditorPage: React.FC = () => {
                           updateField('iconName')(opt.value)
                         }}
                       >
-                        <img src={opt.image.src} />
+                        <img alt="" src={opt.image.src} />
                         {opt.text}
                       </DropdownOption>
                     )

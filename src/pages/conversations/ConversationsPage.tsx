@@ -13,11 +13,6 @@ import {
 import { ConversationChat } from 'features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'features/conversations/overview/ConversationsOverview'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'features/navigation/hooks/use-navigation'
 import { FilterStateType } from 'features/questions/FilterSelect'
 import { useQuestionGroups } from 'features/questions/hooks/use-question-groups'
 import {
@@ -30,6 +25,7 @@ import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-gro
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
+import { Page } from 'pages/routes'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -48,9 +44,11 @@ const FadeWrapper = styled(Fade)`
   }
 `
 
-const ConversationsPage: React.FC<RouteComponentProps<{
-  memberId?: string
-}>> = ({ match }) => {
+const ConversationsPage: Page<
+  RouteComponentProps<{
+    memberId?: string
+  }>
+> = ({ match }) => {
   const { memberId } = match.params
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -98,10 +96,6 @@ const ConversationsPage: React.FC<RouteComponentProps<{
     }
   }
 
-  const { focus } = useNavigation()
-
-  useFocus(FocusItems.Conversations.name)
-
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)
 
@@ -132,11 +126,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
       return
     }
 
-    if (
-      isDownKeyPressed &&
-      currentQuestionOrder < filteredGroups.length - 1 &&
-      focus === FocusItems.Conversations.name
-    ) {
+    if (isDownKeyPressed && currentQuestionOrder < filteredGroups.length - 1) {
       fade('up', 'out').then(() => {
         history.push(
           `/conversations/${
@@ -146,11 +136,7 @@ const ConversationsPage: React.FC<RouteComponentProps<{
       })
     }
 
-    if (
-      isUpKeyPressed &&
-      currentQuestionOrder > 0 &&
-      focus === FocusItems.Conversations.name
-    ) {
+    if (isUpKeyPressed && currentQuestionOrder > 0) {
       fade('down', 'out').then(() => {
         history.push(
           `/conversations/${

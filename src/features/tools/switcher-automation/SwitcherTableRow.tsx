@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client'
-import { gql } from '@apollo/client/core'
 import styled from '@emotion/styled'
 import {
   Button,
@@ -27,6 +26,7 @@ import {
   SwitchableSwitcherEmail,
   useMarkSwitcherEmailAsRemindedMutation,
 } from 'types/generated/graphql'
+import gql from 'graphql-tag'
 
 const FORMAT_DATE_TIME = 'yyyy-MM-dd HH:mm'
 
@@ -79,28 +79,30 @@ const Note = styled.div`
   margin: 0.5rem 0;
 `
 
-export const SwitcherEmailRow: React.FC<Pick<
-  SwitchableSwitcherEmail,
-  | 'id'
-  | 'member'
-  | 'sentAt'
-  | 'remindedAt'
-  | 'switcherCompany'
-  | 'switcherType'
-  | 'cancellationDate'
-  | 'note'
-  | 'contract'
-> & {
-  status: SwitcherEmailStatus
-  onTerminate: (
-    contract: Contract,
-    terminationDate: Date,
-    terminationReason: TerminationReason,
-    comment: string,
-  ) => void
-  onActivate: (contract: Contract, activeFrom: Date) => void
-  loading?: boolean
-}> = ({
+export const SwitcherEmailRow: React.FC<
+  Pick<
+    SwitchableSwitcherEmail,
+    | 'id'
+    | 'member'
+    | 'sentAt'
+    | 'remindedAt'
+    | 'switcherCompany'
+    | 'switcherType'
+    | 'cancellationDate'
+    | 'note'
+    | 'contract'
+  > & {
+    status: SwitcherEmailStatus
+    onTerminate: (
+      contract: Contract,
+      terminationDate: Date,
+      terminationReason: TerminationReason,
+      comment: string,
+    ) => void
+    onActivate: (contract: Contract, activeFrom: Date) => void
+    loading?: boolean
+  }
+> = ({
   id,
   member,
   sentAt,
@@ -115,13 +117,11 @@ export const SwitcherEmailRow: React.FC<Pick<
   onActivate,
   loading = false,
 }) => {
-  const [
-    markAsReminded,
-    markAsRemindedOptions,
-  ] = useMarkSwitcherEmailAsRemindedMutation({
-    variables: { id },
-    refetchQueries: () => [{ query: GetSwitcherEmailsDocument }],
-  })
+  const [markAsReminded, markAsRemindedOptions] =
+    useMarkSwitcherEmailAsRemindedMutation({
+      variables: { id },
+      refetchQueries: () => [{ query: GetSwitcherEmailsDocument }],
+    })
 
   const [editNote, setEditNote] = useState(false)
   const [newNote, setNewNote] = useState<string>(note || '')
@@ -131,10 +131,8 @@ export const SwitcherEmailRow: React.FC<Pick<
 
   const [terminateContractView, setTerminateContractView] = useState(false)
   const [terminationDate, setTerminationDate] = useState(new Date())
-  const [
-    terminationReason,
-    setTerminationReason,
-  ] = useState<TerminationReason | null>(null)
+  const [terminationReason, setTerminationReason] =
+    useState<TerminationReason | null>(null)
   const [comment, setComment] = React.useState('')
 
   const sentAtDate = sentAt && parseISO(sentAt)

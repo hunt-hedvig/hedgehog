@@ -1,9 +1,8 @@
 import {
   Button,
   ButtonsGroup,
-  Dropdown,
-  DropdownOption,
   FourthLevelHeadline,
+  SearchableDropdown,
   Spacing,
   TextArea,
   TextDatePicker,
@@ -21,7 +20,6 @@ import {
 } from 'types/generated/graphql'
 
 export enum TerminationReason {
-  NoFeedback = 'NO_FEEDBACK',
   DissatisfiedWithService = 'DISSATISFIED_WITH_SERVICE',
   DissatisfiedWithApp = 'DISSATISFIED_WITH_APP',
   DissatisfiedWithHedvig = 'DISSATISFIED_WITH_HEDVIG',
@@ -49,6 +47,7 @@ export enum TerminationReason {
   Other = 'OTHER',
   Unknown = 'UNKNOWN',
   RenewalPrice = 'RENEWAL_PRICE',
+  NoFeedback = 'NO_FEEDBACK',
 }
 
 const initialTerminationDate = (contract: Contract): Date =>
@@ -61,28 +60,20 @@ export const TerminationDate: React.FC<{
   const [terminationDate, setTerminationDate] = React.useState(
     initialTerminationDate(contract),
   )
-  const [
-    terminationReason,
-    setTerminationReason,
-  ] = React.useState<TerminationReason | null>(null)
+  const [terminationReason, setTerminationReason] =
+    React.useState<TerminationReason | null>(null)
   const [comment, setComment] = React.useState('')
   const reset = () => {
     setTerminationDate(initialTerminationDate(contract))
     setTerminationReason(null)
     setDatePickerEnabled(false)
   }
-  const [
-    terminateContract,
-    { loading: terminateContractLoading },
-  ] = useTerminateContractMutation()
-  const [
-    changeTerminationDate,
-    { loading: changeTerminationDateLoading },
-  ] = useChangeTerminationDateMutation()
-  const [
-    revertTermination,
-    { loading: revertTerminationLoading },
-  ] = useRevertTerminationMutation()
+  const [terminateContract, { loading: terminateContractLoading }] =
+    useTerminateContractMutation()
+  const [changeTerminationDate, { loading: changeTerminationDateLoading }] =
+    useChangeTerminationDateMutation()
+  const [revertTermination, { loading: revertTerminationLoading }] =
+    useRevertTerminationMutation()
 
   const { confirm } = useConfirmDialog()
 
@@ -161,6 +152,12 @@ export const TerminationDate: React.FC<{
                       changeTerminationDate({
                         variables: {
                           contractId: contract.id,
+                          request: {
+                            newTerminationDate: format(
+                              terminationDate,
+                              'yyyy-MM-dd',
+                            ),
+                          },
                         },
                         optimisticResponse: {
                           changeTerminationDate: {
@@ -208,16 +205,18 @@ export const TerminationDate: React.FC<{
             value={terminationDate}
           />
           <Spacing top="small" />
-          <Dropdown placeholder="Reasons">
-            {Object.keys(TerminationReason).map((key) => (
-              <DropdownOption
-                selected={terminationReason === TerminationReason[key]}
-                onClick={() => setTerminationReason(TerminationReason[key])}
-              >
-                {convertEnumToTitle(TerminationReason[key])}
-              </DropdownOption>
-            ))}
-          </Dropdown>
+          <div style={{ width: '100%' }}>
+            <SearchableDropdown
+              placeholder="Reason"
+              onChange={(data) => setTerminationReason(data.value)}
+              noOptionsMessage={() => 'Reason not found'}
+              options={Object.keys(TerminationReason).map((key) => ({
+                label: convertEnumToTitle(TerminationReason[key]),
+                value: TerminationReason[key],
+                text: convertEnumToTitle(TerminationReason[key]),
+              }))}
+            />
+          </div>
           <Spacing top="small" />
           <TextArea
             placeholder="Comment on the reason of termination..."

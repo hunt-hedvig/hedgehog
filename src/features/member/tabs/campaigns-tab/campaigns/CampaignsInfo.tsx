@@ -10,12 +10,6 @@ import { CampaignsRedeemedTable } from 'features/member/tabs/campaigns-tab/campa
 import React from 'react'
 import { ReferralInformation } from 'types/generated/graphql'
 
-const CampaignCard = styled(Card)<{ focused: boolean }>`
-  border-radius: 0.5rem;
-  border: ${({ focused, theme }) =>
-    focused ? `1px solid ${theme.accent}` : 'none'};
-`
-
 const NoRedeemedCampaignsMessage = styled(StandaloneMessage)`
   font-size: 1.2em;
 `
@@ -23,12 +17,10 @@ const NoRedeemedCampaignsMessage = styled(StandaloneMessage)`
 export const CampaignsInfo: React.FC<{
   memberId: string
   referralInformation: ReferralInformation
-  navigationAvailable: boolean
-  focused: boolean
-}> = ({ memberId, referralInformation, navigationAvailable, focused }) => {
+}> = ({ memberId, referralInformation }) => {
   return (
     <CardsWrapper>
-      <CampaignCard focused={focused}>
+      <Card>
         <ThirdLevelHeadline>Redeemed campaigns</ThirdLevelHeadline>
         {referralInformation.redeemedCampaigns.length !== 0 && (
           <CampaignsRedeemedTable
@@ -43,8 +35,8 @@ export const CampaignsInfo: React.FC<{
           </NoRedeemedCampaignsMessage>
         )}
 
-        <CampaignCodeInput memberId={memberId} focus={navigationAvailable} />
-      </CampaignCard>
+        <CampaignCodeInput memberId={memberId} />
+      </Card>
     </CardsWrapper>
   )
 }

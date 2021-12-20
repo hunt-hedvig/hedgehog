@@ -1,34 +1,31 @@
-import { useArrowKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-arrow-keyboard-navigation'
+import { Checkbox, Flex, Label } from '@hedvig-ui'
 import { range } from '@hedvig-ui/utils/range'
-import {
-  complexityIcons,
-  FilterGroupState,
-  FilterWrapper,
-  stateColors,
-} from 'features/claims/claims-list/filters/ClaimListFilters'
 import { Market, MarketFlags } from 'features/config/constants'
 import { MemberGroupColorBadge } from 'features/questions/MemberGroupColorBadge'
+import { NumberMemberGroupsRadioButtons } from 'features/questions/number-member-groups-radio-buttons'
 import { useNumberMemberGroups } from 'features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'pages/claims/list/ClaimsListPage'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
-import { FilterElement, FilterNumberMemberGroups } from '../FilterElements'
+import {
+  complexityIcons,
+  FilterElement,
+  FilterGroupState,
+  FilterWrapper,
+  LabelWithPopover,
+  stateColors,
+} from 'features/claims/claims-list/filters/ClaimListFilters'
 
 interface ClaimListTemplateFiltersProps
   extends React.HTMLAttributes<HTMLDivElement> {
   templateId: string
   template: ClaimsFiltersType
   editTemplate: (newFilter: ClaimsFiltersType, id?: string) => void
-  navigationAvailable: boolean
 }
 
-export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> = ({
-  template,
-  editTemplate,
-  templateId,
-  navigationAvailable,
-  ...props
-}) => {
+export const ClaimListTemplateFilters: React.FC<
+  ClaimListTemplateFiltersProps
+> = ({ template, editTemplate, templateId, ...props }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
 
   const filterExists = (state: string | number, field: string) => {
@@ -76,9 +73,8 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
         {
           ...template,
           [field]: numberOfMemberGroups,
-          filterSelectedMemberGroups: template.filterSelectedMemberGroups.filter(
-            (num) => num !== 2,
-          ),
+          filterSelectedMemberGroups:
+            template.filterSelectedMemberGroups.filter((num) => num !== 2),
         },
         templateId,
       )
@@ -93,126 +89,100 @@ export const ClaimListTemplateFilters: React.FC<ClaimListTemplateFiltersProps> =
     }
   }
 
-  const [navigationStep, reset] = useArrowKeyboardNavigation({
-    maxStep: 3,
-    isActive: navigationAvailable,
-    direction: 'horizontal',
-    withNegative: true,
-  })
-
-  useEffect(() => {
-    if (!navigationAvailable) {
-      reset()
-    }
-  }, [navigationAvailable])
-
   return (
     <FilterWrapper {...props}>
-      <FilterElement
-        active={navigationAvailable && navigationStep + 1 === 0}
-        checked={(key) => filterExists(ClaimState[key], 'filterClaimStates')}
-        onChange={(key) =>
-          setFilterHandler(ClaimState[key], 'filterClaimStates')
-        }
-        onPerfom={(index) =>
-          setFilterHandler(
-            ClaimState[Object.keys(ClaimState)[index + 1]],
-            'filterClaimStates',
-          )
-        }
-        maxStep={Object.keys(ClaimState).length - 2}
-        label="States"
-        values={Object.keys(ClaimState)}
-        onRender={(key) => (
-          <MemberGroupColorBadge
-            style={{
-              height: '0.7em',
-              width: '0.7em',
-              backgroundColor: stateColors[key],
-            }}
+      <FilterElement>
+        <Label>States</Label>
+        {Object.keys(ClaimState).map((key) => (
+          <Flex key={key} direction="row" align="center">
+            <Checkbox
+              label={key}
+              checked={filterExists(ClaimState[key], 'filterClaimStates')}
+              onChange={() =>
+                setFilterHandler(ClaimState[key], 'filterClaimStates')
+              }
+            />
+            <MemberGroupColorBadge
+              style={{
+                height: '0.7em',
+                width: '0.7em',
+                backgroundColor: stateColors[key],
+              }}
+            />
+          </Flex>
+        ))}
+      </FilterElement>
+
+      <FilterElement>
+        <LabelWithPopover
+          label="Complexities"
+          popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
+        />
+        {Object.keys(ClaimComplexity).map((key) => (
+          <Flex key={key} direction="row" align="center">
+            <Checkbox
+              label={key}
+              checked={filterExists(ClaimComplexity[key], 'filterComplexities')}
+              onChange={() =>
+                setFilterHandler(ClaimComplexity[key], 'filterComplexities')
+              }
+            />
+            <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
+          </Flex>
+        ))}
+      </FilterElement>
+
+      <FilterElement>
+        <Label>Number of member groups</Label>
+        <Flex>
+          <NumberMemberGroupsRadioButtons
+            groupsNumber={template.filterNumberOfMemberGroups || undefined}
+            setGroupsNumber={(e: number) =>
+              changeNumberMemberGroupsHandler(e, 'filterNumberOfMemberGroups')
+            }
           />
-        )}
-      />
+        </Flex>
+      </FilterElement>
 
-      <FilterElement
-        active={navigationAvailable && navigationStep + 1 === 1}
-        checked={(key) =>
-          filterExists(ClaimComplexity[key], 'filterComplexities')
-        }
-        onChange={(key) =>
-          setFilterHandler(ClaimComplexity[key], 'filterComplexities')
-        }
-        onPerfom={(index) =>
-          setFilterHandler(
-            ClaimComplexity[Object.keys(ClaimComplexity)[index + 1]],
-            'filterComplexities',
-          )
-        }
-        maxStep={Object.keys(ClaimComplexity).length - 2}
-        label="Complexities"
-        popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
-        values={Object.keys(ClaimComplexity)}
-        onRender={(key) => (
-          <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
+      <FilterElement>
+        <Label>Groups</Label>
+        {range(template?.filterNumberOfMemberGroups || numberMemberGroups).map(
+          (filterNumber) => (
+            <Flex key={filterNumber} direction="row" align="center">
+              <Checkbox
+                label={FilterGroupState[filterNumber]}
+                checked={filterExists(
+                  filterNumber,
+                  'filterSelectedMemberGroups',
+                )}
+                onChange={() =>
+                  setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
+                }
+              />
+              <MemberGroupColorBadge
+                filter={filterNumber}
+                style={{ height: '0.7em', width: '0.7em' }}
+              />
+            </Flex>
+          ),
         )}
-      />
+      </FilterElement>
 
-      <FilterNumberMemberGroups
-        active={navigationAvailable && navigationStep + 1 === 2}
-        numberMemberGroups={template.filterNumberOfMemberGroups || undefined}
-        setNumberMemberGroups={(value: number) => {
-          changeNumberMemberGroupsHandler(value, 'filterNumberOfMemberGroups')
-        }}
-      />
-
-      <FilterElement
-        active={navigationAvailable && navigationStep + 1 === 3}
-        checked={(filterNumber) =>
-          filterExists(filterNumber, 'filterSelectedMemberGroups')
-        }
-        onChange={(filterNumber) =>
-          setFilterHandler(filterNumber, 'filterSelectedMemberGroups')
-        }
-        onPerfom={(index) =>
-          setFilterHandler(index + 1, 'filterSelectedMemberGroups')
-        }
-        maxStep={
-          template.filterNumberOfMemberGroups
-            ? template.filterNumberOfMemberGroups - 2
-            : numberMemberGroups - 2
-        }
-        checkboxLabel={FilterGroupState}
-        label="Groups"
-        values={range(
-          template?.filterNumberOfMemberGroups || numberMemberGroups,
-        )}
-        onRender={(filterNumber) => (
-          <MemberGroupColorBadge
-            filter={+filterNumber}
-            style={{ height: '0.7em', width: '0.7em' }}
-          />
-        )}
-      />
-
-      <FilterElement
-        active={navigationAvailable && navigationStep + 1 === 4}
-        checked={(key) => filterExists(Market[key], 'filterMarkets')}
-        onChange={(key) => setFilterHandler(Market[key], 'filterMarkets')}
-        onPerfom={(index) =>
-          setFilterHandler(
-            Market[Object.keys(Market)[index + 1]],
-            'filterMarkets',
-          )
-        }
-        maxStep={Object.keys(Market).length - 2}
-        values={Object.keys(Market)}
-        label="Markets"
-        onRender={(key) => (
-          <span style={{ marginLeft: '0.5rem' }}>
-            {MarketFlags[key.toUpperCase()]}
-          </span>
-        )}
-      />
+      <FilterElement>
+        <Label>Markets</Label>
+        {Object.keys(Market).map((key) => (
+          <Flex key={key} direction="row" align="center">
+            <Checkbox
+              label={key}
+              checked={filterExists(Market[key], 'filterMarkets')}
+              onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
+            />
+            <span style={{ marginLeft: '0.5rem' }}>
+              {MarketFlags[key.toUpperCase()]}
+            </span>
+          </Flex>
+        ))}
+      </FilterElement>
     </FilterWrapper>
   )
 }

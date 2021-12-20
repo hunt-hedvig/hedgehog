@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { useElementFocus } from 'features/navigation/hooks/use-navigation'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { FileEarmark, FileEarmarkArrowUpFill } from 'react-bootstrap-icons'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
@@ -67,7 +66,11 @@ export const FileUpload: React.FC<{
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useElementFocus(inputRef, focus)
+  useEffect(() => {
+    if (focus && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [focus])
 
   return (
     <UploadClaimFileWrapper>

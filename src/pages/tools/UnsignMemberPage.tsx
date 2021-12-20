@@ -4,6 +4,7 @@ import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
 import { toast } from 'react-hot-toast'
+import { Page } from 'pages/routes'
 
 const UNSIGN_MEMBER = gql`
   mutation UnsignMember($ssn: String, $email: String) {
@@ -11,7 +12,7 @@ const UNSIGN_MEMBER = gql`
   }
 `
 
-const UnsignMemberPage: React.FC = () => {
+const UnsignMemberPage: Page = () => {
   const [ssn, setSsn] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [useUnsignMember, { loading }] = useMutation(UNSIGN_MEMBER)

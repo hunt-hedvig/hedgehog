@@ -16,6 +16,7 @@ import { PropertiesTable } from 'features/tools/claim-types/tables/PropertiesTab
 import { RelationsTable } from 'features/tools/claim-types/tables/RelationsTable'
 import { TypesTable } from 'features/tools/claim-types/tables/TypesTable'
 import React, { useState } from 'react'
+import { Page } from 'pages/routes'
 
 const Container = styled(Flex)`
   padding: 1em;
@@ -37,7 +38,7 @@ const TitleOption = styled.button<{ selected?: boolean }>`
   }
 `
 
-const ClaimTypesPage: React.FC = () => {
+const ClaimTypesPage: Page = () => {
   const [tab, setTab] = useState<
     'types' | 'properties' | 'options' | 'relations'
   >('types')

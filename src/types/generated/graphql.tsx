@@ -5,10 +5,12 @@ export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K]
 }
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]?: Maybe<T[SubKey]> }
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]: Maybe<T[SubKey]> }
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>
+}
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>
+}
 const defaultOptions = {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -182,6 +184,7 @@ export type Claim = {
   state: ClaimState
   claimType?: Maybe<Scalars['String']>
   dateOfOccurrence?: Maybe<Scalars['LocalDate']>
+  closedAt?: Maybe<Scalars['Instant']>
   outcome?: Maybe<Scalars['String']>
   reserves?: Maybe<Scalars['MonetaryAmount']>
   registrationDate: Scalars['Instant']
@@ -196,6 +199,8 @@ export type Claim = {
   propertySelections: Array<ClaimPropertySelection>
   coInsured?: Maybe<CoInsured>
   restriction?: Maybe<ResourceAccessInformation>
+  market?: Maybe<Scalars['String']>
+  typeOfContract?: Maybe<Scalars['String']>
 }
 
 export enum ClaimComplexity {
@@ -374,6 +379,7 @@ export type Contract = {
   contractTypeName: Scalars['String']
   createdAt: Scalars['Instant']
   isLocked: Scalars['Boolean']
+  selfChangeBlockers: Array<Scalars['String']>
 }
 
 export type ContractMarketInfo = {
@@ -572,6 +578,9 @@ export type ListClaimsOptions = {
   filterSelectedMemberGroups?: Maybe<Array<Scalars['Int']>>
   filterMarkets?: Maybe<Array<Scalars['String']>>
   filterTypesOfContract?: Maybe<Array<Scalars['String']>>
+  filterReserveAmount?: Maybe<Scalars['BigDecimal']>
+  filterClaimTypes?: Maybe<Array<Scalars['String']>>
+  filterClaimOutcomes?: Maybe<Array<Scalars['String']>>
 }
 
 export type ListClaimsResult = {
@@ -944,7 +953,7 @@ export type MutationTypeActivatePendingAgreementArgs = {
 
 export type MutationTypeChangeTerminationDateArgs = {
   contractId: Scalars['ID']
-  request?: Maybe<ChangeTerminationDateInput>
+  request: ChangeTerminationDateInput
 }
 
 export type MutationTypeRevertTerminationArgs = {
@@ -1261,7 +1270,6 @@ export type QueryType = {
   getPartnerCampaignOwners: Array<CampaignOwnerPartner>
   availableCampaignCodeTypes: Array<Scalars['String']>
   dashboardNumbers?: Maybe<DashboardNumbers>
-  quoteSchemaForContractType?: Maybe<Scalars['JSON']>
   quoteSchemaForInsuranceType?: Maybe<Scalars['JSON']>
   memberSearch: MemberSearchResult
   listClaims: ListClaimsResult
@@ -1299,10 +1307,6 @@ export type QueryTypeMessageHistoryArgs = {
 
 export type QueryTypeFindPartnerCampaignsArgs = {
   input: CampaignFilter
-}
-
-export type QueryTypeQuoteSchemaForContractTypeArgs = {
-  contractType: Scalars['String']
 }
 
 export type QueryTypeQuoteSchemaForInsuranceTypeArgs = {
@@ -1613,6 +1617,8 @@ export enum UserSettingKey {
   MemberGroupsFilter = 'MEMBER_GROUPS_FILTER',
   MarketFilter = 'MARKET_FILTER',
   NumberOfClaimsFilter = 'NUMBER_OF_CLAIMS_FILTER',
+  FocusMarkets = 'FOCUS_MARKETS',
+  Languages = 'LANGUAGES',
 }
 
 export type UserSettingsFilter = {
@@ -2631,7 +2637,7 @@ export type ChangeFromDateMutation = { __typename?: 'MutationType' } & {
 
 export type ChangeTerminationDateMutationVariables = Exact<{
   contractId: Scalars['ID']
-  request?: Maybe<ChangeTerminationDateInput>
+  request: ChangeTerminationDateInput
 }>
 
 export type ChangeTerminationDateMutation = { __typename?: 'MutationType' } & {
@@ -2686,6 +2692,7 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
             | 'contractTypeName'
             | 'createdAt'
             | 'isLocked'
+            | 'selfChangeBlockers'
           > & {
               genericAgreements: Array<
                 { __typename?: 'GenericAgreement' } & Pick<
@@ -4038,9 +4045,8 @@ export function useSetClaimDateMutation(
 export type SetClaimDateMutationHookResult = ReturnType<
   typeof useSetClaimDateMutation
 >
-export type SetClaimDateMutationResult = ApolloReactCommon.MutationResult<
-  SetClaimDateMutation
->
+export type SetClaimDateMutationResult =
+  ApolloReactCommon.MutationResult<SetClaimDateMutation>
 export type SetClaimDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SetClaimDateMutation,
   SetClaimDateMutationVariables
@@ -4091,13 +4097,13 @@ export function useSetClaimOutcomeMutation(
 export type SetClaimOutcomeMutationHookResult = ReturnType<
   typeof useSetClaimOutcomeMutation
 >
-export type SetClaimOutcomeMutationResult = ApolloReactCommon.MutationResult<
-  SetClaimOutcomeMutation
->
-export type SetClaimOutcomeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetClaimOutcomeMutation,
-  SetClaimOutcomeMutationVariables
->
+export type SetClaimOutcomeMutationResult =
+  ApolloReactCommon.MutationResult<SetClaimOutcomeMutation>
+export type SetClaimOutcomeMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    SetClaimOutcomeMutation,
+    SetClaimOutcomeMutationVariables
+  >
 export const SetClaimPropertySelectionDocument = gql`
   mutation SetClaimPropertySelection(
     $id: ID!
@@ -4126,10 +4132,11 @@ export const SetClaimPropertySelectionDocument = gql`
     }
   }
 `
-export type SetClaimPropertySelectionMutationFn = ApolloReactCommon.MutationFunction<
-  SetClaimPropertySelectionMutation,
-  SetClaimPropertySelectionMutationVariables
->
+export type SetClaimPropertySelectionMutationFn =
+  ApolloReactCommon.MutationFunction<
+    SetClaimPropertySelectionMutation,
+    SetClaimPropertySelectionMutationVariables
+  >
 
 /**
  * __useSetClaimPropertySelectionMutation__
@@ -4166,13 +4173,13 @@ export function useSetClaimPropertySelectionMutation(
 export type SetClaimPropertySelectionMutationHookResult = ReturnType<
   typeof useSetClaimPropertySelectionMutation
 >
-export type SetClaimPropertySelectionMutationResult = ApolloReactCommon.MutationResult<
-  SetClaimPropertySelectionMutation
->
-export type SetClaimPropertySelectionMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetClaimPropertySelectionMutation,
-  SetClaimPropertySelectionMutationVariables
->
+export type SetClaimPropertySelectionMutationResult =
+  ApolloReactCommon.MutationResult<SetClaimPropertySelectionMutation>
+export type SetClaimPropertySelectionMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    SetClaimPropertySelectionMutation,
+    SetClaimPropertySelectionMutationVariables
+  >
 export const DeleteCoInsuredDocument = gql`
   mutation DeleteCoInsured($claimId: ID!) {
     deleteCoInsured(claimId: $claimId)
@@ -4215,13 +4222,13 @@ export function useDeleteCoInsuredMutation(
 export type DeleteCoInsuredMutationHookResult = ReturnType<
   typeof useDeleteCoInsuredMutation
 >
-export type DeleteCoInsuredMutationResult = ApolloReactCommon.MutationResult<
-  DeleteCoInsuredMutation
->
-export type DeleteCoInsuredMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  DeleteCoInsuredMutation,
-  DeleteCoInsuredMutationVariables
->
+export type DeleteCoInsuredMutationResult =
+  ApolloReactCommon.MutationResult<DeleteCoInsuredMutation>
+export type DeleteCoInsuredMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    DeleteCoInsuredMutation,
+    DeleteCoInsuredMutationVariables
+  >
 export const UpsertCoInsuredDocument = gql`
   mutation UpsertCoInsured($claimId: ID!, $request: UpsertCoInsuredInput!) {
     upsertCoInsured(claimId: $claimId, request: $request) {
@@ -4274,13 +4281,13 @@ export function useUpsertCoInsuredMutation(
 export type UpsertCoInsuredMutationHookResult = ReturnType<
   typeof useUpsertCoInsuredMutation
 >
-export type UpsertCoInsuredMutationResult = ApolloReactCommon.MutationResult<
-  UpsertCoInsuredMutation
->
-export type UpsertCoInsuredMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpsertCoInsuredMutation,
-  UpsertCoInsuredMutationVariables
->
+export type UpsertCoInsuredMutationResult =
+  ApolloReactCommon.MutationResult<UpsertCoInsuredMutation>
+export type UpsertCoInsuredMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    UpsertCoInsuredMutation,
+    UpsertCoInsuredMutationVariables
+  >
 export const ClaimAddClaimNoteDocument = gql`
   mutation ClaimAddClaimNote($claimId: ID!, $note: ClaimNoteInput!) {
     addClaimNote(id: $claimId, note: $note) {
@@ -4335,13 +4342,13 @@ export function useClaimAddClaimNoteMutation(
 export type ClaimAddClaimNoteMutationHookResult = ReturnType<
   typeof useClaimAddClaimNoteMutation
 >
-export type ClaimAddClaimNoteMutationResult = ApolloReactCommon.MutationResult<
-  ClaimAddClaimNoteMutation
->
-export type ClaimAddClaimNoteMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  ClaimAddClaimNoteMutation,
-  ClaimAddClaimNoteMutationVariables
->
+export type ClaimAddClaimNoteMutationResult =
+  ApolloReactCommon.MutationResult<ClaimAddClaimNoteMutation>
+export type ClaimAddClaimNoteMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    ClaimAddClaimNoteMutation,
+    ClaimAddClaimNoteMutationVariables
+  >
 export const ClaimMemberContractsMasterInceptionDocument = gql`
   query ClaimMemberContractsMasterInception($memberId: ID!) {
     member(id: $memberId) {
@@ -4462,10 +4469,11 @@ export type ClaimMemberContractsMasterInceptionQueryHookResult = ReturnType<
 export type ClaimMemberContractsMasterInceptionLazyQueryHookResult = ReturnType<
   typeof useClaimMemberContractsMasterInceptionLazyQuery
 >
-export type ClaimMemberContractsMasterInceptionQueryResult = ApolloReactCommon.QueryResult<
-  ClaimMemberContractsMasterInceptionQuery,
-  ClaimMemberContractsMasterInceptionQueryVariables
->
+export type ClaimMemberContractsMasterInceptionQueryResult =
+  ApolloReactCommon.QueryResult<
+    ClaimMemberContractsMasterInceptionQuery,
+    ClaimMemberContractsMasterInceptionQueryVariables
+  >
 export const ClaimPageDocument = gql`
   query ClaimPage($claimId: ID!) {
     claim(id: $claimId) {
@@ -4843,13 +4851,13 @@ export function useUpdateReserveMutation(
 export type UpdateReserveMutationHookResult = ReturnType<
   typeof useUpdateReserveMutation
 >
-export type UpdateReserveMutationResult = ApolloReactCommon.MutationResult<
-  UpdateReserveMutation
->
-export type UpdateReserveMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateReserveMutation,
-  UpdateReserveMutationVariables
->
+export type UpdateReserveMutationResult =
+  ApolloReactCommon.MutationResult<UpdateReserveMutation>
+export type UpdateReserveMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    UpdateReserveMutation,
+    UpdateReserveMutationVariables
+  >
 export const CreateClaimPaymentDocument = gql`
   mutation CreateClaimPayment($id: ID!, $payment: ClaimPaymentInput!) {
     createClaimPayment(id: $id, payment: $payment) {
@@ -4905,13 +4913,13 @@ export function useCreateClaimPaymentMutation(
 export type CreateClaimPaymentMutationHookResult = ReturnType<
   typeof useCreateClaimPaymentMutation
 >
-export type CreateClaimPaymentMutationResult = ApolloReactCommon.MutationResult<
-  CreateClaimPaymentMutation
->
-export type CreateClaimPaymentMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateClaimPaymentMutation,
-  CreateClaimPaymentMutationVariables
->
+export type CreateClaimPaymentMutationResult =
+  ApolloReactCommon.MutationResult<CreateClaimPaymentMutation>
+export type CreateClaimPaymentMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreateClaimPaymentMutation,
+    CreateClaimPaymentMutationVariables
+  >
 export const CreateSwishClaimPaymentDocument = gql`
   mutation CreateSwishClaimPayment(
     $id: ID!
@@ -4932,10 +4940,11 @@ export const CreateSwishClaimPaymentDocument = gql`
     }
   }
 `
-export type CreateSwishClaimPaymentMutationFn = ApolloReactCommon.MutationFunction<
-  CreateSwishClaimPaymentMutation,
-  CreateSwishClaimPaymentMutationVariables
->
+export type CreateSwishClaimPaymentMutationFn =
+  ApolloReactCommon.MutationFunction<
+    CreateSwishClaimPaymentMutation,
+    CreateSwishClaimPaymentMutationVariables
+  >
 
 /**
  * __useCreateSwishClaimPaymentMutation__
@@ -4970,22 +4979,23 @@ export function useCreateSwishClaimPaymentMutation(
 export type CreateSwishClaimPaymentMutationHookResult = ReturnType<
   typeof useCreateSwishClaimPaymentMutation
 >
-export type CreateSwishClaimPaymentMutationResult = ApolloReactCommon.MutationResult<
-  CreateSwishClaimPaymentMutation
->
-export type CreateSwishClaimPaymentMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateSwishClaimPaymentMutation,
-  CreateSwishClaimPaymentMutationVariables
->
+export type CreateSwishClaimPaymentMutationResult =
+  ApolloReactCommon.MutationResult<CreateSwishClaimPaymentMutation>
+export type CreateSwishClaimPaymentMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreateSwishClaimPaymentMutation,
+    CreateSwishClaimPaymentMutationVariables
+  >
 export const MarkClaimFileAsDeletedDocument = gql`
   mutation MarkClaimFileAsDeleted($claimId: ID!, $claimFileId: ID!) {
     markClaimFileAsDeleted(claimId: $claimId, claimFileId: $claimFileId)
   }
 `
-export type MarkClaimFileAsDeletedMutationFn = ApolloReactCommon.MutationFunction<
-  MarkClaimFileAsDeletedMutation,
-  MarkClaimFileAsDeletedMutationVariables
->
+export type MarkClaimFileAsDeletedMutationFn =
+  ApolloReactCommon.MutationFunction<
+    MarkClaimFileAsDeletedMutation,
+    MarkClaimFileAsDeletedMutationVariables
+  >
 
 /**
  * __useMarkClaimFileAsDeletedMutation__
@@ -5020,13 +5030,13 @@ export function useMarkClaimFileAsDeletedMutation(
 export type MarkClaimFileAsDeletedMutationHookResult = ReturnType<
   typeof useMarkClaimFileAsDeletedMutation
 >
-export type MarkClaimFileAsDeletedMutationResult = ApolloReactCommon.MutationResult<
-  MarkClaimFileAsDeletedMutation
->
-export type MarkClaimFileAsDeletedMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  MarkClaimFileAsDeletedMutation,
-  MarkClaimFileAsDeletedMutationVariables
->
+export type MarkClaimFileAsDeletedMutationResult =
+  ApolloReactCommon.MutationResult<MarkClaimFileAsDeletedMutation>
+export type MarkClaimFileAsDeletedMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    MarkClaimFileAsDeletedMutation,
+    MarkClaimFileAsDeletedMutationVariables
+  >
 export const RestrictResourceAccessDocument = gql`
   mutation RestrictResourceAccess($resourceId: ID!) {
     restrictResourceAccess(resourceId: $resourceId) {
@@ -5048,10 +5058,11 @@ export const RestrictResourceAccessDocument = gql`
     }
   }
 `
-export type RestrictResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
-  RestrictResourceAccessMutation,
-  RestrictResourceAccessMutationVariables
->
+export type RestrictResourceAccessMutationFn =
+  ApolloReactCommon.MutationFunction<
+    RestrictResourceAccessMutation,
+    RestrictResourceAccessMutationVariables
+  >
 
 /**
  * __useRestrictResourceAccessMutation__
@@ -5085,13 +5096,13 @@ export function useRestrictResourceAccessMutation(
 export type RestrictResourceAccessMutationHookResult = ReturnType<
   typeof useRestrictResourceAccessMutation
 >
-export type RestrictResourceAccessMutationResult = ApolloReactCommon.MutationResult<
-  RestrictResourceAccessMutation
->
-export type RestrictResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RestrictResourceAccessMutation,
-  RestrictResourceAccessMutationVariables
->
+export type RestrictResourceAccessMutationResult =
+  ApolloReactCommon.MutationResult<RestrictResourceAccessMutation>
+export type RestrictResourceAccessMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    RestrictResourceAccessMutation,
+    RestrictResourceAccessMutationVariables
+  >
 export const SetClaimFileCategoryDocument = gql`
   mutation SetClaimFileCategory(
     $claimId: ID!
@@ -5147,13 +5158,13 @@ export function useSetClaimFileCategoryMutation(
 export type SetClaimFileCategoryMutationHookResult = ReturnType<
   typeof useSetClaimFileCategoryMutation
 >
-export type SetClaimFileCategoryMutationResult = ApolloReactCommon.MutationResult<
-  SetClaimFileCategoryMutation
->
-export type SetClaimFileCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetClaimFileCategoryMutation,
-  SetClaimFileCategoryMutationVariables
->
+export type SetClaimFileCategoryMutationResult =
+  ApolloReactCommon.MutationResult<SetClaimFileCategoryMutation>
+export type SetClaimFileCategoryMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    SetClaimFileCategoryMutation,
+    SetClaimFileCategoryMutationVariables
+  >
 export const SetClaimTypeDocument = gql`
   mutation SetClaimType($id: ID!, $type: String) {
     setClaimType(id: $id, type: $type) {
@@ -5204,9 +5215,8 @@ export function useSetClaimTypeMutation(
 export type SetClaimTypeMutationHookResult = ReturnType<
   typeof useSetClaimTypeMutation
 >
-export type SetClaimTypeMutationResult = ApolloReactCommon.MutationResult<
-  SetClaimTypeMutation
->
+export type SetClaimTypeMutationResult =
+  ApolloReactCommon.MutationResult<SetClaimTypeMutation>
 export type SetClaimTypeMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SetClaimTypeMutation,
   SetClaimTypeMutationVariables
@@ -5261,13 +5271,13 @@ export function useSetContractForClaimMutation(
 export type SetContractForClaimMutationHookResult = ReturnType<
   typeof useSetContractForClaimMutation
 >
-export type SetContractForClaimMutationResult = ApolloReactCommon.MutationResult<
-  SetContractForClaimMutation
->
-export type SetContractForClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetContractForClaimMutation,
-  SetContractForClaimMutationVariables
->
+export type SetContractForClaimMutationResult =
+  ApolloReactCommon.MutationResult<SetContractForClaimMutation>
+export type SetContractForClaimMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    SetContractForClaimMutation,
+    SetContractForClaimMutationVariables
+  >
 export const SetCoveringEmployeeDocument = gql`
   mutation SetCoveringEmployee($id: ID!, $coveringEmployee: Boolean!) {
     setCoveringEmployee(id: $id, coveringEmployee: $coveringEmployee) {
@@ -5318,13 +5328,13 @@ export function useSetCoveringEmployeeMutation(
 export type SetCoveringEmployeeMutationHookResult = ReturnType<
   typeof useSetCoveringEmployeeMutation
 >
-export type SetCoveringEmployeeMutationResult = ApolloReactCommon.MutationResult<
-  SetCoveringEmployeeMutation
->
-export type SetCoveringEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetCoveringEmployeeMutation,
-  SetCoveringEmployeeMutationVariables
->
+export type SetCoveringEmployeeMutationResult =
+  ApolloReactCommon.MutationResult<SetCoveringEmployeeMutation>
+export type SetCoveringEmployeeMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    SetCoveringEmployeeMutation,
+    SetCoveringEmployeeMutationVariables
+  >
 export const UpdateClaimStateDocument = gql`
   mutation UpdateClaimState($id: ID!, $state: ClaimState!) {
     updateClaimState(id: $id, state: $state) {
@@ -5375,13 +5385,13 @@ export function useUpdateClaimStateMutation(
 export type UpdateClaimStateMutationHookResult = ReturnType<
   typeof useUpdateClaimStateMutation
 >
-export type UpdateClaimStateMutationResult = ApolloReactCommon.MutationResult<
-  UpdateClaimStateMutation
->
-export type UpdateClaimStateMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateClaimStateMutation,
-  UpdateClaimStateMutationVariables
->
+export type UpdateClaimStateMutationResult =
+  ApolloReactCommon.MutationResult<UpdateClaimStateMutation>
+export type UpdateClaimStateMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    UpdateClaimStateMutation,
+    UpdateClaimStateMutationVariables
+  >
 export const ListClaimsDocument = gql`
   query ListClaims($options: ListClaimsOptions!) {
     listClaims(options: $options) {
@@ -5525,10 +5535,11 @@ export const AddAccountEntryToMemberDocument = gql`
     }
   }
 `
-export type AddAccountEntryToMemberMutationFn = ApolloReactCommon.MutationFunction<
-  AddAccountEntryToMemberMutation,
-  AddAccountEntryToMemberMutationVariables
->
+export type AddAccountEntryToMemberMutationFn =
+  ApolloReactCommon.MutationFunction<
+    AddAccountEntryToMemberMutation,
+    AddAccountEntryToMemberMutationVariables
+  >
 
 /**
  * __useAddAccountEntryToMemberMutation__
@@ -5563,13 +5574,13 @@ export function useAddAccountEntryToMemberMutation(
 export type AddAccountEntryToMemberMutationHookResult = ReturnType<
   typeof useAddAccountEntryToMemberMutation
 >
-export type AddAccountEntryToMemberMutationResult = ApolloReactCommon.MutationResult<
-  AddAccountEntryToMemberMutation
->
-export type AddAccountEntryToMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AddAccountEntryToMemberMutation,
-  AddAccountEntryToMemberMutationVariables
->
+export type AddAccountEntryToMemberMutationResult =
+  ApolloReactCommon.MutationResult<AddAccountEntryToMemberMutation>
+export type AddAccountEntryToMemberMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    AddAccountEntryToMemberMutation,
+    AddAccountEntryToMemberMutationVariables
+  >
 export const AddMonthlyEntryDocument = gql`
   mutation AddMonthlyEntry($memberId: ID!, $input: MonthlyEntryInput!) {
     addMonthlyEntryToMember(memberId: $memberId, monthlyEntry: $input) {
@@ -5615,13 +5626,13 @@ export function useAddMonthlyEntryMutation(
 export type AddMonthlyEntryMutationHookResult = ReturnType<
   typeof useAddMonthlyEntryMutation
 >
-export type AddMonthlyEntryMutationResult = ApolloReactCommon.MutationResult<
-  AddMonthlyEntryMutation
->
-export type AddMonthlyEntryMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AddMonthlyEntryMutation,
-  AddMonthlyEntryMutationVariables
->
+export type AddMonthlyEntryMutationResult =
+  ApolloReactCommon.MutationResult<AddMonthlyEntryMutation>
+export type AddMonthlyEntryMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    AddMonthlyEntryMutation,
+    AddMonthlyEntryMutationVariables
+  >
 export const BackfillSubscriptionsDocument = gql`
   mutation backfillSubscriptions($memberId: ID!) {
     backfillSubscriptions(memberId: $memberId) {
@@ -5629,10 +5640,11 @@ export const BackfillSubscriptionsDocument = gql`
     }
   }
 `
-export type BackfillSubscriptionsMutationFn = ApolloReactCommon.MutationFunction<
-  BackfillSubscriptionsMutation,
-  BackfillSubscriptionsMutationVariables
->
+export type BackfillSubscriptionsMutationFn =
+  ApolloReactCommon.MutationFunction<
+    BackfillSubscriptionsMutation,
+    BackfillSubscriptionsMutationVariables
+  >
 
 /**
  * __useBackfillSubscriptionsMutation__
@@ -5666,13 +5678,13 @@ export function useBackfillSubscriptionsMutation(
 export type BackfillSubscriptionsMutationHookResult = ReturnType<
   typeof useBackfillSubscriptionsMutation
 >
-export type BackfillSubscriptionsMutationResult = ApolloReactCommon.MutationResult<
-  BackfillSubscriptionsMutation
->
-export type BackfillSubscriptionsMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  BackfillSubscriptionsMutation,
-  BackfillSubscriptionsMutationVariables
->
+export type BackfillSubscriptionsMutationResult =
+  ApolloReactCommon.MutationResult<BackfillSubscriptionsMutation>
+export type BackfillSubscriptionsMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    BackfillSubscriptionsMutation,
+    BackfillSubscriptionsMutationVariables
+  >
 export const GetAccountDocument = gql`
   query GetAccount($memberId: ID!) {
     member(id: $memberId) {
@@ -5826,13 +5838,13 @@ export function useRemoveMonthlyEntryMutation(
 export type RemoveMonthlyEntryMutationHookResult = ReturnType<
   typeof useRemoveMonthlyEntryMutation
 >
-export type RemoveMonthlyEntryMutationResult = ApolloReactCommon.MutationResult<
-  RemoveMonthlyEntryMutation
->
-export type RemoveMonthlyEntryMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RemoveMonthlyEntryMutation,
-  RemoveMonthlyEntryMutationVariables
->
+export type RemoveMonthlyEntryMutationResult =
+  ApolloReactCommon.MutationResult<RemoveMonthlyEntryMutation>
+export type RemoveMonthlyEntryMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    RemoveMonthlyEntryMutation,
+    RemoveMonthlyEntryMutationVariables
+  >
 export const GetReferralInformationDocument = gql`
   query GetReferralInformation($memberId: ID!) {
     member(id: $memberId) {
@@ -5992,13 +6004,13 @@ export function useManualRedeemCampaignMutation(
 export type ManualRedeemCampaignMutationHookResult = ReturnType<
   typeof useManualRedeemCampaignMutation
 >
-export type ManualRedeemCampaignMutationResult = ApolloReactCommon.MutationResult<
-  ManualRedeemCampaignMutation
->
-export type ManualRedeemCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  ManualRedeemCampaignMutation,
-  ManualRedeemCampaignMutationVariables
->
+export type ManualRedeemCampaignMutationResult =
+  ApolloReactCommon.MutationResult<ManualRedeemCampaignMutation>
+export type ManualRedeemCampaignMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    ManualRedeemCampaignMutation,
+    ManualRedeemCampaignMutationVariables
+  >
 export const ManualUnRedeemCampaignDocument = gql`
   mutation ManualUnRedeemCampaign(
     $memberId: ID!
@@ -6014,10 +6026,11 @@ export const ManualUnRedeemCampaignDocument = gql`
     }
   }
 `
-export type ManualUnRedeemCampaignMutationFn = ApolloReactCommon.MutationFunction<
-  ManualUnRedeemCampaignMutation,
-  ManualUnRedeemCampaignMutationVariables
->
+export type ManualUnRedeemCampaignMutationFn =
+  ApolloReactCommon.MutationFunction<
+    ManualUnRedeemCampaignMutation,
+    ManualUnRedeemCampaignMutationVariables
+  >
 
 /**
  * __useManualUnRedeemCampaignMutation__
@@ -6052,13 +6065,13 @@ export function useManualUnRedeemCampaignMutation(
 export type ManualUnRedeemCampaignMutationHookResult = ReturnType<
   typeof useManualUnRedeemCampaignMutation
 >
-export type ManualUnRedeemCampaignMutationResult = ApolloReactCommon.MutationResult<
-  ManualUnRedeemCampaignMutation
->
-export type ManualUnRedeemCampaignMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  ManualUnRedeemCampaignMutation,
-  ManualUnRedeemCampaignMutationVariables
->
+export type ManualUnRedeemCampaignMutationResult =
+  ApolloReactCommon.MutationResult<ManualUnRedeemCampaignMutation>
+export type ManualUnRedeemCampaignMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    ManualUnRedeemCampaignMutation,
+    ManualUnRedeemCampaignMutationVariables
+  >
 export const CreateClaimDocument = gql`
   mutation createClaim(
     $memberId: ID!
@@ -6116,9 +6129,8 @@ export function useCreateClaimMutation(
 export type CreateClaimMutationHookResult = ReturnType<
   typeof useCreateClaimMutation
 >
-export type CreateClaimMutationResult = ApolloReactCommon.MutationResult<
-  CreateClaimMutation
->
+export type CreateClaimMutationResult =
+  ApolloReactCommon.MutationResult<CreateClaimMutation>
 export type CreateClaimMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateClaimMutation,
   CreateClaimMutationVariables
@@ -6240,13 +6252,13 @@ export function useRevertTerminationMutation(
 export type RevertTerminationMutationHookResult = ReturnType<
   typeof useRevertTerminationMutation
 >
-export type RevertTerminationMutationResult = ApolloReactCommon.MutationResult<
-  RevertTerminationMutation
->
-export type RevertTerminationMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RevertTerminationMutation,
-  RevertTerminationMutationVariables
->
+export type RevertTerminationMutationResult =
+  ApolloReactCommon.MutationResult<RevertTerminationMutation>
+export type RevertTerminationMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    RevertTerminationMutation,
+    RevertTerminationMutationVariables
+  >
 export const ActivatePendingAgreementDocument = gql`
   mutation ActivatePendingAgreement(
     $contractId: ID!
@@ -6258,10 +6270,11 @@ export const ActivatePendingAgreementDocument = gql`
     }
   }
 `
-export type ActivatePendingAgreementMutationFn = ApolloReactCommon.MutationFunction<
-  ActivatePendingAgreementMutation,
-  ActivatePendingAgreementMutationVariables
->
+export type ActivatePendingAgreementMutationFn =
+  ApolloReactCommon.MutationFunction<
+    ActivatePendingAgreementMutation,
+    ActivatePendingAgreementMutationVariables
+  >
 
 /**
  * __useActivatePendingAgreementMutation__
@@ -6296,13 +6309,13 @@ export function useActivatePendingAgreementMutation(
 export type ActivatePendingAgreementMutationHookResult = ReturnType<
   typeof useActivatePendingAgreementMutation
 >
-export type ActivatePendingAgreementMutationResult = ApolloReactCommon.MutationResult<
-  ActivatePendingAgreementMutation
->
-export type ActivatePendingAgreementMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  ActivatePendingAgreementMutation,
-  ActivatePendingAgreementMutationVariables
->
+export type ActivatePendingAgreementMutationResult =
+  ApolloReactCommon.MutationResult<ActivatePendingAgreementMutation>
+export type ActivatePendingAgreementMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    ActivatePendingAgreementMutation,
+    ActivatePendingAgreementMutationVariables
+  >
 export const ChangeFromDateDocument = gql`
   mutation ChangeFromDate($agreementId: ID!, $request: ChangeFromDateInput) {
     changeFromDate(agreementId: $agreementId, request: $request) {
@@ -6352,17 +6365,17 @@ export function useChangeFromDateMutation(
 export type ChangeFromDateMutationHookResult = ReturnType<
   typeof useChangeFromDateMutation
 >
-export type ChangeFromDateMutationResult = ApolloReactCommon.MutationResult<
-  ChangeFromDateMutation
->
-export type ChangeFromDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  ChangeFromDateMutation,
-  ChangeFromDateMutationVariables
->
+export type ChangeFromDateMutationResult =
+  ApolloReactCommon.MutationResult<ChangeFromDateMutation>
+export type ChangeFromDateMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    ChangeFromDateMutation,
+    ChangeFromDateMutationVariables
+  >
 export const ChangeTerminationDateDocument = gql`
   mutation ChangeTerminationDate(
     $contractId: ID!
-    $request: ChangeTerminationDateInput
+    $request: ChangeTerminationDateInput!
   ) {
     changeTerminationDate(contractId: $contractId, request: $request) {
       id
@@ -6371,10 +6384,11 @@ export const ChangeTerminationDateDocument = gql`
     }
   }
 `
-export type ChangeTerminationDateMutationFn = ApolloReactCommon.MutationFunction<
-  ChangeTerminationDateMutation,
-  ChangeTerminationDateMutationVariables
->
+export type ChangeTerminationDateMutationFn =
+  ApolloReactCommon.MutationFunction<
+    ChangeTerminationDateMutation,
+    ChangeTerminationDateMutationVariables
+  >
 
 /**
  * __useChangeTerminationDateMutation__
@@ -6409,13 +6423,13 @@ export function useChangeTerminationDateMutation(
 export type ChangeTerminationDateMutationHookResult = ReturnType<
   typeof useChangeTerminationDateMutation
 >
-export type ChangeTerminationDateMutationResult = ApolloReactCommon.MutationResult<
-  ChangeTerminationDateMutation
->
-export type ChangeTerminationDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  ChangeTerminationDateMutation,
-  ChangeTerminationDateMutationVariables
->
+export type ChangeTerminationDateMutationResult =
+  ApolloReactCommon.MutationResult<ChangeTerminationDateMutation>
+export type ChangeTerminationDateMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    ChangeTerminationDateMutation,
+    ChangeTerminationDateMutationVariables
+  >
 export const ChangeToDateDocument = gql`
   mutation ChangeToDate($agreementId: ID!, $request: ChangeToDateInput) {
     changeToDate(agreementId: $agreementId, request: $request) {
@@ -6465,9 +6479,8 @@ export function useChangeToDateMutation(
 export type ChangeToDateMutationHookResult = ReturnType<
   typeof useChangeToDateMutation
 >
-export type ChangeToDateMutationResult = ApolloReactCommon.MutationResult<
-  ChangeToDateMutation
->
+export type ChangeToDateMutationResult =
+  ApolloReactCommon.MutationResult<ChangeToDateMutation>
 export type ChangeToDateMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ChangeToDateMutation,
   ChangeToDateMutationVariables
@@ -6535,6 +6548,7 @@ export const GetContractsDocument = gql`
         contractTypeName
         createdAt
         isLocked
+        selfChangeBlockers
       }
     }
   }
@@ -6675,10 +6689,11 @@ export const RegenerateCertificateDocument = gql`
     }
   }
 `
-export type RegenerateCertificateMutationFn = ApolloReactCommon.MutationFunction<
-  RegenerateCertificateMutation,
-  RegenerateCertificateMutationVariables
->
+export type RegenerateCertificateMutationFn =
+  ApolloReactCommon.MutationFunction<
+    RegenerateCertificateMutation,
+    RegenerateCertificateMutationVariables
+  >
 
 /**
  * __useRegenerateCertificateMutation__
@@ -6712,13 +6727,13 @@ export function useRegenerateCertificateMutation(
 export type RegenerateCertificateMutationHookResult = ReturnType<
   typeof useRegenerateCertificateMutation
 >
-export type RegenerateCertificateMutationResult = ApolloReactCommon.MutationResult<
-  RegenerateCertificateMutation
->
-export type RegenerateCertificateMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RegenerateCertificateMutation,
-  RegenerateCertificateMutationVariables
->
+export type RegenerateCertificateMutationResult =
+  ApolloReactCommon.MutationResult<RegenerateCertificateMutation>
+export type RegenerateCertificateMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    RegenerateCertificateMutation,
+    RegenerateCertificateMutationVariables
+  >
 export const SafelyEditAgreementDocument = gql`
   mutation SafelyEditAgreement(
     $agreementId: ID!
@@ -6772,13 +6787,13 @@ export function useSafelyEditAgreementMutation(
 export type SafelyEditAgreementMutationHookResult = ReturnType<
   typeof useSafelyEditAgreementMutation
 >
-export type SafelyEditAgreementMutationResult = ApolloReactCommon.MutationResult<
-  SafelyEditAgreementMutation
->
-export type SafelyEditAgreementMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SafelyEditAgreementMutation,
-  SafelyEditAgreementMutationVariables
->
+export type SafelyEditAgreementMutationResult =
+  ApolloReactCommon.MutationResult<SafelyEditAgreementMutation>
+export type SafelyEditAgreementMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    SafelyEditAgreementMutation,
+    SafelyEditAgreementMutationVariables
+  >
 export const TerminateContractDocument = gql`
   mutation TerminateContract(
     $contractId: ID!
@@ -6829,13 +6844,13 @@ export function useTerminateContractMutation(
 export type TerminateContractMutationHookResult = ReturnType<
   typeof useTerminateContractMutation
 >
-export type TerminateContractMutationResult = ApolloReactCommon.MutationResult<
-  TerminateContractMutation
->
-export type TerminateContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  TerminateContractMutation,
-  TerminateContractMutationVariables
->
+export type TerminateContractMutationResult =
+  ApolloReactCommon.MutationResult<TerminateContractMutation>
+export type TerminateContractMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    TerminateContractMutation,
+    TerminateContractMutationVariables
+  >
 export const GetMemberNameDocument = gql`
   query GetMemberName($memberId: ID!) {
     member(id: $memberId) {
@@ -7011,13 +7026,13 @@ export function useWhitelistMemberMutation(
 export type WhitelistMemberMutationHookResult = ReturnType<
   typeof useWhitelistMemberMutation
 >
-export type WhitelistMemberMutationResult = ApolloReactCommon.MutationResult<
-  WhitelistMemberMutation
->
-export type WhitelistMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  WhitelistMemberMutation,
-  WhitelistMemberMutationVariables
->
+export type WhitelistMemberMutationResult =
+  ApolloReactCommon.MutationResult<WhitelistMemberMutation>
+export type WhitelistMemberMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    WhitelistMemberMutation,
+    WhitelistMemberMutationVariables
+  >
 export const FileUploadsQueryDocument = gql`
   query FileUploadsQuery($memberId: ID!) {
     member(id: $memberId) {
@@ -7130,13 +7145,13 @@ export function useEditMemberInfoMutation(
 export type EditMemberInfoMutationHookResult = ReturnType<
   typeof useEditMemberInfoMutation
 >
-export type EditMemberInfoMutationResult = ApolloReactCommon.MutationResult<
-  EditMemberInfoMutation
->
-export type EditMemberInfoMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  EditMemberInfoMutation,
-  EditMemberInfoMutationVariables
->
+export type EditMemberInfoMutationResult =
+  ApolloReactCommon.MutationResult<EditMemberInfoMutation>
+export type EditMemberInfoMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    EditMemberInfoMutation,
+    EditMemberInfoMutationVariables
+  >
 export const GetMemberInfoDocument = gql`
   query GetMemberInfo($memberId: ID!) {
     member(id: $memberId) {
@@ -7267,13 +7282,13 @@ export function useSetFraudulentStatusMutation(
 export type SetFraudulentStatusMutationHookResult = ReturnType<
   typeof useSetFraudulentStatusMutation
 >
-export type SetFraudulentStatusMutationResult = ApolloReactCommon.MutationResult<
-  SetFraudulentStatusMutation
->
-export type SetFraudulentStatusMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetFraudulentStatusMutation,
-  SetFraudulentStatusMutationVariables
->
+export type SetFraudulentStatusMutationResult =
+  ApolloReactCommon.MutationResult<SetFraudulentStatusMutation>
+export type SetFraudulentStatusMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    SetFraudulentStatusMutation,
+    SetFraudulentStatusMutationVariables
+  >
 export const CreatePaymentCompletionLinkDocument = gql`
   mutation CreatePaymentCompletionLink($memberId: ID!) {
     createPaymentCompletionLink(memberId: $memberId) {
@@ -7281,10 +7296,11 @@ export const CreatePaymentCompletionLinkDocument = gql`
     }
   }
 `
-export type CreatePaymentCompletionLinkMutationFn = ApolloReactCommon.MutationFunction<
-  CreatePaymentCompletionLinkMutation,
-  CreatePaymentCompletionLinkMutationVariables
->
+export type CreatePaymentCompletionLinkMutationFn =
+  ApolloReactCommon.MutationFunction<
+    CreatePaymentCompletionLinkMutation,
+    CreatePaymentCompletionLinkMutationVariables
+  >
 
 /**
  * __useCreatePaymentCompletionLinkMutation__
@@ -7318,13 +7334,13 @@ export function useCreatePaymentCompletionLinkMutation(
 export type CreatePaymentCompletionLinkMutationHookResult = ReturnType<
   typeof useCreatePaymentCompletionLinkMutation
 >
-export type CreatePaymentCompletionLinkMutationResult = ApolloReactCommon.MutationResult<
-  CreatePaymentCompletionLinkMutation
->
-export type CreatePaymentCompletionLinkMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreatePaymentCompletionLinkMutation,
-  CreatePaymentCompletionLinkMutationVariables
->
+export type CreatePaymentCompletionLinkMutationResult =
+  ApolloReactCommon.MutationResult<CreatePaymentCompletionLinkMutation>
+export type CreatePaymentCompletionLinkMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreatePaymentCompletionLinkMutation,
+    CreatePaymentCompletionLinkMutationVariables
+  >
 export const GetContractMarketInfoDocument = gql`
   query GetContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
@@ -7525,9 +7541,8 @@ export function usePayoutMemberMutation(
 export type PayoutMemberMutationHookResult = ReturnType<
   typeof usePayoutMemberMutation
 >
-export type PayoutMemberMutationResult = ApolloReactCommon.MutationResult<
-  PayoutMemberMutation
->
+export type PayoutMemberMutationResult =
+  ApolloReactCommon.MutationResult<PayoutMemberMutation>
 export type PayoutMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
   PayoutMemberMutation,
   PayoutMemberMutationVariables
@@ -7551,10 +7566,11 @@ export const AddAgreementFromQuoteDocument = gql`
     }
   }
 `
-export type AddAgreementFromQuoteMutationFn = ApolloReactCommon.MutationFunction<
-  AddAgreementFromQuoteMutation,
-  AddAgreementFromQuoteMutationVariables
->
+export type AddAgreementFromQuoteMutationFn =
+  ApolloReactCommon.MutationFunction<
+    AddAgreementFromQuoteMutation,
+    AddAgreementFromQuoteMutationVariables
+  >
 
 /**
  * __useAddAgreementFromQuoteMutation__
@@ -7592,13 +7608,13 @@ export function useAddAgreementFromQuoteMutation(
 export type AddAgreementFromQuoteMutationHookResult = ReturnType<
   typeof useAddAgreementFromQuoteMutation
 >
-export type AddAgreementFromQuoteMutationResult = ApolloReactCommon.MutationResult<
-  AddAgreementFromQuoteMutation
->
-export type AddAgreementFromQuoteMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AddAgreementFromQuoteMutation,
-  AddAgreementFromQuoteMutationVariables
->
+export type AddAgreementFromQuoteMutationResult =
+  ApolloReactCommon.MutationResult<AddAgreementFromQuoteMutation>
+export type AddAgreementFromQuoteMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    AddAgreementFromQuoteMutation,
+    AddAgreementFromQuoteMutationVariables
+  >
 export const CreateQuoteForMemberBySchemaDocument = gql`
   mutation CreateQuoteForMemberBySchema(
     $memberId: ID!
@@ -7614,10 +7630,11 @@ export const CreateQuoteForMemberBySchemaDocument = gql`
     }
   }
 `
-export type CreateQuoteForMemberBySchemaMutationFn = ApolloReactCommon.MutationFunction<
-  CreateQuoteForMemberBySchemaMutation,
-  CreateQuoteForMemberBySchemaMutationVariables
->
+export type CreateQuoteForMemberBySchemaMutationFn =
+  ApolloReactCommon.MutationFunction<
+    CreateQuoteForMemberBySchemaMutation,
+    CreateQuoteForMemberBySchemaMutationVariables
+  >
 
 /**
  * __useCreateQuoteForMemberBySchemaMutation__
@@ -7653,13 +7670,13 @@ export function useCreateQuoteForMemberBySchemaMutation(
 export type CreateQuoteForMemberBySchemaMutationHookResult = ReturnType<
   typeof useCreateQuoteForMemberBySchemaMutation
 >
-export type CreateQuoteForMemberBySchemaMutationResult = ApolloReactCommon.MutationResult<
-  CreateQuoteForMemberBySchemaMutation
->
-export type CreateQuoteForMemberBySchemaMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateQuoteForMemberBySchemaMutation,
-  CreateQuoteForMemberBySchemaMutationVariables
->
+export type CreateQuoteForMemberBySchemaMutationResult =
+  ApolloReactCommon.MutationResult<CreateQuoteForMemberBySchemaMutation>
+export type CreateQuoteForMemberBySchemaMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreateQuoteForMemberBySchemaMutation,
+    CreateQuoteForMemberBySchemaMutationVariables
+  >
 export const CreateQuoteFromAgreementDocument = gql`
   mutation CreateQuoteFromAgreement($agreementId: ID!, $memberId: ID!) {
     createQuoteFromAgreement(agreementId: $agreementId, memberId: $memberId) {
@@ -7667,10 +7684,11 @@ export const CreateQuoteFromAgreementDocument = gql`
     }
   }
 `
-export type CreateQuoteFromAgreementMutationFn = ApolloReactCommon.MutationFunction<
-  CreateQuoteFromAgreementMutation,
-  CreateQuoteFromAgreementMutationVariables
->
+export type CreateQuoteFromAgreementMutationFn =
+  ApolloReactCommon.MutationFunction<
+    CreateQuoteFromAgreementMutation,
+    CreateQuoteFromAgreementMutationVariables
+  >
 
 /**
  * __useCreateQuoteFromAgreementMutation__
@@ -7705,13 +7723,13 @@ export function useCreateQuoteFromAgreementMutation(
 export type CreateQuoteFromAgreementMutationHookResult = ReturnType<
   typeof useCreateQuoteFromAgreementMutation
 >
-export type CreateQuoteFromAgreementMutationResult = ApolloReactCommon.MutationResult<
-  CreateQuoteFromAgreementMutation
->
-export type CreateQuoteFromAgreementMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateQuoteFromAgreementMutation,
-  CreateQuoteFromAgreementMutationVariables
->
+export type CreateQuoteFromAgreementMutationResult =
+  ApolloReactCommon.MutationResult<CreateQuoteFromAgreementMutation>
+export type CreateQuoteFromAgreementMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreateQuoteFromAgreementMutation,
+    CreateQuoteFromAgreementMutationVariables
+  >
 export const GetQuotesDocument = gql`
   query GetQuotes($memberId: ID!) {
     member(id: $memberId) {
@@ -7844,10 +7862,11 @@ export type GetSchemaForInsuranceTypeQueryHookResult = ReturnType<
 export type GetSchemaForInsuranceTypeLazyQueryHookResult = ReturnType<
   typeof useGetSchemaForInsuranceTypeLazyQuery
 >
-export type GetSchemaForInsuranceTypeQueryResult = ApolloReactCommon.QueryResult<
-  GetSchemaForInsuranceTypeQuery,
-  GetSchemaForInsuranceTypeQueryVariables
->
+export type GetSchemaForInsuranceTypeQueryResult =
+  ApolloReactCommon.QueryResult<
+    GetSchemaForInsuranceTypeQuery,
+    GetSchemaForInsuranceTypeQueryVariables
+  >
 export const OverrideQuotePriceDocument = gql`
   mutation OverrideQuotePrice($input: OverrideQuotePriceInput!) {
     overrideQuotePrice(input: $input) {
@@ -7892,13 +7911,13 @@ export function useOverrideQuotePriceMutation(
 export type OverrideQuotePriceMutationHookResult = ReturnType<
   typeof useOverrideQuotePriceMutation
 >
-export type OverrideQuotePriceMutationResult = ApolloReactCommon.MutationResult<
-  OverrideQuotePriceMutation
->
-export type OverrideQuotePriceMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  OverrideQuotePriceMutation,
-  OverrideQuotePriceMutationVariables
->
+export type OverrideQuotePriceMutationResult =
+  ApolloReactCommon.MutationResult<OverrideQuotePriceMutation>
+export type OverrideQuotePriceMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    OverrideQuotePriceMutation,
+    OverrideQuotePriceMutationVariables
+  >
 export const SignQuoteForNewContractDocument = gql`
   mutation SignQuoteForNewContract($quoteId: ID!, $activationDate: LocalDate) {
     signQuoteForNewContract(
@@ -7909,10 +7928,11 @@ export const SignQuoteForNewContractDocument = gql`
     }
   }
 `
-export type SignQuoteForNewContractMutationFn = ApolloReactCommon.MutationFunction<
-  SignQuoteForNewContractMutation,
-  SignQuoteForNewContractMutationVariables
->
+export type SignQuoteForNewContractMutationFn =
+  ApolloReactCommon.MutationFunction<
+    SignQuoteForNewContractMutation,
+    SignQuoteForNewContractMutationVariables
+  >
 
 /**
  * __useSignQuoteForNewContractMutation__
@@ -7947,13 +7967,13 @@ export function useSignQuoteForNewContractMutation(
 export type SignQuoteForNewContractMutationHookResult = ReturnType<
   typeof useSignQuoteForNewContractMutation
 >
-export type SignQuoteForNewContractMutationResult = ApolloReactCommon.MutationResult<
-  SignQuoteForNewContractMutation
->
-export type SignQuoteForNewContractMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SignQuoteForNewContractMutation,
-  SignQuoteForNewContractMutationVariables
->
+export type SignQuoteForNewContractMutationResult =
+  ApolloReactCommon.MutationResult<SignQuoteForNewContractMutation>
+export type SignQuoteForNewContractMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    SignQuoteForNewContractMutation,
+    SignQuoteForNewContractMutationVariables
+  >
 export const UpdateQuoteBySchemaDocument = gql`
   mutation UpdateQuoteBySchema(
     $quoteId: ID!
@@ -8008,13 +8028,13 @@ export function useUpdateQuoteBySchemaMutation(
 export type UpdateQuoteBySchemaMutationHookResult = ReturnType<
   typeof useUpdateQuoteBySchemaMutation
 >
-export type UpdateQuoteBySchemaMutationResult = ApolloReactCommon.MutationResult<
-  UpdateQuoteBySchemaMutation
->
-export type UpdateQuoteBySchemaMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateQuoteBySchemaMutation,
-  UpdateQuoteBySchemaMutationVariables
->
+export type UpdateQuoteBySchemaMutationResult =
+  ApolloReactCommon.MutationResult<UpdateQuoteBySchemaMutation>
+export type UpdateQuoteBySchemaMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    UpdateQuoteBySchemaMutation,
+    UpdateQuoteBySchemaMutationVariables
+  >
 export const MemberSearchDocument = gql`
   query MemberSearch($query: String!, $options: MemberSearchOptions!) {
     memberSearch(query: $query, options: $options) {
@@ -8134,13 +8154,13 @@ export function useAnswerQuestionMutation(
 export type AnswerQuestionMutationHookResult = ReturnType<
   typeof useAnswerQuestionMutation
 >
-export type AnswerQuestionMutationResult = ApolloReactCommon.MutationResult<
-  AnswerQuestionMutation
->
-export type AnswerQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AnswerQuestionMutation,
-  AnswerQuestionMutationVariables
->
+export type AnswerQuestionMutationResult =
+  ApolloReactCommon.MutationResult<AnswerQuestionMutation>
+export type AnswerQuestionMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    AnswerQuestionMutation,
+    AnswerQuestionMutationVariables
+  >
 export const GetQuestionsGroupsDocument = gql`
   query GetQuestionsGroups {
     questionGroups {
@@ -8222,10 +8242,11 @@ export const MarkQuestionAsResolvedDocument = gql`
     markQuestionAsResolved(memberId: $memberId)
   }
 `
-export type MarkQuestionAsResolvedMutationFn = ApolloReactCommon.MutationFunction<
-  MarkQuestionAsResolvedMutation,
-  MarkQuestionAsResolvedMutationVariables
->
+export type MarkQuestionAsResolvedMutationFn =
+  ApolloReactCommon.MutationFunction<
+    MarkQuestionAsResolvedMutation,
+    MarkQuestionAsResolvedMutationVariables
+  >
 
 /**
  * __useMarkQuestionAsResolvedMutation__
@@ -8259,13 +8280,13 @@ export function useMarkQuestionAsResolvedMutation(
 export type MarkQuestionAsResolvedMutationHookResult = ReturnType<
   typeof useMarkQuestionAsResolvedMutation
 >
-export type MarkQuestionAsResolvedMutationResult = ApolloReactCommon.MutationResult<
-  MarkQuestionAsResolvedMutation
->
-export type MarkQuestionAsResolvedMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  MarkQuestionAsResolvedMutation,
-  MarkQuestionAsResolvedMutationVariables
->
+export type MarkQuestionAsResolvedMutationResult =
+  ApolloReactCommon.MutationResult<MarkQuestionAsResolvedMutation>
+export type MarkQuestionAsResolvedMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    MarkQuestionAsResolvedMutation,
+    MarkQuestionAsResolvedMutationVariables
+  >
 export const MemberNameAndContractMarketInfoDocument = gql`
   query MemberNameAndContractMarketInfo($memberId: ID!) {
     member(id: $memberId) {
@@ -8326,10 +8347,11 @@ export type MemberNameAndContractMarketInfoQueryHookResult = ReturnType<
 export type MemberNameAndContractMarketInfoLazyQueryHookResult = ReturnType<
   typeof useMemberNameAndContractMarketInfoLazyQuery
 >
-export type MemberNameAndContractMarketInfoQueryResult = ApolloReactCommon.QueryResult<
-  MemberNameAndContractMarketInfoQuery,
-  MemberNameAndContractMarketInfoQueryVariables
->
+export type MemberNameAndContractMarketInfoQueryResult =
+  ApolloReactCommon.QueryResult<
+    MemberNameAndContractMarketInfoQuery,
+    MemberNameAndContractMarketInfoQueryVariables
+  >
 export const SendMessageDocument = gql`
   mutation SendMessage($input: SendMessageInput!) {
     sendMessage(input: $input) {
@@ -8381,9 +8403,8 @@ export function useSendMessageMutation(
 export type SendMessageMutationHookResult = ReturnType<
   typeof useSendMessageMutation
 >
-export type SendMessageMutationResult = ApolloReactCommon.MutationResult<
-  SendMessageMutation
->
+export type SendMessageMutationResult =
+  ApolloReactCommon.MutationResult<SendMessageMutation>
 export type SendMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SendMessageMutation,
   SendMessageMutationVariables
@@ -8456,22 +8477,23 @@ export function useGrantResourceAccessMutation(
 export type GrantResourceAccessMutationHookResult = ReturnType<
   typeof useGrantResourceAccessMutation
 >
-export type GrantResourceAccessMutationResult = ApolloReactCommon.MutationResult<
-  GrantResourceAccessMutation
->
-export type GrantResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  GrantResourceAccessMutation,
-  GrantResourceAccessMutationVariables
->
+export type GrantResourceAccessMutationResult =
+  ApolloReactCommon.MutationResult<GrantResourceAccessMutation>
+export type GrantResourceAccessMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    GrantResourceAccessMutation,
+    GrantResourceAccessMutationVariables
+  >
 export const ReleaseResourceAccessDocument = gql`
   mutation ReleaseResourceAccess($resourceId: ID!) {
     releaseResourceAccess(resourceId: $resourceId)
   }
 `
-export type ReleaseResourceAccessMutationFn = ApolloReactCommon.MutationFunction<
-  ReleaseResourceAccessMutation,
-  ReleaseResourceAccessMutationVariables
->
+export type ReleaseResourceAccessMutationFn =
+  ApolloReactCommon.MutationFunction<
+    ReleaseResourceAccessMutation,
+    ReleaseResourceAccessMutationVariables
+  >
 
 /**
  * __useReleaseResourceAccessMutation__
@@ -8505,13 +8527,13 @@ export function useReleaseResourceAccessMutation(
 export type ReleaseResourceAccessMutationHookResult = ReturnType<
   typeof useReleaseResourceAccessMutation
 >
-export type ReleaseResourceAccessMutationResult = ApolloReactCommon.MutationResult<
-  ReleaseResourceAccessMutation
->
-export type ReleaseResourceAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  ReleaseResourceAccessMutation,
-  ReleaseResourceAccessMutationVariables
->
+export type ReleaseResourceAccessMutationResult =
+  ApolloReactCommon.MutationResult<ReleaseResourceAccessMutation>
+export type ReleaseResourceAccessMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    ReleaseResourceAccessMutation,
+    ReleaseResourceAccessMutationVariables
+  >
 export const ResourceAccessInformationDocument = gql`
   query ResourceAccessInformation($resourceId: String!) {
     resourceAccess(resourceId: $resourceId) {
@@ -8587,10 +8609,11 @@ export type ResourceAccessInformationQueryHookResult = ReturnType<
 export type ResourceAccessInformationLazyQueryHookResult = ReturnType<
   typeof useResourceAccessInformationLazyQuery
 >
-export type ResourceAccessInformationQueryResult = ApolloReactCommon.QueryResult<
-  ResourceAccessInformationQuery,
-  ResourceAccessInformationQueryVariables
->
+export type ResourceAccessInformationQueryResult =
+  ApolloReactCommon.QueryResult<
+    ResourceAccessInformationQuery,
+    ResourceAccessInformationQueryVariables
+  >
 export const AssignCampaignToPartnerFreeMonthsDocument = gql`
   mutation AssignCampaignToPartnerFreeMonths(
     $request: AssignVoucherFreeMonths
@@ -8598,10 +8621,11 @@ export const AssignCampaignToPartnerFreeMonthsDocument = gql`
     assignCampaignToPartnerFreeMonths(request: $request)
   }
 `
-export type AssignCampaignToPartnerFreeMonthsMutationFn = ApolloReactCommon.MutationFunction<
-  AssignCampaignToPartnerFreeMonthsMutation,
-  AssignCampaignToPartnerFreeMonthsMutationVariables
->
+export type AssignCampaignToPartnerFreeMonthsMutationFn =
+  ApolloReactCommon.MutationFunction<
+    AssignCampaignToPartnerFreeMonthsMutation,
+    AssignCampaignToPartnerFreeMonthsMutationVariables
+  >
 
 /**
  * __useAssignCampaignToPartnerFreeMonthsMutation__
@@ -8635,13 +8659,13 @@ export function useAssignCampaignToPartnerFreeMonthsMutation(
 export type AssignCampaignToPartnerFreeMonthsMutationHookResult = ReturnType<
   typeof useAssignCampaignToPartnerFreeMonthsMutation
 >
-export type AssignCampaignToPartnerFreeMonthsMutationResult = ApolloReactCommon.MutationResult<
-  AssignCampaignToPartnerFreeMonthsMutation
->
-export type AssignCampaignToPartnerFreeMonthsMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AssignCampaignToPartnerFreeMonthsMutation,
-  AssignCampaignToPartnerFreeMonthsMutationVariables
->
+export type AssignCampaignToPartnerFreeMonthsMutationResult =
+  ApolloReactCommon.MutationResult<AssignCampaignToPartnerFreeMonthsMutation>
+export type AssignCampaignToPartnerFreeMonthsMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    AssignCampaignToPartnerFreeMonthsMutation,
+    AssignCampaignToPartnerFreeMonthsMutationVariables
+  >
 export const AssignCampaignToPartnerNoDiscountDocument = gql`
   mutation AssignCampaignToPartnerNoDiscount(
     $request: AssignVoucherNoDiscount
@@ -8649,10 +8673,11 @@ export const AssignCampaignToPartnerNoDiscountDocument = gql`
     assignCampaignToPartnerNoDiscount(request: $request)
   }
 `
-export type AssignCampaignToPartnerNoDiscountMutationFn = ApolloReactCommon.MutationFunction<
-  AssignCampaignToPartnerNoDiscountMutation,
-  AssignCampaignToPartnerNoDiscountMutationVariables
->
+export type AssignCampaignToPartnerNoDiscountMutationFn =
+  ApolloReactCommon.MutationFunction<
+    AssignCampaignToPartnerNoDiscountMutation,
+    AssignCampaignToPartnerNoDiscountMutationVariables
+  >
 
 /**
  * __useAssignCampaignToPartnerNoDiscountMutation__
@@ -8686,13 +8711,13 @@ export function useAssignCampaignToPartnerNoDiscountMutation(
 export type AssignCampaignToPartnerNoDiscountMutationHookResult = ReturnType<
   typeof useAssignCampaignToPartnerNoDiscountMutation
 >
-export type AssignCampaignToPartnerNoDiscountMutationResult = ApolloReactCommon.MutationResult<
-  AssignCampaignToPartnerNoDiscountMutation
->
-export type AssignCampaignToPartnerNoDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AssignCampaignToPartnerNoDiscountMutation,
-  AssignCampaignToPartnerNoDiscountMutationVariables
->
+export type AssignCampaignToPartnerNoDiscountMutationResult =
+  ApolloReactCommon.MutationResult<AssignCampaignToPartnerNoDiscountMutation>
+export type AssignCampaignToPartnerNoDiscountMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    AssignCampaignToPartnerNoDiscountMutation,
+    AssignCampaignToPartnerNoDiscountMutationVariables
+  >
 export const AssignCampaignToPartnerPercentageDiscountDocument = gql`
   mutation AssignCampaignToPartnerPercentageDiscount(
     $request: AssignVoucherPercentageDiscount
@@ -8700,10 +8725,11 @@ export const AssignCampaignToPartnerPercentageDiscountDocument = gql`
     assignCampaignToPartnerPercentageDiscount(request: $request)
   }
 `
-export type AssignCampaignToPartnerPercentageDiscountMutationFn = ApolloReactCommon.MutationFunction<
-  AssignCampaignToPartnerPercentageDiscountMutation,
-  AssignCampaignToPartnerPercentageDiscountMutationVariables
->
+export type AssignCampaignToPartnerPercentageDiscountMutationFn =
+  ApolloReactCommon.MutationFunction<
+    AssignCampaignToPartnerPercentageDiscountMutation,
+    AssignCampaignToPartnerPercentageDiscountMutationVariables
+  >
 
 /**
  * __useAssignCampaignToPartnerPercentageDiscountMutation__
@@ -8734,16 +8760,15 @@ export function useAssignCampaignToPartnerPercentageDiscountMutation(
     AssignCampaignToPartnerPercentageDiscountMutationVariables
   >(AssignCampaignToPartnerPercentageDiscountDocument, options)
 }
-export type AssignCampaignToPartnerPercentageDiscountMutationHookResult = ReturnType<
-  typeof useAssignCampaignToPartnerPercentageDiscountMutation
->
-export type AssignCampaignToPartnerPercentageDiscountMutationResult = ApolloReactCommon.MutationResult<
-  AssignCampaignToPartnerPercentageDiscountMutation
->
-export type AssignCampaignToPartnerPercentageDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AssignCampaignToPartnerPercentageDiscountMutation,
-  AssignCampaignToPartnerPercentageDiscountMutationVariables
->
+export type AssignCampaignToPartnerPercentageDiscountMutationHookResult =
+  ReturnType<typeof useAssignCampaignToPartnerPercentageDiscountMutation>
+export type AssignCampaignToPartnerPercentageDiscountMutationResult =
+  ApolloReactCommon.MutationResult<AssignCampaignToPartnerPercentageDiscountMutation>
+export type AssignCampaignToPartnerPercentageDiscountMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    AssignCampaignToPartnerPercentageDiscountMutation,
+    AssignCampaignToPartnerPercentageDiscountMutationVariables
+  >
 export const AssignCampaignToPartnerVisibleNoDiscountDocument = gql`
   mutation AssignCampaignToPartnerVisibleNoDiscount(
     $request: AssignVoucherVisibleNoDiscount
@@ -8751,10 +8776,11 @@ export const AssignCampaignToPartnerVisibleNoDiscountDocument = gql`
     assignCampaignToPartnerVisibleNoDiscount(request: $request)
   }
 `
-export type AssignCampaignToPartnerVisibleNoDiscountMutationFn = ApolloReactCommon.MutationFunction<
-  AssignCampaignToPartnerVisibleNoDiscountMutation,
-  AssignCampaignToPartnerVisibleNoDiscountMutationVariables
->
+export type AssignCampaignToPartnerVisibleNoDiscountMutationFn =
+  ApolloReactCommon.MutationFunction<
+    AssignCampaignToPartnerVisibleNoDiscountMutation,
+    AssignCampaignToPartnerVisibleNoDiscountMutationVariables
+  >
 
 /**
  * __useAssignCampaignToPartnerVisibleNoDiscountMutation__
@@ -8785,16 +8811,15 @@ export function useAssignCampaignToPartnerVisibleNoDiscountMutation(
     AssignCampaignToPartnerVisibleNoDiscountMutationVariables
   >(AssignCampaignToPartnerVisibleNoDiscountDocument, options)
 }
-export type AssignCampaignToPartnerVisibleNoDiscountMutationHookResult = ReturnType<
-  typeof useAssignCampaignToPartnerVisibleNoDiscountMutation
->
-export type AssignCampaignToPartnerVisibleNoDiscountMutationResult = ApolloReactCommon.MutationResult<
-  AssignCampaignToPartnerVisibleNoDiscountMutation
->
-export type AssignCampaignToPartnerVisibleNoDiscountMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  AssignCampaignToPartnerVisibleNoDiscountMutation,
-  AssignCampaignToPartnerVisibleNoDiscountMutationVariables
->
+export type AssignCampaignToPartnerVisibleNoDiscountMutationHookResult =
+  ReturnType<typeof useAssignCampaignToPartnerVisibleNoDiscountMutation>
+export type AssignCampaignToPartnerVisibleNoDiscountMutationResult =
+  ApolloReactCommon.MutationResult<AssignCampaignToPartnerVisibleNoDiscountMutation>
+export type AssignCampaignToPartnerVisibleNoDiscountMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    AssignCampaignToPartnerVisibleNoDiscountMutation,
+    AssignCampaignToPartnerVisibleNoDiscountMutationVariables
+  >
 export const AvailableCampaignCodeTypesDocument = gql`
   query AvailableCampaignCodeTypes {
     availableCampaignCodeTypes
@@ -8846,19 +8871,21 @@ export type AvailableCampaignCodeTypesQueryHookResult = ReturnType<
 export type AvailableCampaignCodeTypesLazyQueryHookResult = ReturnType<
   typeof useAvailableCampaignCodeTypesLazyQuery
 >
-export type AvailableCampaignCodeTypesQueryResult = ApolloReactCommon.QueryResult<
-  AvailableCampaignCodeTypesQuery,
-  AvailableCampaignCodeTypesQueryVariables
->
+export type AvailableCampaignCodeTypesQueryResult =
+  ApolloReactCommon.QueryResult<
+    AvailableCampaignCodeTypesQuery,
+    AvailableCampaignCodeTypesQueryVariables
+  >
 export const CreateCampaignPartnerDocument = gql`
   mutation CreateCampaignPartner($partnerId: ID!, $partnerName: String!) {
     createCampaignPartner(partnerId: $partnerId, partnerName: $partnerName)
   }
 `
-export type CreateCampaignPartnerMutationFn = ApolloReactCommon.MutationFunction<
-  CreateCampaignPartnerMutation,
-  CreateCampaignPartnerMutationVariables
->
+export type CreateCampaignPartnerMutationFn =
+  ApolloReactCommon.MutationFunction<
+    CreateCampaignPartnerMutation,
+    CreateCampaignPartnerMutationVariables
+  >
 
 /**
  * __useCreateCampaignPartnerMutation__
@@ -8893,13 +8920,13 @@ export function useCreateCampaignPartnerMutation(
 export type CreateCampaignPartnerMutationHookResult = ReturnType<
   typeof useCreateCampaignPartnerMutation
 >
-export type CreateCampaignPartnerMutationResult = ApolloReactCommon.MutationResult<
-  CreateCampaignPartnerMutation
->
-export type CreateCampaignPartnerMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateCampaignPartnerMutation,
-  CreateCampaignPartnerMutationVariables
->
+export type CreateCampaignPartnerMutationResult =
+  ApolloReactCommon.MutationResult<CreateCampaignPartnerMutation>
+export type CreateCampaignPartnerMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreateCampaignPartnerMutation,
+    CreateCampaignPartnerMutationVariables
+  >
 export const GetPartnerCampaignOwnersDocument = gql`
   query GetPartnerCampaignOwners {
     getPartnerCampaignOwners {
@@ -9108,13 +9135,13 @@ export function useSetCampaignCodeTypeMutation(
 export type SetCampaignCodeTypeMutationHookResult = ReturnType<
   typeof useSetCampaignCodeTypeMutation
 >
-export type SetCampaignCodeTypeMutationResult = ApolloReactCommon.MutationResult<
-  SetCampaignCodeTypeMutation
->
-export type SetCampaignCodeTypeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  SetCampaignCodeTypeMutation,
-  SetCampaignCodeTypeMutationVariables
->
+export type SetCampaignCodeTypeMutationResult =
+  ApolloReactCommon.MutationResult<SetCampaignCodeTypeMutation>
+export type SetCampaignCodeTypeMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    SetCampaignCodeTypeMutation,
+    SetCampaignCodeTypeMutationVariables
+  >
 export const PaymentScheduleQueryDocument = gql`
   query PaymentScheduleQuery($month: YearMonth!) {
     paymentSchedule(status: SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL) {
@@ -9197,10 +9224,11 @@ export const CreateClaimPropertyOptionDocument = gql`
     }
   }
 `
-export type CreateClaimPropertyOptionMutationFn = ApolloReactCommon.MutationFunction<
-  CreateClaimPropertyOptionMutation,
-  CreateClaimPropertyOptionMutationVariables
->
+export type CreateClaimPropertyOptionMutationFn =
+  ApolloReactCommon.MutationFunction<
+    CreateClaimPropertyOptionMutation,
+    CreateClaimPropertyOptionMutationVariables
+  >
 
 /**
  * __useCreateClaimPropertyOptionMutation__
@@ -9234,13 +9262,13 @@ export function useCreateClaimPropertyOptionMutation(
 export type CreateClaimPropertyOptionMutationHookResult = ReturnType<
   typeof useCreateClaimPropertyOptionMutation
 >
-export type CreateClaimPropertyOptionMutationResult = ApolloReactCommon.MutationResult<
-  CreateClaimPropertyOptionMutation
->
-export type CreateClaimPropertyOptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateClaimPropertyOptionMutation,
-  CreateClaimPropertyOptionMutationVariables
->
+export type CreateClaimPropertyOptionMutationResult =
+  ApolloReactCommon.MutationResult<CreateClaimPropertyOptionMutation>
+export type CreateClaimPropertyOptionMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreateClaimPropertyOptionMutation,
+    CreateClaimPropertyOptionMutationVariables
+  >
 export const CreateClaimPropertyDocument = gql`
   mutation CreateClaimProperty($name: String!) {
     createClaimProperty(name: $name) {
@@ -9286,13 +9314,13 @@ export function useCreateClaimPropertyMutation(
 export type CreateClaimPropertyMutationHookResult = ReturnType<
   typeof useCreateClaimPropertyMutation
 >
-export type CreateClaimPropertyMutationResult = ApolloReactCommon.MutationResult<
-  CreateClaimPropertyMutation
->
-export type CreateClaimPropertyMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateClaimPropertyMutation,
-  CreateClaimPropertyMutationVariables
->
+export type CreateClaimPropertyMutationResult =
+  ApolloReactCommon.MutationResult<CreateClaimPropertyMutation>
+export type CreateClaimPropertyMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreateClaimPropertyMutation,
+    CreateClaimPropertyMutationVariables
+  >
 export const CreateClaimTypeRelationDocument = gql`
   mutation CreateClaimTypeRelation($request: CreateClaimTypeRelationInput) {
     createClaimTypeRelation(request: $request) {
@@ -9309,10 +9337,11 @@ export const CreateClaimTypeRelationDocument = gql`
     }
   }
 `
-export type CreateClaimTypeRelationMutationFn = ApolloReactCommon.MutationFunction<
-  CreateClaimTypeRelationMutation,
-  CreateClaimTypeRelationMutationVariables
->
+export type CreateClaimTypeRelationMutationFn =
+  ApolloReactCommon.MutationFunction<
+    CreateClaimTypeRelationMutation,
+    CreateClaimTypeRelationMutationVariables
+  >
 
 /**
  * __useCreateClaimTypeRelationMutation__
@@ -9346,22 +9375,23 @@ export function useCreateClaimTypeRelationMutation(
 export type CreateClaimTypeRelationMutationHookResult = ReturnType<
   typeof useCreateClaimTypeRelationMutation
 >
-export type CreateClaimTypeRelationMutationResult = ApolloReactCommon.MutationResult<
-  CreateClaimTypeRelationMutation
->
-export type CreateClaimTypeRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateClaimTypeRelationMutation,
-  CreateClaimTypeRelationMutationVariables
->
+export type CreateClaimTypeRelationMutationResult =
+  ApolloReactCommon.MutationResult<CreateClaimTypeRelationMutation>
+export type CreateClaimTypeRelationMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreateClaimTypeRelationMutation,
+    CreateClaimTypeRelationMutationVariables
+  >
 export const DeleteClaimTypeRelationDocument = gql`
   mutation DeleteClaimTypeRelation($id: ID!) {
     deleteClaimTypeRelation(id: $id)
   }
 `
-export type DeleteClaimTypeRelationMutationFn = ApolloReactCommon.MutationFunction<
-  DeleteClaimTypeRelationMutation,
-  DeleteClaimTypeRelationMutationVariables
->
+export type DeleteClaimTypeRelationMutationFn =
+  ApolloReactCommon.MutationFunction<
+    DeleteClaimTypeRelationMutation,
+    DeleteClaimTypeRelationMutationVariables
+  >
 
 /**
  * __useDeleteClaimTypeRelationMutation__
@@ -9395,22 +9425,23 @@ export function useDeleteClaimTypeRelationMutation(
 export type DeleteClaimTypeRelationMutationHookResult = ReturnType<
   typeof useDeleteClaimTypeRelationMutation
 >
-export type DeleteClaimTypeRelationMutationResult = ApolloReactCommon.MutationResult<
-  DeleteClaimTypeRelationMutation
->
-export type DeleteClaimTypeRelationMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  DeleteClaimTypeRelationMutation,
-  DeleteClaimTypeRelationMutationVariables
->
+export type DeleteClaimTypeRelationMutationResult =
+  ApolloReactCommon.MutationResult<DeleteClaimTypeRelationMutation>
+export type DeleteClaimTypeRelationMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    DeleteClaimTypeRelationMutation,
+    DeleteClaimTypeRelationMutationVariables
+  >
 export const DeprecateClaimPropertyOptionDocument = gql`
   mutation DeprecateClaimPropertyOption($id: ID!) {
     deprecateClaimPropertyOption(id: $id)
   }
 `
-export type DeprecateClaimPropertyOptionMutationFn = ApolloReactCommon.MutationFunction<
-  DeprecateClaimPropertyOptionMutation,
-  DeprecateClaimPropertyOptionMutationVariables
->
+export type DeprecateClaimPropertyOptionMutationFn =
+  ApolloReactCommon.MutationFunction<
+    DeprecateClaimPropertyOptionMutation,
+    DeprecateClaimPropertyOptionMutationVariables
+  >
 
 /**
  * __useDeprecateClaimPropertyOptionMutation__
@@ -9444,22 +9475,23 @@ export function useDeprecateClaimPropertyOptionMutation(
 export type DeprecateClaimPropertyOptionMutationHookResult = ReturnType<
   typeof useDeprecateClaimPropertyOptionMutation
 >
-export type DeprecateClaimPropertyOptionMutationResult = ApolloReactCommon.MutationResult<
-  DeprecateClaimPropertyOptionMutation
->
-export type DeprecateClaimPropertyOptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  DeprecateClaimPropertyOptionMutation,
-  DeprecateClaimPropertyOptionMutationVariables
->
+export type DeprecateClaimPropertyOptionMutationResult =
+  ApolloReactCommon.MutationResult<DeprecateClaimPropertyOptionMutation>
+export type DeprecateClaimPropertyOptionMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    DeprecateClaimPropertyOptionMutation,
+    DeprecateClaimPropertyOptionMutationVariables
+  >
 export const DeprecateClaimPropertyDocument = gql`
   mutation DeprecateClaimProperty($id: ID!) {
     deprecateClaimProperty(id: $id)
   }
 `
-export type DeprecateClaimPropertyMutationFn = ApolloReactCommon.MutationFunction<
-  DeprecateClaimPropertyMutation,
-  DeprecateClaimPropertyMutationVariables
->
+export type DeprecateClaimPropertyMutationFn =
+  ApolloReactCommon.MutationFunction<
+    DeprecateClaimPropertyMutation,
+    DeprecateClaimPropertyMutationVariables
+  >
 
 /**
  * __useDeprecateClaimPropertyMutation__
@@ -9493,13 +9525,13 @@ export function useDeprecateClaimPropertyMutation(
 export type DeprecateClaimPropertyMutationHookResult = ReturnType<
   typeof useDeprecateClaimPropertyMutation
 >
-export type DeprecateClaimPropertyMutationResult = ApolloReactCommon.MutationResult<
-  DeprecateClaimPropertyMutation
->
-export type DeprecateClaimPropertyMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  DeprecateClaimPropertyMutation,
-  DeprecateClaimPropertyMutationVariables
->
+export type DeprecateClaimPropertyMutationResult =
+  ApolloReactCommon.MutationResult<DeprecateClaimPropertyMutation>
+export type DeprecateClaimPropertyMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    DeprecateClaimPropertyMutation,
+    DeprecateClaimPropertyMutationVariables
+  >
 export const UpdateClaimPropertyOptionDocument = gql`
   mutation UpdateClaimPropertyOption($id: ID!, $name: String!) {
     updateClaimPropertyOption(id: $id, name: $name) {
@@ -9508,10 +9540,11 @@ export const UpdateClaimPropertyOptionDocument = gql`
     }
   }
 `
-export type UpdateClaimPropertyOptionMutationFn = ApolloReactCommon.MutationFunction<
-  UpdateClaimPropertyOptionMutation,
-  UpdateClaimPropertyOptionMutationVariables
->
+export type UpdateClaimPropertyOptionMutationFn =
+  ApolloReactCommon.MutationFunction<
+    UpdateClaimPropertyOptionMutation,
+    UpdateClaimPropertyOptionMutationVariables
+  >
 
 /**
  * __useUpdateClaimPropertyOptionMutation__
@@ -9546,13 +9579,13 @@ export function useUpdateClaimPropertyOptionMutation(
 export type UpdateClaimPropertyOptionMutationHookResult = ReturnType<
   typeof useUpdateClaimPropertyOptionMutation
 >
-export type UpdateClaimPropertyOptionMutationResult = ApolloReactCommon.MutationResult<
-  UpdateClaimPropertyOptionMutation
->
-export type UpdateClaimPropertyOptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateClaimPropertyOptionMutation,
-  UpdateClaimPropertyOptionMutationVariables
->
+export type UpdateClaimPropertyOptionMutationResult =
+  ApolloReactCommon.MutationResult<UpdateClaimPropertyOptionMutation>
+export type UpdateClaimPropertyOptionMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    UpdateClaimPropertyOptionMutation,
+    UpdateClaimPropertyOptionMutationVariables
+  >
 export const UpdateClaimPropertyDocument = gql`
   mutation UpdateClaimProperty($id: ID!, $name: String!) {
     updateClaimProperty(id: $id, name: $name) {
@@ -9599,13 +9632,13 @@ export function useUpdateClaimPropertyMutation(
 export type UpdateClaimPropertyMutationHookResult = ReturnType<
   typeof useUpdateClaimPropertyMutation
 >
-export type UpdateClaimPropertyMutationResult = ApolloReactCommon.MutationResult<
-  UpdateClaimPropertyMutation
->
-export type UpdateClaimPropertyMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateClaimPropertyMutation,
-  UpdateClaimPropertyMutationVariables
->
+export type UpdateClaimPropertyMutationResult =
+  ApolloReactCommon.MutationResult<UpdateClaimPropertyMutation>
+export type UpdateClaimPropertyMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    UpdateClaimPropertyMutation,
+    UpdateClaimPropertyMutationVariables
+  >
 export const GetClaimPropertiesDocument = gql`
   query GetClaimProperties {
     claimProperties {
@@ -10195,13 +10228,13 @@ export function useCreateEmployeeMutation(
 export type CreateEmployeeMutationHookResult = ReturnType<
   typeof useCreateEmployeeMutation
 >
-export type CreateEmployeeMutationResult = ApolloReactCommon.MutationResult<
-  CreateEmployeeMutation
->
-export type CreateEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  CreateEmployeeMutation,
-  CreateEmployeeMutationVariables
->
+export type CreateEmployeeMutationResult =
+  ApolloReactCommon.MutationResult<CreateEmployeeMutation>
+export type CreateEmployeeMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    CreateEmployeeMutation,
+    CreateEmployeeMutationVariables
+  >
 export const EmployeesDocument = gql`
   query Employees {
     employees {
@@ -10302,13 +10335,13 @@ export function useRemoveEmployeeMutation(
 export type RemoveEmployeeMutationHookResult = ReturnType<
   typeof useRemoveEmployeeMutation
 >
-export type RemoveEmployeeMutationResult = ApolloReactCommon.MutationResult<
-  RemoveEmployeeMutation
->
-export type RemoveEmployeeMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  RemoveEmployeeMutation,
-  RemoveEmployeeMutationVariables
->
+export type RemoveEmployeeMutationResult =
+  ApolloReactCommon.MutationResult<RemoveEmployeeMutation>
+export type RemoveEmployeeMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    RemoveEmployeeMutation,
+    RemoveEmployeeMutationVariables
+  >
 export const UpdateEmployeeRoleDocument = gql`
   mutation UpdateEmployeeRole($id: ID!, $role: String!) {
     updateEmployeeRole(id: $id, role: $role) {
@@ -10357,13 +10390,13 @@ export function useUpdateEmployeeRoleMutation(
 export type UpdateEmployeeRoleMutationHookResult = ReturnType<
   typeof useUpdateEmployeeRoleMutation
 >
-export type UpdateEmployeeRoleMutationResult = ApolloReactCommon.MutationResult<
-  UpdateEmployeeRoleMutation
->
-export type UpdateEmployeeRoleMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateEmployeeRoleMutation,
-  UpdateEmployeeRoleMutationVariables
->
+export type UpdateEmployeeRoleMutationResult =
+  ApolloReactCommon.MutationResult<UpdateEmployeeRoleMutation>
+export type UpdateEmployeeRoleMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    UpdateEmployeeRoleMutation,
+    UpdateEmployeeRoleMutationVariables
+  >
 export const GetSwitcherEmailsDocument = gql`
   query GetSwitcherEmails {
     switchableSwitcherEmails {
@@ -10451,10 +10484,11 @@ export const MarkSwitcherEmailAsRemindedDocument = gql`
     }
   }
 `
-export type MarkSwitcherEmailAsRemindedMutationFn = ApolloReactCommon.MutationFunction<
-  MarkSwitcherEmailAsRemindedMutation,
-  MarkSwitcherEmailAsRemindedMutationVariables
->
+export type MarkSwitcherEmailAsRemindedMutationFn =
+  ApolloReactCommon.MutationFunction<
+    MarkSwitcherEmailAsRemindedMutation,
+    MarkSwitcherEmailAsRemindedMutationVariables
+  >
 
 /**
  * __useMarkSwitcherEmailAsRemindedMutation__
@@ -10488,13 +10522,13 @@ export function useMarkSwitcherEmailAsRemindedMutation(
 export type MarkSwitcherEmailAsRemindedMutationHookResult = ReturnType<
   typeof useMarkSwitcherEmailAsRemindedMutation
 >
-export type MarkSwitcherEmailAsRemindedMutationResult = ApolloReactCommon.MutationResult<
-  MarkSwitcherEmailAsRemindedMutation
->
-export type MarkSwitcherEmailAsRemindedMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  MarkSwitcherEmailAsRemindedMutation,
-  MarkSwitcherEmailAsRemindedMutationVariables
->
+export type MarkSwitcherEmailAsRemindedMutationResult =
+  ApolloReactCommon.MutationResult<MarkSwitcherEmailAsRemindedMutation>
+export type MarkSwitcherEmailAsRemindedMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    MarkSwitcherEmailAsRemindedMutation,
+    MarkSwitcherEmailAsRemindedMutationVariables
+  >
 export const GetMeDocument = gql`
   query GetMe {
     me {
@@ -10620,13 +10654,13 @@ export function useUpdateUserSettingsMutation(
 export type UpdateUserSettingsMutationHookResult = ReturnType<
   typeof useUpdateUserSettingsMutation
 >
-export type UpdateUserSettingsMutationResult = ApolloReactCommon.MutationResult<
-  UpdateUserSettingsMutation
->
-export type UpdateUserSettingsMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateUserSettingsMutation,
-  UpdateUserSettingsMutationVariables
->
+export type UpdateUserSettingsMutationResult =
+  ApolloReactCommon.MutationResult<UpdateUserSettingsMutation>
+export type UpdateUserSettingsMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    UpdateUserSettingsMutation,
+    UpdateUserSettingsMutationVariables
+  >
 export const UpdateUserDocument = gql`
   mutation UpdateUser($input: UpdateUserInput!) {
     updateUser(input: $input) {
@@ -10674,9 +10708,8 @@ export function useUpdateUserMutation(
 export type UpdateUserMutationHookResult = ReturnType<
   typeof useUpdateUserMutation
 >
-export type UpdateUserMutationResult = ApolloReactCommon.MutationResult<
-  UpdateUserMutation
->
+export type UpdateUserMutationResult =
+  ApolloReactCommon.MutationResult<UpdateUserMutation>
 export type UpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
@@ -10807,10 +10840,11 @@ export const MarkAllNotificationsAsReadDocument = gql`
     }
   }
 `
-export type MarkAllNotificationsAsReadMutationFn = ApolloReactCommon.MutationFunction<
-  MarkAllNotificationsAsReadMutation,
-  MarkAllNotificationsAsReadMutationVariables
->
+export type MarkAllNotificationsAsReadMutationFn =
+  ApolloReactCommon.MutationFunction<
+    MarkAllNotificationsAsReadMutation,
+    MarkAllNotificationsAsReadMutationVariables
+  >
 
 /**
  * __useMarkAllNotificationsAsReadMutation__
@@ -10843,13 +10877,13 @@ export function useMarkAllNotificationsAsReadMutation(
 export type MarkAllNotificationsAsReadMutationHookResult = ReturnType<
   typeof useMarkAllNotificationsAsReadMutation
 >
-export type MarkAllNotificationsAsReadMutationResult = ApolloReactCommon.MutationResult<
-  MarkAllNotificationsAsReadMutation
->
-export type MarkAllNotificationsAsReadMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  MarkAllNotificationsAsReadMutation,
-  MarkAllNotificationsAsReadMutationVariables
->
+export type MarkAllNotificationsAsReadMutationResult =
+  ApolloReactCommon.MutationResult<MarkAllNotificationsAsReadMutation>
+export type MarkAllNotificationsAsReadMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    MarkAllNotificationsAsReadMutation,
+    MarkAllNotificationsAsReadMutationVariables
+  >
 export const MarkNotificationAsReadDocument = gql`
   mutation MarkNotificationAsRead($notificationId: ID!) {
     markNotificationAsRead(notificationId: $notificationId) {
@@ -10858,10 +10892,11 @@ export const MarkNotificationAsReadDocument = gql`
     }
   }
 `
-export type MarkNotificationAsReadMutationFn = ApolloReactCommon.MutationFunction<
-  MarkNotificationAsReadMutation,
-  MarkNotificationAsReadMutationVariables
->
+export type MarkNotificationAsReadMutationFn =
+  ApolloReactCommon.MutationFunction<
+    MarkNotificationAsReadMutation,
+    MarkNotificationAsReadMutationVariables
+  >
 
 /**
  * __useMarkNotificationAsReadMutation__
@@ -10895,13 +10930,13 @@ export function useMarkNotificationAsReadMutation(
 export type MarkNotificationAsReadMutationHookResult = ReturnType<
   typeof useMarkNotificationAsReadMutation
 >
-export type MarkNotificationAsReadMutationResult = ApolloReactCommon.MutationResult<
-  MarkNotificationAsReadMutation
->
-export type MarkNotificationAsReadMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  MarkNotificationAsReadMutation,
-  MarkNotificationAsReadMutationVariables
->
+export type MarkNotificationAsReadMutationResult =
+  ApolloReactCommon.MutationResult<MarkNotificationAsReadMutation>
+export type MarkNotificationAsReadMutationOptions =
+  ApolloReactCommon.BaseMutationOptions<
+    MarkNotificationAsReadMutation,
+    MarkNotificationAsReadMutationVariables
+  >
 export const SharePathDocument = gql`
   mutation SharePath($path: String!, $userId: ID!) {
     sharePath(path: $path, userId: $userId)
@@ -10945,9 +10980,8 @@ export function useSharePathMutation(
 export type SharePathMutationHookResult = ReturnType<
   typeof useSharePathMutation
 >
-export type SharePathMutationResult = ApolloReactCommon.MutationResult<
-  SharePathMutation
->
+export type SharePathMutationResult =
+  ApolloReactCommon.MutationResult<SharePathMutation>
 export type SharePathMutationOptions = ApolloReactCommon.BaseMutationOptions<
   SharePathMutation,
   SharePathMutationVariables

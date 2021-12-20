@@ -3,7 +3,6 @@ import {
   useKeyboardListener,
   UseVerticalKeyboardNavigationProps,
 } from '@hedvig-ui/hooks/keyboard/use-keyboard-listener'
-import { PushKeyboardNavigation } from 'features/tracking/utils/tags'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 const handleStepChange = (
@@ -20,59 +19,47 @@ const handleStepChange = (
   })
 }
 
-export const useArrowKeyboardNavigation = ({
+export const useVerticalKeyboardNavigation = ({
   maxStep,
   onNavigationStep,
   onPerformNavigation,
-  defaultNavigationStep,
   onExit,
   isActive = false,
-  direction = 'vertical',
-  withNegative = false,
 }: UseVerticalKeyboardNavigationProps): [number, () => void] => {
-  const [navigationIndex, setNavigationIndex] = useState(
-    defaultNavigationStep ?? -1,
-  )
+  const [navigationIndex, setNavigationIndex] = useState(-1)
   const reset = () => {
     setNavigationIndex(-1)
   }
 
-  useEffect(() => {
-    setNavigationIndex(defaultNavigationStep ?? -1)
-  }, [defaultNavigationStep])
-
   useKeyboardListener(isActive, (e) => {
     if (
-      (!withNegative ? navigationIndex !== -1 : true) &&
+      navigationIndex !== -1 &&
       isPressing(e, Keys.Enter) &&
       onPerformNavigation
     ) {
       e.preventDefault()
       onPerformNavigation(navigationIndex)
-      PushKeyboardNavigation('useVerticalKeyboardNavigation', [Keys.Enter.code])
       return
     }
 
-    if (isPressing(e, direction === 'vertical' ? Keys.Up : Keys.Left)) {
+    if (isPressing(e, Keys.Up)) {
       e.preventDefault()
-      if (withNegative ? navigationIndex === -1 : navigationIndex === 0) {
-        onExit?.()
+      if (navigationIndex === 0 && onExit) {
+        onExit()
       }
       handleStepChange(setNavigationIndex, (i) => i > -1, -1)
-      PushKeyboardNavigation('useVerticalKeyboardNavigation', [Keys.Up.code])
       return
     }
 
-    if (isPressing(e, direction === 'vertical' ? Keys.Down : Keys.Right)) {
+    if (isPressing(e, Keys.Down)) {
       e.preventDefault()
       handleStepChange(setNavigationIndex, (i) => i < maxStep, 1)
-      PushKeyboardNavigation('useVerticalKeyboardNavigation', [Keys.Down.code])
       return
     }
   })
 
   useEffect(() => {
-    if (onNavigationStep && (!withNegative ? navigationIndex !== -1 : true)) {
+    if (onNavigationStep && navigationIndex !== -1) {
       onNavigationStep()
     }
   }, [navigationIndex])
