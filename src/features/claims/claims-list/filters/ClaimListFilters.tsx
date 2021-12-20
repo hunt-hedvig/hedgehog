@@ -32,8 +32,8 @@ export const FilterWrapper = styled.div`
   max-width: 1500px;
 
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  column-gap: 2rem;
+  grid-template-columns: repeat(8, 1fr);
+  column-gap: 3rem;
   align-items: flex-start;
   margin: 2rem 0;
 `
