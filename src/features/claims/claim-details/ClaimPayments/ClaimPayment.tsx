@@ -89,7 +89,9 @@ export const ClaimPayment: React.FC<{
       text: paymentType,
       disabled:
         paymentType === ClaimPaymentType.Manual ||
-        (paymentType === ClaimPaymentType.Automatic && !isPaymentActivated),
+        (paymentType === ClaimPaymentType.Automatic &&
+          !loading &&
+          !isPaymentActivated),
     })),
     {
       key: 5,
@@ -106,12 +108,7 @@ export const ClaimPayment: React.FC<{
     form.setValue('note', '')
     setIsExGratia(false)
     setDate(null)
-    form.setValue(
-      'type',
-      isPaymentActivated
-        ? ClaimPaymentType.Automatic
-        : ClaimPaymentType.IndemnityCost,
-    )
+    form.setValue('type', ClaimPaymentType.Automatic)
     form.reset()
   }
 
@@ -130,7 +127,7 @@ export const ClaimPayment: React.FC<{
     ) {
       form.setValue('type', ClaimPaymentType.Automatic)
     }
-  }, [isExGratia, isPaymentActivated])
+  }, [isExGratia, loading])
 
   const createPaymentHandler = async () => {
     const paymentInput: Partial<ClaimPaymentInput | ClaimSwishPaymentInput> = {
@@ -236,35 +233,28 @@ export const ClaimPayment: React.FC<{
           checked={isExGratia}
           onChange={() => setIsExGratia((prev) => !prev)}
         />
-        {!loading && (
-          <FormDropdown
-            placeholder="Type"
-            options={categoryOptions.filter((opt) => {
-              if (opt.disabled) {
-                return false
-              }
-              if (opt.value === 'AutomaticSwish') {
-                return (
-                  areSwishPayoutsEnabled() &&
-                  market === Market.Sweden &&
-                  !isExGratia
-                )
-              }
-              return isExGratia
-                ? opt.value !== ClaimPaymentType.Automatic
-                : true
-            })}
-            name="type"
-            defaultValue={
-              isPaymentActivated
-                ? ClaimPaymentType.Automatic
-                : ClaimPaymentType.IndemnityCost
+
+        <FormDropdown
+          placeholder="Type"
+          options={categoryOptions.filter((opt) => {
+            if (opt.disabled) {
+              return false
             }
-            rules={{
-              required: 'Category is required',
-            }}
-          />
-        )}
+            if (opt.value === 'AutomaticSwish') {
+              return (
+                areSwishPayoutsEnabled() &&
+                market === Market.Sweden &&
+                !isExGratia
+              )
+            }
+            return isExGratia ? opt.value !== ClaimPaymentType.Automatic : true
+          })}
+          name="type"
+          defaultValue={ClaimPaymentType.Automatic}
+          rules={{
+            required: 'Category is required',
+          }}
+        />
 
         {isPotentiallySanctioned && (
           <FormCheckbox

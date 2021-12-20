@@ -10,7 +10,7 @@ import {
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import formatDate from 'date-fns/format'
 import { parseISO } from 'date-fns'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
   Contract,
