@@ -146,7 +146,7 @@ export const MemberSearchForm: React.FC = () => {
         <Wrapper onSubmit={handleSubmit}>
           {ssn ? (
             <FadeIn duration={200}>
-              <Label>Personal number</Label>
+              <Label>Social Security Number</Label>
             </FadeIn>
           ) : (
             <Label>{'\xa0'}</Label>
@@ -154,7 +154,7 @@ export const MemberSearchForm: React.FC = () => {
           <Input
             ref={inputRef}
             autoFocus
-            placeholder="Personal number"
+            placeholder="Social Security Number"
             size="large"
             disabled={loading}
             value={ssn}
