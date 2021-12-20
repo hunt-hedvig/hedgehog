@@ -8,22 +8,17 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'portals/hope/features/navigation/hooks/use-navigation'
-import {
   FilterSelect,
   FilterStateType,
 } from 'portals/hope/features/questions/FilterSelect'
-import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
 import { QuestionGroups } from 'portals/hope/features/questions/questions-list/QuestionGroups'
-import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
+import { useMe } from 'portals/hope/features/user/hooks/use-me'
+import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 
 const ListPage = styled.div`
   display: flex;
@@ -63,9 +58,6 @@ const QuestionsPage: Page = () => {
   ])
 
   const [questionGroups, { loading }] = useQuestionGroups()
-
-  const { focus } = useNavigation()
-  useFocus(FocusItems.Questions.name)
 
   if (loading) {
     return <LoadingMessage paddingTop="25vh" />
@@ -143,7 +135,6 @@ const QuestionsPage: Page = () => {
       </Spacing>
 
       <QuestionGroups
-        navigationAvailable={focus === FocusItems.Questions.name}
         selectedFilters={selectedFilters}
         questionGroups={questionGroups}
       />

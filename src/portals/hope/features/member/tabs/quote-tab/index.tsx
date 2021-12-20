@@ -7,11 +7,6 @@ import {
   QuoteProductTypeContractMap,
 } from 'portals/hope/features/config/constants'
 import { useQuotes } from 'portals/hope/features/member/tabs/quote-tab/hooks/use-get-quotes'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'portals/hope/features/navigation/hooks/use-navigation'
 import React from 'react'
 import { Quote } from 'types/generated/graphql'
 import { QuotesSubSection } from './quote-sub-section'
@@ -22,9 +17,6 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   )
   const [{ quotes, contractMarket, pickedLocale }, { loading }] =
     useQuotes(memberId)
-
-  const { focus, setFocus } = useNavigation()
-  useFocus(FocusItems.Member.items.QuoteTabs)
 
   if (loading) {
     return <LoadingMessage paddingTop="10vh" />
@@ -57,17 +49,13 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   return (
     <>
       <Tabs
-        navigationAvailable={focus === FocusItems.Member.items.QuoteTabs}
         style={{ marginBottom: '2em' }}
         list={
           memberMarket
             ? ContractMarketTypes[memberMarket].map((type, index) => ({
                 active: type === activeTab,
                 title: convertEnumToTitle(type),
-                action: () => {
-                  setActiveTab(type)
-                  setFocus(FocusItems.Member.items.Quotes)
-                },
+                action: () => setActiveTab(type),
                 key: index,
               }))
             : []

@@ -66,7 +66,7 @@ export const ClaimPayment: React.FC<{
   market,
   memberId,
 }) => {
-  const { data: memberData } = useGetMemberTransactionsQuery({
+  const { data: memberData, loading } = useGetMemberTransactionsQuery({
     variables: { id: memberId },
   })
   const [createPayment] = useCreateClaimPaymentMutation()
@@ -120,10 +120,14 @@ export const ClaimPayment: React.FC<{
     if (isExGratia && form.getValues().type === ClaimPaymentType.Automatic) {
       form.setValue('type', undefined)
     }
-    if (!isExGratia && form.getValues().type === undefined) {
+    if (
+      !isExGratia &&
+      form.getValues().type === undefined &&
+      isPaymentActivated
+    ) {
       form.setValue('type', ClaimPaymentType.Automatic)
     }
-  }, [isExGratia])
+  }, [isExGratia, isPaymentActivated])
 
   const createPaymentHandler = async () => {
     const paymentInput: Partial<ClaimPaymentInput | ClaimSwishPaymentInput> = {
@@ -228,31 +232,35 @@ export const ClaimPayment: React.FC<{
           checked={isExGratia}
           onChange={() => setIsExGratia((prev) => !prev)}
         />
-        <FormDropdown
-          placeholder="Type"
-          options={categoryOptions.filter((opt) => {
-            if (opt.disabled) {
-              return false
+        {!loading && (
+          <FormDropdown
+            placeholder="Type"
+            options={categoryOptions.filter((opt) => {
+              if (opt.disabled) {
+                return false
+              }
+              if (opt.value === 'AutomaticSwish') {
+                return (
+                  areSwishPayoutsEnabled() &&
+                  market === Market.Sweden &&
+                  !isExGratia
+                )
+              }
+              return isExGratia
+                ? opt.value !== ClaimPaymentType.Automatic
+                : true
+            })}
+            name="type"
+            defaultValue={
+              isPaymentActivated
+                ? ClaimPaymentType.Automatic
+                : ClaimPaymentType.IndemnityCost
             }
-            if (opt.value === 'AutomaticSwish') {
-              return (
-                areSwishPayoutsEnabled() &&
-                market === Market.Sweden &&
-                !isExGratia
-              )
-            }
-            return isExGratia ? opt.value !== ClaimPaymentType.Automatic : true
-          })}
-          name="type"
-          defaultValue={
-            isPaymentActivated
-              ? ClaimPaymentType.Automatic
-              : ClaimPaymentType.IndemnityCost
-          }
-          rules={{
-            required: 'Category is required',
-          }}
-        />
+            rules={{
+              required: 'Category is required',
+            }}
+          />
+        )}
 
         {isPotentiallySanctioned && (
           <FormCheckbox

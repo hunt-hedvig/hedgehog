@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client'
-import { gql } from '@apollo/client/core'
 import styled from '@emotion/styled'
 import {
   Button,
@@ -27,6 +26,7 @@ import {
   SwitchableSwitcherEmail,
   useMarkSwitcherEmailAsRemindedMutation,
 } from 'types/generated/graphql'
+import gql from 'graphql-tag'
 
 const FORMAT_DATE_TIME = 'yyyy-MM-dd HH:mm'
 

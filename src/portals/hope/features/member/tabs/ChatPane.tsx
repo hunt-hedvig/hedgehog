@@ -4,10 +4,6 @@ import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persis
 import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
 import { ChatPanel } from 'portals/hope/features/member/chat/ChatPanel'
 import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
-import {
-  FocusItems,
-  useNavigation,
-} from 'portals/hope/features/navigation/hooks/use-navigation'
 import React, { useEffect, useRef } from 'react'
 import { ChevronDoubleDown } from 'react-bootstrap-icons'
 
@@ -97,16 +93,6 @@ export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
     manualChange.current = true
   }
 
-  const { focus, setFocus } = useNavigation()
-
-  useEffect(() => {
-    if (isVisible) {
-      setFocus(FocusItems.Member.items.Chat)
-    } else {
-      setFocus(null)
-    }
-  }, [isVisible])
-
   return isVisible ? (
     <OpenChatContainer>
       <ChatHeader
@@ -115,7 +101,7 @@ export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
         isHinting={isHintingOption}
       />
       <MessageListWithBackground memberId={memberId} />
-      <ChatPanel memberId={memberId} focus={focus} />
+      <ChatPanel memberId={memberId} />
     </OpenChatContainer>
   ) : (
     <ClosedChatContainer>

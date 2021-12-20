@@ -13,8 +13,7 @@ const FadeInQuestionGroup =
 
 export const FilteredQuestionGroups: React.FC<{
   filterQuestionGroups: ReadonlyArray<QuestionGroup>
-  navigationAvailable: boolean
-}> = ({ filterQuestionGroups, navigationAvailable }) => {
+}> = ({ filterQuestionGroups }) => {
   const [focusedItem, setFocusedItem] = useState(1)
   const [focusedInsideItem, setFocusedInsideItem] = useState(0)
 
@@ -34,10 +33,6 @@ export const FilteredQuestionGroups: React.FC<{
   )
 
   useEffect(() => {
-    if (!navigationAvailable) {
-      return
-    }
-
     const length = filterQuestionGroups.length
 
     if (!focusedInsideItem && isDownPressed && focusedItem < length) {
@@ -52,10 +47,6 @@ export const FilteredQuestionGroups: React.FC<{
   }, [isUpPressed, isDownPressed])
 
   useEffect(() => {
-    if (!navigationAvailable) {
-      return
-    }
-
     if (isEnterPressed && !isCommandPressed && !focusedInsideItem) {
       setFocusedInsideItem(focusedItem)
     }

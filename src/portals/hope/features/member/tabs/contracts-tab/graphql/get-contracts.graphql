@@ -60,6 +60,7 @@ query GetContracts($memberId: ID!) {
       contractTypeName
       createdAt
       isLocked
+      selfChangeBlockers
     }
   }
 }

@@ -11,11 +11,6 @@ import {
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { format } from 'date-fns'
 import { MemberClaimsList } from 'portals/hope/features/member/tabs/claims-tab/components/MemberClaimsList'
-import {
-  FocusItems,
-  useFocus,
-  useNavigation,
-} from 'portals/hope/features/navigation/hooks/use-navigation'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -47,9 +42,6 @@ export const ClaimsTab: React.FC<{
   const [showForm, setShowForm] = React.useState(false)
   const [claimSource, setClaimSource] = React.useState<ClaimSource | null>(null)
   const [claimDate, setClaimDate] = React.useState<Date>(new Date())
-
-  const { focus } = useNavigation()
-  useFocus(FocusItems.Member.items.Claims)
 
   return (
     <FadeIn>
@@ -138,10 +130,7 @@ export const ClaimsTab: React.FC<{
         )}
       </HeaderWrapper>
       <Spacing top />
-      <MemberClaimsList
-        memberId={memberId}
-        navigationAvailable={focus === FocusItems.Member.items.Claims}
-      />
+      <MemberClaimsList memberId={memberId} />
     </FadeIn>
   )
 }

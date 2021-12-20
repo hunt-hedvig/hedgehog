@@ -4,19 +4,9 @@ import { MemberTab } from 'portals/hope/features/member/tabs/member-tab/MemberTa
 import { PaymentsTab } from 'portals/hope/features/member/tabs/payments-tab/PaymentsTab'
 import { Quotes } from 'portals/hope/features/member/tabs/quote-tab'
 
-import { Tabs } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import React from 'react'
 import { ClaimsTab } from 'portals/hope/features/member/tabs/claims-tab/ClaimsTab'
-import {
-  FocusItems,
-  useNavigation,
-} from 'portals/hope/features/navigation/hooks/use-navigation'
-import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
-import React, { useEffect } from 'react'
-import { useHistory } from 'react-router'
 import { AccountTab } from './account-tab'
 import { CampaignsTab } from './campaigns-tab'
 import { DebtTab } from './debt-tab'
@@ -113,43 +103,3 @@ export const memberPagePanes = (memberId, member) => [
     component: () => <CampaignsTab memberId={memberId} />,
   },
 ]
-
-export const MemberTabsList = ({ memberId, member }) => {
-  const history = useHistory()
-  const { pushToMemberHistory } = useMemberHistory()
-
-  const pathname = history.location.pathname.split('/')
-  const path =
-    pathname.length === 4 ? pathname[pathname.length - 1] : 'contracts'
-
-  const navigateToTab = (tabName) => {
-    history.replace(`/members/${memberId}/${tabName}`)
-    setFocus(null)
-  }
-
-  useEffect(() => {
-    pushToMemberHistory(memberId)
-    navigateToTab(path)
-  }, [])
-
-  const { focus, setFocus } = useNavigation()
-  const isTPressed = useKeyIsPressed(Keys.T)
-
-  useEffect(() => {
-    if (isTPressed && focus !== FocusItems.Main.items.Modal) {
-      setFocus(FocusItems.Member.items.Tabs)
-    }
-  }, [isTPressed])
-
-  return (
-    <Tabs
-      list={memberPagePanes(memberId, member).map((pane) => ({
-        title: pane.tabTitle,
-        active: path === pane.tabName,
-        action: () => navigateToTab(pane.tabName),
-        hotkey: pane.hotkey,
-      }))}
-      navigationAvailable={focus === FocusItems.Member.items.Tabs}
-    />
-  )
-}
