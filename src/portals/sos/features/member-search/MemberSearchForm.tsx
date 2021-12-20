@@ -68,10 +68,16 @@ const NoInsuranceMessage = styled.div`
 `
 
 export const MemberSearchForm: React.FC = () => {
-  const [memberLookup, { loading, data }] = useSosMemberLookupLazyQuery()
   const [ssn, setSsn] = useState('')
+  const [memberLookup, { data }] = useSosMemberLookupLazyQuery({
+    fetchPolicy: 'network-only',
+    variables: {
+      ssn,
+    },
+  })
   const [showResult, setShowResult] = useState(false)
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -104,15 +110,27 @@ export const MemberSearchForm: React.FC = () => {
     }
 
     setError('')
+    setLoading(true)
 
-    memberLookup({ variables: { ssn } }).then((response) => {
-      if (response.error) {
+    memberLookup()
+      .then((response) => {
+        if (response.error || !response?.data) {
+          setError('No member found for SSN')
+          setShowResult(false)
+          setLoading(false)
+          return
+        }
+
+        setShowResult(true)
+        inputRef?.current?.blur()
+        setLoading(false)
+      })
+      .catch(() => {
         setError('No member found for SSN')
+        setShowResult(false)
+        setLoading(false)
         return
-      }
-      setShowResult(true)
-      inputRef?.current?.blur()
-    })
+      })
   }
 
   const member = data?.SOSMemberLookup
@@ -163,7 +181,7 @@ export const MemberSearchForm: React.FC = () => {
             <InsuranceCard contract={contract} />
           </React.Fragment>
         ))}
-        {!contracts.length && (
+        {!contracts.length && !loading && !!member?.memberId && (
           <NoInsuranceMessage>No active insurances</NoInsuranceMessage>
         )}
       </ResultWrapper>
