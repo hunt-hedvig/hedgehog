@@ -113,8 +113,8 @@ type UserSetting {
 
 type MutationType {
   chargeMember(
-    id: ID!,
-    amount: MonetaryAmount!,
+    id: ID!
+    amount: MonetaryAmount!
     allowManualCharge: Boolean
   ): Member
   addAccountEntryToMember(
@@ -366,7 +366,7 @@ input ListClaimsOptions {
   filterSelectedMemberGroups: [Int!]
   filterMarkets: [String!]
   filterTypesOfContract: [String!]
-  filterReserveAmount: BigDecimal,
+  filterReserveAmount: BigDecimal
   filterClaimTypes: [String!]
   filterClaimOutcomes: [String!]
 }
@@ -606,7 +606,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
