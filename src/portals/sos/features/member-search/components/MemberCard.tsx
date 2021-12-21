@@ -3,7 +3,7 @@ import React from 'react'
 import chroma from 'chroma-js'
 import { Flex, Spacing } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
-import { SosMemberLookupResult } from 'types/generated/graphql'
+import { SimpleMemberLookupResult } from 'types/generated/graphql'
 
 const Card = styled.div`
   background-color: ${({ theme }) =>
@@ -64,7 +64,7 @@ const flags: Record<string, string> = {
   SWEDEN: '🇸🇪',
 }
 
-export const MemberCard: React.FC<{ member: SosMemberLookupResult }> = ({
+export const MemberCard: React.FC<{ member: SimpleMemberLookupResult }> = ({
   member: { firstName, lastName, memberId, email, phoneNumber, market },
 }) => {
   return (

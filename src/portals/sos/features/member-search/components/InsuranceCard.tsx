@@ -3,8 +3,8 @@ import React from 'react'
 import { Flex, Spacing } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { TypeOfContractType } from 'portals/hope/features/config/constants'
-import { SosMemberContract } from 'types/generated/graphql'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { SimpleMemberLookupContract } from 'types/generated/graphql'
 
 const Card = styled.div`
   display: flex;
@@ -57,7 +57,9 @@ const Card = styled.div`
   }
 `
 
-export const InsuranceCard: React.FC<{ contract: SosMemberContract }> = ({
+export const InsuranceCard: React.FC<{
+  contract: SimpleMemberLookupContract
+}> = ({
   contract: {
     typeOfContract,
     masterInception,
