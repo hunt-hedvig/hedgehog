@@ -1887,6 +1887,7 @@ export type ClaimMemberContractsMasterInceptionQuery = {
                   | 'typeOfContract'
                   | 'lineOfBusinessName'
                   | 'carrier'
+                  | 'partner'
                   | 'createdAt'
                 > & {
                     address?: Maybe<
@@ -2010,7 +2011,12 @@ export type ClaimPageQuery = { __typename?: 'QueryType' } & {
         agreement?: Maybe<
           { __typename?: 'GenericAgreement' } & Pick<
             GenericAgreement,
-            'id' | 'typeOfContract' | 'lineOfBusinessName' | 'carrier'
+            | 'id'
+            | 'typeOfContract'
+            | 'lineOfBusinessName'
+            | 'carrier'
+            | 'partner'
+            | 'createdAt'
           > & {
               address?: Maybe<
                 { __typename?: 'Address' } & Pick<
@@ -4440,6 +4446,7 @@ export const ClaimMemberContractsMasterInceptionDocument = gql`
           typeOfContract
           lineOfBusinessName
           carrier
+          partner
           premium {
             amount
             currency
@@ -4600,6 +4607,8 @@ export const ClaimPageDocument = gql`
         typeOfContract
         lineOfBusinessName
         carrier
+        partner
+        createdAt
       }
       transcriptions {
         confidenceScore

@@ -99,7 +99,6 @@ export const Contract: React.FC<{
         </Card>
       </CardsWrapper>
       <AgreementsTable
-        locale={locale}
         agreements={contract.genericAgreements}
         selectedAgreement={selectedAgreement}
         setSelectedAgreement={setSelectedAgreement}
@@ -123,6 +122,7 @@ export const Contract: React.FC<{
           agreement={agreementToShow}
           contract={contract}
           refetch={refetch}
+          locale={locale}
         />
       )}
     </ContractWrapper>
