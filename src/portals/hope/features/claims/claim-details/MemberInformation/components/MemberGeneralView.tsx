@@ -61,7 +61,7 @@ const debtFlagDescriptionMap: Record<Flag, string> = {
   [Flag.Red]: 'Major Debt',
 }
 
-const Info = styled.div`
+export const Info = styled.div`
   width: 100%;
   margin: 0.5rem 0;
 
