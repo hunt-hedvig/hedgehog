@@ -25,6 +25,14 @@ type QueryType {
   employees: [Employee!]!
   availableEmployeeRoles: [String!]!
 
+  termsAndConditions(
+    contractType: String!
+    locale: String!
+    date: LocalDate
+    partner: String
+    carrier: String!
+  ): TermsAndConditions
+
   claimTypes: [String!]!
   claimTypeTemplates: [ClaimTypeTemplate!]!
   claimTypeTemplate(claimType: String!): ClaimTypeTemplate
@@ -113,8 +121,8 @@ type UserSetting {
 
 type MutationType {
   chargeMember(
-    id: ID!,
-    amount: MonetaryAmount!,
+    id: ID!
+    amount: MonetaryAmount!
     allowManualCharge: Boolean
   ): Member
   addAccountEntryToMember(
@@ -366,7 +374,7 @@ input ListClaimsOptions {
   filterSelectedMemberGroups: [Int!]
   filterMarkets: [String!]
   filterTypesOfContract: [String!]
-  filterReserveAmount: BigDecimal,
+  filterReserveAmount: BigDecimal
   filterClaimTypes: [String!]
   filterClaimOutcomes: [String!]
 }
@@ -442,6 +450,12 @@ enum ContractStatus {
   TERMINATED_TODAY
   TERMINATED_IN_FUTURE
   TERMINATED
+}
+
+type TermsAndConditions {
+  commencementDate: LocalDate!
+  displayName: String!
+  url: String!
 }
 
 type Employee {
@@ -606,7 +620,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

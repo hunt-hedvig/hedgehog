@@ -49,7 +49,8 @@ export const Contract: React.FC<{
   contract: ContractType
   refetch: () => Promise<any>
   shouldPreSelectAgreement: boolean
-}> = ({ contract, refetch, shouldPreSelectAgreement }) => {
+  locale: string
+}> = ({ contract, refetch, shouldPreSelectAgreement, locale }) => {
   const [selectedAgreement, setSelectedAgreement] = React.useState<
     string | undefined
   >(shouldPreSelectAgreement ? contract.currentAgreementId : undefined)
@@ -98,6 +99,7 @@ export const Contract: React.FC<{
         </Card>
       </CardsWrapper>
       <AgreementsTable
+        locale={locale}
         agreements={contract.genericAgreements}
         selectedAgreement={selectedAgreement}
         setSelectedAgreement={setSelectedAgreement}

@@ -1,0 +1,19 @@
+query GetTermsAndConditions(
+  $contractType: String!
+  $locale: String!
+  $date: LocalDate
+  $partner: String
+  $carrier: String!
+) {
+  termsAndConditions(
+    contractType: $contractType
+    locale: $locale
+    date: $date
+    partner: $partner
+    carrier: $carrier
+  ) {
+    commencementDate
+    displayName
+    url
+  }
+}

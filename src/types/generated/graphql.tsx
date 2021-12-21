@@ -1273,6 +1273,7 @@ export type QueryType = {
   listClaims: ListClaimsResult
   employees: Array<Employee>
   availableEmployeeRoles: Array<Scalars['String']>
+  termsAndConditions?: Maybe<TermsAndConditions>
   claimTypes: Array<Scalars['String']>
   claimTypeTemplates: Array<ClaimTypeTemplate>
   claimTypeTemplate?: Maybe<ClaimTypeTemplate>
@@ -1318,6 +1319,14 @@ export type QueryTypeMemberSearchArgs = {
 
 export type QueryTypeListClaimsArgs = {
   options: ListClaimsOptions
+}
+
+export type QueryTypeTermsAndConditionsArgs = {
+  contractType: Scalars['String']
+  locale: Scalars['String']
+  date?: Maybe<Scalars['LocalDate']>
+  partner?: Maybe<Scalars['String']>
+  carrier: Scalars['String']
 }
 
 export type QueryTypeClaimTypeTemplateArgs = {
@@ -1506,6 +1515,13 @@ export type TerminateContractInput = {
   terminationDate: Scalars['LocalDate']
   terminationReason: Scalars['String']
   comment?: Maybe<Scalars['String']>
+}
+
+export type TermsAndConditions = {
+  __typename?: 'TermsAndConditions'
+  commencementDate: Scalars['LocalDate']
+  displayName: Scalars['String']
+  url: Scalars['String']
 }
 
 export type Transaction = {
@@ -2745,6 +2761,23 @@ export type GetContractsQuery = { __typename?: 'QueryType' } & {
             }
         >
       }
+  >
+}
+
+export type GetTermsAndConditionsQueryVariables = Exact<{
+  contractType: Scalars['String']
+  locale: Scalars['String']
+  date?: Maybe<Scalars['LocalDate']>
+  partner?: Maybe<Scalars['String']>
+  carrier: Scalars['String']
+}>
+
+export type GetTermsAndConditionsQuery = { __typename?: 'QueryType' } & {
+  termsAndConditions?: Maybe<
+    { __typename?: 'TermsAndConditions' } & Pick<
+      TermsAndConditions,
+      'commencementDate' | 'displayName' | 'url'
+    >
   >
 }
 
@@ -6601,6 +6634,82 @@ export type GetContractsLazyQueryHookResult = ReturnType<
 export type GetContractsQueryResult = ApolloReactCommon.QueryResult<
   GetContractsQuery,
   GetContractsQueryVariables
+>
+export const GetTermsAndConditionsDocument = gql`
+  query GetTermsAndConditions(
+    $contractType: String!
+    $locale: String!
+    $date: LocalDate
+    $partner: String
+    $carrier: String!
+  ) {
+    termsAndConditions(
+      contractType: $contractType
+      locale: $locale
+      date: $date
+      partner: $partner
+      carrier: $carrier
+    ) {
+      commencementDate
+      displayName
+      url
+    }
+  }
+`
+
+/**
+ * __useGetTermsAndConditionsQuery__
+ *
+ * To run a query within a React component, call `useGetTermsAndConditionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTermsAndConditionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTermsAndConditionsQuery({
+ *   variables: {
+ *      contractType: // value for 'contractType'
+ *      locale: // value for 'locale'
+ *      date: // value for 'date'
+ *      partner: // value for 'partner'
+ *      carrier: // value for 'carrier'
+ *   },
+ * });
+ */
+export function useGetTermsAndConditionsQuery(
+  baseOptions: ApolloReactHooks.QueryHookOptions<
+    GetTermsAndConditionsQuery,
+    GetTermsAndConditionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useQuery<
+    GetTermsAndConditionsQuery,
+    GetTermsAndConditionsQueryVariables
+  >(GetTermsAndConditionsDocument, options)
+}
+export function useGetTermsAndConditionsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetTermsAndConditionsQuery,
+    GetTermsAndConditionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return ApolloReactHooks.useLazyQuery<
+    GetTermsAndConditionsQuery,
+    GetTermsAndConditionsQueryVariables
+  >(GetTermsAndConditionsDocument, options)
+}
+export type GetTermsAndConditionsQueryHookResult = ReturnType<
+  typeof useGetTermsAndConditionsQuery
+>
+export type GetTermsAndConditionsLazyQueryHookResult = ReturnType<
+  typeof useGetTermsAndConditionsLazyQuery
+>
+export type GetTermsAndConditionsQueryResult = ApolloReactCommon.QueryResult<
+  GetTermsAndConditionsQuery,
+  GetTermsAndConditionsQueryVariables
 >
 export const GetTrialsDocument = gql`
   query GetTrials($memberId: ID!) {
