@@ -47,20 +47,20 @@ type QueryType {
   usersOnPath(path: String!): [User!]!
   resourceAccess(resourceId: String!): ResourceAccessInformation
 
-  SOSMemberLookup(ssn: String!): SOSMemberLookupResult!
+  simpleMemberLookup(ssn: String!): SimpleMemberLookupResult!
 }
 
-type SOSMemberLookupResult {
+type SimpleMemberLookupResult {
   memberId: ID!
   firstName: String!
   lastName: String!
   email: String!
   phoneNumber: String!
   market: String!
-  contracts: [SOSMemberContract!]!
+  contracts: [SimpleMemberLookupContract!]!
 }
 
-type SOSMemberContract {
+type SimpleMemberLookupContract {
   contractId: ID!
   typeOfContract: String!
   masterInception: LocalDate
@@ -141,8 +141,8 @@ type UserSetting {
 
 type MutationType {
   chargeMember(
-    id: ID!
-    amount: MonetaryAmount!
+    id: ID!,
+    amount: MonetaryAmount!,
     allowManualCharge: Boolean
   ): Member
   addAccountEntryToMember(
@@ -474,7 +474,7 @@ enum ContractStatus {
 
 type TermsAndConditions {
   commencementDate: LocalDate!
-  displayName: String!
+  displayName: String!,
   url: String!
 }
 
@@ -640,7 +640,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

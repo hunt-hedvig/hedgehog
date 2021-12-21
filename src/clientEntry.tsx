@@ -10,7 +10,7 @@ import { Global } from '@emotion/react'
 import { DarkmodeProvider } from '@hedvig-ui/hooks/use-darkmode'
 import { GlobalStyles } from '@hedvig-ui/themes'
 
-const App = app('Hope')
+const App = app('SOS')
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()

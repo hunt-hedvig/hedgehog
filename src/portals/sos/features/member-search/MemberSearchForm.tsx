@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FadeIn, Input, Label, Spacing } from '@hedvig-ui'
 import styled from '@emotion/styled'
-import { useSosMemberLookupLazyQuery } from 'types/generated/graphql'
 import {
   Logo,
   LogoIcon,
@@ -10,6 +9,7 @@ import { colorsV3 } from '@hedviginsurance/brand'
 import { MemberCard } from 'portals/sos/features/member-search/components/MemberCard'
 import { InsuranceCard } from 'portals/sos/features/member-search/components/InsuranceCard'
 import chroma from 'chroma-js'
+import { useSimpleMemberLookupLazyQuery } from 'types/generated/graphql'
 
 const Wrapper = styled.form`
   width: 25rem;
@@ -69,7 +69,7 @@ const NoInsuranceMessage = styled.div`
 
 export const MemberSearchForm: React.FC = () => {
   const [ssn, setSsn] = useState('')
-  const [memberLookup, { data }] = useSosMemberLookupLazyQuery({
+  const [memberLookup, { data }] = useSimpleMemberLookupLazyQuery({
     fetchPolicy: 'network-only',
     variables: {
       ssn,
@@ -133,8 +133,8 @@ export const MemberSearchForm: React.FC = () => {
       })
   }
 
-  const member = data?.SOSMemberLookup
-  const contracts = data?.SOSMemberLookup?.contracts ?? []
+  const member = data?.simpleMemberLookup
+  const contracts = data?.simpleMemberLookup?.contracts ?? []
 
   return (
     <Container pushTop={showResult}>

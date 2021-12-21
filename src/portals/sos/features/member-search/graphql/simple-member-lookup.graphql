@@ -1,5 +1,5 @@
-query SOSMemberLookup($ssn: String!) {
-  SOSMemberLookup(ssn: $ssn) {
+query SimpleMemberLookup($ssn: String!) {
+  simpleMemberLookup(ssn: $ssn) {
     memberId
     firstName
     lastName
