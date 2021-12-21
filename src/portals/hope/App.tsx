@@ -1,12 +1,7 @@
-import { css, Global, ThemeProvider } from '@emotion/react'
 import styled from '@emotion/styled'
-import { BaseStyle, darkTheme, lightTheme, StandaloneMessage } from '@hedvig-ui'
-import {
-  getDefaultIsDarkmode,
-  UseDarkmode,
-} from '@hedvig-ui/hooks/use-darkmode'
+import { BaseStyle, StandaloneMessage } from '@hedvig-ui'
 import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { colorsV3, fonts, getCdnFontFaces } from '@hedviginsurance/brand'
+import { colorsV3 } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
 import { CommandLineProvider } from 'portals/hope/features/commands/use-command-line'
 import {
@@ -22,7 +17,7 @@ import { MeProvider } from 'portals/hope/features/user/hooks/use-me'
 import { MemberHistoryProvider } from 'portals/hope/features/user/hooks/use-member-history'
 import { NumberMemberGroupsProvider } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { Routes } from 'portals/hope/pages/routes'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import TagManager from 'react-gtm-module'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
@@ -50,36 +45,6 @@ const MainContent = styled.div`
   overflow-y: auto;
 `
 
-const globalCss = css`
-  ${getCdnFontFaces()}
-
-  * {
-    box-sizing: border-box;
-    font-family: ${fonts.FAVORIT}, sans-serif;
-    transition: background 1000ms, color 1000ms;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  body {
-    font-family: ${fonts.FAVORIT}, sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
-    margin: 0;
-    padding: 0;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: ${fonts.FAVORIT}, sans-serif;
-    font-kerning: none;
-    font-weight: 400;
-  }
-`
-
 const HopeLogo = styled(Logo)`
   width: 7rem;
   fill: ${colorsV3.gray800};
@@ -92,7 +57,6 @@ const HopeLogoIcon = styled(LogoIcon)`
 `
 
 const App: React.FC = () => {
-  const [isDarkmode, setIsDarkmode] = useState(getDefaultIsDarkmode())
   const { me, loading } = useAuthenticate()
 
   useEffect(() => {
@@ -140,60 +104,42 @@ const App: React.FC = () => {
   }
 
   return (
-    <UseDarkmode.Provider
-      value={{
-        isDarkmode,
-        setIsDarkmode: (newIsDarkmode) => {
-          setIsDarkmode(newIsDarkmode)
-          localStorage.setItem(
-            'hedvig:theming:darkmode',
-            JSON.stringify(newIsDarkmode),
-          )
-        },
-      }}
-    >
-      <Global styles={globalCss} />
-      <TrackingProvider>
-        <ThemeProvider theme={isDarkmode ? darkTheme : lightTheme}>
-          <MemberHistoryProvider>
-            <NumberMemberGroupsProvider>
-              <Router history={history}>
-                <MeProvider me={me}>
-                  <CommandLineProvider>
-                    <ConfirmDialogProvider>
-                      <Layout>
-                        <Tracker />
-                        {!history.location.pathname.startsWith('/login') && (
-                          <VerticalMenu history={history} />
-                        )}
-                        <Main
-                          dark={history.location.pathname.startsWith('/login')}
-                        >
-                          <TopBar />
-                          <MainContent>
-                            <Switch>
-                              <Routes />
-                            </Switch>
-                            <Toaster
-                              position="top-center"
-                              toastOptions={{
-                                style: {
-                                  padding: '20px 25px',
-                                },
-                              }}
-                            />
-                          </MainContent>
-                        </Main>
-                      </Layout>
-                    </ConfirmDialogProvider>
-                  </CommandLineProvider>
-                </MeProvider>
-              </Router>
-            </NumberMemberGroupsProvider>
-          </MemberHistoryProvider>
-        </ThemeProvider>
-      </TrackingProvider>
-    </UseDarkmode.Provider>
+    <TrackingProvider>
+      <MemberHistoryProvider>
+        <NumberMemberGroupsProvider>
+          <Router history={history}>
+            <MeProvider me={me}>
+              <CommandLineProvider>
+                <ConfirmDialogProvider>
+                  <Layout>
+                    <Tracker />
+                    {!history.location.pathname.startsWith('/login') && (
+                      <VerticalMenu history={history} />
+                    )}
+                    <Main dark={history.location.pathname.startsWith('/login')}>
+                      <TopBar />
+                      <MainContent>
+                        <Switch>
+                          <Routes />
+                        </Switch>
+                        <Toaster
+                          position="top-center"
+                          toastOptions={{
+                            style: {
+                              padding: '20px 25px',
+                            },
+                          }}
+                        />
+                      </MainContent>
+                    </Main>
+                  </Layout>
+                </ConfirmDialogProvider>
+              </CommandLineProvider>
+            </MeProvider>
+          </Router>
+        </NumberMemberGroupsProvider>
+      </MemberHistoryProvider>
+    </TrackingProvider>
   )
 }
 

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { InputHTMLAttributes, useEffect, useRef } from 'react'
+import React, { InputHTMLAttributes, useRef } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { Spinner } from '../Spinner/spinner'
 
@@ -189,27 +189,22 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       size,
       affix,
       style,
-      focus,
       ...props
     },
-    _,
+    forwardRef,
   ) => {
-    const inputRef = useRef<HTMLInputElement>(null)
+    const internalRef = useRef<HTMLInputElement>(null)
     const isAffix = Boolean(affix)
     const isSuccess = success && !error && !loading
     const isError = error && !success && !loading
 
-    useEffect(() => {
-      if (focus && inputRef.current) {
-        inputRef.current.focus()
-      }
-    }, [focus])
+    const ref = forwardRef ?? internalRef
 
     return (
       <InputWrapper style={style}>
         {icon ? <CustomIcon>{icon}</CustomIcon> : null}
         <InputStyled
-          ref={inputRef}
+          ref={ref}
           className="input"
           withIcon={Boolean(icon)}
           inputSize={size}
