@@ -7,13 +7,15 @@ import { useAuthenticate } from 'portals/hope/features/user/hooks/use-authentica
 import { Route, Switch } from 'react-router'
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100vw;
-  min-height: 90vh;
-  padding-left: 10vw;
-  padding-right: 10vw;
-  padding-bottom: 5rem;
 
   background-color: ${({ theme }) => theme.background};
+`
+
+const Content = styled.div`
+  min-height: 90vh;
 `
 
 const Footer = styled.div`
@@ -65,14 +67,14 @@ const MainPage: Page = () => {
   }
 
   return (
-    <>
-      <Container>
+    <Container>
+      <Content>
         <MemberSearchForm />
-      </Container>
+      </Content>
       <Footer>
         <a href="/login/logout">Sign out</a>
       </Footer>
-    </>
+    </Container>
   )
 }
 
