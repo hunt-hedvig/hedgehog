@@ -8,3 +8,5 @@ yarn-error.log
 /tsconfig-diff-master.json
 *.iml
 tsconfig.tsbuildinfo
+src/types/generated/graphql.tsx
+graphql.schema.json

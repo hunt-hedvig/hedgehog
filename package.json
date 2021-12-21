@@ -132,10 +132,12 @@
   },
   "scripts": {
     "start": "NODE_ENV=production ts-node -P tsconfig-server.json src/server/serverEntry.ts",
+    "prebuild": "yarn graphql:gen",
     "build": "NODE_ENV=production webpack --mode production --config webpack/webpack.config.client.production.js",
     "clean": "rm -rf ./build && rm -rf tsconfig.tsbuildinfo",
     "build:vendor": "NODE_ENV=development webpack --config webpack/webpack.config.vendor.js",
     "heroku-postbuild": "yarn build",
+    "prewatch": "yarn graphql:gen",
     "watch": "concurrently -n wds,srv 'npm:watch-client' 'npm:watch-server'",
     "watch-client": "NODE_ENV=development webpack serve --config webpack/webpack.config.client.development.js",
     "watch-server": "NODE_ENV=development BROWSER=false nodemon -q -w ./src/server -x 'ts-node -P tsconfig-server.json' src/server/serverEntry.ts",
