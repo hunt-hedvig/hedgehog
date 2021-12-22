@@ -50,7 +50,7 @@ export const ClaimPayment: React.FC<{
   const { data: memberData } = useGetMemberTransactionsQuery({
     variables: { id: memberId },
   })
-  const [createPayment] = useCreateClaimPaymentMutation()
+  const [createPayment, { loading }] = useCreateClaimPaymentMutation()
   const [createSwishPayment] = useCreateSwishClaimPaymentMutation()
 
   const [isConfirming, setIsConfirming] = useState(false)

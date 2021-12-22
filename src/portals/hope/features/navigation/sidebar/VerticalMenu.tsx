@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Chat,
   ChevronLeft,
@@ -20,6 +20,8 @@ import { useLocation } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
 import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
   ({ collapsed, theme }) => ({

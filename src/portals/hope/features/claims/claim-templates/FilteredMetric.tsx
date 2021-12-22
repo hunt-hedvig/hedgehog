@@ -3,7 +3,7 @@ import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { CreateFilterModal } from 'portals/hope/features/claims/claim-templates/CreateFilterModal'
 import { ClaimFilterTemplate } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
 import { useListClaims } from 'portals/hope/features/claims/claims-list/graphql/use-list-claims'
-import React, { useEffect, useState } from 'react'
+import React, { HTMLAttributes, useEffect, useState } from 'react'
 import { Files, Pencil, Trash } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { v4 as uuidv4 } from 'uuid'
@@ -85,7 +85,6 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={clickHandler}
-      {...props}
     >
       <MetricNumber onClick={clickHandler}>{totalClaims || 0}</MetricNumber>
       <MetricName onClick={clickHandler} title={template.name}>

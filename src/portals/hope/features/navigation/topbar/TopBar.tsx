@@ -14,6 +14,7 @@ import { UserPanel } from 'portals/hope/features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
 import { BellFill, PeopleFill } from 'react-bootstrap-icons'
 import UserMenu from './UserMenu'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const Wrapper = styled.div`
   z-index: 1000;

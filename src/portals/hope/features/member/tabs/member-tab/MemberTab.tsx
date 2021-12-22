@@ -14,7 +14,6 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
-import { FraudulentStatusEdit } from 'features/member/tabs/member-tab/FraudulentStatus'
 import React, { useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -25,6 +24,7 @@ import {
   useEditMemberInfoMutation,
   useSetFraudulentStatusMutation,
 } from 'types/generated/graphql'
+import { FraudulentStatusEdit } from 'portals/hope/features/member/tabs/member-tab/FraudulentStatus'
 
 const ButtonWrapper = styled.div`
   width: 100%;
