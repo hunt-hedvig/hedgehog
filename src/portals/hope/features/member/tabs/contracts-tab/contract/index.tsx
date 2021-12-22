@@ -69,7 +69,8 @@ export const Contract: React.FC<{
             <InfoRow>
               Holder{' '}
               <InfoText>
-                {contract.holderFirstName} {contract.holderLastName}
+                {contract.holderMember.firstName}{' '}
+                {contract.holderMember.lastName}
               </InfoText>
             </InfoRow>
             <InfoRow>

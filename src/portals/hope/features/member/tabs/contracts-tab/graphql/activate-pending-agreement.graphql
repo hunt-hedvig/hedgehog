@@ -4,6 +4,8 @@ mutation ActivatePendingAgreement(
 ) {
   activatePendingAgreement(contractId: $contractId, request: $request) {
     id
-    holderMemberId
+    holderMember {
+      memberId
+    }
   }
 }

@@ -1,7 +1,9 @@
 mutation RevertTermination($contractId: ID!) {
   revertTermination(contractId: $contractId) {
     id
-    holderMemberId
+    holderMember {
+      memberId
+    }
     terminationDate
   }
 }

@@ -439,9 +439,7 @@ input OverrideQuotePriceInput {
 
 type Contract {
   id: ID!
-  holderMemberId: ID!
-  holderFirstName: String
-  holderLastName: String
+  holderMember: Member!
   switchedFrom: String
   masterInception: LocalDate
   status: ContractStatus!

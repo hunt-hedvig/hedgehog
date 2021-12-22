@@ -109,7 +109,7 @@ export const TerminationDate: React.FC<{
                             revertTermination: {
                               __typename: 'Contract',
                               id: contract.id,
-                              holderMemberId: contract.holderMemberId,
+                              holderMember: contract.holderMember,
                               terminationDate: null,
                             },
                           },
@@ -163,7 +163,7 @@ export const TerminationDate: React.FC<{
                           changeTerminationDate: {
                             __typename: 'Contract',
                             id: contract.id,
-                            holderMemberId: contract.holderMemberId,
+                            holderMember: contract.holderMember,
                             terminationDate,
                           },
                         },
@@ -252,7 +252,7 @@ export const TerminationDate: React.FC<{
                         terminateContract: {
                           __typename: 'Contract',
                           id: contract.id,
-                          holderMemberId: contract.holderMemberId,
+                          holderMember: contract.holderMember,
                           terminationDate,
                         },
                       },
