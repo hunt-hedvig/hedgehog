@@ -5,7 +5,7 @@ import dates from 'compromise-dates'
 import numbers from 'compromise-numbers'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { Calendar } from 'react-bootstrap-icons'
 import DatePicker from 'react-datepicker'
 import { isPressing, Keys } from '../hooks/keyboard/use-key-is-pressed'
@@ -55,7 +55,6 @@ export const getDate = (value: string) => {
 const InlineDatePicker = ({
   value,
   setValue,
-  setTextValue,
   setView,
   maxDate,
   showTimePicker,
@@ -71,10 +70,7 @@ const InlineDatePicker = ({
           inline
           date={value || null}
           onChange={(date) => {
-            const newDate = parseISO(date.toISOString())
-            const formattedDate = formatDate(newDate, 'yyyy-MM-dd')
             setValue(date)
-            setTextValue(formattedDate)
             setView(false)
           }}
           showTimeSelect={showTimePicker}
@@ -87,97 +83,85 @@ const InlineDatePicker = ({
 }
 
 interface TextDatePickerProps extends Omit<InputProps, 'value' | 'onChange'> {
-  value?: Date | null
-  onChange: (date: Date | null) => void
+  value?: string | null
+  onChange: (date: string | null) => void
   errorMessage?: string
   maxDate?: Date
   showTimePicker?: boolean
+  withCurrentTime?: boolean
 }
 
-export const TextDatePicker = React.forwardRef(
-  (
-    {
-      value,
-      onChange,
-      error,
-      errorMessage,
-      maxDate,
-      showTimePicker,
-      onKeyDown,
-      ...props
-    }: TextDatePickerProps,
-    forwardRef: React.ForwardedRef<HTMLInputElement>,
-  ) => {
-    const [showOldDatepicker, setShowOldDatepicker] = React.useState(false)
-    const [textValue, setTextValue] = React.useState<string | null>()
+export const TextDatePicker: React.FC<TextDatePickerProps> = ({
+  value,
+  onChange,
+  error,
+  errorMessage,
+  maxDate,
+  showTimePicker,
+  withCurrentTime,
+  ...props
+}) => {
+  const [showOldDatepicker, setShowOldDatepicker] = React.useState(false)
+  const [textValue, setTextValue] = React.useState<string | null>()
 
-    const defaultRef = useRef<HTMLInputElement>(null)
-    const ref = (forwardRef ?? defaultRef) as React.RefObject<HTMLInputElement>
+  React.useEffect(() => {
+    setTextValue(value?.split('T')[0])
+  }, [value])
 
-    useEffect(() => {
-      if (value) {
-        const isoDate = parseISO(value.toISOString())
-        const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
-        setTextValue(formattedDate)
-        return
-      }
+  const formatAndSetDate = (date: Date) => {
+    const isoDate = parseISO(date.toISOString())
+    let formattedDate: string = formatDate(isoDate, 'yyyy-MM-dd')
 
-      setTextValue(null)
-    }, [value])
-
-    const setDateHandler = () => {
-      const date = getDate(textValue || '')
-
-      if (!date) {
-        return
-      }
-
-      const newDate = date.start
-
-      const isoDate = parseISO(newDate)
-      const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
-
-      if (value && formattedDate === formatDate(value, 'yyyy-MM-dd')) {
-        return
-      }
-
-      onChange(new Date(newDate))
-      setTextValue(formattedDate)
+    if (withCurrentTime) {
+      const isoTime = new Date().toISOString().split('T')[1]
+      formattedDate = formattedDate + 'T' + isoTime
     }
 
-    return (
-      <Wrapper>
-        <Input
-          error={error}
-          icon={
-            <CalendarIcon
-              onClick={() => setShowOldDatepicker((prev) => !prev)}
-            />
+    setTextValue(value?.split('T')[0])
+    onChange(formattedDate)
+  }
+
+  const setDateHandler = () => {
+    const date = getDate(textValue || '')
+
+    if (!date) {
+      return
+    }
+
+    const newDate = new Date(date.start)
+
+    formatAndSetDate(newDate)
+  }
+
+  return (
+    <Wrapper>
+      <Input
+        error={error}
+        icon={
+          <CalendarIcon onClick={() => setShowOldDatepicker((prev) => !prev)} />
+        }
+        onBlur={() => {
+          setDateHandler()
+        }}
+        value={textValue || ''}
+        onChange={(e) => setTextValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (isPressing(e, Keys.Enter)) {
+            setDateHandler()
           }
-          onBlur={setDateHandler}
-          value={textValue || ''}
-          onChange={(e) => setTextValue(e.target.value)}
-          onKeyDown={(e) => {
-            onKeyDown?.(e)
-            if (isPressing(e, Keys.Enter) && textValue) {
-              setDateHandler()
-            }
-          }}
-          {...props}
-          ref={ref}
+        }}
+        {...props}
+      />
+      {error && <ErrorMessage>{errorMessage || 'Invalid Date'}</ErrorMessage>}
+      {showOldDatepicker && (
+        <InlineDatePicker
+          value={value}
+          setValue={(dateValue) => formatAndSetDate(dateValue)}
+          setView={setShowOldDatepicker}
+          maxDate={maxDate}
+          showTimePicker={showTimePicker}
         />
-        {error && <ErrorMessage>{errorMessage || 'Invalid Date'}</ErrorMessage>}
-        {showOldDatepicker && (
-          <InlineDatePicker
-            value={value}
-            setValue={onChange}
-            setTextValue={setTextValue}
-            setView={setShowOldDatepicker}
-            maxDate={maxDate}
-            showTimePicker={showTimePicker}
-          />
-        )}
-      </Wrapper>
-    )
-  },
-)
+      )}
+    </Wrapper>
+  )
+}

@@ -16,7 +16,6 @@ type QueryType {
   getPartnerCampaignOwners: [CampaignOwnerPartner!]!
   availableCampaignCodeTypes: [String!]!
   dashboardNumbers: DashboardNumbers
-  quoteSchemaForContractType(contractType: String!): JSON
   quoteSchemaForInsuranceType(insuranceType: String!): JSON
   memberSearch(
     query: String!
@@ -25,6 +24,14 @@ type QueryType {
   listClaims(options: ListClaimsOptions!): ListClaimsResult!
   employees: [Employee!]!
   availableEmployeeRoles: [String!]!
+
+  termsAndConditions(
+    contractType: String!
+    locale: String!
+    date: LocalDate
+    partner: String
+    carrier: String!
+  ): TermsAndConditions
 
   claimTypes: [String!]!
   claimTypeTemplates: [ClaimTypeTemplate!]!
@@ -37,10 +44,29 @@ type QueryType {
 
   user(email: String!): User
   users: [User!]!
-
   usersOnPath(path: String!): [User!]!
-
   resourceAccess(resourceId: String!): ResourceAccessInformation
+
+  simpleMemberLookup(ssn: String!): SimpleMemberLookupResult!
+}
+
+type SimpleMemberLookupResult {
+  memberId: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String!
+  market: String!
+  contracts: [SimpleMemberLookupContract!]!
+}
+
+type SimpleMemberLookupContract {
+  contractId: ID!
+  typeOfContract: String!
+  masterInception: LocalDate
+  terminationDate: LocalDate
+  numberCoInsured: Int!
+  address: Address
 }
 
 type ResourceAccessInformation {
@@ -75,6 +101,9 @@ enum UserSettingKey {
   MEMBER_GROUPS_FILTER
   MARKET_FILTER
   NUMBER_OF_CLAIMS_FILTER
+  OUTCOME_FILTER
+  FOCUS_MARKETS
+  LANGUAGES
 }
 
 type User {
@@ -179,7 +208,7 @@ type MutationType {
   ): Contract!
   changeTerminationDate(
     contractId: ID!
-    request: ChangeTerminationDateInput
+    request: ChangeTerminationDateInput!
   ): Contract!
   revertTermination(contractId: ID!): Contract!
   createNorwegianGripenPriceEngine(
@@ -365,6 +394,9 @@ input ListClaimsOptions {
   filterSelectedMemberGroups: [Int!]
   filterMarkets: [String!]
   filterTypesOfContract: [String!]
+  filterReserveAmount: BigDecimal
+  filterClaimTypes: [String!]
+  filterClaimOutcomes: [String!]
 }
 
 type MemberSearchResult {
@@ -407,9 +439,7 @@ input OverrideQuotePriceInput {
 
 type Contract {
   id: ID!
-  holderMemberId: ID!
-  holderFirstName: String
-  holderLastName: String
+  holderMember: Member!
   switchedFrom: String
   masterInception: LocalDate
   status: ContractStatus!
@@ -427,6 +457,7 @@ type Contract {
   contractTypeName: String!
   createdAt: Instant!
   isLocked: Boolean!
+  selfChangeBlockers: [String!]!
 }
 
 enum ContractStatus {
@@ -437,6 +468,12 @@ enum ContractStatus {
   TERMINATED_TODAY
   TERMINATED_IN_FUTURE
   TERMINATED
+}
+
+type TermsAndConditions {
+  commencementDate: LocalDate!
+  displayName: String!
+  url: String!
 }
 
 type Employee {
@@ -466,6 +503,7 @@ type GenericAgreement {
   carrier: String!
   partner: String
   createdAt: Instant!
+  termsAndConditions: TermsAndConditions
 }
 
 enum AgreementStatus {
@@ -952,6 +990,7 @@ type Claim {
   state: ClaimState!
   claimType: String
   dateOfOccurrence: LocalDate
+  closedAt: Instant
   outcome: String
   reserves: MonetaryAmount
   registrationDate: Instant!
@@ -966,6 +1005,8 @@ type Claim {
   propertySelections: [ClaimPropertySelection!]!
   coInsured: CoInsured
   restriction: ResourceAccessInformation
+  market: String
+  typeOfContract: String
 }
 
 type CoInsured {
@@ -984,7 +1025,7 @@ type ClaimPropertySelection {
 
 type ClaimNote {
   text: String!
-  date: LocalDateTime!
+  date: Instant!
   handlerReference: String
 }
 
@@ -995,13 +1036,14 @@ type ClaimTranscription {
 }
 
 type ClaimPayment {
-  id: String
-  amount: MonetaryAmount
-  deductible: MonetaryAmount
-  note: String
-  type: ClaimPaymentType
-  timestamp: Instant
-  exGratia: Boolean
+  id: String!
+  amount: MonetaryAmount!
+  deductible: MonetaryAmount!
+  note: String!
+  type: ClaimPaymentType!
+  timestamp: Instant!
+  paidAt: Instant
+  exGratia: Boolean!
   transaction: Transaction
   status: ClaimPaymentStatus
 }
@@ -1017,6 +1059,7 @@ enum ClaimPaymentStatus {
 input ClaimPaymentInput {
   amount: MonetaryAmount!
   deductible: MonetaryAmount!
+  paidAt: Instant
   note: String!
   type: ClaimPaymentType!
   exGratia: Boolean!
@@ -1027,6 +1070,7 @@ input ClaimPaymentInput {
 input ClaimSwishPaymentInput {
   amount: MonetaryAmount!
   deductible: MonetaryAmount!
+  paidAt: Instant
   note: String!
   exGratia: Boolean!
   sanctionListSkipped: Boolean!

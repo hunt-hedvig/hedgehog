@@ -65,7 +65,6 @@ const FormWrapper = styled.div`
     input {
       padding: 10px 15px;
       border-radius: 4px;
-      border: none;
       border: 1px solid ${({ theme }) => theme.border};
     }
   }
@@ -197,14 +196,14 @@ const transformErrors = (errors: AjvError[]): AjvError[] => {
         transformedError.message = `Should not be shorter than ${transformedError.params.limit} characters`
         break
       case 'minimum':
-        transformedError.message = `Should be greater than ${!transformedError
-          .params.exclusive && '(or equal to) '}${
-          transformedError.params.limit
-        }`
+        transformedError.message = `Should be greater than ${
+          !transformedError.params.exclusive && '(or equal to) '
+        }${transformedError.params.limit}`
         break
       case 'maximum':
-        transformedError.message = `Should be less than ${!transformedError
-          .params.exlusive && '(or equal to) '}${transformedError.params.limit}`
+        transformedError.message = `Should be less than ${
+          !transformedError.params.exlusive && '(or equal to) '
+        }${transformedError.params.limit}`
         break
     }
     transformedError.stack = `${getPropertyTitle(transformedError.property)}: ${

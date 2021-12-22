@@ -1,0 +1,51 @@
+rules:
+  - id: prohibit-hedvig-ui-coupling
+    paths:
+      include:
+        - '*shared/@hedvig-ui*'
+    patterns:
+      - pattern: import { $X } from $Y
+      - metavariable-regex:
+          metavariable: $Y
+          regex: ^.*features/.*$
+    message: Feature folders should not be coupled with @hedvig-ui
+    languages:
+      - ts
+    severity: ERROR
+
+  - id: no-console-log
+    patterns:
+      - pattern: console.log(...)
+    message: Do not use `console.log`. If really necessary, consider `console.error` or `console.warn` instead.
+    languages:
+      - ts
+    severity: ERROR
+
+  - id: pages-use-suffix
+    paths:
+      include:
+        - '*src/pages/*'
+    patterns:
+      - pattern: |
+          const $NAME: Page = (...) => { ... }
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: ^(?!.*Page$).*$
+    message: Page component should have the `Page` suffix
+    languages:
+      - ts
+    severity: ERROR
+
+  - id: redundant-existence-check
+    patterns:
+      - pattern-either:
+          - pattern: |
+              $X !== null ? $X : $REST
+          - pattern: |
+              $X !== undefined ? $X : $REST
+          - pattern: |
+              !!$X ? $X : $REST
+    message: The check is redundant
+    languages: [ts]
+    severity: WARNING
+    fix: $X ?? $REST

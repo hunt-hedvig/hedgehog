@@ -1,14 +1,11 @@
 import styled from '@emotion/styled'
 import { InfoTag, InfoTagStatus, ThirdLevelHeadline } from '@hedvig-ui'
-import { useElementFocus } from '@hedvig-ui/hooks/use-element-focus'
 import { colorsV3 } from '@hedviginsurance/brand'
-import React, { useRef } from 'react'
+import React from 'react'
 import { LockFill } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 
-export const CardsWrapper = styled.div<{
-  contentWrap?: string
-}>`
+export const CardsWrapper = styled.div<{ contentWrap?: string }>`
   width: calc(100% + 1rem);
   display: flex;
   flex-direction: row;
@@ -42,7 +39,6 @@ export interface CardProps {
   span?: number
   padding?: PaddingSize
   locked?: boolean
-  focus?: boolean
   children: any
 }
 
@@ -63,27 +59,16 @@ const CardContainer = styled.div<CardProps>`
 
 export const CardLink = CardContainer.withComponent(Link)
 
-export const Card = React.forwardRef(
-  (
-    { children, locked, focus, ...cardProps }: CardProps,
-    ref: React.ForwardedRef<HTMLDivElement>,
-  ) => {
-    const internalRef = useRef<HTMLDivElement>(null)
-
-    useElementFocus((ref as React.RefObject<HTMLElement>) ?? internalRef, focus)
-
-    return (
-      <CardContainer ref={ref ?? internalRef} {...cardProps}>
-        {children}
-        {locked && (
-          <LockedOverlay>
-            Locked
-            <LockFill />
-          </LockedOverlay>
-        )}
-      </CardContainer>
-    )
-  },
+export const Card = ({ children, locked, ...cardProps }: CardProps) => (
+  <CardContainer {...cardProps}>
+    {children}
+    {locked && (
+      <LockedOverlay>
+        Locked
+        <LockFill />
+      </LockedOverlay>
+    )}
+  </CardContainer>
 )
 
 export const DangerCard = styled(Card)<CardProps>`

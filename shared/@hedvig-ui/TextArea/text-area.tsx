@@ -48,15 +48,12 @@ export interface TextAreaProps
   autoResize?: boolean
 }
 
-export const TextArea = React.forwardRef(
-  (
-    { autoResize, value, focus, onChange, ...props }: TextAreaProps,
-    forwardRef: React.ForwardedRef<HTMLTextAreaElement>,
-  ) => {
+export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
+  ({ autoResize, value, focus, onChange, ...props }, forwardRef) => {
     const defaultRef = useRef<HTMLTextAreaElement>(null)
-    const ref = (forwardRef ?? defaultRef) as React.RefObject<
-      HTMLTextAreaElement
-    >
+
+    const ref = (forwardRef ??
+      defaultRef) as React.RefObject<HTMLTextAreaElement>
 
     return autoResize ? (
       <TextareaAutosizeStyled

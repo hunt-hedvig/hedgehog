@@ -15,6 +15,7 @@ export const useElementFocus = (
       if (ref.current.scrollIntoView) {
         ref.current.scrollIntoView({
           block: 'center',
+          behavior: 'smooth',
         })
       }
 

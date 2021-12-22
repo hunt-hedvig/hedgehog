@@ -12,10 +12,6 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import {
-  FocusItems,
-  useFocus,
-} from '../../../src/features/navigation/hooks/use-old-navigation'
 
 const ConfirmButtons = styled.div`
   display: grid;
@@ -34,8 +30,6 @@ export const ConfirmDialogComponent: React.FC<{
 }> = ({ content, close, confirm }) => {
   const isEnterPressed = useKeyIsPressed(Keys.Enter)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
-
-  useFocus(FocusItems.Main.items.Modal)
 
   useEffect(() => {
     if (isEnterPressed) {
