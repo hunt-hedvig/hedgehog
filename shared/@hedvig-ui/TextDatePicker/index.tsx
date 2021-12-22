@@ -125,7 +125,6 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
     const date = getDate(textValue || '')
 
     if (!date) {
-      onChange(null)
       return
     }
 

@@ -18,7 +18,7 @@ import {
   useChangeToDateMutation,
 } from 'types/generated/graphql'
 import { checkGapBetweenAgreements, DateSpan, DialogWarning } from './helpers'
-import { getTodayFormatDate } from 'features/member/tabs/contracts-tab/agreement/helpers'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 const initialToDate = (agreement: GenericAgreement): string =>
   agreement.toDate || getTodayFormatDate()

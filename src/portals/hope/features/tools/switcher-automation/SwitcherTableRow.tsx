@@ -27,7 +27,7 @@ import {
   useMarkSwitcherEmailAsRemindedMutation,
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
-import { getTodayFormatDate } from 'features/member/tabs/contracts-tab/agreement/helpers'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 const FORMAT_DATE_TIME = 'yyyy-MM-dd HH:mm'
 

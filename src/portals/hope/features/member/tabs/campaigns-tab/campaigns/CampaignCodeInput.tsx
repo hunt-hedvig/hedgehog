@@ -3,7 +3,7 @@ import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useManualRedeemCampaignMutation } from 'types/generated/graphql'
-import { getTodayFormatDate } from 'features/member/tabs/contracts-tab/agreement/helpers'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 export const CampaignCodeInput: React.FC<{
   memberId: string

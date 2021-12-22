@@ -17,7 +17,7 @@ import {
   useRevertTerminationMutation,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
-import { getTodayFormatDate } from 'features/member/tabs/contracts-tab/agreement/helpers'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 export enum TerminationReason {
   DissatisfiedWithService = 'DISSATISFIED_WITH_SERVICE',

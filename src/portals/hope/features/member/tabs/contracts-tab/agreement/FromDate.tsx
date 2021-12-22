@@ -18,7 +18,7 @@ import {
   useChangeFromDateMutation,
 } from 'types/generated/graphql'
 import { checkGapBetweenAgreements, DateSpan, DialogWarning } from './helpers'
-import { getTodayFormatDate } from 'features/member/tabs/contracts-tab/agreement/helpers'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 const initialFromDate = (agreement: GenericAgreement): string =>
   agreement.fromDate || getTodayFormatDate()
@@ -114,7 +114,7 @@ export const FromDate: React.FC<{
         <>
           <Spacing bottom width="auto">
             <FourthLevelHeadline>
-              {agreement.fromDate !== null ? agreement.fromDate : 'Not set'}
+              {agreement.fromDate ?? 'Not set'}
             </FourthLevelHeadline>
           </Spacing>
           {agreement.fromDate && !contract.terminationDate && (

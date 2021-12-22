@@ -19,8 +19,6 @@ export const checkGapBetweenAgreements = (previousAgreement, nextAgreement) =>
     new Date(previousAgreement.toDate),
   ) <= 1
 
-// export const formatDate = (date) => format(date, 'yyyy-MM-dd')
-
 export const getTodayFormatDate = () => {
   const isoDate = parseISO(new Date().toISOString())
   const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')

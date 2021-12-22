@@ -8,7 +8,7 @@ import {
   useSignQuoteForNewContractMutation,
 } from 'types/generated/graphql'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
-import { getTodayFormatDate } from 'features/member/tabs/contracts-tab/agreement/helpers'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 export const QuoteContractCreation: React.FC<{
   quote: Quote
