@@ -107,7 +107,12 @@ export const ExternalMenuItem: React.FC<ExternalMenuItemProps> = ({
   const ItemIcon = icon
 
   return (
-    <MenuItemExternalLink href={href} target="_blank" {...props}>
+    <MenuItemExternalLink
+      href={href}
+      target="_blank"
+      {...props}
+      rel="noreferrer"
+    >
       {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
       <ItemIcon />
       {!(shouldAlwaysCollapse || isCollapsed) && title}
