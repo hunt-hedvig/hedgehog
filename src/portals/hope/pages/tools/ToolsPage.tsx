@@ -18,7 +18,6 @@ const Icon = styled('div')`
 
 const Card = styled(CardLink)`
   position: relative;
-
   padding: 2rem;
 `
 

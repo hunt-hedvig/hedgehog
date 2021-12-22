@@ -341,11 +341,7 @@ export const ClaimInformation: React.FC<{
                 down: 'ContractForClaim',
               },
             })}
-            value={
-              (data?.claim?.dateOfOccurrence &&
-                parseISO(data.claim.dateOfOccurrence)) ??
-              null
-            }
+            value={data?.claim?.dateOfOccurrence ?? null}
             onChange={(date) => {
               if (!data?.claim || !date) {
                 return
