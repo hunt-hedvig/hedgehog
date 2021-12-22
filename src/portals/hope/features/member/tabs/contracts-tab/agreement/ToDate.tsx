@@ -112,7 +112,7 @@ export const ToDate: React.FC<{
       {!datePickerEnabled && (
         <Spacing bottom width="auto">
           <FourthLevelHeadline>
-            {agreement.toDate !== null ? agreement.toDate : 'Active'}
+            {agreement.toDate ?? 'Active'}
           </FourthLevelHeadline>
         </Spacing>
       )}
