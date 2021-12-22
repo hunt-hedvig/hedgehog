@@ -22,17 +22,6 @@ import {
 } from 'types/generated/graphql'
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 
-export interface PaymentFormData {
-  amount: string
-  deductible: string
-  note: string
-  exGratia?: boolean
-  type: ClaimPaymentType | 'AutomaticSwish'
-  overridden?: boolean
-  phoneNumber?: string
-  message?: string
-}
-
 const areSwishPayoutsEnabled = () => {
   return (window as any).HOPE_FEATURES?.swishPayoutsEnabled ?? false
 }
@@ -51,26 +40,17 @@ interface CategoryOptionsType {
 }
 
 export const ClaimPayment: React.FC<{
-  focus: boolean
   sanctionStatus?: SanctionStatus | null
   claimId: string
   identified: boolean
   market: string
   carrier: string
   memberId: string
-}> = ({
-  focus,
-  sanctionStatus,
-  carrier,
-  claimId,
-  identified,
-  market,
-  memberId,
-}) => {
-  const { data: memberData, loading } = useGetMemberTransactionsQuery({
+}> = ({ sanctionStatus, carrier, claimId, identified, market, memberId }) => {
+  const { data: memberData } = useGetMemberTransactionsQuery({
     variables: { id: memberId },
   })
-  const [createPayment] = useCreateClaimPaymentMutation()
+  const [createPayment, { loading }] = useCreateClaimPaymentMutation()
   const [createSwishPayment] = useCreateSwishClaimPaymentMutation()
 
   const [isConfirming, setIsConfirming] = useState(false)
@@ -198,7 +178,6 @@ export const ClaimPayment: React.FC<{
     <FormProvider {...form}>
       <Form onSubmit={() => setIsConfirming(true)}>
         <FormInput
-          focus={focus}
           placeholder="Payout amount"
           name="amount"
           defaultValue=""

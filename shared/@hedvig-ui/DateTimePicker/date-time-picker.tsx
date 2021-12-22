@@ -27,10 +27,9 @@ const Wrapper = styled.div`
   }
 `
 
-const CalendarIcon = styled(Calendar)<{ focus?: boolean }>`
+const CalendarIcon = styled(Calendar)`
   transition: all 0.1s;
-  color: ${({ theme, focus }) =>
-    focus ? theme.accent : theme.placeholderColor};
+  color: ${({ theme }) => theme.placeholderColor};
   cursor: pointer;
   width: 1em;
 `

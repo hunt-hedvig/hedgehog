@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Chat,
   ChevronLeft,
@@ -20,6 +20,8 @@ import { useLocation } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
 import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const Wrapper = styled('div')<{ collapsed: boolean }>(
   ({ collapsed, theme }) => ({
@@ -174,7 +176,9 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
       false,
   )
 
-  React.useEffect(() => {
+  const { register } = useNavigation()
+
+  useEffect(() => {
     const latestLocations = [pathname, ...locations].filter(
       (_, index) => index < 10,
     )
@@ -291,11 +295,28 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
             </Header>
 
             <Menu>
-              {MenuItemsList.map(({ external, single, ...item }) =>
-                !external ? (
+              {MenuItemsList.map(({ external, single, ...item }, index) => {
+                const navigation = register(item.title, {
+                  focus: index === 0 ? Keys.S : undefined,
+                  resolve: () => {
+                    item.hotkeyHandler()
+                  },
+                  neighbors: {
+                    up: index ? MenuItemsList[index - 1].title : undefined,
+                    down:
+                      index < MenuItemsList.length - 1
+                        ? MenuItemsList[index + 1].title
+                        : undefined,
+                  },
+                })
+
+                return !external ? (
                   <MenuItem
                     key={item.route}
-                    style={{ marginBottom: single ? '4rem' : 0 }}
+                    style={{
+                      marginBottom: single ? '4rem' : 0,
+                      ...navigation.style,
+                    }}
                     isActive={(_match, location) =>
                       location.pathname.startsWith(item.route)
                     }
@@ -310,15 +331,19 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
                   />
                 ) : (
                   <ExternalMenuItem
+                    {...navigation}
                     key={item.route}
-                    style={{ marginBottom: single ? '4rem' : 0 }}
+                    style={{
+                      marginBottom: single ? '4rem' : 0,
+                      ...navigation.style,
+                    }}
                     href={item.route}
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
                     isCollapsed={isCollapsed}
                     {...item}
                   />
-                ),
-              )}
+                )
+              })}
             </Menu>
           </InnerWrapper>
         </Wrapper>

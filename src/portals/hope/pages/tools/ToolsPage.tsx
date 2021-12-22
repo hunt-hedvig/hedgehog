@@ -1,20 +1,10 @@
 import styled from '@emotion/styled'
-import {
-  CardLink,
-  CardsWrapper,
-  FadeIn,
-  HotkeyStyled,
-  MainHeadline,
-} from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { CardLink, CardsWrapper, FadeIn, MainHeadline } from '@hedvig-ui'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import React from 'react'
-import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
 import { useHistory } from 'react-router'
-import { Page } from 'portals/hope/pages/routes'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const Row = styled.div<{ columns?: number }>`
   display: grid;
@@ -28,12 +18,7 @@ const Icon = styled('div')`
 
 const Card = styled(CardLink)`
   position: relative;
-`
-
-const Hotkey = styled(HotkeyStyled)`
-  right: 1em;
-  top: 1em;
-  padding: 2px 10px;
+  padding: 2rem;
 `
 
 const stagingToolsAvailable = () => {
@@ -41,108 +26,147 @@ const stagingToolsAvailable = () => {
 }
 
 const StagingTools: React.FC = () => {
+  const history = useHistory()
+  const { register } = useNavigation()
   return (
     <>
       <MainHeadline>Staging specific tools</MainHeadline>
       <CardsWrapper>
-        <CardLink to="/tools/unsign-member" span={4}>
+        <Card
+          to="/tools/unsign-member"
+          span={4}
+          {...register('UnsignMember', {
+            resolve: () => {
+              history.push('/tools/unsign-member')
+            },
+            neighbors: {
+              up: 'CampaignCodes',
+            },
+          })}
+        >
           <Icon>✍️</Icon>
           Unsign member
-        </CardLink>
+        </Card>
       </CardsWrapper>
     </>
   )
 }
 
-const ToolsPage: Page = () => {
-  const history = useHistory()
-  const isControlPressed = useKeyIsPressed(Keys.Control)
-  const { registerActions } = useCommandLine()
-
+const ToolsPage: React.FC = () => {
   useTitle('Tools')
 
-  registerActions([
-    {
-      label: 'Go to Approve Charges',
-      keys: [Keys.Control, Keys.One],
-      onResolve: () => {
-        history.push('/tools/charges')
-      },
-    },
-    {
-      label: 'Go to Switcher Automation',
-      keys: [Keys.Control, Keys.Two],
-      onResolve: () => {
-        history.push('/tools/switcher-automation')
-      },
-    },
-    {
-      label: 'Go to Perils Editor',
-      keys: [Keys.Control, Keys.Three],
-      onResolve: () => {
-        history.push('/tools/perils-editor')
-      },
-    },
-    {
-      label: 'Go to Campaign Codes',
-      keys: [Keys.Control, Keys.Four],
-      onResolve: () => {
-        history.push('/tools/campaign-codes')
-      },
-    },
-    {
-      label: 'Go to Employees',
-      keys: [Keys.Control, Keys.Five],
-      onResolve: () => {
-        history.push('/tools/employees')
-      },
-    },
-    {
-      label: 'Go to Claim Types',
-      keys: [Keys.Control, Keys.Six],
-      onResolve: () => {
-        history.push('/tools/claim-types')
-      },
-    },
-  ])
+  const { register } = useNavigation()
+  const history = useHistory()
 
   return (
     <FadeIn>
       <CardsWrapper style={{ flexDirection: 'column' }}>
         <Row columns={3}>
-          <Card to="/tools/charges" span={4}>
+          <Card
+            to="/tools/charges"
+            span={4}
+            {...register('ApproveCharges', {
+              focus: Keys.T,
+              resolve: () => {
+                history.push('/tools/charges')
+              },
+              neighbors: {
+                right: 'SwitcherAutomation',
+                down: 'CampaignCodes',
+              },
+            })}
+          >
             <Icon>💰</Icon>
             Approve Charges
-            {isControlPressed && <Hotkey dark>1</Hotkey>}
           </Card>
-          <Card to="/tools/switcher-automation" span={4}>
+          <Card
+            to="/tools/switcher-automation"
+            span={4}
+            {...register('SwitcherAutomation', {
+              resolve: () => {
+                history.push('/tools/switcher-automation')
+              },
+              neighbors: {
+                left: 'ApproveCharges',
+                right: 'PerilsEditor',
+                down: 'Employees',
+              },
+            })}
+          >
             <Icon>🏡</Icon>
-            {isControlPressed && <Hotkey dark>2</Hotkey>}
             Switcher Automation
           </Card>
-          <Card to="/tools/perils-editor" span={4}>
+          <Card
+            to="/tools/perils-editor"
+            span={4}
+            {...register('PerilsEditor', {
+              resolve: () => {
+                history.push('/tools/perils-editor')
+              },
+              neighbors: {
+                left: 'SwitcherAutomation',
+                down: 'ClaimTypes',
+              },
+            })}
+          >
             <Icon>📝</Icon>
-            {isControlPressed && <Hotkey dark>3</Hotkey>}
             Perils Editor
           </Card>
         </Row>
 
         <Row columns={3}>
-          <CardLink to="/tools/campaign-codes" span={4}>
+          <Card
+            to="/tools/campaign-codes"
+            span={4}
+            {...register('CampaignCodes', {
+              resolve: () => {
+                history.push('/tools/campaign-codes')
+              },
+              neighbors: {
+                up: 'ApproveCharges',
+                right: 'Employees',
+                down: 'UnsignMember',
+              },
+            })}
+          >
             <Icon>💵</Icon>
-            {isControlPressed && <Hotkey dark>4</Hotkey>}
             Campaign Codes
-          </CardLink>
-          <CardLink to="/tools/employees" span={4}>
+          </Card>
+          <Card
+            to="/tools/employees"
+            span={4}
+            {...register('Employees', {
+              resolve: () => {
+                history.push('/tools/employees')
+              },
+              neighbors: {
+                up: 'SwitcherAutomation',
+                right: 'ClaimTypes',
+                left: 'CampaignCodes',
+                down: 'UnsignMember',
+              },
+            })}
+          >
             <Icon>👩🏼‍🦰</Icon>
-            {isControlPressed && <Hotkey dark>5</Hotkey>}
             Employees
-          </CardLink>
-          <CardLink to="/tools/claim-types" span={4}>
+          </Card>
+          <Card
+            to="/tools/claim-types"
+            span={4}
+            {...register('ClaimTypes', {
+              resolve: () => {
+                history.push('/tools/claim-types')
+              },
+              neighbors: {
+                up: 'PerilsEditor',
+                left: 'Employees',
+                down: 'UnsignMember',
+              },
+            })}
+          >
             <Icon>🧠</Icon>
-            {isControlPressed && <Hotkey dark>6</Hotkey>}
             Claim Types
-          </CardLink>
+          </Card>
         </Row>
       </CardsWrapper>
 

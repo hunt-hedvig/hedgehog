@@ -182,7 +182,6 @@ export const ChatPanel = ({ memberId }) => {
     <MessagesPanelContainer>
       <ChatForm onSubmit={handleSubmit}>
         <ChatTextArea
-          focus={true}
           autoResize={true}
           maxHeight="350px"
           error={error}

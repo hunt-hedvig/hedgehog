@@ -8,17 +8,13 @@ import { Button, Input, Spacing } from '@hedvig-ui'
 
 const isStringNumber = (s: string) => /^-?\d+$/.test(s) || /^\d+\.\d+$/.test(s)
 
-const ClaimReserveForm: React.FC<{ claimId: string; focus: boolean }> = ({
-  claimId,
-  focus,
-}) => {
+const ClaimReserveForm: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [updateReserve, { loading }] = useUpdateReserveMutation()
   const [value, setValue] = useState('')
 
   return (
     <>
       <Input
-        focus={focus}
         placeholder="Reserve amount"
         onChange={(e) => setValue(e.currentTarget.value)}
       />

@@ -1,4 +1,5 @@
 import { Dropdown, DropdownOption } from '@hedvig-ui'
+import { DropdownProps } from '@hedvig-ui/Dropdown/dropdown'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -18,55 +19,62 @@ export enum ClaimOutcomes {
   TEST = 'TEST',
 }
 
-export const OutcomeDropdown: React.FC<{
+interface OutcomeDropdownProps extends Omit<DropdownProps, 'children'> {
   claimState: string
   claimId: string
   outcome: string | null
-}> = ({ claimState, claimId, outcome }) => {
-  const [setClaimOutcome] = useSetClaimOutcomeMutation()
+}
 
-  const handleSelectOutcome = async (newOutcome: string | null) => {
-    if (claimState === ClaimState.Closed) {
-      toast.error('This claim is closed')
-      return
+export const OutcomeDropdown = React.forwardRef(
+  (
+    { claimState, claimId, outcome, ...props }: OutcomeDropdownProps,
+    forwardRef: React.ForwardedRef<HTMLDivElement>,
+  ) => {
+    const [setClaimOutcome] = useSetClaimOutcomeMutation()
+
+    const handleSelectOutcome = async (newOutcome: string | null) => {
+      if (claimState === ClaimState.Closed) {
+        toast.error('This claim is closed')
+        return
+      }
+
+      await setClaimOutcome({
+        variables: { id: claimId, outcome: newOutcome },
+        optimisticResponse: {
+          setClaimOutcome: {
+            id: claimId,
+            __typename: 'Claim',
+            outcome: newOutcome,
+          },
+        },
+      })
     }
 
-    await setClaimOutcome({
-      variables: { id: claimId, outcome: newOutcome },
-      optimisticResponse: {
-        setClaimOutcome: {
-          id: claimId,
-          __typename: 'Claim',
-          outcome: newOutcome,
-        },
-      },
-    })
-  }
-
-  return (
-    <Dropdown placeholder="Not specified">
-      {[
-        ...Object.keys(ClaimOutcomes).map((value) => ({
-          value,
-          text: convertEnumToTitle(value),
-        })),
-        { value: 'not_specified', text: 'Not specified' },
-      ].map((opt) => (
-        <DropdownOption
-          key={opt.value}
-          onClick={() => {
-            handleSelectOutcome(
-              opt.value === 'not_specified' ? null : opt.value,
-            )
-          }}
-          selected={
-            outcome === opt.value ||
-            (outcome === null && opt.value === 'not_specified' && false)
-          }
-        >
-          {opt.text}
-        </DropdownOption>
-      ))}
-    </Dropdown>
-  )
-}
+    return (
+      <Dropdown placeholder="Not specified" {...props} ref={forwardRef}>
+        {[
+          ...Object.keys(ClaimOutcomes).map((value) => ({
+            value,
+            text: convertEnumToTitle(value),
+          })),
+          { value: 'not_specified', text: 'Not specified' },
+        ].map((opt) => (
+          <DropdownOption
+            key={opt.value}
+            onClick={() => {
+              handleSelectOutcome(
+                opt.value === 'not_specified' ? null : opt.value,
+              )
+            }}
+            selected={
+              outcome === opt.value ||
+              (outcome === null && opt.value === 'not_specified' && false)
+            }
+          >
+            {opt.text}
+          </DropdownOption>
+        ))}
+      </Dropdown>
+    )
+  },
+)

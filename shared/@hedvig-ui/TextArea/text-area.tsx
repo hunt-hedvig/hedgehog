@@ -1,6 +1,7 @@
 import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useEffect, useRef } from 'react'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import React, { useRef } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 
 const styles = (theme: Theme, resize?: boolean, maxHeight?: string) => css`
@@ -43,46 +44,46 @@ export interface TextAreaProps
   name?: string
   maxHeight?: string
   resize?: boolean
-  focus?: boolean
   autoResize?: boolean
 }
 
-export const TextArea: React.FC<TextAreaProps> = ({
-  autoResize,
-  value,
-  focus,
-  onChange,
-  ...props
-}) => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
+  ({ autoResize, value, onChange, ...props }, forwardRef) => {
+    const defaultRef = useRef<HTMLTextAreaElement>(null)
 
-  useEffect(() => {
-    setTimeout(() => {
-      if (focus && textareaRef.current) {
-        textareaRef.current.focus()
-      }
-    }, 0)
-  }, [focus])
+    const ref = (forwardRef ??
+      defaultRef) as React.RefObject<HTMLTextAreaElement>
 
-  return autoResize ? (
-    <TextareaAutosizeStyled
-      ref={textareaRef}
-      value={value || ''}
-      maxHeight={props.maxHeight}
-      onKeyDown={props.onKeyDown}
-      onChange={onChange}
-      placeholder={props.placeholder}
-      resize={props.resize}
-      onFocus={props.onFocus}
-      onBlur={props.onBlur}
-      name={props.name}
-    />
-  ) : (
-    <TextAreaStyled
-      ref={textareaRef}
-      onChange={onChange}
-      value={value || ''}
-      {...props}
-    />
-  )
-}
+    return autoResize ? (
+      <TextareaAutosizeStyled
+        ref={ref}
+        value={value || ''}
+        maxHeight={props.maxHeight}
+        onChange={onChange}
+        placeholder={props.placeholder}
+        resize={props.resize}
+        onFocus={props.onFocus}
+        onBlur={props.onBlur}
+        name={props.name}
+        onKeyDown={(e) => {
+          props.onKeyDown?.(e)
+          if (isPressing(e, Keys.Escape)) {
+            ref?.current?.blur()
+          }
+        }}
+      />
+    ) : (
+      <TextAreaStyled
+        ref={ref}
+        onChange={onChange}
+        value={value || ''}
+        onKeyDown={(e) => {
+          if (isPressing(e, Keys.Escape)) {
+            ref?.current?.blur()
+          }
+        }}
+        {...props}
+      />
+    )
+  },
+)

@@ -180,7 +180,6 @@ export const CommandLineModal: React.FC<{
     <Wrapper>
       <SearchWrapper>
         <CommandLineInput
-          focus={true}
           autoFocus
           value={searchValue}
           size="large"

@@ -16,9 +16,8 @@ import {
 } from 'types/generated/graphql'
 
 export const ClaimType: React.FC<{
-  focus?: boolean
   claimId: string
-}> = ({ claimId, focus }) => {
+}> = ({ claimId }) => {
   const { data: claimTypeData } = useClaimPageQuery({
     variables: { claimId },
   })
@@ -61,7 +60,6 @@ export const ClaimType: React.FC<{
               }
             />
             <SearchableDropdownWithRef
-              focus={focus}
               value={
                 selectedClaimType && {
                   value: selectedClaimType,
