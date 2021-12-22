@@ -91,7 +91,7 @@ export const QuoteActivation: React.FC<{
             refetchQueries: () => [
               {
                 query: GetQuotesDocument,
-                variables: { memberId: contract.holderMemberId },
+                variables: { memberId: contract.holderMember.memberId },
               },
             ],
           }),

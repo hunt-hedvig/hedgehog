@@ -55,7 +55,7 @@ export const withDelayedRefetchContracts = <
 export const delayedRefetchOfContracts = (
   contract: Contract,
 ): DelayedRefetchResultTuple => {
-  const [, { refetch }] = useContracts(contract.holderMemberId)
+  const [, { refetch }] = useContracts(contract.holderMember.memberId)
 
   const [loading, setLoading] = useState(false)
 

@@ -23,7 +23,7 @@ export const CreateQuoteFromAgreement: React.FC<{
 }> = ({ agreement, contract }) => {
   const [createQuote] = useCreateQuoteFromAgreementMutation()
   const [{ quotes }, { loading: loadingQuotes }] = useQuotes(
-    contract.holderMemberId,
+    contract.holderMember.memberId,
   )
   const { confirm } = useConfirmDialog()
 
@@ -51,16 +51,16 @@ export const CreateQuoteFromAgreement: React.FC<{
         createQuote({
           variables: {
             agreementId: agreement.id,
-            memberId: contract.holderMemberId,
+            memberId: contract.holderMember.memberId,
           },
           refetchQueries: () => [
             {
               query: GetQuotesDocument,
-              variables: { memberId: contract.holderMemberId },
+              variables: { memberId: contract.holderMember.memberId },
             },
             {
               query: GetContractsDocument,
-              variables: { memberId: contract.holderMemberId },
+              variables: { memberId: contract.holderMember.memberId },
             },
           ],
         }),
