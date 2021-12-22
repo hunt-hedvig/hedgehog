@@ -1,12 +1,10 @@
 import styled from '@emotion/styled'
 import { Label, Spacing } from '@hedvig-ui'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import chroma from 'chroma-js'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React, { HTMLAttributes } from 'react'
-import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Claim, ClaimState, GetMemberInfoQuery } from 'types/generated/graphql'
 
@@ -92,8 +90,6 @@ export const MemberClaimsView: React.FC<{
   member: GetMemberInfoQuery['member']
   claimId: string
 }> = ({ member, claimId }) => {
-  const history = useHistory()
-  const { register } = useNavigation()
   const currentClaim = (member?.claims ?? []).find(
     (claim) => claim.id === claimId,
   )
@@ -117,22 +113,7 @@ export const MemberClaimsView: React.FC<{
         <div>
           <Label>This claim</Label>
           <div style={{ marginBottom: '0.25rem' }} />
-          <ClaimItem
-            {...register('ThisClaim', {
-              resolve: 'ThisClaim',
-              neighbors: {
-                up: 'MemberClaims',
-                down:
-                  openClaims.length !== 0
-                    ? openClaims[0].id
-                    : closedClaims.length !== 0
-                    ? closedClaims[0].id
-                    : undefined,
-              },
-            })}
-            key={currentClaim?.id}
-            claim={currentClaim as Claim}
-          />
+          <ClaimItem key={currentClaim?.id} claim={currentClaim as Claim} />
 
           <Spacing top="small" />
         </div>
@@ -142,21 +123,8 @@ export const MemberClaimsView: React.FC<{
         <div>
           <Label>Open</Label>
           <div style={{ marginBottom: '0.25rem' }} />
-          {openClaims.map((claim, index) => (
-            <ClaimItem
-              {...register(claim.id, {
-                resolve: () => history.push(`/claims/${claim.id}`),
-                neighbors: {
-                  up: index !== 0 ? openClaims[index - 1].id : 'ThisClaim',
-                  down:
-                    index !== openClaims.length - 1
-                      ? openClaims[index + 1].id
-                      : undefined,
-                },
-              })}
-              key={claim.id}
-              claim={claim as Claim}
-            />
+          {openClaims.map((claim) => (
+            <ClaimItem key={claim.id} claim={claim as Claim} />
           ))}
         </div>
       )}
@@ -164,31 +132,11 @@ export const MemberClaimsView: React.FC<{
       <Spacing top="small" />
 
       {closedClaims.length !== 0 && (
-        <div
-          {...register('ClosedClaims', {
-            resolve: closedClaims[0].id,
-            neighbors: {
-              up: openClaims.length !== 0 ? 'OpenClaims' : 'ThisClaim',
-            },
-          })}
-        >
+        <div>
           <Label>Closed</Label>
           <div style={{ marginBottom: '0.25rem' }} />
-          {closedClaims.map((claim, index) => (
-            <ClaimItem
-              {...register(claim.id, {
-                resolve: () => history.push(`/claims/${claim.id}`),
-                neighbors: {
-                  up: index !== 0 ? closedClaims[index - 1].id : undefined,
-                  down:
-                    index !== closedClaims.length - 1
-                      ? closedClaims[index + 1].id
-                      : undefined,
-                },
-              })}
-              key={claim.id}
-              claim={claim as Claim}
-            />
+          {closedClaims.map((claim) => (
+            <ClaimItem key={claim.id} claim={claim as Claim} />
           ))}
         </div>
       )}

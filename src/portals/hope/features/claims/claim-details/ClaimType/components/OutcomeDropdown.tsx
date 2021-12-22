@@ -1,6 +1,5 @@
 import { Dropdown, DropdownOption } from '@hedvig-ui'
 import { DropdownProps } from '@hedvig-ui/Dropdown/dropdown'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -31,7 +30,6 @@ export const OutcomeDropdown = React.forwardRef(
     { claimState, claimId, outcome, ...props }: OutcomeDropdownProps,
     forwardRef: React.ForwardedRef<HTMLDivElement>,
   ) => {
-    const { register } = useNavigation()
     const [setClaimOutcome] = useSetClaimOutcomeMutation()
 
     const handleSelectOutcome = async (newOutcome: string | null) => {
@@ -53,17 +51,7 @@ export const OutcomeDropdown = React.forwardRef(
     }
 
     return (
-      <Dropdown
-        placeholder="Not specified"
-        {...props}
-        ref={forwardRef}
-        {...register('ClaimOutcomeOptions', {
-          parent: (ref) => {
-            ref?.blur()
-            return 'ClaimOutcome'
-          },
-        })}
-      >
+      <Dropdown placeholder="Not specified" {...props} ref={forwardRef}>
         {[
           ...Object.keys(ClaimOutcomes).map((value) => ({
             value,
