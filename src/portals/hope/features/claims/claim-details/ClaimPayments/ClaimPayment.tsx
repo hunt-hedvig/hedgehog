@@ -143,7 +143,7 @@ export const ClaimPayment: React.FC<{
       note: form.getValues().note,
       exGratia: isExGratia,
       carrier,
-      timestamp: date,
+      paidAt: date,
     }
 
     if (form.getValues().type === 'AutomaticSwish') {
