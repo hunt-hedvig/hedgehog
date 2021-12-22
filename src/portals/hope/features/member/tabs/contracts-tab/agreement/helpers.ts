@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import { differenceInDays, format } from 'date-fns'
+import { differenceInDays, parseISO } from 'date-fns'
+import formatDate from 'date-fns/format'
 
 export const DialogWarning = styled.span`
   margin-top: 1rem;
@@ -18,4 +19,9 @@ export const checkGapBetweenAgreements = (previousAgreement, nextAgreement) =>
     new Date(previousAgreement.toDate),
   ) <= 1
 
-export const formatDate = (date) => format(date, 'yyyy-MM-dd')
+export const getTodayFormatDate = () => {
+  const isoDate = parseISO(new Date().toISOString())
+  const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
+
+  return formattedDate
+}

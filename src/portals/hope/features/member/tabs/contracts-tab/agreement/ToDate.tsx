@@ -8,7 +8,8 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { addDays, format } from 'date-fns'
+import { parseISO } from 'date-fns'
+import formatDate from 'date-fns/format'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -16,15 +17,11 @@ import {
   GenericAgreement,
   useChangeToDateMutation,
 } from 'types/generated/graphql'
-import {
-  checkGapBetweenAgreements,
-  DateSpan,
-  DialogWarning,
-  formatDate,
-} from './helpers'
+import { checkGapBetweenAgreements, DateSpan, DialogWarning } from './helpers'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
-const initialToDate = (agreement: GenericAgreement): Date =>
-  agreement.toDate ? new Date(agreement.toDate) : new Date()
+const initialToDate = (agreement: GenericAgreement): string =>
+  agreement.toDate || getTodayFormatDate()
 
 const getNextAgreement = (agreements, selectedAgreement) =>
   agreements.reduce((nextAgreement, current) => {
@@ -42,7 +39,9 @@ export const ToDate: React.FC<{
   contract: Contract
 }> = ({ agreement, contract }) => {
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
-  const [toDate, setToDate] = React.useState(initialToDate(agreement))
+  const [toDate, setToDate] = React.useState<string | null>(
+    initialToDate(agreement),
+  )
   const [changeToDate] = useChangeToDateMutation()
   const { confirm } = useConfirmDialog()
 
@@ -56,20 +55,24 @@ export const ToDate: React.FC<{
   }, [agreement])
 
   const onConfirm = () => {
-    const formattedToDate = formatDate(toDate)
     let confirmText = (
       <>
-        Do you wish to change the to date to{' '}
-        <DateSpan>{formattedToDate}</DateSpan>?
+        Do you wish to change the to date to <DateSpan>{toDate}</DateSpan>?
       </>
     )
     const nextAgreement = getNextAgreement(
       contract.genericAgreements,
       agreement,
     )
-    if (nextAgreement) {
+
+    if (nextAgreement && toDate) {
       if (checkGapBetweenAgreements(agreement, nextAgreement)) {
-        const formattedNextFromDate = formatDate(addDays(toDate, 1))
+        const nextFromDate = new Date(toDate)
+        nextFromDate.setDate(nextFromDate.getDate() + 1)
+
+        const isoDate = parseISO(nextFromDate.toISOString())
+        const formattedNextFromDate = formatDate(isoDate, 'yyyy-MM-dd')
+
         confirmText = (
           <>
             {confirmText}
@@ -87,7 +90,7 @@ export const ToDate: React.FC<{
           variables: {
             agreementId: agreement.id,
             request: {
-              newToDate: format(toDate, 'yyyy-MM-dd'),
+              newToDate: toDate,
             },
           },
         }),
@@ -109,9 +112,7 @@ export const ToDate: React.FC<{
       {!datePickerEnabled && (
         <Spacing bottom width="auto">
           <FourthLevelHeadline>
-            {agreement.toDate !== null
-              ? formatDate(new Date(agreement.toDate))
-              : 'Active'}
+            {agreement.toDate ?? 'Active'}
           </FourthLevelHeadline>
         </Spacing>
       )}

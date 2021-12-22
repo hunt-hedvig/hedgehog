@@ -5,6 +5,7 @@ import {
   FormDropdown,
   FormInput,
   SubmitButton,
+  TextDatePicker,
 } from '@hedvig-ui'
 import { Market } from 'portals/hope/features/config/constants'
 import React, { useEffect, useState } from 'react'
@@ -75,6 +76,7 @@ export const ClaimPayment: React.FC<{
   const [isConfirming, setIsConfirming] = useState(false)
   const [isExGratia, setIsExGratia] = useState(false)
   const [isOverridden, setIsOverridden] = useState(false)
+  const [date, setDate] = useState<string | null>(null)
 
   const isPaymentActivated =
     !!memberData?.member?.directDebitStatus?.activated ||
@@ -87,7 +89,9 @@ export const ClaimPayment: React.FC<{
       text: paymentType,
       disabled:
         paymentType === ClaimPaymentType.Manual ||
-        (paymentType === ClaimPaymentType.Automatic && !isPaymentActivated),
+        (paymentType === ClaimPaymentType.Automatic &&
+          !loading &&
+          !isPaymentActivated),
     })),
     {
       key: 5,
@@ -103,12 +107,8 @@ export const ClaimPayment: React.FC<{
     form.setValue('deductible', '')
     form.setValue('note', '')
     setIsExGratia(false)
-    form.setValue(
-      'type',
-      isPaymentActivated
-        ? ClaimPaymentType.Automatic
-        : ClaimPaymentType.IndemnityCost,
-    )
+    setDate(null)
+    form.setValue('type', ClaimPaymentType.Automatic)
     form.reset()
   }
 
@@ -127,7 +127,7 @@ export const ClaimPayment: React.FC<{
     ) {
       form.setValue('type', ClaimPaymentType.Automatic)
     }
-  }, [isExGratia, isPaymentActivated])
+  }, [isExGratia, loading])
 
   const createPaymentHandler = async () => {
     const paymentInput: Partial<ClaimPaymentInput | ClaimSwishPaymentInput> = {
@@ -143,6 +143,7 @@ export const ClaimPayment: React.FC<{
       note: form.getValues().note,
       exGratia: isExGratia,
       carrier,
+      timestamp: date,
     }
 
     if (form.getValues().type === 'AutomaticSwish') {
@@ -232,35 +233,28 @@ export const ClaimPayment: React.FC<{
           checked={isExGratia}
           onChange={() => setIsExGratia((prev) => !prev)}
         />
-        {!loading && (
-          <FormDropdown
-            placeholder="Type"
-            options={categoryOptions.filter((opt) => {
-              if (opt.disabled) {
-                return false
-              }
-              if (opt.value === 'AutomaticSwish') {
-                return (
-                  areSwishPayoutsEnabled() &&
-                  market === Market.Sweden &&
-                  !isExGratia
-                )
-              }
-              return isExGratia
-                ? opt.value !== ClaimPaymentType.Automatic
-                : true
-            })}
-            name="type"
-            defaultValue={
-              isPaymentActivated
-                ? ClaimPaymentType.Automatic
-                : ClaimPaymentType.IndemnityCost
+
+        <FormDropdown
+          placeholder="Type"
+          options={categoryOptions.filter((opt) => {
+            if (opt.disabled) {
+              return false
             }
-            rules={{
-              required: 'Category is required',
-            }}
-          />
-        )}
+            if (opt.value === 'AutomaticSwish') {
+              return (
+                areSwishPayoutsEnabled() &&
+                market === Market.Sweden &&
+                !isExGratia
+              )
+            }
+            return isExGratia ? opt.value !== ClaimPaymentType.Automatic : true
+          })}
+          name="type"
+          defaultValue={ClaimPaymentType.Automatic}
+          rules={{
+            required: 'Category is required',
+          }}
+        />
 
         {isPotentiallySanctioned && (
           <FormCheckbox
@@ -291,6 +285,13 @@ export const ClaimPayment: React.FC<{
             />
           </>
         )}
+
+        <TextDatePicker
+          style={{ marginBottom: '2rem' }}
+          placeholder="Payment performed"
+          value={date}
+          onChange={setDate}
+        />
 
         <div>
           <SubmitButton>Create payment</SubmitButton>

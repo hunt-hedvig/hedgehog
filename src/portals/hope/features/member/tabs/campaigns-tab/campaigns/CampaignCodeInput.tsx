@@ -3,14 +3,22 @@ import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useManualRedeemCampaignMutation } from 'types/generated/graphql'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 export const CampaignCodeInput: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
   const [campaignCode, setCampaignCode] = React.useState('')
-  const [activationDate, setActivationDate] = React.useState<Date | null>(null)
+  const [activationDate, setActivationDate] = React.useState<string | null>(
+    null,
+  )
   const [manualRedeemCampaign, { loading }] = useManualRedeemCampaignMutation()
   const { confirm } = useConfirmDialog()
+
+  const setDefaultActivationDate = () => {
+    const formattedDate = getTodayFormatDate()
+    setActivationDate(formattedDate)
+  }
 
   return (
     <>
@@ -27,8 +35,9 @@ export const CampaignCodeInput: React.FC<{
             <div>
               <Spacing left="small" right="small">
                 <TextDatePicker
+                  withCurrentTime
                   onChange={setActivationDate}
-                  value={activationDate ?? new Date()}
+                  value={activationDate}
                 />
               </Spacing>
             </div>
@@ -70,10 +79,7 @@ export const CampaignCodeInput: React.FC<{
           Redeem
         </Button>
         {!activationDate && campaignCode && (
-          <Button
-            variant="tertiary"
-            onClick={() => setActivationDate(new Date())}
-          >
+          <Button variant="tertiary" onClick={() => setDefaultActivationDate()}>
             Add activation date
           </Button>
         )}

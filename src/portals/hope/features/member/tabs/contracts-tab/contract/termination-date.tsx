@@ -9,7 +9,6 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
-import { format } from 'date-fns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -18,6 +17,7 @@ import {
   useRevertTerminationMutation,
   useTerminateContractMutation,
 } from 'types/generated/graphql'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 export enum TerminationReason {
   DissatisfiedWithService = 'DISSATISFIED_WITH_SERVICE',
@@ -50,14 +50,14 @@ export enum TerminationReason {
   NoFeedback = 'NO_FEEDBACK',
 }
 
-const initialTerminationDate = (contract: Contract): Date =>
-  contract.terminationDate ? new Date(contract.terminationDate) : new Date()
+const initialTerminationDate = (contract: Contract): string =>
+  contract.terminationDate || getTodayFormatDate()
 
 export const TerminationDate: React.FC<{
   contract: Contract
 }> = ({ contract }) => {
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
-  const [terminationDate, setTerminationDate] = React.useState(
+  const [terminationDate, setTerminationDate] = React.useState<string | null>(
     initialTerminationDate(contract),
   )
   const [terminationReason, setTerminationReason] =
@@ -143,9 +143,7 @@ export const TerminationDate: React.FC<{
               <Button
                 disabled={changeTerminationDateLoading}
                 onClick={() => {
-                  const confirmMessage = `Are you sure you want to change the termination date from ${
-                    contract.terminationDate
-                  } to ${format(terminationDate, 'yyyy-MM-dd')}?`
+                  const confirmMessage = `Are you sure you want to change the termination date from ${contract.terminationDate} to ${terminationDate}?`
 
                   confirm(confirmMessage).then(() => {
                     toast.promise(
@@ -153,10 +151,7 @@ export const TerminationDate: React.FC<{
                         variables: {
                           contractId: contract.id,
                           request: {
-                            newTerminationDate: format(
-                              terminationDate,
-                              'yyyy-MM-dd',
-                            ),
+                            newTerminationDate: terminationDate,
                           },
                         },
                         optimisticResponse: {
@@ -229,10 +224,7 @@ export const TerminationDate: React.FC<{
               status="danger"
               disabled={terminationReason === null || terminateContractLoading}
               onClick={() => {
-                const confirmedMsg = `Are you sure you want to terminate this contract with the termination date ${format(
-                  terminationDate,
-                  'yyyy-MM-dd',
-                )}?`
+                const confirmedMsg = `Are you sure you want to terminate this contract with the termination date ${terminationDate}?`
 
                 confirm(confirmedMsg).then(() => {
                   toast.promise(
@@ -240,10 +232,7 @@ export const TerminationDate: React.FC<{
                       variables: {
                         contractId: contract.id,
                         request: {
-                          terminationDate: format(
-                            terminationDate,
-                            'yyyy-MM-dd',
-                          ),
+                          terminationDate,
                           terminationReason: terminationReason || '',
                           comment,
                         },

@@ -6,13 +6,13 @@ import {
   TextDatePicker,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { format } from 'date-fns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
   Contract,
   useActivatePendingAgreementMutation,
 } from 'types/generated/graphql'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 export const MasterInception: React.FC<{
   contract: Contract
@@ -21,10 +21,13 @@ export const MasterInception: React.FC<{
     return <FourthLevelHeadline>{contract.masterInception}</FourthLevelHeadline>
   }
 
-  const [activeFrom, setActiveFrom] = React.useState(new Date())
+  const [activeFrom, setActiveFrom] = React.useState<string | null>(
+    getTodayFormatDate(),
+  )
   const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
+
   const reset = () => {
-    setActiveFrom(new Date())
+    setActiveFrom(getTodayFormatDate())
     setDatePickerEnabled(false)
   }
   const [activateContract, { loading: activateContractLoading }] =
@@ -52,10 +55,7 @@ export const MasterInception: React.FC<{
             <Button
               disabled={activateContractLoading}
               onClick={() => {
-                const confirmMessage = `Are you sure you want to activate this contract with master inception of ${format(
-                  activeFrom,
-                  'yyyy-MM-dd',
-                )}?`
+                const confirmMessage = `Are you sure you want to activate this contract with master inception of ${activeFrom}?`
 
                 confirm(confirmMessage).then(() => {
                   toast.promise(
@@ -64,7 +64,7 @@ export const MasterInception: React.FC<{
                         contractId: contract.id,
                         request: {
                           pendingAgreementId: contract.currentAgreementId,
-                          fromDate: format(activeFrom, 'yyyy-MM-dd'),
+                          fromDate: activeFrom,
                         },
                       },
                     }),

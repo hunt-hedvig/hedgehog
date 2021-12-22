@@ -1,5 +1,4 @@
 import { Button, TextDatePicker } from '@hedvig-ui'
-import { format } from 'date-fns'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -9,6 +8,7 @@ import {
   useSignQuoteForNewContractMutation,
 } from 'types/generated/graphql'
 import { BottomSpacerWrapper, ErrorMessage } from './common'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 export const QuoteContractCreation: React.FC<{
   quote: Quote
@@ -21,7 +21,9 @@ export const QuoteContractCreation: React.FC<{
   onSubmitted = () => void 0,
   onWipChange = () => void 0,
 }) => {
-  const [activeFrom, setActiveFrom] = React.useState(() => new Date())
+  const [activeFrom, setActiveFrom] = React.useState<string | null>(
+    getTodayFormatDate(),
+  )
   const [signQuote, setSignQuoteMutation] = useSignQuoteForNewContractMutation()
 
   return (
@@ -39,7 +41,7 @@ export const QuoteContractCreation: React.FC<{
           signQuote({
             variables: {
               quoteId: quote.id,
-              activationDate: format(activeFrom, 'yyyy-MM-dd'),
+              activationDate: activeFrom,
             },
             refetchQueries: () => [
               {

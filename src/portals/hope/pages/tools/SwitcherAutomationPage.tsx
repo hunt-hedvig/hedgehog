@@ -10,7 +10,7 @@ import {
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { sleep } from '@hedvig-ui/utils/sleep'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
-import { format, isPast, parseISO } from 'date-fns'
+import { isPast, parseISO } from 'date-fns'
 import { Market, MarketFlags } from 'portals/hope/features/config/constants'
 import {
   SwitcherEmailRow,
@@ -163,7 +163,7 @@ const SwitcherAutomationPage: Page = () => {
                             contractId: contract.id,
                             request: {
                               pendingAgreementId: contract.currentAgreementId,
-                              fromDate: format(activeFrom, 'yyyy-MM-dd'),
+                              fromDate: activeFrom,
                             },
                           },
                         }),
@@ -188,10 +188,7 @@ const SwitcherAutomationPage: Page = () => {
                           variables: {
                             contractId: contract.id,
                             request: {
-                              terminationDate: format(
-                                terminationDate,
-                                'yyyy-MM-dd',
-                              ),
+                              terminationDate,
                               terminationReason: terminationReason!,
                               comment,
                             },

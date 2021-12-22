@@ -322,11 +322,7 @@ export const ClaimInformation: React.FC<{
         <SelectWrapper>
           <Label>Date of Occurrence</Label>
           <TextDatePicker
-            value={
-              (data?.claim?.dateOfOccurrence &&
-                parseISO(data.claim.dateOfOccurrence)) ??
-              null
-            }
+            value={data?.claim?.dateOfOccurrence || null}
             onChange={(date) => {
               if (!data?.claim || !date) {
                 return
@@ -336,13 +332,13 @@ export const ClaimInformation: React.FC<{
                 setClaimDate({
                   variables: {
                     id: claimId,
-                    date: date && format(date, 'yyyy-MM-dd'),
+                    date,
                   },
                   optimisticResponse: {
                     setDateOfOccurrence: {
                       __typename: 'Claim',
                       id: claimId,
-                      dateOfOccurrence: format(date, 'yyyy-MM-dd'),
+                      dateOfOccurrence: date,
                       contract: data?.claim?.contract,
                     },
                   },

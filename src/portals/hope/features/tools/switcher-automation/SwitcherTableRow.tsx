@@ -27,6 +27,7 @@ import {
   useMarkSwitcherEmailAsRemindedMutation,
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
+import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 const FORMAT_DATE_TIME = 'yyyy-MM-dd HH:mm'
 
@@ -95,11 +96,11 @@ export const SwitcherEmailRow: React.FC<
     status: SwitcherEmailStatus
     onTerminate: (
       contract: Contract,
-      terminationDate: Date,
+      terminationDate: string,
       terminationReason: TerminationReason,
       comment: string,
     ) => void
-    onActivate: (contract: Contract, activeFrom: Date) => void
+    onActivate: (contract: Contract, activeFrom: string) => void
     loading?: boolean
   }
 > = ({
@@ -126,11 +127,13 @@ export const SwitcherEmailRow: React.FC<
   const [editNote, setEditNote] = useState(false)
   const [newNote, setNewNote] = useState<string>(note || '')
 
-  const [activeFrom, setActiveFrom] = useState(new Date())
+  const [activeFrom, setActiveFrom] = useState<string>(getTodayFormatDate())
   const [activateContractView, setActivateContractView] = useState(false)
 
   const [terminateContractView, setTerminateContractView] = useState(false)
-  const [terminationDate, setTerminationDate] = useState(new Date())
+  const [terminationDate, setTerminationDate] = useState<string>(
+    getTodayFormatDate(),
+  )
   const [terminationReason, setTerminationReason] =
     useState<TerminationReason | null>(null)
   const [comment, setComment] = React.useState('')
@@ -288,10 +291,7 @@ export const SwitcherEmailRow: React.FC<
                       status="success"
                       disabled={loading}
                       onClick={() => {
-                        const confirmMessage = `Are you sure you want to activate this contract with master inception of ${format(
-                          activeFrom,
-                          'yyyy-MM-dd',
-                        )}?`
+                        const confirmMessage = `Are you sure you want to activate this contract with master inception of ${activeFrom}?`
 
                         confirm(confirmMessage).then(() => {
                           onActivate(contract, activeFrom)
@@ -352,10 +352,7 @@ export const SwitcherEmailRow: React.FC<
                       status="danger"
                       disabled={terminationReason === null || loading}
                       onClick={() => {
-                        const confirmMessage = `Are you sure you want to terminate this contract with the termination date ${format(
-                          terminationDate,
-                          'yyyy-MM-dd',
-                        )}?`
+                        const confirmMessage = `Are you sure you want to terminate this contract with the termination date ${terminationDate}?`
 
                         confirm(confirmMessage).then(() => {
                           if (terminationReason) {
