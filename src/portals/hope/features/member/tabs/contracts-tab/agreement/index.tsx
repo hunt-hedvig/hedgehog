@@ -70,7 +70,7 @@ export const Agreement: React.FC<{
         <Card span={2}>
           <ThirdLevelHeadline>Debugging</ThirdLevelHeadline>
           <InfoRow>
-            Member Id <InfoText>{contract.holderMemberId}</InfoText>
+            Member Id <InfoText>{contract.holderMember.memberId}</InfoText>
           </InfoRow>
           <InfoRow>
             Contract Id

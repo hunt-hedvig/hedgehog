@@ -11,7 +11,7 @@ export const InsuranceMandate: React.FC<{
       <Button
         onClick={() =>
           window.open(
-            `/api/member/mandate/${contract.holderMemberId}`,
+            `/api/member/mandate/${contract.holderMember.memberId}`,
             '_blank',
           )
         }

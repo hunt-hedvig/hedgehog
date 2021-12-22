@@ -4,7 +4,9 @@ mutation ChangeTerminationDate(
 ) {
   changeTerminationDate(contractId: $contractId, request: $request) {
     id
-    holderMemberId
+    holderMember {
+      memberId
+    }
     terminationDate
   }
 }

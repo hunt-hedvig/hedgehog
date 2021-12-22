@@ -1,0 +1,22 @@
+query SimpleMemberLookup($ssn: String!) {
+  simpleMemberLookup(ssn: $ssn) {
+    memberId
+    firstName
+    lastName
+    email
+    phoneNumber
+    market
+    contracts {
+      contractId
+      typeOfContract
+      masterInception
+      terminationDate
+      numberCoInsured
+      address {
+        street
+        postalCode
+        city
+      }
+    }
+  }
+}
