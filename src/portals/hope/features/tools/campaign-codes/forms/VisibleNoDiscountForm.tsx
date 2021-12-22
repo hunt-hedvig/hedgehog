@@ -81,6 +81,7 @@ export const VisibleNoDiscountForm: React.FC = () => {
         <div style={{ width: '100%', paddingRight: '1.0em' }}>
           <Label>Valid from</Label>
           <TextDatePicker
+            withCurrentTime
             onChange={(validFrom) => setFormData({ ...formData, validFrom })}
             value={formData.validFrom}
             placeholder="Beginning of time"
@@ -89,6 +90,7 @@ export const VisibleNoDiscountForm: React.FC = () => {
         <div style={{ width: '100%', paddingLeft: '1.0em' }}>
           <Label>Valid to</Label>
           <TextDatePicker
+            withCurrentTime
             onChange={(validUntil) => setFormData({ ...formData, validUntil })}
             value={formData.validUntil}
             placeholder="End of time"

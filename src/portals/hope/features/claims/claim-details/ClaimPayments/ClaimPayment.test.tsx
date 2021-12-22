@@ -51,7 +51,8 @@ it('submits valid form with confirmation', async () => {
     note: 'test value with more than 5 chars',
     exGratia: false,
     carrier: 'Hedvig',
-    type: ClaimPaymentType.IndemnityCost,
+    type: ClaimPaymentType.Automatic,
+    timestamp: null,
   }
 
   const wrapper = mount(
