@@ -35,3 +35,17 @@ rules:
     languages:
       - ts
     severity: ERROR
+
+  - id: redundant-existence-check
+    patterns:
+      - pattern-either:
+          - pattern: |
+              $X !== null ? $X : $REST
+          - pattern: |
+              $X !== undefined ? $X : $REST
+          - pattern: |
+              !!$X ? $X : $REST
+    message: The check is redundant
+    languages: [ts]
+    severity: WARNING
+    fix: $X ?? $REST
