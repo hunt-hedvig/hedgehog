@@ -141,8 +141,8 @@ type UserSetting {
 
 type MutationType {
   chargeMember(
-    id: ID!
-    amount: MonetaryAmount!
+    id: ID!,
+    amount: MonetaryAmount!,
     allowManualCharge: Boolean
   ): Member
   addAccountEntryToMember(
@@ -472,7 +472,7 @@ enum ContractStatus {
 
 type TermsAndConditions {
   commencementDate: LocalDate!
-  displayName: String!
+  displayName: String!,
   url: String!
 }
 
@@ -503,6 +503,7 @@ type GenericAgreement {
   carrier: String!
   partner: String
   createdAt: Instant!
+  termsAndConditions: TermsAndConditions
 }
 
 enum AgreementStatus {
@@ -638,7 +639,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -1041,10 +1042,10 @@ type ClaimPayment {
   note: String!
   type: ClaimPaymentType!
   timestamp: Instant!
-  paidAt: Instant!
+  paidAt: Instant
   exGratia: Boolean!
   transaction: Transaction
-  status: ClaimPaymentStatus!
+  status: ClaimPaymentStatus
 }
 
 enum ClaimPaymentStatus {
@@ -1064,7 +1065,6 @@ input ClaimPaymentInput {
   exGratia: Boolean!
   sanctionListSkipped: Boolean!
   carrier: String!
-  timestamp: Instant!
 }
 
 input ClaimSwishPaymentInput {
@@ -1077,7 +1077,6 @@ input ClaimSwishPaymentInput {
   phoneNumber: String!
   message: String!
   carrier: String!
-  timestamp: Instant!
 }
 
 input ClaimNoteInput {
