@@ -44,12 +44,11 @@ export interface TextAreaProps
   name?: string
   maxHeight?: string
   resize?: boolean
-  focus?: boolean
   autoResize?: boolean
 }
 
 export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ autoResize, value, focus, onChange, ...props }, forwardRef) => {
+  ({ autoResize, value, onChange, ...props }, forwardRef) => {
     const defaultRef = useRef<HTMLTextAreaElement>(null)
 
     const ref = (forwardRef ??

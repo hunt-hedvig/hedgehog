@@ -173,7 +173,6 @@ export interface InputProps
   size?: InputSize
   loading?: boolean
   icon?: React.ReactNode
-  focus?: boolean
   affix?: AffixType
 }
 
