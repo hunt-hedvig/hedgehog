@@ -1,0 +1,66 @@
+query GetContracts($memberId: ID!) {
+  member(id: $memberId) {
+    memberId
+    contracts {
+      id
+      holderMember {
+        memberId
+      }
+      switchedFrom
+      masterInception
+      status
+      isTerminated
+      terminationDate
+      currentAgreementId
+      hasPendingAgreement
+      genericAgreements {
+        id
+        fromDate
+        toDate
+        premium {
+          amount
+          currency
+        }
+        certificateUrl
+        status
+        typeOfContract
+        address {
+          street
+          city
+          postalCode
+        }
+        numberCoInsured
+        squareMeters
+        ancillaryArea
+        yearOfConstruction
+        numberOfBathrooms
+        extraBuildings {
+          id
+          type
+          area
+          displayName
+          hasWaterConnected
+        }
+        isSubleted
+        lineOfBusinessName
+        carrier
+        partner
+        createdAt
+      }
+      hasQueuedRenewal
+      renewal {
+        renewalDate
+        draftCertificateUrl
+        draftOfAgreementId
+      }
+      preferredCurrency
+      market
+      signSource
+      typeOfContract
+      contractTypeName
+      createdAt
+      isLocked
+      selfChangeBlockers
+    }
+  }
+}
