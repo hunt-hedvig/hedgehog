@@ -97,6 +97,8 @@ query ClaimPage($claimId: ID!) {
       typeOfContract
       lineOfBusinessName
       carrier
+      partner
+      createdAt
     }
 
     transcriptions {

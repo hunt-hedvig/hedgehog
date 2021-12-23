@@ -14,7 +14,8 @@ import { Trial, useGetTrialsQuery } from 'types/generated/graphql'
 
 export const ContractTab: React.FC<{
   memberId: string
-}> = ({ memberId }) => {
+  locale: string
+}> = ({ memberId, locale }) => {
   const [contracts, { loading, refetch }] = useContracts(memberId)
   const trialsResult = useGetTrialsQuery({ variables: { memberId } })
   const trials = (trialsResult.data?.member?.trials ?? []) as Trial[]
@@ -48,6 +49,7 @@ export const ContractTab: React.FC<{
         <Contract
           key={contract.id}
           contract={contract}
+          locale={locale}
           refetch={refetch}
           shouldPreSelectAgreement={
             contracts.length === 1 && !contract.terminationDate

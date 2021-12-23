@@ -6,7 +6,9 @@ import {
   GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
+  useGetTermsAndConditionsQuery,
   useRestrictResourceAccessMutation,
+  UserSettingKey,
   useSetClaimDateMutation,
   useSetContractForClaimMutation,
   useSetCoveringEmployeeMutation,
@@ -26,6 +28,7 @@ import {
   Label,
   Loadable,
   Paragraph,
+  Spacing,
   TextDatePicker,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
@@ -42,6 +45,7 @@ import {
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
+import { useMe } from '../../../user/hooks/use-me'
 
 const validateSelectOption = (value: any): ClaimState => {
   if (!Object.values(ClaimState).includes(value as any)) {
@@ -362,7 +366,14 @@ export const ClaimInformation: React.FC<{
             />
           </SelectWrapper>
         )}
-        {!selectedAgreement && (
+        {selectedAgreement && selectedAgreement.partner ? (
+          <TermsAndConditions
+            typeOfContract={selectedAgreement.typeOfContract}
+            partner={selectedAgreement.partner}
+            carrier={selectedAgreement.carrier}
+            createdAt={selectedAgreement.createdAt}
+          />
+        ) : (
           <NoAgreementWarning>
             ⚠️ No agreement covers the claim on the date of loss
           </NoAgreementWarning>
@@ -429,5 +440,40 @@ export const ClaimInformation: React.FC<{
         )}
       </Loadable>
     </CardContent>
+  )
+}
+
+const TermsAndConditions: React.FC<{
+  typeOfContract: string
+  partner: string
+  carrier: string
+  createdAt: string
+}> = ({ typeOfContract, partner, carrier, createdAt }) => {
+  const { settings } = useMe()
+
+  const { data } = useGetTermsAndConditionsQuery({
+    variables: {
+      contractType: typeOfContract,
+      partner,
+      carrier,
+      date: createdAt.split('T')[0],
+      locale: settings[UserSettingKey.Languages] || 'en_SE',
+    },
+  })
+
+  if (!data?.termsAndConditions) {
+    return null
+  }
+
+  return (
+    <Spacing top="small">
+      <a
+        href={data.termsAndConditions.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Terms and Conditions
+      </a>
+    </Spacing>
   )
 }

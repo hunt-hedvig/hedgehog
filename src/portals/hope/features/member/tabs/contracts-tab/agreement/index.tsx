@@ -19,6 +19,7 @@ import {
   GenericAgreement as AgreementType,
 } from 'types/generated/graphql'
 import { CreateQuoteFromAgreement } from './CreateQuoteFromAgreement'
+import { TermsAndConditions } from './TermsAndConditions'
 
 const Divider = styled.hr`
   background: transparent;
@@ -32,8 +33,9 @@ const Divider = styled.hr`
 export const Agreement: React.FC<{
   agreement: AgreementType
   contract: Contract
+  locale: string
   refetch: () => Promise<void>
-}> = ({ agreement, contract, refetch }) => {
+}> = ({ agreement, contract, refetch, locale }) => {
   return (
     <>
       <CardsWrapper>
@@ -51,6 +53,9 @@ export const Agreement: React.FC<{
             </Card>
             <Card span={2}>
               <InsuranceCertificate agreement={agreement} refetch={refetch} />
+            </Card>
+            <Card span={2}>
+              <TermsAndConditions agreement={agreement} locale={locale} />
             </Card>
           </>
         )}

@@ -40,7 +40,9 @@ export const memberPagePanes = (memberId, member) => [
       key: Keys.Three,
     },
     path: `members/${memberId}/contracts`,
-    component: () => <ContractTab memberId={memberId} />,
+    component: () => (
+      <ContractTab memberId={memberId} locale={member.pickedLocale} />
+    ),
   },
   {
     tabTitle: 'Quotes',

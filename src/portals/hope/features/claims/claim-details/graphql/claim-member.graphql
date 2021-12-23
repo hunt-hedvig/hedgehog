@@ -57,6 +57,7 @@ query ClaimMemberContractsMasterInception($memberId: ID!) {
         typeOfContract
         lineOfBusinessName
         carrier
+        partner
         premium {
           amount
           currency
