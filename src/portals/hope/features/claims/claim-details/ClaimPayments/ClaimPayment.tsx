@@ -124,7 +124,9 @@ export const ClaimPayment: React.FC<{
       exGratia: isExGratia,
       carrier,
       paidAt:
-        form.getValues().type !== ClaimPaymentType.Automatic ? date : null,
+        form.getValues().type !== ClaimPaymentType.Automatic
+          ? `${date}T00:00:00.000Z`
+          : null,
     }
 
     if (form.getValues().type === 'AutomaticSwish') {
