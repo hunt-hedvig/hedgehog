@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { ThirdLevelHeadline, InfoRow, InfoText } from '@hedvig-ui'
+import { ThirdLevelHeadline, InfoRow, InfoText, Card } from '@hedvig-ui'
 import {
   GenericAgreement,
   useGetTermsAndConditionsQuery,
@@ -46,7 +46,7 @@ export const TermsAndConditions: React.FC<TermsAndConditionsProps> = ({
   }
 
   return (
-    <>
+    <Card span={2}>
       <Headline>
         <span>Terms and Conditions</span>
         <a
@@ -64,6 +64,6 @@ export const TermsAndConditions: React.FC<TermsAndConditionsProps> = ({
         Commencement Date
         <InfoText>{data.termsAndConditions.commencementDate}</InfoText>
       </InfoRow>
-    </>
+    </Card>
   )
 }
