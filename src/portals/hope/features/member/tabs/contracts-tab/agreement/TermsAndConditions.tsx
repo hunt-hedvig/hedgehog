@@ -49,15 +49,19 @@ export const TermsAndConditions: React.FC<TermsAndConditionsProps> = ({
     <>
       <Headline>
         <span>Terms and Conditions</span>
-        <a href={data.termsAndConditions.url} target="_blank">
+        <a
+          href={data.termsAndConditions.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Link
         </a>
       </Headline>
       <InfoRow>
-        Name: <InfoText>{data.termsAndConditions.displayName}</InfoText>
+        Name <InfoText>{data.termsAndConditions.displayName}</InfoText>
       </InfoRow>
       <InfoRow>
-        Commencement Date:
+        Commencement Date
         <InfoText>{data.termsAndConditions.commencementDate}</InfoText>
       </InfoRow>
     </>

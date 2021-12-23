@@ -24,7 +24,6 @@ import {
   Dropdown,
   DropdownOption,
   InfoRow,
-  InfoSection,
   InfoText,
   Label,
   Loadable,
@@ -44,14 +43,9 @@ import {
   useDeleteCoInsured,
 } from 'portals/hope/features/claims/claim-details/CoInsured/CoInsuredForm'
 import React, { useState } from 'react'
-import {
-  BugFill,
-  CloudArrowDownFill,
-  Link45deg as OpenLinkIcon,
-} from 'react-bootstrap-icons'
+import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { useMe } from '../../../user/hooks/use-me'
-import { Info } from '../MemberInformation/components/MemberGeneralView'
 
 const validateSelectOption = (value: any): ClaimState => {
   if (!Object.values(ClaimState).includes(value as any)) {
@@ -449,21 +443,6 @@ export const ClaimInformation: React.FC<{
   )
 }
 
-const TermsLink = styled.a`
-  position: absolute;
-  right: 0.5rem;
-  top: 0.5rem;
-
-  width: 1.5rem;
-  height: 1.5rem;
-
-  & * {
-    width: 100%;
-    height: 100%;
-    color: ${({ theme }) => theme.accent};
-  }
-`
-
 const TermsAndConditions: React.FC<{
   typeOfContract: string
   partner: string
@@ -488,20 +467,13 @@ const TermsAndConditions: React.FC<{
 
   return (
     <Spacing top="small">
-      <Label>Terms and Conditions</Label>
-      <InfoSection style={{ position: 'relative', marginTop: 0 }}>
-        <Info>
-          <span>Name</span>
-          <div>{data.termsAndConditions.displayName}</div>
-        </Info>
-        <Info>
-          <span>Commencement Date</span>
-          <div>{data.termsAndConditions.commencementDate}</div>
-        </Info>
-        <TermsLink href={data.termsAndConditions.url} target="_blank">
-          <OpenLinkIcon />
-        </TermsLink>
-      </InfoSection>
+      <a
+        href={data.termsAndConditions.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Terms and Conditions
+      </a>
     </Spacing>
   )
 }
