@@ -150,7 +150,7 @@ export const MultiDropdown: React.FC<DropdownProps> = ({
         <>
           <Selected onClick={() => setActive((prev) => !prev)}>
             {value.map((opt) => (
-              <Tag>{opt}</Tag>
+              <Tag key={opt}>{opt}</Tag>
             ))}
           </Selected>
           <CloseIcon onClick={clearHandler} />
