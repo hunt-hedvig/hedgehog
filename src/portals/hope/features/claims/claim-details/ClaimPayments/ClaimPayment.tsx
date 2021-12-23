@@ -123,7 +123,10 @@ export const ClaimPayment: React.FC<{
       note: form.getValues().note,
       exGratia: isExGratia,
       carrier,
-      paidAt: date,
+      paidAt:
+        form.getValues().type !== ClaimPaymentType.Automatic
+          ? `${date}T00:00:00.000Z`
+          : null,
     }
 
     if (form.getValues().type === 'AutomaticSwish') {
@@ -265,12 +268,15 @@ export const ClaimPayment: React.FC<{
           </>
         )}
 
-        <TextDatePicker
-          style={{ marginBottom: '2rem' }}
-          placeholder="Payment performed"
-          value={date}
-          onChange={setDate}
-        />
+        {form.watch('type') !== ClaimPaymentType.Automatic &&
+          form.watch('type') !== undefined && (
+            <TextDatePicker
+              style={{ marginBottom: '2rem' }}
+              placeholder="Payment performed"
+              value={date}
+              onChange={setDate}
+            />
+          )}
 
         <div>
           <SubmitButton>Create payment</SubmitButton>
