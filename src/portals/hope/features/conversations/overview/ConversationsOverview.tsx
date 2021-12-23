@@ -31,13 +31,7 @@ export const ConversationsOverview: React.FC<{
   currentQuestionOrder: number
   filters: ReadonlyArray<FilterStateType>
   setFilters: (filter: FilterStateType, settingField?: UserSettingKey) => void
-}> = ({
-  filteredGroups,
-  currentMemberId,
-  currentQuestionOrder,
-  filters,
-  setFilters,
-}) => {
+}> = ({ filteredGroups, currentMemberId, filters, setFilters }) => {
   const { settings, updateSetting } = useMe()
   const history = useHistory()
   const { confirm } = useConfirmDialog()
@@ -105,12 +99,8 @@ export const ConversationsOverview: React.FC<{
         </Flex>
 
         <ConversationWrapper>
-          {filteredGroups.map((group, index) => (
-            <ConversationItem
-              group={group}
-              currentMemberId={currentMemberId}
-              focus={currentQuestionOrder === index}
-            />
+          {filteredGroups.map((group) => (
+            <ConversationItem group={group} currentMemberId={currentMemberId} />
           ))}
         </ConversationWrapper>
       </Flex>

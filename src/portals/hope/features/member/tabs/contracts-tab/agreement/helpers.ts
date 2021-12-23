@@ -21,7 +21,5 @@ export const checkGapBetweenAgreements = (previousAgreement, nextAgreement) =>
 
 export const getTodayFormatDate = () => {
   const isoDate = parseISO(new Date().toISOString())
-  const formattedDate = formatDate(isoDate, 'yyyy-MM-dd')
-
-  return formattedDate
+  return formatDate(isoDate, 'yyyy-MM-dd')
 }

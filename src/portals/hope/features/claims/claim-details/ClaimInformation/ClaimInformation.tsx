@@ -125,9 +125,8 @@ const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
 export const ClaimInformation: React.FC<{
   claimId: string
   memberId: string
-  focus: boolean
   restricted: boolean
-}> = ({ claimId, memberId, focus, restricted }) => {
+}> = ({ claimId, memberId, restricted }) => {
   const [creatingCoInsured, setCreatingCoInsured] = useState(false)
   const { confirm } = useConfirmDialog()
   const deleteCoInsured = useDeleteCoInsured({ claimId })
@@ -297,7 +296,7 @@ export const ClaimInformation: React.FC<{
         {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
         <SelectWrapper>
           <Label>Status</Label>
-          <Dropdown focus={focus} placeholder="State">
+          <Dropdown placeholder="State">
             {Object.keys(ClaimState).map((key) => (
               <DropdownOption
                 key={key}
@@ -322,7 +321,7 @@ export const ClaimInformation: React.FC<{
         <SelectWrapper>
           <Label>Date of Occurrence</Label>
           <TextDatePicker
-            value={data?.claim?.dateOfOccurrence || null}
+            value={data?.claim?.dateOfOccurrence ?? null}
             onChange={(date) => {
               if (!data?.claim || !date) {
                 return
@@ -432,7 +431,9 @@ export const ClaimInformation: React.FC<{
           <SelectWrapper>
             <Button
               variant="tertiary"
-              style={{ width: '100%' }}
+              style={{
+                width: '100%',
+              }}
               onClick={() =>
                 confirm('Are you sure you want to restrict access?').then(() =>
                   handleRestrictAccess(),

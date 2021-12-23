@@ -97,9 +97,8 @@ const TotalDeductible = styled.div`
 
 export const ClaimPayments: React.FC<{
   claimId: string
-  focus: boolean
   memberId: string
-}> = ({ focus, claimId, memberId }) => {
+}> = ({ claimId, memberId }) => {
   const [tableHovered, setTableHovered] = useState(false)
 
   const {
@@ -321,7 +320,6 @@ export const ClaimPayments: React.FC<{
         paymentsData?.claim?.contract &&
         paymentsData?.claim?.agreement?.carrier && (
           <ClaimPayment
-            focus={focus}
             sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
             claimId={claimId}
             identified={Boolean(identity)}

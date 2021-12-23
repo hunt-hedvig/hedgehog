@@ -132,7 +132,6 @@ export const AnswerForm: React.FC<{
         <FormProvider {...form}>
           <Form onSubmit={onSubmit}>
             <FormTextArea
-              focus={isFocused}
               name="answer"
               defaultValue=""
               rules={{

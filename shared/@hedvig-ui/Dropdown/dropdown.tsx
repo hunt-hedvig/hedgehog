@@ -1,6 +1,7 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, {
+  ForwardedRef,
   HTMLAttributes,
   LiHTMLAttributes,
   useEffect,
@@ -123,129 +124,129 @@ const TriangleIcon = styled(TriangleFill)<{ active: number }>`
     active < 0 ? theme.placeholderColor : theme.accent};
 `
 
-interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
-  focus?: boolean
+export interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
   placeholder?: string
+  value?: string
   children: any
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({
-  focus,
-  placeholder,
-  children,
-  ...props
-}) => {
-  const numberOfOptions = React.Children.count(children)
+export const Dropdown = React.forwardRef(
+  (
+    { placeholder, children, value, ...props }: DropdownProps,
+    forwardRef: ForwardedRef<HTMLDivElement>,
+  ) => {
+    const numberOfOptions = React.Children.count(children)
 
-  const dropdownRef = useRef<HTMLDivElement>(null)
+    const defaultRef = useRef<HTMLDivElement>(null)
+    const ref = (forwardRef ?? defaultRef) as React.RefObject<HTMLDivElement>
 
-  const [selectedIdx, setSelectedIdx] = React.useState(0)
-  const [active, setActive] = React.useState(false)
+    const [selectedIdx, setSelectedIdx] = React.useState(0)
+    const [active, setActive] = React.useState(false)
 
-  const [navigationStep] = useVerticalKeyboardNavigation({
-    maxStep: numberOfOptions - 1,
-    onPerformNavigation: (index) => {
-      children[index].props.onClick()
-    },
-    isActive: active,
-  })
+    const [navigationStep] = useVerticalKeyboardNavigation({
+      maxStep: numberOfOptions - 1,
+      onPerformNavigation: (index) => {
+        children[index].props.onClick()
+      },
+      isActive: active,
+    })
 
-  const closeDropdown = async () => {
-    setActive(false)
-  }
-
-  const toggleDropdown = async () => {
-    if (active) {
-      await closeDropdown()
-      return
-    }
-
-    setActive(true)
-  }
-
-  useClickOutside(dropdownRef, closeDropdown)
-
-  useEffect(() => {
-    if (focus && dropdownRef.current) {
-      dropdownRef.current.focus()
-    }
-  }, [focus])
-
-  useEffect(() => {
-    const hasSelected = !!children.filter((el) => el.props.selected).length
-
-    if (hasSelected) {
-      children.forEach((el, index) => {
-        if (el.props.selected) {
-          setSelectedIdx(index + 1)
-        }
-      })
-    } else {
-      setSelectedIdx(0)
-    }
-  }, [children])
-
-  useEffect(() => {
-    if (navigationStep === -1) {
+    const closeDropdown = async () => {
       setActive(false)
     }
-  }, [navigationStep])
 
-  return (
-    <DropdownStyled
-      tabIndex={0}
-      ref={dropdownRef}
-      isActive={active}
-      onKeyDown={(e) => {
-        if (isPressing(e, Keys.Enter)) {
-          toggleDropdown()
-          return
-        }
-        if (isPressing(e, Keys.Enter)) {
-          closeDropdown()
-          return
-        }
-      }}
-      {...props}
-    >
-      {!selectedIdx || !children[selectedIdx - 1] ? (
-        <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
-          <Placeholder>{placeholder || 'Dropdown'}</Placeholder>
-        </OptionStyled>
-      ) : (
-        {
-          ...children[selectedIdx - 1],
-          props: {
-            ...children[selectedIdx - 1].props,
-            tabIndex: -1,
-            selected: false,
-            onClick: () => {
-              toggleDropdown()
-            },
-          },
-        }
-      )}
+    const toggleDropdown = async () => {
+      if (active) {
+        await closeDropdown()
+        return
+      }
 
-      {active && (
-        <OptionsList activeOption={navigationStep}>
-          {children.map((el) => ({
-            ...el,
+      setActive(true)
+    }
+
+    useClickOutside(ref, closeDropdown)
+
+    useEffect(() => {
+      const hasSelected = !!children.filter((el) => el.props.selected).length
+
+      if (hasSelected) {
+        children.forEach((el, index) => {
+          if (el.props.selected) {
+            setSelectedIdx(index + 1)
+          }
+        })
+      } else {
+        setSelectedIdx(0)
+      }
+    }, [children])
+
+    useEffect(() => {
+      if (navigationStep === -1) {
+        setActive(false)
+      }
+    }, [navigationStep])
+
+    return (
+      <DropdownStyled
+        tabIndex={0}
+        ref={ref}
+        isActive={active}
+        onKeyDown={(e) => {
+          if (isPressing(e, Keys.Enter)) {
+            toggleDropdown()
+            return
+          }
+
+          if (isPressing(e, Keys.Enter)) {
+            closeDropdown()
+            return
+          }
+        }}
+        {...props}
+      >
+        {!selectedIdx || !children[selectedIdx - 1] ? (
+          <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
+            <Placeholder>{placeholder || 'Dropdown'}</Placeholder>
+          </OptionStyled>
+        ) : !value ? (
+          {
+            ...children[selectedIdx - 1],
             props: {
-              ...el.props,
+              ...children[selectedIdx - 1].props,
               tabIndex: -1,
+              selected: false,
               onClick: () => {
-                el.props.onClick()
                 toggleDropdown()
               },
             },
-          }))}
-        </OptionsList>
-      )}
+          }
+        ) : (
+          <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
+            {value}
+          </OptionStyled>
+        )}
 
-      <TriangleIcon active={active ? 1 : -1} />
-    </DropdownStyled>
-  )
-}
+        {active && (
+          <OptionsList activeOption={navigationStep}>
+            {children.map((el) => ({
+              ...el,
+              props: {
+                ...el.props,
+                tabIndex: -1,
+                onClick: () => {
+                  el.props.onClick()
+                  toggleDropdown()
+                },
+              },
+            }))}
+          </OptionsList>
+        )}
+
+        <TriangleIcon active={active ? 1 : -1} />
+      </DropdownStyled>
+    )
+  },
+)
 
 export interface OptionProps
   extends Omit<LiHTMLAttributes<HTMLLIElement>, 'onClick'> {

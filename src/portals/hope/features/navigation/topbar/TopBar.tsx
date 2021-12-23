@@ -14,6 +14,7 @@ import { UserPanel } from 'portals/hope/features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
 import { BellFill, PeopleFill } from 'react-bootstrap-icons'
 import UserMenu from './UserMenu'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const Wrapper = styled.div`
   z-index: 1000;
@@ -74,9 +75,21 @@ const NotificationsButton: React.FC<{ onClick: () => void }> = ({
   onClick,
 }) => {
   const { me } = useMe()
+  const { register } = useNavigation()
 
   return (
-    <CircleButton onClick={onClick} style={{ marginLeft: '1rem' }}>
+    <CircleButton
+      onClick={onClick}
+      {...register('NotificationsButton', {
+        resolve: () => {
+          onClick()
+        },
+        neighbors: {
+          right: 'UsersOnlineButton',
+          left: 'SharePageButton',
+        },
+      })}
+    >
       <BellFill />
       {me.notifications.some((notification) => !notification.read) && (
         <NewNotificationsOrb />
@@ -91,6 +104,8 @@ export const TopBar = () => {
   const [showUserNotifications, setShowUserNotifications] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
+
+  const { register } = useNavigation()
 
   useEffect(() => {
     if (isEscapePressed) {
@@ -134,19 +149,37 @@ export const TopBar = () => {
 
         <UserMenu />
 
+        <div style={{ marginLeft: '1rem' }} />
         <CircleButton
           onClick={() => setShowShareModal(true)}
-          style={{ marginLeft: '1rem' }}
+          {...register('SharePageButton', {
+            resolve: () => {
+              setShowShareModal(true)
+            },
+            neighbors: {
+              right: 'NotificationsButton',
+              left: 'UserMenuButton',
+            },
+          })}
         >
           <ShareIcon />
         </CircleButton>
 
+        <div style={{ marginLeft: '1rem' }} />
         <NotificationsButton onClick={() => setShowUserNotifications(true)} />
 
+        <div style={{ marginLeft: '1rem' }} />
         <CircleButton
           id="show_users_online"
           onClick={() => setShowUsers(true)}
-          style={{ marginLeft: '1rem' }}
+          {...register('UsersOnlineButton', {
+            resolve: () => {
+              setShowUsers(true)
+            },
+            neighbors: {
+              left: 'NotificationsButton',
+            },
+          })}
         >
           <PeopleFill />
         </CircleButton>

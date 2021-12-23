@@ -16,19 +16,25 @@ import {
   Label,
   lightTheme,
   Popover,
+  Radio,
   TextDatePicker,
 } from '@hedvig-ui'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
-import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
+import {
+  numberMemberGroupsOptions,
+  NumberMemberGroupsRadioButtons,
+} from 'portals/hope/features/questions/number-member-groups-radio-buttons'
 import { Market, MarketFlags } from 'portals/hope/features/config/constants'
+import { OutcomeDropdown } from '../../claim-details/ClaimType/components/OutcomeDropdown'
 
 export const FilterWrapper = styled.div`
   width: 100%;
   max-width: 1500px;
 
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(8, 1fr);
+  column-gap: 3rem;
   align-items: flex-start;
   margin: 2rem 0;
 `
@@ -44,6 +50,8 @@ export const FilterElement = styled.div`
 `
 
 export const StyledLabel = styled(Label)`
+  width: 100%;
+
   display: flex;
   align-items: center;
 
@@ -59,6 +67,10 @@ export const StyledLabel = styled(Label)`
       cursor: help;
     }
   }
+`
+
+const OutcomeFilter = styled(OutcomeDropdown)`
+  padding: 0.5rem;
 `
 
 export const complexityIcons = {
@@ -103,7 +115,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
 }) => {
   const history = useHistory()
   const { settings, updateSetting } = useMe()
-  const { numberMemberGroups } = useNumberMemberGroups()
+  const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
 
   const settingExist = (field: UserSettingKey, value) => {
     if (!settings[field]) {
@@ -139,6 +151,44 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           )
         : [...settings[field].claims, value],
     })
+  }
+
+  const updateOutcomeFilterHandler = (value: string | null) => {
+    const field = UserSettingKey.OutcomeFilter
+
+    if (!settings[field] || !settings[field].claims) {
+      updateSetting(field, {
+        ...settings[field],
+        claims: value ? [value] : [],
+      })
+
+      return
+    }
+
+    updateSetting(field, {
+      ...settings[field],
+      claims: !value
+        ? []
+        : settings[field].claims.includes(value)
+        ? settings[field].claims.filter(
+            (currentValue) => currentValue !== value,
+          )
+        : [...settings[field].claims, value],
+    })
+  }
+
+  const updateNumberMemberSetting = (state: number) => {
+    if (
+      state === 2 &&
+      settings[UserSettingKey.MemberGroupsFilter].claims.includes(2)
+    ) {
+      updateSetting(UserSettingKey.MemberGroupsFilter, {
+        ...settings[UserSettingKey.MemberGroupsFilter],
+        claims: settings[UserSettingKey.MemberGroupsFilter].claims.filter(
+          (memberGroup) => memberGroup !== 2,
+        ),
+      })
+    }
   }
 
   return (
@@ -204,6 +254,28 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       </FilterElement>
 
       <FilterElement>
+        <Label>Number of member groups</Label>
+        {numberMemberGroupsOptions.map((option, index) => (
+          <Flex key={index} direction="row" align="center">
+            <Radio
+              key={`${option.value}` + index}
+              id={`${option.value}` + index}
+              value={option.value}
+              label={option.label}
+              onChange={() => {
+                updateNumberMemberSetting(option.value)
+                updateSetting(UserSettingKey.NumberOfMemberGroups, {
+                  value: option.value,
+                })
+                setNumberMemberGroups(option.value)
+              }}
+              checked={option.value === numberMemberGroups || false}
+            />
+          </Flex>
+        ))}
+      </FilterElement>
+
+      <FilterElement>
         <Label>Groups</Label>
         {range(numberMemberGroups).map((filterNumber) => (
           <Flex key={filterNumber} direction="row" align="center">
@@ -244,6 +316,19 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
             </span>
           </Flex>
         ))}
+      </FilterElement>
+
+      <FilterElement>
+        <Label>Outcome</Label>
+        <OutcomeFilter
+          multi
+          onSelect={updateOutcomeFilterHandler}
+          outcome={
+            (settings[UserSettingKey.OutcomeFilter] &&
+              settings[UserSettingKey.OutcomeFilter].claims) ||
+            null
+          }
+        />
       </FilterElement>
 
       <FilterElement>

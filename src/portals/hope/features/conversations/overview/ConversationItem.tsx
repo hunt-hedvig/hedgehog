@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
 import { StatusLine } from 'portals/hope/features/claims/claims-list/LargeClaimsList'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useHistory } from 'react-router'
 import { QuestionGroup } from 'types/generated/graphql'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
@@ -57,13 +57,11 @@ const MemberName = styled.span<{ isPlaceholder: boolean }>`
 `
 
 interface ConversationItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  focus?: boolean
   group: QuestionGroup
   currentMemberId?: string
 }
 
 export const ConversationItem: React.FC<ConversationItemProps> = ({
-  focus,
   group,
   currentMemberId,
 }) => {
@@ -72,12 +70,6 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
   const history = useHistory()
 
   const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (focus && ref && ref.current) {
-      ref.current.focus()
-    }
-  }, [focus])
 
   const nameAvailable = group.member?.firstName && group.member.lastName
 

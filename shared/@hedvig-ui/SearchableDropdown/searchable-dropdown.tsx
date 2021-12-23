@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 
@@ -48,23 +48,12 @@ const styles = `
 }`
 
 export const SearchableDropdownWithRef = styled((props) => {
-  const selectRef = useRef<any>()
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (props.focus && selectRef.current) {
-        selectRef.current.focus()
-      }
-    }, 1)
-  }, [props.focus])
-
   if (props.creatable) {
     return (
       <CreatableSelect
         {...props}
         classNamePrefix="searchable-type-select"
         isSearchable={true}
-        ref={(ref) => (selectRef.current = ref)}
       />
     )
   }
@@ -74,7 +63,6 @@ export const SearchableDropdownWithRef = styled((props) => {
       {...props}
       classNamePrefix="searchable-type-select"
       isSearchable={true}
-      ref={(ref) => (selectRef.current = ref)}
     />
   )
 })`

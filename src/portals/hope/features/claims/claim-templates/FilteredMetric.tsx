@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { CreateFilterModal } from 'portals/hope/features/claims/claim-templates/CreateFilterModal'
 import { ClaimFilterTemplate } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
 import { useListClaims } from 'portals/hope/features/claims/claims-list/graphql/use-list-claims'
-import React, { useEffect, useState } from 'react'
+import React, { HTMLAttributes, useEffect, useState } from 'react'
 import { Files, Pencil, Trash } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { v4 as uuidv4 } from 'uuid'
@@ -40,7 +39,7 @@ const Metric = styled.div`
   ${({ theme }) => metricStyles(theme)};
 `
 
-interface FilteredMetricProps {
+interface FilteredMetricProps extends HTMLAttributes<HTMLDivElement> {
   template: ClaimFilterTemplate
   onRemove: (id: string) => void
   onCreate: (filter: ClaimFilterTemplate) => void
@@ -86,11 +85,6 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={clickHandler}
-      onKeyDown={(e) => {
-        if (isPressing(e, Keys.Enter)) {
-          clickHandler(e)
-        }
-      }}
     >
       <MetricNumber onClick={clickHandler}>{totalClaims || 0}</MetricNumber>
       <MetricName onClick={clickHandler} title={template.name}>

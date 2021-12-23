@@ -3,6 +3,7 @@ export { Badge } from './Badge/badge'
 import { BadgeProps as _BadgeProps } from './Badge/badge'
 import { ButtonProps as _ButtonProps } from './Button/button'
 import { CardTitleBadgeProps as _CardTitleBadgeProps } from './Card/card'
+import { DropdownProps as _DropdownProps } from './Dropdown/dropdown'
 import { InfoTagStatus as _InfoTagStatus } from './InfoRow/info-row'
 import { InputProps as _InputProps } from './Input/input'
 import { ModalProps as _ModalProps } from './Modal'
@@ -42,7 +43,10 @@ export { CasualList, CasualListItem } from './CasualList/casual-list'
 export { Checkbox } from './Checkbox/checkbox'
 export { Copyable } from './Copyable/copyable'
 export { DateTimePicker } from './DateTimePicker/date-time-picker'
+
 export { Dropdown, Option as DropdownOption } from './Dropdown/dropdown'
+export type DropdownProps = _DropdownProps
+
 export { MultiDropdown } from './Dropdown/multi-dropdown'
 export {
   Form,
@@ -69,7 +73,7 @@ export { OrbIndicator } from './OrbIndicator/orb-indicator'
 export type OrbFlagsType = _FlagProp
 
 export { Popover } from './Popover/popover'
-export { RadioGroup } from './Radio/radio'
+export { RadioGroup, Radio } from './Radio/radio'
 export {
   SearchableDropdown,
   SearchableDropdownWithRef,

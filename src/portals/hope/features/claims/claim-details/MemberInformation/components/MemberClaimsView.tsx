@@ -4,7 +4,7 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import chroma from 'chroma-js'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
-import React from 'react'
+import React, { HTMLAttributes } from 'react'
 import { Link } from 'react-router-dom'
 import { Claim, ClaimState, GetMemberInfoQuery } from 'types/generated/graphql'
 
@@ -51,7 +51,9 @@ const ClaimItemWrapper = styled(Link)<{ claimType: boolean; outcome: boolean }>`
   }
 `
 
-const ClaimItem: React.FC<{ claim: Claim }> = ({ claim }) => {
+const ClaimItem: React.FC<
+  { claim: Claim } & HTMLAttributes<HTMLAnchorElement>
+> = ({ claim, ...props }) => {
   const registrationDateString = formatDate(
     parseISO(claim.registrationDate),
     'dd MMMM, yyyy',
@@ -66,6 +68,7 @@ const ClaimItem: React.FC<{ claim: Claim }> = ({ claim }) => {
       outcome={!!claim.outcome}
       claimType={!!claim.claimType}
       to={`/claims/${claim.id}`}
+      {...props}
     >
       <div>
         <h5>
@@ -107,36 +110,36 @@ export const MemberClaimsView: React.FC<{
   return (
     <>
       {currentClaim && (
-        <>
+        <div>
           <Label>This claim</Label>
           <div style={{ marginBottom: '0.25rem' }} />
           <ClaimItem key={currentClaim?.id} claim={currentClaim as Claim} />
 
           <Spacing top="small" />
-        </>
+        </div>
       )}
 
       {openClaims.length !== 0 && (
-        <>
+        <div>
           <Label>Open</Label>
           <div style={{ marginBottom: '0.25rem' }} />
-        </>
+          {openClaims.map((claim) => (
+            <ClaimItem key={claim.id} claim={claim as Claim} />
+          ))}
+        </div>
       )}
-      {openClaims.map((claim) => (
-        <ClaimItem key={claim.id} claim={claim as Claim} />
-      ))}
 
       <Spacing top="small" />
 
       {closedClaims.length !== 0 && (
-        <>
+        <div>
           <Label>Closed</Label>
           <div style={{ marginBottom: '0.25rem' }} />
-        </>
+          {closedClaims.map((claim) => (
+            <ClaimItem key={claim.id} claim={claim as Claim} />
+          ))}
+        </div>
       )}
-      {closedClaims.map((claim) => (
-        <ClaimItem key={claim.id} claim={claim as Claim} />
-      ))}
     </>
   )
 }

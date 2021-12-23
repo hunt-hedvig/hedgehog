@@ -115,6 +115,7 @@ export const LargeClaimsList: React.FC<{
       ),
       filterMarkets: getClaimFilter(UserSettingKey.MarketFilter),
       filterTypesOfContract: null,
+      filterClaimOutcomes: getClaimFilter(UserSettingKey.OutcomeFilter),
     }
 
     listClaims({

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Dropdown, DropdownOption, Shadowed } from '@hedvig-ui'
+import { DropdownProps } from '@hedvig-ui/Dropdown/dropdown'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import {
   currentAgreementForContract,
@@ -89,14 +90,22 @@ const ContractItem: React.FC<{
   )
 }
 
-export const ContractDropdown: React.FC<{
-  contracts: Contract[]
-  selectedContract?: Contract
-  selectedAgreement?: GenericAgreement
-  onChange: (value: string) => void
-}> = ({ contracts, selectedContract, selectedAgreement, onChange }) => {
+export const ContractDropdown: React.FC<
+  {
+    contracts: Contract[]
+    selectedContract?: Contract
+    selectedAgreement?: GenericAgreement
+    onChange: (value: string) => void
+  } & Omit<DropdownProps, 'children'>
+> = ({
+  contracts,
+  selectedContract,
+  selectedAgreement,
+  onChange,
+  ...props
+}) => {
   return (
-    <Dropdown placeholder="None selected">
+    <Dropdown placeholder="None selected" {...props}>
       {contracts.map((contract) => {
         return (
           <DropdownOption

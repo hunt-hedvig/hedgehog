@@ -1,8 +1,5 @@
 import styled, { StyledComponent } from '@emotion/styled'
-import { Hotkey } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { colorsV3 } from '@hedviginsurance/brand'
-import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
 import React from 'react'
 import { ArrowUpRight, Icon } from 'react-bootstrap-icons'
 import { NavLink, NavLinkProps } from 'react-router-dom'
@@ -87,24 +84,12 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   hotkeyHandler,
   ...props
 }) => {
-  const { registerActions, isHintingOption } = useCommandLine()
-
-  registerActions([
-    {
-      label: title,
-      keys: [Keys.Option, Keys[hotkey]],
-      onResolve: hotkeyHandler,
-    },
-  ])
-
   const ItemIcon = icon
 
   return (
     <MenuItemStyled to={to} {...props}>
       <ItemIcon />
-      <Hotkey hotkey={hotkey} hinting={isHintingOption}>
-        {!(shouldAlwaysCollapse || isCollapsed) && title}
-      </Hotkey>
+      {!(shouldAlwaysCollapse || isCollapsed) && title}
     </MenuItemStyled>
   )
 }
@@ -119,25 +104,18 @@ export const ExternalMenuItem: React.FC<ExternalMenuItemProps> = ({
   hotkeyHandler,
   ...props
 }) => {
-  const { isHintingOption, registerActions } = useCommandLine()
-
-  registerActions([
-    {
-      label: title,
-      keys: [Keys.Option, Keys[hotkey]],
-      onResolve: hotkeyHandler,
-    },
-  ])
-
   const ItemIcon = icon
 
   return (
-    <MenuItemExternalLink href={href} target="_blank" {...props}>
+    <MenuItemExternalLink
+      href={href}
+      target="_blank"
+      {...props}
+      rel="noreferrer"
+    >
       {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
       <ItemIcon />
-      <Hotkey hotkey={hotkey} hinting={isHintingOption}>
-        {!(shouldAlwaysCollapse || isCollapsed) && title}
-      </Hotkey>
+      {!(shouldAlwaysCollapse || isCollapsed) && title}
     </MenuItemExternalLink>
   )
 }
