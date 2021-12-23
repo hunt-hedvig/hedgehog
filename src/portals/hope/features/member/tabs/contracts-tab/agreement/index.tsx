@@ -54,9 +54,8 @@ export const Agreement: React.FC<{
             <Card span={2}>
               <InsuranceCertificate agreement={agreement} refetch={refetch} />
             </Card>
-            <Card span={2}>
-              <TermsAndConditions agreement={agreement} locale={locale} />
-            </Card>
+
+            <TermsAndConditions agreement={agreement} locale={locale} />
           </>
         )}
         <Card span={2}>
