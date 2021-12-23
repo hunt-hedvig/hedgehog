@@ -63,6 +63,7 @@ const OptionsList = styled.ul`
   animation: ${show} 0.1s linear;
 
   position: absolute;
+  z-index: 2;
   top: calc(100% + 1px);
   left: -1px;
 
@@ -105,10 +106,11 @@ const CloseIcon = styled(X)`
   cursor: pointer;
 `
 
-interface DropdownProps {
+interface DropdownProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   options: string[]
   placeholder?: string
-  value: string[]
+  value: string[] | null
   onChange: (opt: string) => void
   clearHandler: () => void
 }
@@ -119,6 +121,7 @@ export const MultiDropdown: React.FC<DropdownProps> = ({
   onChange,
   value,
   clearHandler,
+  ...props
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = React.useState(false)
@@ -130,9 +133,9 @@ export const MultiDropdown: React.FC<DropdownProps> = ({
       ref={dropdownRef}
       tabIndex={0}
       active={active}
-      onClick={() => !value.length && setActive(true)}
+      onClick={() => !value?.length && setActive(true)}
       onKeyDown={(e) => {
-        if (isPressing(e, Keys.Enter) && !value.length) {
+        if (isPressing(e, Keys.Enter) && !value?.length) {
           setActive(true)
           return
         }
@@ -141,26 +144,26 @@ export const MultiDropdown: React.FC<DropdownProps> = ({
           return
         }
       }}
+      {...props}
     >
-      {!value.length ? (
-        <span className="placeholder">{placeholder || 'Dropdown'}</span>
-      ) : (
+      {value && !!value.length ? (
         <>
           <Selected onClick={() => setActive((prev) => !prev)}>
             {value.map((opt) => (
-              <Tag>{opt}</Tag>
+              <Tag key={opt}>{opt}</Tag>
             ))}
           </Selected>
           <CloseIcon onClick={clearHandler} />
         </>
+      ) : (
+        <span className="placeholder">{placeholder || 'Dropdown'}</span>
       )}
-
       {active && (
         <OptionsList>
           {options.map((opt) => (
             <Option
               key={opt}
-              selected={value.includes(opt)}
+              selected={value?.includes(opt)}
               tabIndex={0}
               onClick={() => {
                 onChange(opt)

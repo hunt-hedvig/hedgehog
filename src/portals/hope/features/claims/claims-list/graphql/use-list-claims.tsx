@@ -36,6 +36,7 @@ export const useListClaims = (): ListClaimsReturnTuple => {
             options?.filterSelectedMemberGroups || null,
           filterMarkets: options?.filterMarkets || null,
           filterTypesOfContract: options?.filterTypesOfContract || null,
+          filterClaimOutcomes: options?.filterClaimOutcomes || null,
         },
       },
     })

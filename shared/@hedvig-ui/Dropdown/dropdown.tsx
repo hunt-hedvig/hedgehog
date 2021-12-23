@@ -126,12 +126,13 @@ const TriangleIcon = styled(TriangleFill)<{ active: number }>`
 
 export interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
   placeholder?: string
+  value?: string
   children: any
 }
 
 export const Dropdown = React.forwardRef(
   (
-    { placeholder, children, ...props }: DropdownProps,
+    { placeholder, children, value, ...props }: DropdownProps,
     forwardRef: ForwardedRef<HTMLDivElement>,
   ) => {
     const numberOfOptions = React.Children.count(children)
@@ -207,7 +208,7 @@ export const Dropdown = React.forwardRef(
           <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
             <Placeholder>{placeholder || 'Dropdown'}</Placeholder>
           </OptionStyled>
-        ) : (
+        ) : !value ? (
           {
             ...children[selectedIdx - 1],
             props: {
@@ -219,6 +220,10 @@ export const Dropdown = React.forwardRef(
               },
             },
           }
+        ) : (
+          <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
+            {value}
+          </OptionStyled>
         )}
 
         {active && (

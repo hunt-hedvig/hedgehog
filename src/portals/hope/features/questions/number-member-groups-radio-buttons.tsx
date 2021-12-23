@@ -16,7 +16,7 @@ const Group = styled.div`
   }
 `
 
-const numberMemberGroupsOptions = range(
+export const numberMemberGroupsOptions = range(
   Object.keys(MemberGroups).length - 1,
 ).map((numberMemberGroups) => {
   return {
