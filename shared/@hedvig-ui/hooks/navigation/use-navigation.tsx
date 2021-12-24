@@ -3,6 +3,7 @@ import {
   Key,
   Keys,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import chroma from 'chroma-js'
 import React, {
   createContext,
   useContext,
@@ -10,6 +11,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import { lightTheme } from '@hedvig-ui'
 
 interface NavigationContextProps {
   cursor: string | null
@@ -237,6 +239,7 @@ interface NodeNavigationDirections {
 }
 
 interface UseNavigationRegisterOptions {
+  autoFocus?: boolean
   focus?: Key
   resolve?: string | ((ref: any) => string | void)
   parent?: string | ((ref: any) => string)
@@ -263,6 +266,14 @@ export const useNavigation = () => {
     localItems.current[name] = options
   }
 
+  useEffect(() => {
+    Object.keys(localItems.current).forEach((name) => {
+      if (localItems.current[name].autoFocus) {
+        setCursor(name)
+      }
+    })
+  }, [])
+
   const itemExists = (name: string) => !!registry[name]
 
   useEffect(() => {
@@ -285,7 +296,7 @@ export const useNavigation = () => {
       }
 
       return {
-        style: { border: '2px solid blue' },
+        style: { background: chroma(lightTheme.accent).alpha(0.3).hex() },
         ref: (ref: any) => {
           assignRef(name, ref)
 

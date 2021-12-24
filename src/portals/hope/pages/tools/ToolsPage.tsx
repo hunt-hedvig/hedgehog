@@ -66,6 +66,7 @@ const ToolsPage: React.FC = () => {
             to="/tools/charges"
             span={4}
             {...register('ApproveCharges', {
+              autoFocus: true,
               focus: Keys.T,
               resolve: () => {
                 history.push('/tools/charges')
