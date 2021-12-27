@@ -276,7 +276,7 @@ export const useNavigation = () => {
         setCursor(name)
       }
     })
-  }, [cursor])
+  }, [cursor, localItems.current])
 
   const itemExists = (name: string) => !!registry[name]
 

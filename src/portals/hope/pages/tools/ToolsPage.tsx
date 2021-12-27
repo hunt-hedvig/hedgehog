@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { CardLink, CardsWrapper, FadeIn, MainHeadline } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import React from 'react'
 import { useHistory } from 'react-router'
@@ -67,7 +66,6 @@ const ToolsPage: React.FC = () => {
             span={4}
             {...register('ApproveCharges', {
               autoFocus: true,
-              focus: Keys.T,
               resolve: () => {
                 history.push('/tools/charges')
               },
