@@ -1,8 +1,9 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
-import React, { TableHTMLAttributes, useEffect, useRef } from 'react'
+import React, { TableHTMLAttributes, useEffect } from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
+import { useNavigation } from '../hooks/navigation/use-navigation'
 
 const range = (start, end) =>
   start >= 0 && end >= start
@@ -49,6 +50,13 @@ export const TableBody: React.FC<
     </StyledTableBody>
   )
 }
+
+export const TestTableBody = styled.tbody`
+  border-collapse: collapse;
+  font-weight: normal;
+  text-align: left;
+  width: 100%;
+`
 
 const StyledTableBody = styled.tbody<{ activeRow: number }>`
   border-collapse: collapse;
@@ -166,20 +174,37 @@ export const TableRowStyled = styled.tr<{ active?: boolean; border?: boolean }>`
 `
 
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
-  active?: boolean
-  border?: boolean
+  index: number
+  length: number
+  onResolve: (idx: number) => void
 }
 
-export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
-  const rowRef = useRef<HTMLTableRowElement>(null)
+export const TableRow: React.FC<TableRowProps> = ({
+  index,
+  length,
+  onResolve,
+  ...props
+}) => {
+  const { register } = useNavigation()
 
-  useEffect(() => {
-    if (active && rowRef && rowRef.current) {
-      rowRef.current.focus()
-    }
-  }, [active])
-
-  return <TableRowStyled ref={rowRef} active={active} {...props} />
+  return (
+    <TableRowStyled
+      {...register(`Table Row ${index}`, {
+        autoFocus: index === 0,
+        resolve: () => {
+          onResolve(index)
+        },
+        neighbors: {
+          up: index > 0 ? `Table Row ${index - 1}` : undefined,
+          down:
+            index < length - 1
+              ? `Table Row ${index + 1}`
+              : 'Table Pagination 0',
+        },
+      })}
+      {...props}
+    />
+  )
 }
 
 export const TableHeader: React.FC<
@@ -222,31 +247,85 @@ export const TablePageSelect: React.FC<{
   currentPage: number
   totalPages: number
   onSelect: (page: number) => void
-}> = ({ currentPage, totalPages, onSelect }) => {
+  rowCount: number
+}> = ({ currentPage, totalPages, onSelect, rowCount }) => {
   const { startPage, endPage } = getPageLimits(totalPages, currentPage)
+  const { register } = useNavigation()
+
+  console.log(rowCount)
+
   return (
     <PageSelectWrapper>
-      <PageLink disabled={currentPage === 0} onClick={() => onSelect(1)}>
+      <PageLink
+        disabled={currentPage === 0}
+        onClick={() => onSelect(1)}
+        {...register(`Table Pagination 0`, {
+          resolve: () => {
+            if (currentPage === 0) {
+              return
+            }
+            onSelect(1)
+          },
+          neighbors: {
+            up: `Table Row ${rowCount - 1}`,
+            right: 'Table Pagination 1',
+          },
+        })}
+      >
         First
       </PageLink>
 
-      {range(startPage, endPage).map((page, id) => (
-        <PageLink
-          key={id}
-          disabled={currentPage === page}
-          onClick={() => {
+      {range(startPage, endPage).map((page, id) => {
+        const pagination = register(`Table Pagination ${id + 1}`, {
+          resolve: () => {
+            if (currentPage === page) {
+              return
+            }
+
             onSelect(page + 1)
-          }}
-        >
-          {page + 1}
-        </PageLink>
-      ))}
+          },
+          neighbors: {
+            up: `Table Row ${rowCount - 1}`,
+            left: id ? `Table Pagination ${id}` : undefined,
+            right: `Table Pagination ${id + 2}`,
+          },
+        })
+
+        return (
+          <PageLink
+            style={{ ...pagination.style }}
+            key={id}
+            disabled={currentPage === page}
+            onClick={() => {
+              onSelect(page + 1)
+            }}
+          >
+            {page + 1}
+          </PageLink>
+        )
+      })}
 
       <PageLink
         disabled={currentPage === totalPages - 1}
         onClick={() => {
           onSelect(totalPages)
         }}
+        {...register(
+          `Table Pagination ${range(startPage, endPage).length + 1}`,
+          {
+            resolve: () => {
+              if (currentPage === totalPages - 1) {
+                return
+              }
+
+              onSelect(totalPages)
+            },
+            neighbors: {
+              up: `Table Row ${rowCount - 1}`,
+              left: `Table Pagination ${range(startPage, endPage).length}`,
+            },
+          },
+        )}
       >
         Last
       </PageLink>

@@ -3,7 +3,6 @@ import {
   Key,
   Keys,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import chroma from 'chroma-js'
 import React, {
   createContext,
   useContext,
@@ -267,6 +266,10 @@ export const useNavigation = () => {
   }
 
   useEffect(() => {
+    console.log(cursor)
+  }, [cursor])
+
+  useEffect(() => {
     if (cursor) {
       return
     }
@@ -300,7 +303,7 @@ export const useNavigation = () => {
       }
 
       return {
-        style: { background: chroma(lightTheme.accent).alpha(0.3).hex() },
+        style: { border: `2px solid ${lightTheme.accent}` },
         ref: (ref: any) => {
           assignRef(name, ref)
 

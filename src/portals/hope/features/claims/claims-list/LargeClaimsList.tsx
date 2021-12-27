@@ -6,7 +6,7 @@ import {
   Placeholder,
   SecondLevelHeadline,
   Table,
-  TableBody,
+  TestTableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -27,7 +27,7 @@ import { getMemberIdColor } from 'portals/hope/features/member/utils'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { ClaimState, UserSettingKey } from 'types/generated/graphql'
 
@@ -89,7 +89,6 @@ export const LargeClaimsList: React.FC<{
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const isCommandPressed = useKeyIsPressed(Keys.Command)
-  const [activeRow, setActiveRow] = useState<number | null>(null)
 
   useTitle('Claims')
 
@@ -166,18 +165,7 @@ export const LargeClaimsList: React.FC<{
           <TableHeaderColumn>State</TableHeaderColumn>
           <TableHeaderColumn>Reserves</TableHeaderColumn>
         </TableHeader>
-        <TableBody
-          setActiveRow={(num) => setActiveRow(num)}
-          onPerformNavigation={(index) => {
-            const claimId = claims[index].id
-
-            if (!claimId) {
-              return
-            }
-
-            redirectClaimHandler(claimId)
-          }}
-        >
+        <TestTableBody>
           {claims.map((claim, index) => {
             const registrationDateString = formatDate(
               parseISO(claim.registrationDate),
@@ -190,7 +178,11 @@ export const LargeClaimsList: React.FC<{
 
             return (
               <TableRow
-                active={activeRow === index}
+                index={index}
+                length={claims.length}
+                onResolve={(selectedIndex) =>
+                  redirectClaimHandler(claims[selectedIndex].id)
+                }
                 key={claim.id}
                 tabIndex={0}
                 onKeyDown={(e) => {
@@ -256,9 +248,10 @@ export const LargeClaimsList: React.FC<{
               </TableRow>
             )
           })}
-        </TableBody>
+        </TestTableBody>
       </Table>
       <TablePageSelect
+        rowCount={claims.length}
         currentPage={currentPage}
         totalPages={totalPages}
         onSelect={(newPage) => history.push(`/claims/list/${newPage}`)}
