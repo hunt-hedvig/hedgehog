@@ -267,12 +267,16 @@ export const useNavigation = () => {
   }
 
   useEffect(() => {
+    if (cursor) {
+      return
+    }
+
     Object.keys(localItems.current).forEach((name) => {
       if (localItems.current[name].autoFocus) {
         setCursor(name)
       }
     })
-  }, [])
+  }, [cursor])
 
   const itemExists = (name: string) => !!registry[name]
 
