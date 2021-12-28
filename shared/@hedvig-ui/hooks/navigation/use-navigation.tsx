@@ -266,10 +266,6 @@ export const useNavigation = () => {
   }
 
   useEffect(() => {
-    console.log(cursor)
-  }, [cursor])
-
-  useEffect(() => {
     if (cursor) {
       return
     }

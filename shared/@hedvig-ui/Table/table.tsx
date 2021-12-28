@@ -16,40 +16,6 @@ export const Table = styled.table`
   width: 100%;
 `
 
-// export const TableBody: React.FC<
-//   {
-//     onPerformNavigation?: (index) => void
-//     setActiveRow?: (n: number) => void
-//   } & TableHTMLAttributes<HTMLTableSectionElement>
-// > = ({ onPerformNavigation, children, setActiveRow, ...props }) => {
-//   const numberOfRows = React.Children.count(children)
-
-//   const [navigationStep] = useVerticalKeyboardNavigation({
-//     maxStep: numberOfRows - 1,
-//     onPerformNavigation: (index) => {
-//       if (onPerformNavigation) {
-//         onPerformNavigation(index)
-//       }
-//     },
-//     isActive: !!onPerformNavigation,
-//   })
-
-//   useEffect(() => {
-//     if (setActiveRow) {
-//       setActiveRow(navigationStep)
-//     }
-//   }, [navigationStep])
-
-//   return (
-//     <StyledTableBody
-//       activeRow={onPerformNavigation ? navigationStep : -1}
-//       {...props}
-//     >
-//       {children}
-//     </StyledTableBody>
-//   )
-// }
-
 export const TableBody = styled.tbody`
   border-collapse: collapse;
   font-weight: normal;
@@ -156,9 +122,11 @@ export const TableRowStyled = styled.tr<{ active?: boolean; border?: boolean }>`
 `
 
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
-  index: number
-  length: number
-  onResolve: (idx: number) => void
+  index?: number
+  length?: number
+  onResolve?: (idx: number) => void
+  border?: boolean
+  active?: boolean
 }
 
 export const TableRow: React.FC<TableRowProps> = ({
@@ -169,24 +137,28 @@ export const TableRow: React.FC<TableRowProps> = ({
 }) => {
   const { register } = useNavigation()
 
-  return (
-    <TableRowStyled
-      {...register(`Table Row ${index}`, {
-        autoFocus: index === 0,
-        resolve: () => {
-          onResolve(index)
-        },
-        neighbors: {
-          up: index > 0 ? `Table Row ${index - 1}` : undefined,
-          down:
-            index < length - 1
-              ? `Table Row ${index + 1}`
-              : 'Table Pagination 0',
-        },
-      })}
-      {...props}
-    />
-  )
+  const rowNavigation =
+    typeof index === 'number' && typeof length === 'number' && onResolve
+      ? register(`Table Row ${index}`, {
+          autoFocus: index === 0,
+          resolve: () => {
+            if (!onResolve || !index) {
+              return
+            }
+
+            onResolve(index)
+          },
+          neighbors: {
+            up: index > 0 ? `Table Row ${index - 1}` : undefined,
+            down:
+              index < length - 1
+                ? `Table Row ${index + 1}`
+                : 'Table Pagination 0',
+          },
+        })
+      : null
+
+  return <TableRowStyled {...rowNavigation} {...props} />
 }
 
 export const TableHeader: React.FC<
@@ -233,8 +205,6 @@ export const TablePageSelect: React.FC<{
 }> = ({ currentPage, totalPages, onSelect, rowCount }) => {
   const { startPage, endPage } = getPageLimits(totalPages, currentPage)
   const { register } = useNavigation()
-
-  console.log(rowCount)
 
   return (
     <PageSelectWrapper>
