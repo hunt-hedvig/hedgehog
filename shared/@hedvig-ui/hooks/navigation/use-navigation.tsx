@@ -299,7 +299,8 @@ export const useNavigation = () => {
       }
 
       return {
-        style: { border: `2px solid ${lightTheme.accent}` },
+        // style: { border: `2px solid ${lightTheme.accent}` },
+        style: { border: `3px solid red` },
         ref: (ref: any) => {
           assignRef(name, ref)
 
@@ -312,5 +313,6 @@ export const useNavigation = () => {
       }
     },
     focus: (name: string) => setCursor(name),
+    cursor,
   }
 }

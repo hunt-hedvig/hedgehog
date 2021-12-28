@@ -127,12 +127,14 @@ interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   onResolve?: (idx: number) => void
   border?: boolean
   active?: boolean
+  topElement?: string
 }
 
 export const TableRow: React.FC<TableRowProps> = ({
   index,
   length,
   onResolve,
+  topElement,
   ...props
 }) => {
   const { register } = useNavigation()
@@ -149,7 +151,7 @@ export const TableRow: React.FC<TableRowProps> = ({
             onResolve(index)
           },
           neighbors: {
-            up: index > 0 ? `Table Row ${index - 1}` : undefined,
+            up: index > 0 ? `Table Row ${index - 1}` : topElement,
             down:
               index < length - 1
                 ? `Table Row ${index + 1}`

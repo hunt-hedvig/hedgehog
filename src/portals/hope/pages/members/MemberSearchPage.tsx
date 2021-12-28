@@ -13,6 +13,7 @@ import {
 import React, { useRef } from 'react'
 import { useHistory } from 'react-router'
 import { Page } from 'portals/hope/pages/routes'
+import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
 
 const MemberSearchPage: Page = () => {
   const [query, setQuery] = React.useState('')
@@ -20,6 +21,8 @@ const MemberSearchPage: Page = () => {
   const [luckySearch, setLuckySearch] = React.useState(false)
   const history = useHistory()
   const searchField = useRef<React.ReactElement>()
+
+  const { memberHistory } = useMemberHistory()
 
   const [{ members, totalPages, page }, memberSearch, { loading }] =
     useMemberSearch()
@@ -41,6 +44,8 @@ const MemberSearchPage: Page = () => {
   return (
     <>
       <SearchForm
+        membersLength={members.length}
+        suggestionsLength={memberHistory.length}
         onSubmit={() => {
           memberSearch(query || '%', {
             includeAll,
@@ -92,7 +97,7 @@ const MemberSearchPage: Page = () => {
 
           <MemberSuggestionsWrapper>
             <MainHeadline>Suggestions</MainHeadline>
-            <MemberSuggestions />
+            <MemberSuggestions suggestions={memberHistory} />
           </MemberSuggestionsWrapper>
         </>
       )}

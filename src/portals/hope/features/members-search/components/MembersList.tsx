@@ -135,6 +135,7 @@ export const MembersList: React.FC<{
 
             return (
               <TableRow
+                topElement="Member Search Form"
                 index={index}
                 length={members.length}
                 onResolve={(selectedIndex) => {
