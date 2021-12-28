@@ -60,6 +60,7 @@ const MemberSearchPage: Page = () => {
           <FadeIn>
             <MembersList members={members} />
             <TablePageSelect
+              rowCount={members.length}
               currentPage={page}
               totalPages={totalPages}
               onSelect={pageSelectHandler}

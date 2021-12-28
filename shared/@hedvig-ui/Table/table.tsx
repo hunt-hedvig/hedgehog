@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
-import React, { TableHTMLAttributes, useEffect } from 'react'
+import React from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
 import { useNavigation } from '../hooks/navigation/use-navigation'
 
@@ -17,62 +16,45 @@ export const Table = styled.table`
   width: 100%;
 `
 
-export const TableBody: React.FC<
-  {
-    onPerformNavigation?: (index) => void
-    setActiveRow?: (n: number) => void
-  } & TableHTMLAttributes<HTMLTableSectionElement>
-> = ({ onPerformNavigation, children, setActiveRow, ...props }) => {
-  const numberOfRows = React.Children.count(children)
+// export const TableBody: React.FC<
+//   {
+//     onPerformNavigation?: (index) => void
+//     setActiveRow?: (n: number) => void
+//   } & TableHTMLAttributes<HTMLTableSectionElement>
+// > = ({ onPerformNavigation, children, setActiveRow, ...props }) => {
+//   const numberOfRows = React.Children.count(children)
 
-  const [navigationStep] = useVerticalKeyboardNavigation({
-    maxStep: numberOfRows - 1,
-    onPerformNavigation: (index) => {
-      if (onPerformNavigation) {
-        onPerformNavigation(index)
-      }
-    },
-    isActive: !!onPerformNavigation,
-  })
+//   const [navigationStep] = useVerticalKeyboardNavigation({
+//     maxStep: numberOfRows - 1,
+//     onPerformNavigation: (index) => {
+//       if (onPerformNavigation) {
+//         onPerformNavigation(index)
+//       }
+//     },
+//     isActive: !!onPerformNavigation,
+//   })
 
-  useEffect(() => {
-    if (setActiveRow) {
-      setActiveRow(navigationStep)
-    }
-  }, [navigationStep])
+//   useEffect(() => {
+//     if (setActiveRow) {
+//       setActiveRow(navigationStep)
+//     }
+//   }, [navigationStep])
 
-  return (
-    <StyledTableBody
-      activeRow={onPerformNavigation ? navigationStep : -1}
-      {...props}
-    >
-      {children}
-    </StyledTableBody>
-  )
-}
+//   return (
+//     <StyledTableBody
+//       activeRow={onPerformNavigation ? navigationStep : -1}
+//       {...props}
+//     >
+//       {children}
+//     </StyledTableBody>
+//   )
+// }
 
-export const TestTableBody = styled.tbody`
+export const TableBody = styled.tbody`
   border-collapse: collapse;
   font-weight: normal;
   text-align: left;
   width: 100%;
-`
-
-const StyledTableBody = styled.tbody<{ activeRow: number }>`
-  border-collapse: collapse;
-  font-weight: normal;
-  text-align: left;
-  width: 100%;
-
-  ${({ activeRow, theme }) => {
-    if (activeRow !== -1) {
-      return css`
-        tr:nth-of-type(${activeRow + 1}) td {
-          background-color: ${theme.accentLight};
-        }
-      `
-    }
-  }}
 `
 
 export const TableColumn = styled.td`

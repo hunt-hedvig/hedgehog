@@ -6,7 +6,7 @@ import {
   Placeholder,
   SecondLevelHeadline,
   Table,
-  TestTableBody,
+  TableBody,
   TableColumn,
   TableHeader,
   TableHeaderColumn,
@@ -165,7 +165,7 @@ export const LargeClaimsList: React.FC<{
           <TableHeaderColumn>State</TableHeaderColumn>
           <TableHeaderColumn>Reserves</TableHeaderColumn>
         </TableHeader>
-        <TestTableBody>
+        <TableBody>
           {claims.map((claim, index) => {
             const registrationDateString = formatDate(
               parseISO(claim.registrationDate),
@@ -248,7 +248,7 @@ export const LargeClaimsList: React.FC<{
               </TableRow>
             )
           })}
-        </TestTableBody>
+        </TableBody>
       </Table>
       <TablePageSelect
         rowCount={claims.length}
