@@ -9,6 +9,7 @@ import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage
 import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { ClaimTemplateFilters } from 'portals/hope/features/claims/claim-templates/components/ClaimTemplateFilters'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const ClaimFilters = styled(ClaimTemplateFilters)`
   display: grid;
@@ -63,6 +64,8 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
 
   useKeyIsPressed(Keys.Enter, createFilterHandler)
 
+  const { register } = useNavigation()
+
   return (
     <Modal
       onClose={onClose}
@@ -77,6 +80,11 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
           onChange={(e) => {
             setName(e.currentTarget.value)
           }}
+          {...register('Create Template - Name', {
+            neighbors: {
+              down: '',
+            },
+          })}
         />
 
         <ClaimFilters filters={filters} setFilters={setFilters} />

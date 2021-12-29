@@ -92,16 +92,16 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
       <Label>Templates</Label>
       <List>
         {templates.map((filter, index) => {
-          const templateNavigation = register(filter.name, {
+          const templateNavigation = register(filter.id, {
             focus: index === 0 ? Keys.T : undefined,
             resolve: () => {
               onSelect(filter.id)
             },
             neighbors: {
-              left: index ? templates[index - 1].name : undefined,
+              left: index ? templates[index - 1].id : undefined,
               right:
                 index < templates.length - 1
-                  ? templates[index + 1].name
+                  ? templates[index + 1].id
                   : 'Add Template',
             },
           })
@@ -126,9 +126,10 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
           {...register('Add Template', {
             resolve: () => {
               setCreateFilter(true)
+              return 'Create Template - Name'
             },
             neighbors: {
-              left: templates[templates.length - 1].name,
+              left: templates[templates.length - 1].id,
             },
           })}
           onClick={() => setCreateFilter(true)}
