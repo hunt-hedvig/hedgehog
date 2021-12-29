@@ -177,7 +177,16 @@ const ClaimDetailsPage: Page<
             </>
           )}
 
-          {
+          {!carrier ? (
+            <NoCarrierMessage opacity={0.6}>
+              Cannot make a payment or set a reserve without a carrier.
+              <NoCarrierSubtitle>
+                Select a <Shadowed>Contract for Claim</Shadowed> and{' '}
+                <Shadowed>Date of Occurrence</Shadowed> such that the claim is
+                covered on the date.
+              </NoCarrierSubtitle>
+            </NoCarrierMessage>
+          ) : (
             <>
               <CardsWrapper contentWrap="noWrap">
                 <Card>
@@ -190,7 +199,7 @@ const ClaimDetailsPage: Page<
                 </Card>
               </CardsWrapper>
             </>
-          }
+          )}
 
           <CardsWrapper contentWrap="noWrap">
             <Card>
