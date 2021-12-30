@@ -265,7 +265,6 @@ const DashboardPage: Page = () => {
             {...register('Add Template', {
               resolve: () => {
                 setCreateFilter(true)
-                return 'Create Template - Name'
               },
               neighbors: {
                 left: !!templateFilters.length

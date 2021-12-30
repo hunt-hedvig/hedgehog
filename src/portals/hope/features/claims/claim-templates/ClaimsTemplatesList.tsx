@@ -126,7 +126,6 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
           {...register('Add Template', {
             resolve: () => {
               setCreateFilter(true)
-              return 'Create Template - Name'
             },
             neighbors: {
               left: templates[templates.length - 1].id,

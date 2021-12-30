@@ -11,6 +11,7 @@ import React, {
   useState,
 } from 'react'
 import { lightTheme } from '@hedvig-ui'
+import chroma from 'chroma-js'
 
 interface NavigationContextProps {
   cursor: string | null
@@ -299,8 +300,10 @@ export const useNavigation = () => {
       }
 
       return {
-        // style: { border: `2px solid ${lightTheme.accent}` },
-        style: { border: `3px solid red` },
+        style: {
+          // background: chroma(lightTheme.accent).brighten(0.5).alpha(0.5).hex(),
+          border: `4px solid ${chroma(lightTheme.accent).brighten(1).hex()}`,
+        },
         ref: (ref: any) => {
           assignRef(name, ref)
 
