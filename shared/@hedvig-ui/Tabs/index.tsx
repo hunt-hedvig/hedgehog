@@ -7,6 +7,7 @@ import {
   Keys,
   useKeyIsPressed,
 } from '../hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '../hooks/navigation/use-navigation'
 
 const TabStyled = styled.li<{ active?: boolean }>`
   transition: all 0.3s;
@@ -124,11 +125,29 @@ export interface TabsProps extends React.HTMLAttributes<HTMLUListElement> {
 }
 
 export const Tabs: React.FC<TabsProps> = ({ list, ...props }) => {
+  const { register } = useNavigation()
+
   return (
     <TabsWrapper tabCount={list.length} {...props}>
-      {list.map((tab) => (
-        <Tab key={tab.title} {...tab} />
-      ))}
+      {list.map((tab, index) => {
+        const tabNavigation = register(`Tab - ${tab.title}`, {
+          // The active tab is not updated after action
+          // focus: tab.active ? Keys.T : undefined,
+          focus: index === 0 ? Keys.T : undefined,
+          resolve: () => {
+            tab.action()
+          },
+          neighbors: {
+            left: index ? `Tab - ${list[index - 1].title}` : undefined,
+            right:
+              index < list.length - 1
+                ? `Tab - ${list[index + 1].title}`
+                : undefined,
+          },
+        })
+
+        return <Tab key={tab.title} {...tab} {...tabNavigation} />
+      })}
     </TabsWrapper>
   )
 }
