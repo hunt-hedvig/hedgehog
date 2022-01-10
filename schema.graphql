@@ -473,7 +473,7 @@ enum ContractStatus {
 
 type TermsAndConditions {
   commencementDate: LocalDate!
-  displayName: String!,
+  displayName: String!
   url: String!
 }
 

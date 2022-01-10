@@ -43,5 +43,10 @@ export const useAuthenticate = (): UseAuthenticateResult => {
     }
   }
 
-  return { portal: null, role: null, loading: false, error: error ?? null }
+  return {
+    portal: null,
+    role: null,
+    loading: false,
+    error: refetchAttempt > 5 && error ? error : null,
+  }
 }

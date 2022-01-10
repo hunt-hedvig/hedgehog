@@ -10,12 +10,18 @@ import { Global } from '@emotion/react'
 import { DarkmodeProvider } from '@hedvig-ui/hooks/use-darkmode'
 import { GlobalStyles } from '@hedvig-ui/themes'
 import { useAuthenticate } from 'auth/use-authenticate'
+import { Route, Router, Switch } from 'react-router'
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
 
 const App: React.FC = () => {
-  const { portal } = useAuthenticate()
+  const { portal, error } = useAuthenticate()
+
+  if (error) {
+    window.location.pathname = '/login/logout'
+    return null
+  }
 
   if (!portal) {
     return null
@@ -29,6 +35,23 @@ const App: React.FC = () => {
 ReactDOM.render(
   <CookiesProvider>
     <BrowserRouter>
+      <Router history={history}>
+        <Switch>
+          <Route
+            path="/gatekeeper"
+            exact
+            component={() => {
+              console.log('What')
+              window.location.href = `${
+                (window as any).GATEKEEPER_HOST
+              }/sso?redirect=${window.location.protocol}//${
+                window.location.host
+              }/login/callback`
+              return null
+            }}
+          />
+        </Switch>
+      </Router>
       <ApolloProvider client={apolloClient!}>
         <Global styles={GlobalStyles} />
         <DarkmodeProvider>
