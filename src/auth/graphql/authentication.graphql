@@ -1,0 +1,6 @@
+query Authentication {
+  me {
+    role
+    portal
+  }
+}

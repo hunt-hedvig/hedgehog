@@ -9,11 +9,22 @@ import { app } from 'portals'
 import { Global } from '@emotion/react'
 import { DarkmodeProvider } from '@hedvig-ui/hooks/use-darkmode'
 import { GlobalStyles } from '@hedvig-ui/themes'
-
-const App = app('Hope')
+import { useAuthenticate } from 'auth/use-authenticate'
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
+
+const App: React.FC = () => {
+  const { portal } = useAuthenticate()
+
+  if (!portal) {
+    return null
+  }
+
+  const Portal = app(portal)
+
+  return Portal ? <Portal /> : null
+}
 
 ReactDOM.render(
   <CookiesProvider>

@@ -1,16 +1,19 @@
-import { Me, useGetMeQuery } from 'types/generated/graphql'
+import { useAuthenticationQuery } from 'types/generated/graphql'
 import { useEffect, useState } from 'react'
+import { ApolloError } from '@apollo/client'
 
 interface UseAuthenticateResult {
-  me?: Me
+  role: string | null
+  portal: string | null
   loading: boolean
+  error: ApolloError | null
 }
 
 export const useAuthenticate = (): UseAuthenticateResult => {
   const maxRefetchAttempts = 5
 
   const [refetchAttempt, setRefetchAttempt] = useState(0)
-  const { data, loading } = useGetMeQuery({
+  const { data, loading, error } = useAuthenticationQuery({
     pollInterval: 3000,
   })
 
@@ -28,12 +31,17 @@ export const useAuthenticate = (): UseAuthenticateResult => {
   }, [data, loading])
 
   if (loading) {
-    return { loading: true }
+    return { loading: true, portal: null, role: null, error: null }
   }
 
   if (data?.me) {
-    return { me: data.me as Me, loading: false }
+    return {
+      portal: data.me.portal,
+      role: data.me.portal,
+      loading: false,
+      error: null,
+    }
   }
 
-  return { loading: false }
+  return { portal: null, role: null, loading: false, error: error ?? null }
 }

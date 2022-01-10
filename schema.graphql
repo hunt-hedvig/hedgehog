@@ -86,6 +86,7 @@ type Me {
   role: String!
   user: User!
   settings(filters: UserSettingsFilter): [UserSetting!]!
+  portal: String!
 }
 
 input UserSettingsFilter {
@@ -472,7 +473,7 @@ enum ContractStatus {
 
 type TermsAndConditions {
   commencementDate: LocalDate!
-  displayName: String!
+  displayName: String!,
   url: String!
 }
 
