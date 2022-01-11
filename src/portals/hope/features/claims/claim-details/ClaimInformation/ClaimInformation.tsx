@@ -366,10 +366,10 @@ export const ClaimInformation: React.FC<{
             />
           </SelectWrapper>
         )}
-        {selectedAgreement && selectedAgreement.partner ? (
+        {selectedAgreement ? (
           <TermsAndConditions
             typeOfContract={selectedAgreement.typeOfContract}
-            partner={selectedAgreement.partner}
+            partner={selectedAgreement?.partner ?? null}
             carrier={selectedAgreement.carrier}
             createdAt={selectedAgreement.createdAt}
           />
@@ -445,7 +445,7 @@ export const ClaimInformation: React.FC<{
 
 const TermsAndConditions: React.FC<{
   typeOfContract: string
-  partner: string
+  partner: string | null
   carrier: string
   createdAt: string
 }> = ({ typeOfContract, partner, carrier, createdAt }) => {
