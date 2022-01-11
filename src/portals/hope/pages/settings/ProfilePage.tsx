@@ -123,13 +123,20 @@ const ProfilePage: Page = () => {
           </form>
         </Flex>
       </div>
-      <Spacing top="large" />
-      <div>
-        <ThirdLevelHeadline>Portals</ThirdLevelHeadline>
-        <Flex fullWidth>
-          <AvailablePortals portals={portals} currentPortal={currentPortal} />
-        </Flex>
-      </div>
+      {portals.length > 1 && (
+        <>
+          <Spacing top="large" />
+          <div>
+            <ThirdLevelHeadline>Portals</ThirdLevelHeadline>
+            <Flex fullWidth>
+              <AvailablePortals
+                portals={portals}
+                currentPortal={currentPortal}
+              />
+            </Flex>
+          </div>
+        </>
+      )}
     </>
   )
 }
