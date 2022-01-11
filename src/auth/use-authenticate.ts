@@ -5,6 +5,7 @@ import { ApolloError } from '@apollo/client'
 interface UseAuthenticateResult {
   role: string | null
   portal: string | null
+  availablePortals: string[]
   loading: boolean
   error: ApolloError | null
 }
@@ -31,7 +32,13 @@ export const useAuthenticate = (): UseAuthenticateResult => {
   }, [data, loading])
 
   if (loading) {
-    return { loading: true, portal: null, role: null, error: null }
+    return {
+      loading: true,
+      portal: null,
+      role: null,
+      error: null,
+      availablePortals: data?.me.availablePortals ?? [],
+    }
   }
 
   if (data?.me) {
@@ -40,6 +47,7 @@ export const useAuthenticate = (): UseAuthenticateResult => {
       role: data.me.portal,
       loading: false,
       error: null,
+      availablePortals: data?.me.availablePortals ?? [],
     }
   }
 
@@ -48,5 +56,6 @@ export const useAuthenticate = (): UseAuthenticateResult => {
     role: null,
     loading: false,
     error: refetchAttempt > 5 && error ? error : null,
+    availablePortals: data?.me.availablePortals ?? [],
   }
 }

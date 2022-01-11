@@ -1,15 +1,27 @@
-import { Button, Flex, Input, Label, MainHeadline, Spacing } from '@hedvig-ui'
+import {
+  Button,
+  Flex,
+  Input,
+  Label,
+  MainHeadline,
+  Spacing,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useGetMeQuery, useUpdateUserMutation } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
+import { AvailablePortals } from 'auth/components/AvailablePortals'
 
 const ProfilePage: Page = () => {
   const { data } = useGetMeQuery()
   const [fullName, setFullName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState<null | string>('')
   const [updateUser] = useUpdateUserMutation()
+
+  const portals = data?.me.availablePortals ?? []
+  const currentPortal = data?.me.portal ?? ''
 
   const handleSaveChanges = () => {
     if (!data) {
@@ -60,9 +72,10 @@ const ProfilePage: Page = () => {
 
   return (
     <>
+      <MainHeadline>Settings</MainHeadline>
+      <Spacing top="large" />
       <div>
-        <MainHeadline>Profile</MainHeadline>
-        <Spacing top />
+        <ThirdLevelHeadline>Profile</ThirdLevelHeadline>
         <Flex direction="column">
           <form
             style={{ width: '100%', maxWidth: '350px' }}
@@ -108,6 +121,13 @@ const ProfilePage: Page = () => {
               )}
             </Flex>
           </form>
+        </Flex>
+      </div>
+      <Spacing top="large" />
+      <div>
+        <ThirdLevelHeadline>Portals</ThirdLevelHeadline>
+        <Flex fullWidth>
+          <AvailablePortals portals={portals} currentPortal={currentPortal} />
         </Flex>
       </div>
     </>

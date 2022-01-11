@@ -2,5 +2,6 @@ query Authentication {
   me {
     role
     portal
+    availablePortals
   }
 }
