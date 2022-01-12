@@ -1,9 +1,9 @@
 import '@emotion/react'
-import { lightTheme } from '@hedvig-ui'
+import { lightTheme } from '@hedvig-ui/index'
 
 declare module '@emotion/react' {
   type ThemeRecord = Record<keyof typeof lightTheme, string>
 
-  // tslint:disable-next-line
+  // eslint-disable-next-line
   export interface Theme extends ThemeRecord {}
 }
