@@ -113,6 +113,7 @@ export const MemberHistoryCardWrapper = styled(Link)<{ muted: boolean }>`
     `};
   }
 `
+
 export const MemberName = styled.span`
   display: block;
 `
