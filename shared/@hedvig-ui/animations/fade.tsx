@@ -60,7 +60,7 @@ interface UseFadeAnimationVariables {
 }
 
 interface UseFadeAnimationResult {
-  fade: (direction: FadeDirection, type: FadeType) => Promise<any>
+  fade: (direction: FadeDirection, type: FadeType) => Promise<void>
   props: {
     duration: number
     type: FadeType | null

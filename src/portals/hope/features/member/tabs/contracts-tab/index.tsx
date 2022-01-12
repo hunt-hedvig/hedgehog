@@ -50,7 +50,7 @@ export const ContractTab: React.FC<{
           key={contract.id}
           contract={contract}
           locale={locale}
-          refetch={refetch}
+          onRefetch={() => refetch()}
           shouldPreSelectAgreement={
             contracts.length === 1 && !contract.terminationDate
           }

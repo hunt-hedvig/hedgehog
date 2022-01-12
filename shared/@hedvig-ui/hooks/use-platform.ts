@@ -2,7 +2,7 @@ import { Key, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import React from 'react'
 
 interface UsePlatformResult {
-  isMetaKey: (e: KeyboardEvent | React.KeyboardEvent<any>) => boolean
+  isMetaKey: (e: React.KeyboardEvent | KeyboardEvent) => boolean
   metaKey: Key
   platform: 'Mac' | 'Other'
 }
@@ -10,7 +10,7 @@ interface UsePlatformResult {
 export const usePlatform = (): UsePlatformResult => {
   const isMac = window.navigator.appVersion.indexOf('Mac') !== -1
   return {
-    isMetaKey: (e: KeyboardEvent | React.KeyboardEvent<any>) =>
+    isMetaKey: (e: React.KeyboardEvent | KeyboardEvent) =>
       isMac ? e.metaKey : e.ctrlKey,
     metaKey: isMac ? Keys.Command : Keys.Control,
     platform: isMac ? 'Mac' : 'Other',

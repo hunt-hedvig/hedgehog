@@ -16,48 +16,45 @@ import {
   Tools,
 } from 'react-bootstrap-icons'
 import MediaQuery from 'react-media'
-import { useLocation } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
 import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
-const Wrapper = styled('div')<{ collapsed: boolean }>(
-  ({ collapsed, theme }) => ({
-    display: 'inline-block',
-    position: 'relative',
-    flex: 1,
-    background: theme.type === 'dark' ? colorsV3.gray800 : colorsV3.gray900,
-    color: colorsV3.white,
-    transition: 'max-width 300ms',
-    maxWidth: collapsed ? '6rem' : 300,
-    minWidth: '6rem',
-    minHeight: '100vh',
+const Wrapper = styled.div<{ collapsed: boolean }>`
+  display: inline-block;
+  position: relative;
+  flex: 1;
 
-    [Menu as any]: {
-      padding: collapsed ? '0 1rem' : '0 2rem',
-    },
-    [BottomSection as any]: {
-      padding: collapsed ? '0 1rem' : '0 2rem',
-      alignItems: collapsed ? 'center' : 'flex-start',
-    },
-    a: {
-      padding: collapsed ? '0.75rem 1rem' : undefined,
-      width: collapsed ? undefined : '100%',
-      justifyContent: collapsed ? 'center' : 'flex-start',
+  background: ${({ theme }) =>
+    theme.type === 'dark' ? colorsV3.gray800 : colorsV3.gray900};
+  color: ${colorsV3.white};
+  transition: max-width 300ms;
+  max-width: ${({ collapsed }) => (collapsed ? '6rem' : '300px')};
+  min-width: 6rem;
 
-      svg: {
-        width: collapsed ? 24 : 18,
-        height: collapsed ? 24 : 18,
-        marginRight: collapsed ? 0 : '1rem',
-      },
-    },
-    [MenuText as any]: {
-      width: collapsed ? 0 : 'auto',
-    },
-  }),
-)
+  min-height: 100vh;
+
+  .menu {
+    padding: ${({ collapsed }) => (collapsed ? '0 1rem' : '0 2rem')};
+  }
+
+  a {
+    padding: ${({ collapsed }) => (collapsed ? '0.75rem 1rem' : undefined)};
+    width: ${({ collapsed }) => (collapsed ? undefined : '100%')};
+    justify-content: ${({ collapsed }) =>
+      collapsed ? 'center' : 'flex-start'};
+
+    svg {
+      width: ${({ collapsed }) => (collapsed ? '24px' : '18px')};
+      height: ${({ collapsed }) => (collapsed ? '24px' : '18px')};
+      margin-right: ${({ collapsed }) => (collapsed ? 0 : '1rem')};
+    }
+  }
+`
+
 const InnerWrapper = styled('div')({
   position: 'sticky',
   display: 'flex',
@@ -133,21 +130,6 @@ const Menu = styled('div')({
   minHeight: 'fit-content',
 })
 
-const MenuText = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-  transition: 'width 500ms',
-  whiteSpace: 'nowrap',
-  overflowX: 'hidden',
-})
-
-const BottomSection = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-  padding: '0 2rem 2rem 2rem',
-})
-
 const routes = {
   dashborad: '/dashborad',
   claims: '/claims/list/1',
@@ -161,9 +143,8 @@ const routes = {
   foss: 'https://foss.finansnorge.no/#/account/login',
 }
 
-export const VerticalMenu: React.FC<any & { history: History }> = ({
-  history,
-}) => {
+export const VerticalMenu: React.FC = () => {
+  const history = useHistory()
   const { settings } = useMe()
   const { pathname } = useLocation()
   const [isCollapsed, setCollapsed] = useState(
@@ -294,7 +275,7 @@ export const VerticalMenu: React.FC<any & { history: History }> = ({
               <HeaderLogoIcon collapsed={shouldAlwaysCollapse || isCollapsed} />
             </Header>
 
-            <Menu>
+            <Menu className="menu">
               {MenuItemsList.map(({ external, single, ...item }, index) => {
                 const navigation = register(item.title, {
                   focus: index === 0 ? Keys.S : undefined,

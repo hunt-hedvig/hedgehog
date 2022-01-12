@@ -47,15 +47,12 @@ import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { useMe } from '../../../user/hooks/use-me'
 
-const validateSelectOption = (value: any): ClaimState => {
-  if (!Object.values(ClaimState).includes(value as any)) {
+const validateSelectOption = (value): ClaimState => {
+  if (!Object.values(ClaimState).includes(value)) {
     throw new Error(`invalid ClaimState: ${value}`)
   }
-  return value as ClaimState
-}
 
-const validateSelectEmployeeClaimOption = (value: any): boolean => {
-  return value === 'True'
+  return value as ClaimState
 }
 
 const SelectWrapper = styled.div`
@@ -162,13 +159,13 @@ export const ClaimInformation: React.FC<{
     await setCoveringEmployee({
       variables: {
         id: claimId,
-        coveringEmployee: validateSelectEmployeeClaimOption(value),
+        coveringEmployee: value === 'True',
       },
       optimisticResponse: {
         setCoveringEmployee: {
           id: claimId,
           __typename: 'Claim',
-          coveringEmployee: validateSelectEmployeeClaimOption(value),
+          coveringEmployee: value === 'True',
           events: data?.claim?.events ?? [],
         },
       },

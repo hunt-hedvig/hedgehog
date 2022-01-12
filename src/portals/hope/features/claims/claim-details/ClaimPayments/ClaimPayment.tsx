@@ -23,7 +23,12 @@ import {
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 
 const areSwishPayoutsEnabled = () => {
-  return (window as any).HOPE_FEATURES?.swishPayoutsEnabled ?? false
+  return (
+    (
+      window as Window &
+        typeof global & { HOPE_FEATURES: { swishPayoutsEnabled?: boolean } }
+    ).HOPE_FEATURES?.swishPayoutsEnabled ?? false
+  )
 }
 
 const FormCheckbox = styled(Checkbox)`

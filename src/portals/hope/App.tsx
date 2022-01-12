@@ -98,7 +98,7 @@ const App: React.FC = () => {
                   <Layout>
                     <Tracker />
                     {!history.location.pathname.startsWith('/login') && (
-                      <VerticalMenu history={history} />
+                      <VerticalMenu />
                     )}
                     <Main dark={history.location.pathname.startsWith('/login')}>
                       <TopBar />

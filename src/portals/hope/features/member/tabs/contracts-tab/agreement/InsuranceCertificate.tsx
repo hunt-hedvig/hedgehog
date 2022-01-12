@@ -10,8 +10,8 @@ import {
 
 export const InsuranceCertificate: React.FC<{
   agreement: GenericAgreement
-  refetch: () => Promise<void>
-}> = ({ agreement, refetch }) => {
+  onRefetch: () => void
+}> = ({ agreement, onRefetch }) => {
   const [regenerateCertificate, { loading }] =
     useRegenerateCertificateMutation()
 
@@ -33,7 +33,7 @@ export const InsuranceCertificate: React.FC<{
           error: 'Could not upload certificate',
         },
       )
-      .then(() => refetch())
+      .then(() => onRefetch())
   }
 
   return (

@@ -24,7 +24,7 @@ const Button = styled(DefaultButton)`
 `
 
 export const ConfirmDialogComponent: React.FC<{
-  content: string
+  content: React.ReactNode
   close: () => void
   confirm: () => void
 }> = ({ content, close, confirm }) => {
@@ -79,21 +79,21 @@ export const ConfirmDialogComponent: React.FC<{
 }
 
 export interface ConfirmDialogContextProps {
-  confirm: any
+  confirm: (content: React.ReactNode) => Promise<void>
 }
 
 const ConfirmDialogContext = createContext<ConfirmDialogContextProps>({
-  confirm: undefined,
+  confirm: (_: React.ReactNode) => Promise.resolve(),
 })
 
 export const useConfirmDialog = () => useContext(ConfirmDialogContext)
 
 export const ConfirmDialogProvider: React.FC = ({ children }) => {
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState<React.ReactNode>(null)
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
 
   const awaitingPromiseRef = useRef<{
-    resolve: (value: boolean) => void
+    resolve: () => void
     reject: () => void
   }>()
 
@@ -107,15 +107,15 @@ export const ConfirmDialogProvider: React.FC = ({ children }) => {
   const confirmHandler = () => {
     if (awaitingPromiseRef.current) {
       setShowConfirmDialog(false)
-      awaitingPromiseRef.current.resolve(true)
+      awaitingPromiseRef.current.resolve()
     }
   }
 
-  const confirm = (msg: string) => {
-    setMessage(msg)
+  const confirm = (m: React.ReactNode) => {
+    setMessage(m)
     setShowConfirmDialog(true)
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       awaitingPromiseRef.current = { resolve, reject }
     })
   }

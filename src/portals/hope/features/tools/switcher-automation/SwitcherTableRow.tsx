@@ -235,17 +235,13 @@ export const SwitcherEmailRow: React.FC<
                 variant="secondary"
                 disabled={!!remindedAtDate || markAsRemindedOptions.loading}
                 onClick={async () => {
-                  if (
-                    confirm(
-                      `Did you remind ${convertEnumToTitle(
-                        switcherCompany,
-                      )} about ${member.firstName} ${member.lastName} (${
-                        member.memberId
-                      })?`,
-                    )
-                  ) {
-                    await markAsReminded()
-                  }
+                  confirm(
+                    `Did you remind ${convertEnumToTitle(
+                      switcherCompany,
+                    )} about ${member.firstName} ${member.lastName} (${
+                      member.memberId
+                    })?`,
+                  ).then(() => markAsReminded())
                 }}
               >
                 {markAsRemindedOptions.loading

@@ -137,7 +137,8 @@ const PerilsEditorPage: Page = () => {
               typeof peril.title === 'string'
                 ? peril.title
                 : peril.title.props.children
-            const updateField = (field: string) => (value: any) => {
+
+            const updateField = (field: string) => (value) => {
               setParsedPerils(
                 parsedPerils.map((originalPeril, i_) => {
                   if (i_ === index) {

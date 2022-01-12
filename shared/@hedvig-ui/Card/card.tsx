@@ -39,7 +39,7 @@ export interface CardProps {
   span?: number
   padding?: PaddingSize
   locked?: boolean
-  children: any
+  children: React.ReactNode
 }
 
 const CardContainer = styled.div<CardProps>`
