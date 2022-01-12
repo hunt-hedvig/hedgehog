@@ -62,9 +62,7 @@ export const FileRow = ({ claimId, claimFile, refetch }) => {
       <TableColumn>
         <Dropdown
           style={{ width: 200 }}
-          placeholder={
-            claimFile.category !== null ? claimFile.category : 'File Type'
-          }
+          placeholder={claimFile.category ?? 'File Type'}
         >
           {fileUploadOptions.map((file) => (
             <DropdownOption
