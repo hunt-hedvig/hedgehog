@@ -17,7 +17,7 @@ const sortFileDate = (a, b) => {
   const aDate = new Date(a.timestamp)
   const bDate = new Date(b.timestamp)
 
-  return (bDate as any as number) - (aDate as any as number)
+  return bDate.getTime() - aDate.getTime()
 }
 
 const Image = styled.img`
