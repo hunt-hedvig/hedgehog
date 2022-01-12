@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Checkbox, RadioGroup } from '@hedvig-ui'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { MessageContentType } from 'portals/hope/features/member/messages/components/Message'
 
@@ -53,7 +52,3 @@ const SelectList = ({ content }: { content: MessageContentType }) => (
 )
 
 export default SelectList
-
-SelectList.propTypes = {
-  content: PropTypes.object.isRequired,
-}
