@@ -5,7 +5,6 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import React, {
   createContext,
-  RefObject,
   useContext,
   useEffect,
   useRef,
@@ -17,7 +16,7 @@ interface NavigationContextProps {
   setCursor: (focus: string | null) => void
   registry: Record<string, UseNavigationRegisterOptions>
   setRegistryItem: (name: string, options: UseNavigationRegisterOptions) => void
-  assignRef: <T>(name: string, ref: React.RefObject<T>) => void
+  assignRef: (name: string, ref: unknown) => void
   removeRegistryItem: (name: string) => void
 }
 
@@ -26,7 +25,7 @@ const NavigationContext = createContext<NavigationContextProps>({
   setCursor: (_: string | null) => void 0,
   registry: {},
   setRegistryItem: (_: string, __) => void 0,
-  assignRef: (_: string, __: React.RefObject<unknown>) => void 0,
+  assignRef: (_: string, __: unknown) => void 0,
   removeRegistryItem: (_: string) => false,
 })
 
@@ -87,11 +86,8 @@ export const NavigationProvider = ({ children }) => {
       }
 
       const nextCursor = cursorRef.current
-        ? target?.ref
-          ? target.parent(target.ref)
-          : null
+        ? target.parent(registry.current[cursorRef.current].ref)
         : null
-
       setCursor(nextCursor)
       cursorRef.current = nextCursor
 
@@ -114,9 +110,7 @@ export const NavigationProvider = ({ children }) => {
       }
 
       const nextCursor = cursorRef.current
-        ? target?.ref
-          ? target.resolve(target.ref) ?? null
-          : null
+        ? target.resolve(registry.current[cursorRef.current].ref) ?? null
         : null
 
       setCursor(nextCursor)
@@ -213,7 +207,7 @@ export const NavigationProvider = ({ children }) => {
     delete registry.current[name]
   }
 
-  const assignRef = (name: string, ref: React.RefObject<unknown>) => {
+  const assignRef = (name: string, ref: unknown) => {
     if (!registry.current[name].ref) {
       registry.current[name].ref = ref
     }
@@ -244,10 +238,10 @@ interface NodeNavigationDirections {
 
 interface UseNavigationRegisterOptions {
   focus?: Key
-  resolve?: string | ((ref: RefObject<unknown>) => string | void)
-  parent?: string | ((ref: RefObject<unknown>) => string)
+  resolve?: string | ((ref: unknown) => string | void)
+  parent?: string | ((ref: unknown) => string)
   neighbors?: NodeNavigationDirections
-  ref?: RefObject<unknown>
+  ref?: unknown
 }
 
 export const useNavigation = () => {
