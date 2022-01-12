@@ -24,7 +24,7 @@ const Button = styled(DefaultButton)`
 `
 
 export const ConfirmDialogComponent: React.FC<{
-  content: string
+  content: React.ReactNode
   close: () => void
   confirm: () => void
 }> = ({ content, close, confirm }) => {
@@ -79,17 +79,17 @@ export const ConfirmDialogComponent: React.FC<{
 }
 
 export interface ConfirmDialogContextProps {
-  confirm: (message: string) => Promise<void>
+  confirm: (content: React.ReactNode) => Promise<void>
 }
 
 const ConfirmDialogContext = createContext<ConfirmDialogContextProps>({
-  confirm: (_: string) => Promise.resolve(),
+  confirm: (_: React.ReactNode) => Promise.resolve(),
 })
 
 export const useConfirmDialog = () => useContext(ConfirmDialogContext)
 
 export const ConfirmDialogProvider: React.FC = ({ children }) => {
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState<React.ReactNode>(null)
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
 
   const awaitingPromiseRef = useRef<{
@@ -111,7 +111,7 @@ export const ConfirmDialogProvider: React.FC = ({ children }) => {
     }
   }
 
-  const confirm = (m: string) => {
+  const confirm = (m: React.ReactNode) => {
     setMessage(m)
     setShowConfirmDialog(true)
 

@@ -35,7 +35,7 @@ const OPTIONS_LIST = [
 ]
 
 export const StandardRadio = () => {
-  const [value, setValue] = useState('banana')
+  const [value, setValue] = useState<string>('banana')
 
   return (
     <div style={{ padding: 20 }}>
@@ -43,7 +43,7 @@ export const StandardRadio = () => {
       <div style={{ display: 'flex', gap: 15, marginBottom: 15 }}>
         <RadioGroup
           value={value}
-          onChange={setValue}
+          onChange={(v) => setValue(v as string)}
           options={OPTIONS_LIST.map((opt) => ({
             ...opt,
             disabled: boolean('Disabled', false),
