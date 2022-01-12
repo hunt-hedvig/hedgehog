@@ -21,7 +21,7 @@ export interface CommandLineAction {
 }
 
 interface CommandLineContextProps {
-  registerActions: (newActions: CommandLineAction[]) => any
+  registerActions: (newActions: CommandLineAction[]) => void
   isHintingOption: boolean
   isHintingControl: boolean
 }

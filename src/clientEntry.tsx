@@ -45,7 +45,10 @@ ReactDOM.render(
               path="/gatekeeper"
               component={() => {
                 window.location.href = `${
-                  (window as any).GATEKEEPER_HOST
+                  (
+                    window as Window &
+                      typeof global & { GATEKEEPER_HOST: string }
+                  ).GATEKEEPER_HOST
                 }/sso?redirect=${window.location.protocol}//${
                   window.location.host
                 }/login/callback`

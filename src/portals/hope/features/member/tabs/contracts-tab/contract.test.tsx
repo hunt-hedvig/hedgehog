@@ -9,7 +9,7 @@ it('getFirstMasterInception returns first master inception if one contract is ac
       masterInception: '2020-01-01',
     },
   ]
-  const firstMasterInception = getFirstMasterInception(activeContracts as any)
+  const firstMasterInception = getFirstMasterInception(activeContracts)
   expect(firstMasterInception).toStrictEqual('2020-01-01')
 })
 
@@ -19,7 +19,7 @@ it('getFirstMasterInception returns null if one contract is pending', () => {
       masterInception: null,
     },
   ]
-  const firstMasterInception = getFirstMasterInception(activeContracts as any)
+  const firstMasterInception = getFirstMasterInception(activeContracts)
   expect(firstMasterInception).toStrictEqual(null)
 })
 
@@ -32,7 +32,7 @@ it('getFirstMasterInception returns first master inception if both are active', 
       masterInception: '2020-03-01',
     },
   ]
-  const firstMasterInception = getFirstMasterInception(activeContracts as any)
+  const firstMasterInception = getFirstMasterInception(activeContracts)
   expect(firstMasterInception).toStrictEqual('2020-01-01')
 })
 
@@ -45,9 +45,7 @@ it('getFirstMasterInception returns first master inception in time if first cont
       masterInception: null,
     },
   ]
-  const firstMasterInception = getFirstMasterInception(
-    oneActiveOnePending as any,
-  )
+  const firstMasterInception = getFirstMasterInception(oneActiveOnePending)
   expect(firstMasterInception).toStrictEqual('2020-01-01')
 })
 
@@ -60,9 +58,7 @@ it('getFirstMasterInception returns first master inception in time if second con
       masterInception: '2020-01-01',
     },
   ]
-  const firstMasterInception = getFirstMasterInception(
-    oneActiveOnePending as any,
-  )
+  const firstMasterInception = getFirstMasterInception(oneActiveOnePending)
   expect(firstMasterInception).toStrictEqual('2020-01-01')
 })
 
@@ -75,7 +71,7 @@ it('getFirstMasterInception returns null if both contracts are inactive', () => 
       masterInception: null,
     },
   ]
-  const firstMasterInception = getFirstMasterInception(bothInactive as any)
+  const firstMasterInception = getFirstMasterInception(bothInactive)
   expect(firstMasterInception).toBe(null)
 })
 
@@ -90,7 +86,7 @@ it('getLastTerminationDate returns null if one contract is active', () => {
       terminationDate: null,
     },
   ]
-  const lastTerminationDate = getLastTerminationDate(terminatedContracts as any)
+  const lastTerminationDate = getLastTerminationDate(terminatedContracts)
   expect(lastTerminationDate).toStrictEqual(null)
 })
 
@@ -100,7 +96,7 @@ it('getLastTerminationDate returns last termination date in time if one contract
       terminationDate: '2020-03-01',
     },
   ]
-  const lastTerminationDate = getLastTerminationDate(terminatedContracts as any)
+  const lastTerminationDate = getLastTerminationDate(terminatedContracts)
   expect(lastTerminationDate).toStrictEqual('2020-03-01')
 })
 
@@ -113,7 +109,7 @@ it('getLastTerminationDate returns last termination date in time if second is te
       terminationDate: '2020-03-01',
     },
   ]
-  const lastTerminationDate = getLastTerminationDate(terminatedContracts as any)
+  const lastTerminationDate = getLastTerminationDate(terminatedContracts)
   expect(lastTerminationDate).toStrictEqual('2020-03-01')
 })
 
@@ -126,7 +122,7 @@ it('getLastTerminationDate returns last termination date in time if first is ter
       terminationDate: '2020-01-01',
     },
   ]
-  const lastTerminationDate = getLastTerminationDate(terminatedContracts as any)
+  const lastTerminationDate = getLastTerminationDate(terminatedContracts)
   expect(lastTerminationDate).toStrictEqual('2020-03-01')
 })
 
@@ -139,9 +135,7 @@ it('getLastTerminationDate returns null first contract is active', () => {
       terminationDate: '2020-03-01',
     },
   ]
-  const lastTerminationDate = getLastTerminationDate(
-    oneActiveOneTerminated as any,
-  )
+  const lastTerminationDate = getLastTerminationDate(oneActiveOneTerminated)
   expect(lastTerminationDate).toBe(null)
 })
 
@@ -154,7 +148,7 @@ it('getLastTerminationDate returns null if both contracts are active', () => {
       terminationDate: null,
     },
   ]
-  const lastTerminationDate = getLastTerminationDate(bothInactive as any)
+  const lastTerminationDate = getLastTerminationDate(bothInactive)
   expect(lastTerminationDate).toBe(null)
 })
 
