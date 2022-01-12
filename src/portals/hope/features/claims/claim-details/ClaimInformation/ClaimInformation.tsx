@@ -346,26 +346,33 @@ export const ClaimInformation: React.FC<{
             placeholder="When did it happen?"
           />
         </SelectWrapper>
-        {contracts && (
-          <SelectWrapper>
-            <Label>Contract for Claim</Label>
-            <ContractDropdown
-              contracts={contracts as Contract[]}
-              selectedContract={selectedContract as Contract | undefined}
-              selectedAgreement={
-                selectedAgreement as GenericAgreement | undefined
-              }
-              onChange={async (value) => {
-                await setContractForClaim({
-                  variables: {
-                    request: { claimId, memberId, contractId: value },
-                  },
-                })
-                await refetch()
-              }}
-            />
-          </SelectWrapper>
-        )}
+        <SelectWrapper>
+          <Label>Contract for Claim</Label>
+          <Dropdown placeholder="None selected">
+            <DropdownOption selected={false} onClick={() => void 0}>
+              <div>Hello</div>
+            </DropdownOption>
+            <DropdownOption selected={false} onClick={() => void 0}>
+              <div>Hello</div>
+            </DropdownOption>
+          </Dropdown>
+
+          <ContractDropdown
+            contracts={contracts as Contract[]}
+            selectedContract={selectedContract as Contract | undefined}
+            selectedAgreement={
+              selectedAgreement as GenericAgreement | undefined
+            }
+            onChange={async (value) => {
+              await setContractForClaim({
+                variables: {
+                  request: { claimId, memberId, contractId: value },
+                },
+              })
+              await refetch()
+            }}
+          />
+        </SelectWrapper>
         {selectedAgreement ? (
           <TermsAndConditions
             typeOfContract={selectedAgreement.typeOfContract}

@@ -100,6 +100,7 @@ const OptionStyled = styled.li<{ selected: boolean }>`
   background-color: ${({ theme, selected }) =>
     !selected ? theme.backgroundLight : theme.accentBackground};
 
+  transition: none;
   &:hover,
   &:focus {
     background-color: ${({ theme, selected }) =>
