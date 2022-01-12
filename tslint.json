@@ -16,12 +16,10 @@
         "allow-leading-underscore",
         "allow-trailing-underscore"
       ]
-    }
+    },
+    "no-any": true
   },
   "linterOptions": {
-    "exclude": [
-      "./src/api/generated/graphql.tsx",
-      "./src/types/generated/graphql.tsx"
-    ]
+    "exclude": ["./src/api/generated/graphql.tsx", "./src/types/**/*"]
   }
 }

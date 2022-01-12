@@ -143,8 +143,8 @@
     "watch-server": "NODE_ENV=development BROWSER=false nodemon -q -w ./src/server -x 'ts-node -P tsconfig-server.json' src/server/serverEntry.ts",
     "test": "NODE_ENV=test jest --maxWorkers=1",
     "typecheck": "tsc",
-    "lint": "tslint src/**/*.ts* shared/**/*.ts*",
-    "fix": "tslint src/**/*.ts* shared/**/*.ts* --fix && pretty-quick",
+    "lint": "tslint src/**/*.{ts,tsx} shared/**/*.{ts,tsx}",
+    "fix": "tslint src/**/*.{ts,tsx} shared/**/*.{ts,tsx} --fix && pretty-quick",
     "graphql:gen": "graphql-codegen --config graphql-codegen.yml",
     "precommit": "lint-staged",
     "storybook": "start-storybook -p 6006",
@@ -153,7 +153,6 @@
   "lint-staged": {
     "*.{ts,tsx}": [
       "pretty-quick",
-      "yarn lint --fix",
       "git add"
     ]
   },

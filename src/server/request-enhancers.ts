@@ -31,8 +31,12 @@ export const setLoggerMiddleware: Middleware = async (ctx, next) => {
   await next()
 }
 
+interface LogEvent {
+  status?: number | null
+}
+
 export const logRequestMiddleware: Middleware = async (ctx, next) => {
-  const log = (e?: { status: any }) =>
+  const log = (e?: LogEvent) =>
     (e?.status ? e.status !== 200 : ctx.status !== 200) &&
     ctx.state
       .getLogger('request')
