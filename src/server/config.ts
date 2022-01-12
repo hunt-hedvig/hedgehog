@@ -15,7 +15,7 @@ const requireNotNullish = <T>(
     )
   }
 
-  return thing!
+  return thing
 }
 
 export const config = {

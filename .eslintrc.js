@@ -1,6 +1,7 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
+    'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
     'plugin:prettier/recommended',
@@ -9,8 +10,5 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  rules: {
-    '@typescript-eslint/array-type': ['error', { default: 'generic' }],
-  },
-  ignorePatterns: ["/src/types/**/*"]
+  ignorePatterns: ['/src/types/**/*'],
 }
