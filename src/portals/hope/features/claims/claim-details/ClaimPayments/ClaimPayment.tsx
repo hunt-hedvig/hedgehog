@@ -124,7 +124,7 @@ export const ClaimPayment: React.FC<{
       exGratia: isExGratia,
       carrier,
       paidAt:
-        form.getValues().type !== ClaimPaymentType.Automatic
+        form.getValues().type !== ClaimPaymentType.Automatic && date
           ? `${date}T00:00:00.000Z`
           : null,
     }
@@ -171,7 +171,10 @@ export const ClaimPayment: React.FC<{
             setIsExGratia(false)
             return 'Claim payment done'
           },
-          error: 'Could not make payment',
+          error: (e) => {
+            console.error(e)
+            return 'Could not make payment'
+          },
         },
       )
     }

@@ -103,9 +103,10 @@ export const CommandLineProvider: React.FC = ({ children }) => {
   }
 
   const handleKeyDown = async (e: KeyboardEvent) => {
-    if (e.getModifierState(e.key)) {
+    if (e.getModifierState && e.getModifierState(e.key)) {
       return
     }
+
     if (!(e.shiftKey || e.ctrlKey || e.altKey || e.metaKey)) {
       return
     }
