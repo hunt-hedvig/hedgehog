@@ -3,7 +3,7 @@ import { Spinner } from '@hedvig-ui'
 import { parseISO } from 'date-fns'
 import { useMessageHistory } from 'portals/hope/features/member/messages/hooks/use-message-history'
 import React, { HTMLAttributes } from 'react'
-import { Message } from './Message'
+import { Message } from './components/Message'
 
 const MessagesListContainer = styled.div`
   height: 100%;

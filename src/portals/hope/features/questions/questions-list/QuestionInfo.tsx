@@ -1,5 +1,5 @@
 import { parseISO } from 'date-fns'
-import { Message } from 'portals/hope/features/member/messages/Message'
+import { Message } from 'portals/hope/features/member/messages/components/Message'
 import React from 'react'
 import { Question } from 'types/generated/graphql'
 
