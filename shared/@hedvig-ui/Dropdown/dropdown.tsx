@@ -1,6 +1,7 @@
 import { css, keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
 import React, {
+  Children,
   ForwardedRef,
   HTMLAttributes,
   LiHTMLAttributes,
@@ -100,6 +101,8 @@ const OptionStyled = styled.li<{ selected: boolean }>`
   background-color: ${({ theme, selected }) =>
     !selected ? theme.backgroundLight : theme.accentBackground};
 
+  transition: none;
+
   &:hover,
   &:focus {
     background-color: ${({ theme, selected }) =>
@@ -127,7 +130,7 @@ const TriangleIcon = styled(TriangleFill)<{ active: number }>`
 export interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
   placeholder?: string
   value?: string
-  children: any
+  children: React.ReactNode
 }
 
 export const Dropdown = React.forwardRef(
@@ -135,6 +138,18 @@ export const Dropdown = React.forwardRef(
     { placeholder, children, value, ...props }: DropdownProps,
     forwardRef: ForwardedRef<HTMLDivElement>,
   ) => {
+    const arrayChildren = Children.toArray(children).filter((child) => {
+      const castedChild = child as React.ReactElement
+
+      return (
+        castedChild.props?.onClick &&
+        typeof castedChild?.props?.selected !== 'undefined'
+      )
+    }) as unknown as Omit<React.ReactElement, 'props'> &
+      {
+        props: OptionProps
+      }[]
+
     const numberOfOptions = React.Children.count(children)
 
     const defaultRef = useRef<HTMLDivElement>(null)
@@ -146,7 +161,7 @@ export const Dropdown = React.forwardRef(
     const [navigationStep] = useVerticalKeyboardNavigation({
       maxStep: numberOfOptions - 1,
       onPerformNavigation: (index) => {
-        children[index].props.onClick()
+        arrayChildren[index].props.onClick()
       },
       isActive: active,
     })
@@ -167,11 +182,13 @@ export const Dropdown = React.forwardRef(
     useClickOutside(ref, closeDropdown)
 
     useEffect(() => {
-      const hasSelected = !!children.filter((el) => el.props.selected).length
+      const hasSelected = !!arrayChildren.find(
+        (element) => !!element?.props?.selected,
+      )
 
       if (hasSelected) {
-        children.forEach((el, index) => {
-          if (el.props.selected) {
+        arrayChildren.forEach((element, index) => {
+          if (!!element?.props?.selected) {
             setSelectedIdx(index + 1)
           }
         })
@@ -204,15 +221,15 @@ export const Dropdown = React.forwardRef(
         }}
         {...props}
       >
-        {!selectedIdx || !children[selectedIdx - 1] ? (
+        {!selectedIdx || !arrayChildren[selectedIdx - 1] ? (
           <OptionStyled selected={false} tabIndex={-1} onClick={toggleDropdown}>
             <Placeholder>{placeholder || 'Dropdown'}</Placeholder>
           </OptionStyled>
         ) : !value ? (
           {
-            ...children[selectedIdx - 1],
+            ...arrayChildren[selectedIdx - 1],
             props: {
-              ...children[selectedIdx - 1].props,
+              ...arrayChildren[selectedIdx - 1].props,
               tabIndex: -1,
               selected: false,
               onClick: () => {
@@ -228,13 +245,13 @@ export const Dropdown = React.forwardRef(
 
         {active && (
           <OptionsList activeOption={navigationStep}>
-            {children.map((el) => ({
-              ...el,
+            {arrayChildren.map((element) => ({
+              ...element,
               props: {
-                ...el.props,
+                ...element.props,
                 tabIndex: -1,
                 onClick: () => {
-                  el.props.onClick()
+                  element.props.onClick()
                   toggleDropdown()
                 },
               },

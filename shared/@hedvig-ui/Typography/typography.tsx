@@ -70,7 +70,7 @@ interface HotkeyProps {
   hotkey: string
   hinting: boolean
   dark?: boolean
-  children: any
+  children: React.ReactNode
 }
 
 const HotkeyWrapper = styled.div`

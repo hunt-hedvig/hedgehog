@@ -52,7 +52,7 @@ const CheckIconStyled = styled(CheckIcon)`
 `
 
 interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: any
+  label: React.ReactNode
   checked?: boolean
   disabled?: boolean
 }
