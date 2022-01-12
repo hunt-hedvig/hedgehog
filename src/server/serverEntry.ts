@@ -1,6 +1,4 @@
 import dotenv from 'dotenv'
-dotenv.config()
-
 import { readFileSync } from 'fs'
 import Koa from 'koa'
 import compress from 'koa-compress'
@@ -12,7 +10,6 @@ import serve from 'koa-static'
 import path from 'path'
 import 'source-map-support/register'
 import tls from 'tls'
-import url from 'url'
 import { loginCallback, logout, refreshTokenCallback } from './auth'
 import { config } from './config'
 import {
@@ -21,6 +18,8 @@ import {
   setLoggerMiddleware,
   setRequestUuidMiddleware,
 } from './request-enhancers'
+
+dotenv.config()
 
 const template = () => `
 <!doctype html>
@@ -116,13 +115,19 @@ app.use(
     changeOrigin: false,
     ssl: {
       checkServerIdentity(_host, cert) {
-        tls.checkServerIdentity(url.parse(process.env.API_URL!).hostname!, cert)
+        if (!process.env.API_URL) {
+          logger.error('No API_URL defined, exiting')
+          server.close()
+          return
+        }
+
+        tls.checkServerIdentity(new URL(process.env.API_URL).hostname, cert)
       },
     },
     ws: true,
   }),
 )
 
-app.listen(getPort(), () => {
+const server = app.listen(getPort(), () => {
   logger.info(`Server started 🚀 listening on port ${getPort()}`)
 })

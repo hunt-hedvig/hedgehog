@@ -1,3 +1,7 @@
+import dotenv from 'dotenv'
+
+dotenv.config()
+
 const defaultGatekeeperHost =
   process.env.NODE_ENV === 'production' ? null : 'https://id.dev.hedvigit.com'
 
