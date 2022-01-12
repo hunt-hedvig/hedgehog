@@ -15,7 +15,8 @@ interface FadeInProps {
 export const withFadeIn: <T extends object>(
   component,
   ...args
-) => StyledComponent<FadeInProps, T, object> = (component, ...args) =>
+) => // eslint-disable-next-line
+StyledComponent<FadeInProps, T, any> = (component, ...args) =>
   styled(
     component,
     ...args,

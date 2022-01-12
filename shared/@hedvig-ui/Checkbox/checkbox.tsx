@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { HTMLAttributes } from 'react'
+import React, { ChangeEvent, InputHTMLAttributes } from 'react'
 import { Check as CheckIcon } from 'react-bootstrap-icons'
 import { isPressing, Keys } from '../hooks/keyboard/use-key-is-pressed'
 
@@ -51,7 +51,7 @@ const CheckIconStyled = styled(CheckIcon)`
   height: 100%;
 `
 
-interface CheckboxProps extends HTMLAttributes<HTMLInputElement> {
+interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   label: React.ReactNode
   checked?: boolean
   disabled?: boolean
@@ -73,7 +73,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       onKeyDown={(e) => {
         if (isPressing(e, Keys.Enter)) {
           e.preventDefault()
-          onChange?.(e)
+          onChange?.(e as unknown as ChangeEvent<HTMLInputElement>)
         }
       }}
       type="checkbox"
