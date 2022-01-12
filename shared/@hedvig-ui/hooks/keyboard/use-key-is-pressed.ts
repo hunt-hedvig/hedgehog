@@ -328,7 +328,6 @@ const isPressingKey = (
   codeAlternative?: string,
 ): boolean => e.code === code || e.code === codeAlternative
 
-// tslint:disable:no-unused-expression
 const isPressingKeys = (
   e: React.KeyboardEvent | KeyboardEvent,
   keys: ReadonlyArray<string>,

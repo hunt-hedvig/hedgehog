@@ -92,7 +92,7 @@ it('submits a valid form', async () => {
     wrapper
       .find('button[type="submit"]')
       .prop('onClick')
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line
       ?.call({}, {} as any)
     await tickAsync()
   })
