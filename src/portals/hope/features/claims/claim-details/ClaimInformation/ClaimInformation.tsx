@@ -33,10 +33,7 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
-import {
-  ContractDropdown,
-  ContractItem,
-} from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ContractDropdown'
+import { ContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ContractDropdown'
 import {
   ClaimOutcomes,
   OutcomeDropdown,
@@ -49,7 +46,6 @@ import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { useMe } from '../../../user/hooks/use-me'
-import { currentAgreementForContract } from 'portals/hope/features/member/tabs/contracts-tab/utils'
 
 const validateSelectOption = (value: any): ClaimState => {
   if (!Object.values(ClaimState).includes(value as any)) {
@@ -353,39 +349,24 @@ export const ClaimInformation: React.FC<{
         {contracts && (
           <SelectWrapper>
             <Label>Contract for Claim</Label>
-            <Dropdown placeholder="None selected">
-              {contracts.map((contract) => {
-                return (
-                  <DropdownOption
-                    key={contract.id}
-                    selected={contract.id === selectedContract?.id}
-                    onClick={() => {
-                      setContractForClaim({
-                        variables: {
-                          request: {
-                            claimId,
-                            memberId,
-                            contractId: contract.id,
-                          },
-                        },
-                      }).then(() => refetch())
-                    }}
-                  >
-                    <ContractItem
-                      contract={contract}
-                      agreement={
-                        contract.id === selectedContract?.id
-                          ? selectedAgreement
-                          : currentAgreementForContract(contract)
-                      }
-                    />
-                  </DropdownOption>
-                )
-              })}
-            </Dropdown>
+            <ContractDropdown
+              contracts={contracts as Contract[]}
+              selectedContract={selectedContract as Contract | undefined}
+              selectedAgreement={
+                selectedAgreement as GenericAgreement | undefined
+              }
+              onChange={async (value) => {
+                await setContractForClaim({
+                  variables: {
+                    request: { claimId, memberId, contractId: value },
+                  },
+                })
+                await refetch()
+              }}
+            />
           </SelectWrapper>
         )}
-        {selectedAgreement && selectedAgreement.partner ? (
+        {selectedAgreement ? (
           <TermsAndConditions
             typeOfContract={selectedAgreement.typeOfContract}
             partner={selectedAgreement?.partner ?? null}
