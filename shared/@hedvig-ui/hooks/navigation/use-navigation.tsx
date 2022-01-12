@@ -5,6 +5,7 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import React, {
   createContext,
+  RefObject,
   useContext,
   useEffect,
   useRef,
@@ -16,7 +17,7 @@ interface NavigationContextProps {
   setCursor: (focus: string | null) => void
   registry: Record<string, UseNavigationRegisterOptions>
   setRegistryItem: (name: string, options: UseNavigationRegisterOptions) => void
-  assignRef: (name: string, ref: any) => void
+  assignRef: <T>(name: string, ref: React.RefObject<T>) => void
   removeRegistryItem: (name: string) => void
 }
 
@@ -25,7 +26,7 @@ const NavigationContext = createContext<NavigationContextProps>({
   setCursor: (_: string | null) => void 0,
   registry: {},
   setRegistryItem: (_: string, __) => void 0,
-  assignRef: (_: string, __: any) => void 0,
+  assignRef: (_: string, __: React.RefObject<unknown>) => void 0,
   removeRegistryItem: (_: string) => false,
 })
 
@@ -86,8 +87,11 @@ export const NavigationProvider = ({ children }) => {
       }
 
       const nextCursor = cursorRef.current
-        ? target.parent(registry.current[cursorRef.current].ref)
+        ? target?.ref
+          ? target.parent(target.ref)
+          : null
         : null
+
       setCursor(nextCursor)
       cursorRef.current = nextCursor
 
@@ -110,7 +114,9 @@ export const NavigationProvider = ({ children }) => {
       }
 
       const nextCursor = cursorRef.current
-        ? target.resolve(registry.current[cursorRef.current].ref) ?? null
+        ? target?.ref
+          ? target.resolve(target.ref) ?? null
+          : null
         : null
 
       setCursor(nextCursor)
@@ -207,7 +213,7 @@ export const NavigationProvider = ({ children }) => {
     delete registry.current[name]
   }
 
-  const assignRef = (name: string, ref: any) => {
+  const assignRef = (name: string, ref: React.RefObject<unknown>) => {
     if (!registry.current[name].ref) {
       registry.current[name].ref = ref
     }
@@ -238,10 +244,10 @@ interface NodeNavigationDirections {
 
 interface UseNavigationRegisterOptions {
   focus?: Key
-  resolve?: string | ((ref: any) => string | void)
-  parent?: string | ((ref: any) => string)
+  resolve?: string | ((ref: RefObject<unknown>) => string | void)
+  parent?: string | ((ref: RefObject<unknown>) => string)
   neighbors?: NodeNavigationDirections
-  ref?: any
+  ref?: RefObject<unknown>
 }
 
 export const useNavigation = () => {
@@ -286,7 +292,7 @@ export const useNavigation = () => {
 
       return {
         style: { border: '2px solid blue' },
-        ref: (ref: any) => {
+        ref: (ref) => {
           assignRef(name, ref)
 
           ref?.scrollIntoView({
