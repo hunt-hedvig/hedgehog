@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react'
 import { Route, Switch } from 'react-router'
 
-export type Page<T = {}> = React.FC<T>
+export type Page<T> = React.FC<T>
 
 const MainPage = lazy(() => import('./MainPage'))
 

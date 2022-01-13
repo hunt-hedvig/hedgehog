@@ -92,7 +92,7 @@ const PerilsEditorPage: Page = () => {
 
     const reader = new FileReader()
     reader.onload = (event) => {
-      const result = event.target!.result as string
+      const result = event?.target?.result ?? ''
 
       if (!isValidJson(result)) {
         toast.error('Unable to parse file')
