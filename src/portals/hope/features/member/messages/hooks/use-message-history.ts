@@ -3,9 +3,10 @@ import {
   GetMessageHistoryQueryHookResult,
   useGetMessageHistoryQuery,
 } from 'types/generated/graphql'
+import { MessageContentType } from 'portals/hope/features/member/messages/components/Message'
 
 export type Message = ChatMessage & {
-  body: any
+  body: MessageContentType
 }
 
 type MessageHistoryReturnTuple = [

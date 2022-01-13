@@ -12,7 +12,7 @@ import {
 import React from 'react'
 import { Member } from 'types/generated/graphql'
 
-const ButtonsBlock = styled('div')((_) => ({
+const ButtonsBlock = styled('div')(() => ({
   float: 'right',
   marginTop: '10px',
 }))

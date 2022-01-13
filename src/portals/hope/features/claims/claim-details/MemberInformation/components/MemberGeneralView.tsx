@@ -118,7 +118,13 @@ export const MemberGeneralView: React.FC<{
               <span>Personal number</span>
               <div>
                 {member?.personalNumber ? (
-                  <Copyable onClick={() => copy(member.personalNumber!)}>
+                  <Copyable
+                    onClick={() => {
+                      if (member?.personalNumber) {
+                        copy(member.personalNumber)
+                      }
+                    }}
+                  >
                     {formatSsn(member.personalNumber)}
                   </Copyable>
                 ) : (

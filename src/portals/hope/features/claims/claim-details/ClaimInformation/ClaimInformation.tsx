@@ -6,9 +6,7 @@ import {
   GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
-  useGetTermsAndConditionsQuery,
   useRestrictResourceAccessMutation,
-  UserSettingKey,
   useSetClaimDateMutation,
   useSetContractForClaimMutation,
   useSetCoveringEmployeeMutation,
@@ -28,7 +26,6 @@ import {
   Label,
   Loadable,
   Paragraph,
-  Spacing,
   TextDatePicker,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
@@ -45,17 +42,13 @@ import {
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { useMe } from '../../../user/hooks/use-me'
 
-const validateSelectOption = (value: any): ClaimState => {
-  if (!Object.values(ClaimState).includes(value as any)) {
+const validateSelectOption = (value): ClaimState => {
+  if (!Object.values(ClaimState).includes(value)) {
     throw new Error(`invalid ClaimState: ${value}`)
   }
-  return value as ClaimState
-}
 
-const validateSelectEmployeeClaimOption = (value: any): boolean => {
-  return value === 'True'
+  return value as ClaimState
 }
 
 const SelectWrapper = styled.div`
@@ -162,13 +155,13 @@ export const ClaimInformation: React.FC<{
     await setCoveringEmployee({
       variables: {
         id: claimId,
-        coveringEmployee: validateSelectEmployeeClaimOption(value),
+        coveringEmployee: value === 'True',
       },
       optimisticResponse: {
         setCoveringEmployee: {
           id: claimId,
           __typename: 'Claim',
-          coveringEmployee: validateSelectEmployeeClaimOption(value),
+          coveringEmployee: value === 'True',
           events: data?.claim?.events ?? [],
         },
       },
@@ -366,14 +359,8 @@ export const ClaimInformation: React.FC<{
             />
           </SelectWrapper>
         )}
-        {selectedAgreement ? (
-          <TermsAndConditions
-            typeOfContract={selectedAgreement.typeOfContract}
-            partner={selectedAgreement?.partner ?? null}
-            carrier={selectedAgreement.carrier}
-            createdAt={selectedAgreement.createdAt}
-          />
-        ) : (
+        {selectedAgreement ? null : (
+          // TODO: Show TermsAndConditions here instead of null, but it currently just yields 403
           <NoAgreementWarning>
             ⚠️ No agreement covers the claim on the date of loss
           </NoAgreementWarning>
@@ -443,37 +430,41 @@ export const ClaimInformation: React.FC<{
   )
 }
 
-const TermsAndConditions: React.FC<{
-  typeOfContract: string
-  partner: string | null
-  carrier: string
-  createdAt: string
-}> = ({ typeOfContract, partner, carrier, createdAt }) => {
-  const { settings } = useMe()
+{
+  /*
+  const TermsAndConditions: React.FC<{
+    typeOfContract: string
+    partner: string | null
+    carrier: string
+    createdAt: string
+  }> = ({typeOfContract, partner, carrier, createdAt}) => {
+    const {settings} = useMe()
 
-  const { data } = useGetTermsAndConditionsQuery({
-    variables: {
-      contractType: typeOfContract,
-      partner,
-      carrier,
-      date: createdAt.split('T')[0],
-      locale: settings[UserSettingKey.Languages] || 'en_SE',
-    },
-  })
+    const {data} = useGetTermsAndConditionsQuery({
+      variables: {
+        contractType: typeOfContract,
+        partner,
+        carrier,
+        date: createdAt.split('T')[0],
+        locale: settings[UserSettingKey.Languages] || 'en_SE',
+      },
+    })
 
-  if (!data?.termsAndConditions) {
-    return null
+    if (!data?.termsAndConditions) {
+      return null
+    }
+
+    return (
+      <Spacing top="small">
+        <a
+          href={data.termsAndConditions.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Terms and Conditions
+        </a>
+      </Spacing>
+    )
   }
-
-  return (
-    <Spacing top="small">
-      <a
-        href={data.termsAndConditions.url}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Terms and Conditions
-      </a>
-    </Spacing>
-  )
+   */
 }

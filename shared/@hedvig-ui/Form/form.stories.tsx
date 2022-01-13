@@ -34,13 +34,9 @@ const formOptions = [
 export const StandardForm = () => {
   const form = useForm()
 
-  const submitHandler = (e) => {
-    console.log(e)
-  }
-
   return (
     <FormProvider {...form}>
-      <Form onSubmit={submitHandler}>
+      <Form onSubmit={() => void 0}>
         <FormInput
           label="Text input"
           name="textInput"

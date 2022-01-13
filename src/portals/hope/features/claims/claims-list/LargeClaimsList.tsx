@@ -96,7 +96,7 @@ export const LargeClaimsList: React.FC<{
   const [{ claims, page: currentPage, totalPages }, listClaims, { loading }] =
     useListClaims()
 
-  const getClaimFilter = (field: UserSettingKey, isClaims: boolean = true) =>
+  const getClaimFilter = (field: UserSettingKey, isClaims = true) =>
     (settings[field] &&
       (isClaims ? settings[field].claims : settings[field].value)) ||
     null

@@ -307,7 +307,7 @@ const IllegalCharacters = new Set([
 export const shouldIgnoreInput = (key: string) => IllegalCharacters.has(key)
 
 export const isPressing = (
-  e: KeyboardEvent | React.KeyboardEvent<any>,
+  e: React.KeyboardEvent | KeyboardEvent,
   key: Key | ReadonlyArray<Key> | ReadonlyArray<string>,
 ): boolean => {
   if (!('length' in key)) {
@@ -323,14 +323,13 @@ export const isPressing = (
 }
 
 const isPressingKey = (
-  e: KeyboardEvent | React.KeyboardEvent<any>,
+  e: React.KeyboardEvent | KeyboardEvent,
   code: string,
   codeAlternative?: string,
 ): boolean => e.code === code || e.code === codeAlternative
 
-// tslint:disable:no-unused-expression
 const isPressingKeys = (
-  e: KeyboardEvent | React.KeyboardEvent<any>,
+  e: React.KeyboardEvent | KeyboardEvent,
   keys: ReadonlyArray<string>,
 ): boolean => {
   if (keys.length <= 1) {

@@ -86,6 +86,8 @@ type Me {
   role: String!
   user: User!
   settings(filters: UserSettingsFilter): [UserSetting!]!
+  portal: String!
+  availablePortals: [String!]!
 }
 
 input UserSettingsFilter {
@@ -293,6 +295,8 @@ type MutationType {
   markAllNotificationsAsRead: [UserNotification!]!
 
   sharePath(path: String!, userId: ID!): Boolean!
+
+  setPortal(portal: String!): User!
 }
 
 enum GrantHolderType {

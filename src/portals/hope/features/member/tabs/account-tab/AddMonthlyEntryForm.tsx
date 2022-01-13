@@ -27,14 +27,14 @@ export const AddMonthlyEntryForm: React.FC<{
   const [addMonthlyEntry] = useAddMonthlyEntryMutation()
   const form = useForm()
 
-  if (!Boolean(contractMarketInfo?.preferredCurrency)) {
+  if (!contractMarketInfo?.preferredCurrency) {
     return (
       <StandaloneMessage>
         The member has no preferred currency
       </StandaloneMessage>
     )
   }
-  const preferredCurrency = contractMarketInfo!.preferredCurrency
+  const { preferredCurrency } = contractMarketInfo
 
   const onSubmit = (data: FieldValues) => {
     const dataCopy = {

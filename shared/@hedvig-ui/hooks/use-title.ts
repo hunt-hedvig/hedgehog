@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { DependencyList, useEffect, useRef } from 'react'
 
 export const useTitle = (
   title: string,
-  dependencies: any[] = [],
-  retainOnUnmount: boolean = false,
+  dependencies: DependencyList = [],
+  retainOnUnmount = false,
 ) => {
   const defaultTitle = useRef(document.title)
 

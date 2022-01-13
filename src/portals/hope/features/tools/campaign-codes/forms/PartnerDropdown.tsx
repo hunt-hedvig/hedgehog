@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast'
 import { useCreateCampaignPartnerMutation } from 'types/generated/graphql'
 
 export const PartnerDropdown: React.FC<{
-  onChange: (data: any) => void
+  onChange: (data) => void
   value: string
   loading?: boolean
   creatable?: boolean

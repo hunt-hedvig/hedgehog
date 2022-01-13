@@ -71,7 +71,7 @@ const RadioLabel = styled.div<{ checked?: boolean; disabled?: boolean }>`
 
 interface RadioGroupProps {
   value?: string | number
-  onChange?: any
+  onChange?: (value: string | number) => void
   options: {
     value: string | number
     label: string | React.ReactNode
@@ -130,7 +130,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
         onChange={() => onChange && onChange(opt.value)}
         onKeyDown={(e) => {
           if (isPressing(e, Keys.Enter)) {
-            onChange(opt.value)
+            onChange?.(opt.value)
             return
           }
         }}

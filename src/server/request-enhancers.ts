@@ -10,7 +10,7 @@ import {
 import uuidV4 from 'uuid/v4'
 
 export interface LoggingMiddleware {
-  getLogger: (name: string) => Logger
+  getLogger: (message: string) => Logger
 }
 
 const options = new LoggerFactoryOptions().addLogGroupRule(
@@ -31,8 +31,12 @@ export const setLoggerMiddleware: Middleware = async (ctx, next) => {
   await next()
 }
 
+interface LogEvent {
+  status?: number | null
+}
+
 export const logRequestMiddleware: Middleware = async (ctx, next) => {
-  const log = (e?: { status: any }) =>
+  const log = (e?: LogEvent) =>
     (e?.status ? e.status !== 200 : ctx.status !== 200) &&
     ctx.state
       .getLogger('request')

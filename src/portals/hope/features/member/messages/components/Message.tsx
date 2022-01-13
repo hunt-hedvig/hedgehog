@@ -1,24 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { format } from 'date-fns'
-import ImageMessage from 'portals/hope/features/member/messages/ImageMessage'
-import {
-  ACTIVATION_DATE,
-  AUDIO,
-  BANK_ID_COLLECT,
-  CANCELLATION_DATE,
-  DATE,
-  FILE_UPLOAD,
-  HERO,
-  MULTIPLE_SELECT,
-  NUMBER,
-  PARAGRAPH,
-  PHOTO,
-  SINGLE_SELECT,
-  TEXT,
-  VIDEO,
-} from 'portals/hope/features/member/messages/message-types'
-import SelectMessage from 'portals/hope/features/member/messages/SelectMessage'
+import ImageMessage from 'portals/hope/features/member/messages/components/ImageMessage'
+import SelectMessage from 'portals/hope/features/member/messages/components/SelectMessage'
 import React from 'react'
 
 const MessageRow = styled.div<
@@ -100,15 +84,50 @@ const Image = styled.img`
   max-width: 300px;
 `
 
-const isImage = (text) => {
+const isImage = (text: string) => {
   return text.match(/\.(jpeg|jpg|gif|png)$/) != null
+}
+
+export enum MessageTypes {
+  TEXT = 'text',
+  NUMBER = 'number',
+  SINGLE_SELECT = 'single_select',
+  MULTIPLE_SELECT = 'multiple_select',
+  DATE = 'date_picker',
+  ACTIVATION_DATE = 'activation_date_picker',
+  CANCELLATION_DATE = 'cancellation_date_picker',
+  PARAGRAPH = 'paragraph',
+  AUDIO = 'audio',
+  VIDEO = 'video',
+  HERO = 'hero',
+  PHOTO = 'photo_upload',
+  BANK_ID_COLLECT = 'bankid_collect',
+  FILE_UPLOAD = 'file_upload',
+}
+
+export interface MessageContentType {
+  type: keyof typeof MessageTypes
+  text: string
+  url?: string
+  URL?: string
+  imageUri?: string
+  imageURL?: string
+  date?: string
+  choices: {
+    type?: string
+    selected?: boolean
+    appUrl?: string
+    webUrl?: string
+    view?: string
+    text: string | number
+  }[]
 }
 
 export const Message = React.forwardRef<
   React.ReactNode,
   {
     left: boolean
-    content: any
+    content: MessageContentType
     isQuestionMessage?: boolean
     timestamp: Date | null
     from?: string
@@ -145,28 +164,28 @@ export const Message = React.forwardRef<
   )
 })
 
-const MessageContent = ({ content }) => {
+const MessageContent = ({ content }: { content: MessageContentType }) => {
   switch (content.type) {
-    case DATE:
-      return <p>Date: {content.date}</p>
-    case AUDIO:
-      return <audio src={content.URL} controls />
-    case VIDEO:
+    case 'DATE':
+      return <p>Date: {content?.date}</p>
+    case 'AUDIO':
+      return <audio src={content?.URL} controls />
+    case 'VIDEO':
       return <Video src={content.URL} controls />
-    case PHOTO:
-    case PARAGRAPH:
-    case HERO:
+    case 'PHOTO':
+    case 'PARAGRAPH':
+    case 'HERO':
       return <ImageMessage content={content} />
-    case MULTIPLE_SELECT:
-    case SINGLE_SELECT:
+    case 'MULTIPLE_SELECT':
+    case 'SINGLE_SELECT':
       return <SelectMessage content={content} />
-    case FILE_UPLOAD:
+    case 'FILE_UPLOAD':
       return <a href={content.url}>Attached file</a>
-    case TEXT:
-    case NUMBER:
-    case ACTIVATION_DATE:
-    case CANCELLATION_DATE:
-    case BANK_ID_COLLECT:
+    case 'TEXT':
+    case 'NUMBER':
+    case 'ACTIVATION_DATE':
+    case 'CANCELLATION_DATE':
+    case 'BANK_ID_COLLECT':
       return null
     default:
       return null

@@ -13,7 +13,7 @@ interface TrackingContextProps {
 }
 
 const TrackingContext = createContext<TrackingContextProps>({
-  update: (_: UserTrackingData) => void 0,
+  update: () => void 0,
   flush: () => void 0,
   data: null,
 })
@@ -26,7 +26,7 @@ export const TrackingProvider: React.FC<{ children: React.ReactNode }> = ({
   const TRACKING_COOKIE_NAME = '_hvg_payload'
 
   const isPageVisible = usePageVisibility()
-  const [_, setCookie] = useCookies([TRACKING_COOKIE_NAME])
+  const [, setCookie] = useCookies([TRACKING_COOKIE_NAME])
   const [trackingData, setTrackingData] = useState<UserTrackingData | null>(
     null,
   )

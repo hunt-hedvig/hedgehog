@@ -21,13 +21,13 @@ export interface CommandLineAction {
 }
 
 interface CommandLineContextProps {
-  registerActions: (newActions: CommandLineAction[]) => any
+  registerActions: (newActions: CommandLineAction[]) => void
   isHintingOption: boolean
   isHintingControl: boolean
 }
 
 const CommandLineContext = createContext<CommandLineContextProps>({
-  registerActions: (_: CommandLineAction[]) => void 0,
+  registerActions: () => void 0,
   isHintingOption: false,
   isHintingControl: false,
 })
