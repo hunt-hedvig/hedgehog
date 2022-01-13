@@ -27,7 +27,7 @@ interface CommandLineContextProps {
 }
 
 const CommandLineContext = createContext<CommandLineContextProps>({
-  registerActions: (_: CommandLineAction[]) => void 0,
+  registerActions: () => void 0,
   isHintingOption: false,
   isHintingControl: false,
 })

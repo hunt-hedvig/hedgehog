@@ -8,7 +8,7 @@ import {
   useGetClaimPropertiesQuery,
 } from 'types/generated/graphql'
 
-export const CreatePropertyForm: React.FC<{}> = () => {
+export const CreatePropertyForm: React.FC = () => {
   const { data } = useGetClaimPropertiesQuery()
   const [newPropertyName, setNewPropertyName] = useState('')
   const [createProperty, { loading }] = useCreateClaimPropertyMutation()

@@ -188,7 +188,7 @@ export const Dropdown = React.forwardRef(
 
       if (hasSelected) {
         arrayChildren.forEach((element, index) => {
-          if (!!element?.props?.selected) {
+          if (element?.props?.selected) {
             setSelectedIdx(index + 1)
           }
         })

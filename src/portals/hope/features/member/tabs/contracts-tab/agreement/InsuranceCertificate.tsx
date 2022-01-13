@@ -42,7 +42,13 @@ export const InsuranceCertificate: React.FC<{
       <ButtonsGroup>
         {agreement.certificateUrl && (
           <Button
-            onClick={() => window.open(agreement.certificateUrl!!, '_blank')}
+            onClick={() => {
+              if (!agreement.certificateUrl) {
+                return
+              }
+
+              window.open(agreement.certificateUrl, '_blank')
+            }}
           >
             View
           </Button>

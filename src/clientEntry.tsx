@@ -35,7 +35,7 @@ const App: React.FC = () => {
 ReactDOM.render(
   <CookiesProvider>
     <Router history={history}>
-      <ApolloProvider client={apolloClient!}>
+      <ApolloProvider client={apolloClient}>
         <DarkmodeProvider>
           <Global styles={GlobalStyles} />
           <Switch>

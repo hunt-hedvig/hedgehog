@@ -141,8 +141,8 @@ export const ClaimPayment: React.FC<{
             id: claimId,
             payment: {
               ...(paymentInput as ClaimSwishPaymentInput),
-              phoneNumber: form.getValues().phoneNumber!,
-              message: form.getValues().message!,
+              phoneNumber: form.getValues().phoneNumber,
+              message: form.getValues().message,
             },
           },
         }),

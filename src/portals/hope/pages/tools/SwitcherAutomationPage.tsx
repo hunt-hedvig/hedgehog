@@ -189,7 +189,7 @@ const SwitcherAutomationPage: Page = () => {
                             contractId: contract.id,
                             request: {
                               terminationDate,
-                              terminationReason: terminationReason!,
+                              terminationReason,
                               comment,
                             },
                           },

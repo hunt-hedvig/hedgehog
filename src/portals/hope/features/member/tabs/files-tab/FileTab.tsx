@@ -72,6 +72,6 @@ export const MemberFile: React.FC<{
       No files uploaded for this member
     </StandaloneMessage>
   ) : (
-    <MemberFileTable memberFiles={data.member!.fileUploads} />
+    <MemberFileTable memberFiles={data.member.fileUploads} />
   )
 }

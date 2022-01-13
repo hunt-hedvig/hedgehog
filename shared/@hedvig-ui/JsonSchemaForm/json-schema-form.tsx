@@ -157,11 +157,12 @@ const CustomSelectWidget: React.FC<WidgetProps> = ({
   onChange,
   schema,
 }) => {
-  const options = schema.enum!.map((enumValue, idx) => ({
-    key: idx,
-    text: convertEnumToTitle(enumValue as string),
-    value: enumValue as string,
-  }))
+  const options =
+    schema.enum?.map((enumValue, idx) => ({
+      key: idx,
+      text: convertEnumToTitle(enumValue as string),
+      value: enumValue as string,
+    })) ?? []
 
   return (
     <Dropdown>
@@ -221,12 +222,18 @@ const formatInitialFormData = (
   initialFormData: Record<string, unknown>,
   schema: JSONSchema7,
 ): Record<string, unknown> => {
-  const properties = schema.properties!
+  const properties = schema.properties
   const formData = { ...initialFormData }
+
+  if (!properties) {
+    return formData
+  }
+
   Object.entries(properties).forEach(([key, value]) => {
     formData[key] =
       initialFormData[key] ?? (value as JSONSchema7).default ?? undefined
   })
+
   return formData
 }
 
@@ -252,7 +259,7 @@ export const JsonSchemaForm: React.FC<{
         onChange={(e) => setFormData(e.formData)}
         onSubmit={(e) => {
           setFormData(e.formData)
-          onSubmit(formData!)
+          onSubmit(formData)
         }}
         transformErrors={transformErrors}
         ArrayFieldTemplate={ArrayFieldTemplate}

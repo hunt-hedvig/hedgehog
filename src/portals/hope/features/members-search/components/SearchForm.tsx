@@ -107,8 +107,8 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
         <Group pushLeft style={{ display: 'flex', alignItems: 'center' }}>
           <Checkbox
             onChange={(e) => {
-              setIncludeAll(e.currentTarget.checked!)
-              onSubmit(query, e.currentTarget.checked!)
+              setIncludeAll(e.currentTarget.checked)
+              onSubmit(query, e.currentTarget.checked)
             }}
             checked={includeAll}
             label="Wide search"

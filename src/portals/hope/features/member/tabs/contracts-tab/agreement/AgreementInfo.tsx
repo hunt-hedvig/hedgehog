@@ -81,7 +81,7 @@ export const AgreementInfo: React.FC<{
       {agreement.extraBuildings &&
         agreement.extraBuildings.map((extraBuilding, index) => {
           return (
-            <InfoRow key={extraBuilding.id!}>
+            <InfoRow key={extraBuilding.id}>
               Extra building {index + 1}{' '}
               <InfoText>
                 {extraBuilding.displayName}, {extraBuilding.area} m<sup>2</sup>{' '}

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React, { InputHTMLAttributes } from 'react'
+import React, { ChangeEvent, InputHTMLAttributes } from 'react'
 import { Check as CheckIcon } from 'react-bootstrap-icons'
 import { isPressing, Keys } from '../hooks/keyboard/use-key-is-pressed'
 
@@ -73,8 +73,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       onKeyDown={(e) => {
         if (isPressing(e, Keys.Enter)) {
           e.preventDefault()
-          // @ts-ignore
-          onChange(e)
+          onChange?.(e as unknown as ChangeEvent<HTMLInputElement>)
         }
       }}
       type="checkbox"

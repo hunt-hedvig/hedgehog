@@ -22,11 +22,11 @@ interface NavigationContextProps {
 
 const NavigationContext = createContext<NavigationContextProps>({
   cursor: null,
-  setCursor: (_: string | null) => void 0,
+  setCursor: () => void 0,
   registry: {},
-  setRegistryItem: (_: string, __) => void 0,
-  assignRef: (_: string, __: unknown) => void 0,
-  removeRegistryItem: (_: string) => false,
+  setRegistryItem: () => void 0,
+  assignRef: () => void 0,
+  removeRegistryItem: () => false,
 })
 
 export const NavigationProvider = ({ children }) => {

@@ -3,7 +3,7 @@ import { DependencyList, useEffect, useRef } from 'react'
 export const useTitle = (
   title: string,
   dependencies: DependencyList = [],
-  retainOnUnmount: boolean = false,
+  retainOnUnmount = false,
 ) => {
   const defaultTitle = useRef(document.title)
 

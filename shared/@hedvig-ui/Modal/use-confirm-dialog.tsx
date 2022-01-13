@@ -83,7 +83,7 @@ export interface ConfirmDialogContextProps {
 }
 
 const ConfirmDialogContext = createContext<ConfirmDialogContextProps>({
-  confirm: (_: React.ReactNode) => Promise.resolve(),
+  confirm: () => Promise.resolve(),
 })
 
 export const useConfirmDialog = () => useContext(ConfirmDialogContext)

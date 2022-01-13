@@ -42,8 +42,9 @@ export const DebtTab: React.FC<{
   }
 
   // FIXME: We should not make market specific features like this, should use "have debt" or "don't have debt" instead
-  const memberMarket =
-    contractMarketInfo?.market ?? PickedLocaleMarket[pickedLocale!]
+  const memberMarket: string | undefined =
+    contractMarketInfo?.market ??
+    (pickedLocale && PickedLocaleMarket[pickedLocale])
 
   if (memberMarket !== Market.Sweden) {
     return (
@@ -62,7 +63,7 @@ export const DebtTab: React.FC<{
   }
 
   const isEligibleForWhitelist = (): boolean => {
-    if (!!person?.status?.whitelisted) {
+    if (person?.status?.whitelisted) {
       return false
     }
     if ((person?.debt?.paymentDefaults?.length ?? 0) > 0) {

@@ -10,7 +10,7 @@ import {
 import uuidV4 from 'uuid/v4'
 
 export interface LoggingMiddleware {
-  getLogger: (name: string) => Logger
+  getLogger: (message: string) => Logger
 }
 
 const options = new LoggerFactoryOptions().addLogGroupRule(

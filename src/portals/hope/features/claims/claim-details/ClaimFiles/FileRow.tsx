@@ -73,7 +73,7 @@ export const FileRow = ({ claimId, claimFile, refetch }) => {
                 setClaimFileCategory({
                   variables: {
                     claimId,
-                    claimFileId: claimFile.claimFileId!,
+                    claimFileId: claimFile.claimFileId,
                     category: file.value,
                   },
                 })
@@ -90,7 +90,7 @@ export const FileRow = ({ claimId, claimFile, refetch }) => {
       <TableColumn>
         <DeleteButton
           claimId={claimId}
-          claimFileId={claimFile.claimFileId!}
+          claimFileId={claimFile.claimFileId}
           onDeleted={async () => {
             await sleep(500)
             await refetch()
