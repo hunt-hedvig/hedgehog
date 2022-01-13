@@ -363,14 +363,8 @@ export const ClaimInformation: React.FC<{
             />
           </SelectWrapper>
         )}
-        {selectedAgreement ? (
-          <TermsAndConditions
-            typeOfContract={selectedAgreement.typeOfContract}
-            partner={selectedAgreement?.partner ?? null}
-            carrier={selectedAgreement.carrier}
-            createdAt={selectedAgreement.createdAt}
-          />
-        ) : (
+        {selectedAgreement ? null : (
+          // TODO: Show TermsAndConditions here instead of null, but it currently just yields 403
           <NoAgreementWarning>
             ⚠️ No agreement covers the claim on the date of loss
           </NoAgreementWarning>
@@ -440,6 +434,7 @@ export const ClaimInformation: React.FC<{
   )
 }
 
+// @ts-ignore
 const TermsAndConditions: React.FC<{
   typeOfContract: string
   partner: string | null
