@@ -1,13 +1,14 @@
 import styled from '@emotion/styled'
-import { Dropdown, DropdownOption, Shadowed } from '@hedvig-ui'
+import { Dropdown, DropdownOption } from '@hedvig-ui'
 import { DropdownProps } from '@hedvig-ui/Dropdown/dropdown'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
-import {
-  currentAgreementForContract,
-  getCarrierText,
-} from 'portals/hope/features/member/tabs/contracts-tab/utils'
 import React from 'react'
-import { Contract, GenericAgreement } from 'types/generated/graphql'
+import {
+  useMemberContractsQuery,
+  useSetClaimContractMutation,
+} from 'types/generated/graphql'
+import gql from 'graphql-tag'
+import { TypeOfContractType } from 'portals/hope/features/config/constants'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 
 const ContractItemTypeName = styled.div`
   font-size: 1.2em;
@@ -20,21 +21,21 @@ const ContractItemAddress = styled.div`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-const ContractItemCarrier = styled.div`
-  padding-top: 0.15em;
-  font-size: 0.9em;
-  padding-bottom: 0.6em;
+const Tag = styled.span<{ alert?: boolean }>`
+  display: inline-block;
+  background-color: ${({ theme, alert }) =>
+    alert ? theme.danger : theme.backgroundTransparent};
+  color: ${({ theme, alert }) => alert && theme.background};
+
+  font-size: 0.9rem;
+  padding: 0.2rem 0.4rem;
+  margin: 0.25rem 0.25rem 0.25rem 0;
+  border-radius: 0.25rem;
 `
 
 const ContractItemDateRange = styled.div`
   font-size: 0.8em;
   color: ${({ theme }) => theme.semiStrongForeground};
-`
-
-const ContractItemLineOfBusiness = styled.div`
-  padding-top: 0.15em;
-  font-size: 0.9em;
-  padding-bottom: 0.6em;
 `
 
 const ContractItemTopTitle = styled.div`
@@ -51,74 +52,115 @@ const ContractItemStyled = styled.div`
 `
 
 const ContractItem: React.FC<{
-  contract: Contract
-  agreement?: GenericAgreement
-}> = ({ contract, agreement }) => {
-  const address = agreement?.address
-  const lineOfBusiness =
-    agreement && convertEnumToTitle(agreement.lineOfBusinessName)
-
+  title: string
+  address?: string
+  activeFrom: string
+  activeTo?: string
+  tags: React.ReactNode
+}> = ({ title, address, activeFrom, activeTo, tags }) => {
   return (
     <ContractItemStyled>
-      <ContractItemTopTitle>
-        {agreement && (
-          <ContractItemCarrier>
-            <Shadowed>{getCarrierText(agreement?.carrier)}</Shadowed>
-          </ContractItemCarrier>
-        )}
-        {lineOfBusiness && (
-          <ContractItemLineOfBusiness
-            style={{ paddingLeft: agreement && '0.5em' }}
-          >
-            <Shadowed>{lineOfBusiness}</Shadowed>
-          </ContractItemLineOfBusiness>
-        )}
-      </ContractItemTopTitle>
-      <ContractItemTypeName>{contract.contractTypeName}</ContractItemTypeName>
-      {address && (
-        <>
-          <ContractItemAddress>{address && address.street}</ContractItemAddress>
-        </>
-      )}
+      {tags && <ContractItemTopTitle>{tags}</ContractItemTopTitle>}
+      <ContractItemTypeName>{title}</ContractItemTypeName>
+      {address && <ContractItemAddress>{address}</ContractItemAddress>}
 
       <ContractItemDateRange>
-        {contract.masterInception}
+        {activeFrom}
         {' - '}
-        {contract.terminationDate ?? 'Ongoing'}
+        {activeTo ?? 'Ongoing'}
       </ContractItemDateRange>
     </ContractItemStyled>
   )
 }
 
+gql`
+  query MemberContracts($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      contracts {
+        id
+        masterInception
+        terminationDate
+        currentAgreement {
+          id
+          address {
+            street
+          }
+          lineOfBusinessName
+          typeOfContract
+          carrier
+        }
+      }
+    }
+  }
+
+  mutation SetClaimContract($request: SetContractForClaim!) {
+    setContractForClaim(request: $request) {
+      id
+      contract {
+        id
+      }
+    }
+  }
+`
+
 export const ContractDropdown: React.FC<
   {
-    contracts: Contract[]
-    selectedContract?: Contract
-    selectedAgreement?: GenericAgreement
-    onChange: (value: string) => void
+    value?: string
+    memberId: string
+    claimId: string
   } & Omit<DropdownProps, 'children'>
-> = ({
-  contracts,
-  selectedContract,
-  selectedAgreement,
-  onChange,
-  ...props
-}) => {
+> = ({ memberId, claimId, value, ...props }) => {
+  const [setClaimContract] = useSetClaimContractMutation()
+  const { data, refetch } = useMemberContractsQuery({ variables: { memberId } })
+
+  const contracts = data?.member?.contracts ?? []
+
   return (
     <Dropdown placeholder="None selected" {...props}>
       {contracts.map((contract) => {
         return (
           <DropdownOption
             key={contract.id}
-            selected={contract.id === selectedContract?.id}
-            onClick={() => onChange(contract.id)}
+            selected={contract.id === value}
+            onClick={() => {
+              setClaimContract({
+                variables: {
+                  request: { claimId, memberId, contractId: contract.id },
+                },
+                optimisticResponse: {
+                  setContractForClaim: {
+                    __typename: 'Claim',
+                    id: claimId,
+                    contract: {
+                      __typename: 'Contract',
+                      ...contract,
+                      id: contract.id,
+                    },
+                  },
+                },
+              }).then(() => refetch())
+            }}
           >
             <ContractItem
-              contract={contract}
-              agreement={
-                contract.id === selectedContract?.id
-                  ? selectedAgreement
-                  : currentAgreementForContract(contract)
+              title={convertEnumToTitle(
+                TypeOfContractType[contract.currentAgreement.typeOfContract],
+              )}
+              address={contract?.currentAgreement?.address?.street}
+              activeFrom={contract.masterInception}
+              activeTo={contract.terminationDate}
+              tags={
+                <>
+                  <Tag>
+                    {convertEnumToTitle(contract.currentAgreement.carrier)}
+                  </Tag>
+                  <Tag>
+                    {convertEnumToTitle(
+                      contract.currentAgreement.lineOfBusinessName,
+                    )}
+                  </Tag>
+                  <Tag alert={true}>Trial</Tag>
+                </>
               }
             />
           </DropdownOption>

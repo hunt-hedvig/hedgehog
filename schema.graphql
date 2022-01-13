@@ -451,6 +451,7 @@ type Contract {
   isTerminated: Boolean!
   terminationDate: LocalDate
   currentAgreementId: ID!
+  currentAgreement: GenericAgreement!
   hasPendingAgreement: Boolean!
   genericAgreements: [GenericAgreement!]!
   hasQueuedRenewal: Boolean!

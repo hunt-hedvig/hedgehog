@@ -2,13 +2,10 @@ import styled from '@emotion/styled'
 import {
   ClaimPageDocument,
   ClaimState,
-  Contract,
-  GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
   useRestrictResourceAccessMutation,
   useSetClaimDateMutation,
-  useSetContractForClaimMutation,
   useSetCoveringEmployeeMutation,
   useUpdateClaimStateMutation,
 } from 'types/generated/graphql'
@@ -122,7 +119,6 @@ export const ClaimInformation: React.FC<{
     data,
     error: queryError,
     loading: claimInformationLoading,
-    refetch,
   } = useClaimPageQuery({
     variables: { claimId },
   })
@@ -136,7 +132,6 @@ export const ClaimInformation: React.FC<{
     recordingUrl,
     coveringEmployee,
     state,
-    contract: selectedContract,
     agreement: selectedAgreement,
     coInsured,
     payments = [],
@@ -146,7 +141,6 @@ export const ClaimInformation: React.FC<{
   const contracts = memberData?.member?.contracts ?? []
   const trials = memberData?.member?.trials ?? []
 
-  const [setContractForClaim] = useSetContractForClaimMutation()
   const [setCoveringEmployee] = useSetCoveringEmployeeMutation()
   const [updateClaimState] = useUpdateClaimStateMutation()
   const [setClaimDate] = useSetClaimDateMutation()
@@ -343,19 +337,9 @@ export const ClaimInformation: React.FC<{
           <SelectWrapper>
             <Label>Contract for Claim</Label>
             <ContractDropdown
-              contracts={contracts as Contract[]}
-              selectedContract={selectedContract as Contract | undefined}
-              selectedAgreement={
-                selectedAgreement as GenericAgreement | undefined
-              }
-              onChange={async (value) => {
-                await setContractForClaim({
-                  variables: {
-                    request: { claimId, memberId, contractId: value },
-                  },
-                })
-                await refetch()
-              }}
+              value={data?.claim?.contract?.id}
+              claimId={claimId}
+              memberId={memberId}
             />
           </SelectWrapper>
         )}
