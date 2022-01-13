@@ -133,8 +133,12 @@ const ChargeNotAvailableMessage = styled(StandaloneMessage)`
   padding: 1.5em 0;
 `
 
-const MemberTransactionsTable: React.FC = () => {
-  const { data } = useGetMemberTransactionsQuery({ fetchPolicy: 'cache-first' })
+const MemberTransactionsTable: React.FC<{ memberId: string }> = ({
+  memberId,
+}) => {
+  const { data } = useGetMemberTransactionsQuery({
+    variables: { id: memberId },
+  })
 
   const transactions = (data?.member?.transactions ?? [])
     .slice()
@@ -422,7 +426,7 @@ export const PaymentsTab: React.FC<{
           )}
         <Card>
           <ThirdLevelHeadline>Transactions</ThirdLevelHeadline>
-          <MemberTransactionsTable />
+          <MemberTransactionsTable memberId={memberId} />
         </Card>
       </CardsWrapper>
     </>
