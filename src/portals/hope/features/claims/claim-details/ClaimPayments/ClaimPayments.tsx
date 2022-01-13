@@ -242,7 +242,7 @@ export const ClaimPayments: React.FC<{
                   <TableRow
                     key={payment.id}
                     onClick={() => {
-                      copy(payment.id!, {
+                      copy(payment.id, {
                         format: 'text/plain',
                       })
                       toast.success('Copied payment ID')
@@ -286,7 +286,7 @@ export const ClaimPayments: React.FC<{
                 <Monetary
                   amount={{
                     amount: totalAmount.toFixed(2),
-                    currency: payments[0]!.amount.currency,
+                    currency: payments[0].amount.currency,
                   }}
                 />
               </TotalAmount>
@@ -295,7 +295,7 @@ export const ClaimPayments: React.FC<{
                 <Monetary
                   amount={{
                     amount: totalDeductible.toFixed(2),
-                    currency: payments[0]!.amount.currency,
+                    currency: payments[0].amount.currency,
                   }}
                 />
               </TotalDeductible>

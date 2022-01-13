@@ -56,10 +56,8 @@ const MenuItemExternalLink = MenuItemStyled.withComponent(
 interface MenuItemProps extends NavLinkProps {
   title: string
   icon: Icon
-  hotkey: string
   shouldAlwaysCollapse: boolean
   isCollapsed: boolean
-  hotkeyHandler: () => void
   transparent?: boolean
 }
 
@@ -68,20 +66,16 @@ interface ExternalMenuItemProps
   title: string
   href: string
   icon: Icon
-  hotkey: string
   shouldAlwaysCollapse: boolean
   isCollapsed: boolean
-  hotkeyHandler: () => void
 }
 
 export const MenuItem: React.FC<MenuItemProps> = ({
   title,
   to,
   icon,
-  hotkey,
   shouldAlwaysCollapse,
   isCollapsed,
-  hotkeyHandler,
   ...props
 }) => {
   const ItemIcon = icon
@@ -98,10 +92,8 @@ export const ExternalMenuItem: React.FC<ExternalMenuItemProps> = ({
   title,
   href,
   icon,
-  hotkey,
   shouldAlwaysCollapse,
   isCollapsed,
-  hotkeyHandler,
   ...props
 }) => {
   const ItemIcon = icon

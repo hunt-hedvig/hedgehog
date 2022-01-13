@@ -177,7 +177,6 @@ export const ChatPanel = ({ memberId }) => {
     }
   }
 
-  // @ts-ignore
   return (
     <MessagesPanelContainer>
       <ChatForm onSubmit={handleSubmit}>

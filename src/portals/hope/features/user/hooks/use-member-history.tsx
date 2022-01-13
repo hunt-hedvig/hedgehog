@@ -4,17 +4,22 @@ const MEMBER_HISTORY_KEY = 'hedvig:members:history'
 
 export const getDefaultHistory = (): ReadonlyArray<string> => {
   try {
-    return JSON.parse(window.sessionStorage.getItem(MEMBER_HISTORY_KEY)!) ?? []
+    return (
+      JSON.parse(window.sessionStorage.getItem(MEMBER_HISTORY_KEY) ?? '') ?? []
+    )
   } catch {
     return []
   }
 }
 
-export const MemberHistoryContext = createContext({
+interface MemberHistoryContextProps {
+  memberHistory: ReadonlyArray<string>
+  pushToMemberHistory: (memberId: string) => void
+}
+
+export const MemberHistoryContext = createContext<MemberHistoryContextProps>({
   memberHistory: getDefaultHistory(),
-  pushToMemberHistory: (_memberId: string) => {
-    /* noop */
-  },
+  pushToMemberHistory: () => void 0,
 })
 
 export const useMemberHistory = () => useContext(MemberHistoryContext)

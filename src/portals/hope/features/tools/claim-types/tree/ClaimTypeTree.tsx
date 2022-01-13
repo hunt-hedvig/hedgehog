@@ -24,7 +24,7 @@ interface Node {
 
 type Variant = 'type' | 'property' | 'option'
 
-export const ClaimTypeTree: React.FC<{}> = ({}) => {
+export const ClaimTypeTree: React.FC = () => {
   const circleRadius = 10
   const { data: claimTypeTemplateData } = useGetClaimTypeTemplatesQuery()
 

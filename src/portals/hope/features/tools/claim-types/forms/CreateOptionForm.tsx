@@ -8,7 +8,7 @@ import {
   useGetClaimPropertyOptionsQuery,
 } from 'types/generated/graphql'
 
-export const CreateOptionForm: React.FC<{}> = () => {
+export const CreateOptionForm: React.FC = () => {
   const { data } = useGetClaimPropertyOptionsQuery()
   const [newOptionName, setNewOptionName] = useState('')
   const [createOption, { loading }] = useCreateClaimPropertyOptionMutation()

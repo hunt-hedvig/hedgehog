@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-undef
 module.exports = {
   parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
@@ -12,4 +13,13 @@ module.exports = {
     sourceType: 'module',
   },
   ignorePatterns: ['/src/types/**/*'],
+  rules: {
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        ignoreRestSiblings: true,
+      },
+    ],
+  },
 }

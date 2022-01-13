@@ -209,13 +209,12 @@ const ChargesPage: Page = () => {
                         toast.promise(
                           mutation({
                             variables: {
-                              approvals: data.paymentSchedule!.map(
-                                (payment) => ({
+                              approvals:
+                                data.paymentSchedule?.map((payment) => ({
                                   memberId: payment?.member?.memberId ?? '',
                                   amount:
                                     payment?.member?.account?.currentBalance,
-                                }),
-                              ),
+                                })) ?? [],
                             },
                           }),
                           {
