@@ -1,6 +1,7 @@
 import { useAuthenticationQuery } from 'types/generated/graphql'
 import { useEffect, useState } from 'react'
 import { ApolloError } from '@apollo/client'
+import gql from 'graphql-tag'
 
 interface UseAuthenticateResult {
   role: string | null
@@ -9,6 +10,16 @@ interface UseAuthenticateResult {
   loading: boolean
   error: ApolloError | null
 }
+
+gql`
+  query Authentication {
+    me {
+      role
+      portal
+      availablePortals
+    }
+  }
+`
 
 export const useAuthenticate = (): UseAuthenticateResult => {
   const maxRefetchAttempts = 5

@@ -1,5 +1,0 @@
-mutation SetPortal($portal: String!) {
-  setPortal(portal: $portal) {
-    id
-  }
-}

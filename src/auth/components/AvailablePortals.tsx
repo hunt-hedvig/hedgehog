@@ -5,6 +5,7 @@ import chroma from 'chroma-js'
 import { useSetPortalMutation } from 'types/generated/graphql'
 import { useHistory } from 'react-router'
 import { FadeIn } from '@hedvig-ui'
+import gql from 'graphql-tag'
 
 const PortalCard = styled.div`
   display: flex;
@@ -89,6 +90,14 @@ const Container = styled.div`
   flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
+`
+
+gql`
+  mutation SetPortal($portal: String!) {
+    setPortal(portal: $portal) {
+      id
+    }
+  }
 `
 
 export const AvailablePortals: React.FC<{
