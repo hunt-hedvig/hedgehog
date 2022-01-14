@@ -77,6 +77,16 @@ gql`
   query MemberContracts($memberId: ID!) {
     member(id: $memberId) {
       memberId
+      trials {
+        id
+        fromDate
+        toDate
+        displayName
+        address {
+          street
+        }
+        partner
+      }
       contracts {
         id
         masterInception
@@ -115,6 +125,7 @@ export const ContractDropdown: React.FC<
   const { data, refetch } = useMemberContractsQuery({ variables: { memberId } })
 
   const contracts = data?.member?.contracts ?? []
+  const trials = data?.member?.trials ?? []
 
   return (
     <Dropdown placeholder="None selected" {...props}>
@@ -159,6 +170,29 @@ export const ContractDropdown: React.FC<
                       contract.currentAgreement.lineOfBusinessName,
                     )}
                   </Tag>
+                </>
+              }
+            />
+          </DropdownOption>
+        )
+      })}
+
+      {trials.map((trial) => {
+        return (
+          <DropdownOption
+            key={trial.id}
+            selected={trial.id === value}
+            onClick={() => void 0}
+          >
+            <ContractItem
+              title={trial.displayName}
+              address={trial.address.street}
+              activeFrom={trial.fromDate}
+              activeTo={trial.toDate}
+              tags={
+                <>
+                  <Tag>Hedvig</Tag>
+                  <Tag>{convertEnumToTitle(trial.partner)}</Tag>
                   <Tag alert={true}>Trial</Tag>
                 </>
               }
