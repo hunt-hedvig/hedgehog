@@ -6,7 +6,9 @@ import {
   GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
+  useGetTermsAndConditionsQuery,
   useRestrictResourceAccessMutation,
+  UserSettingKey,
   useSetClaimDateMutation,
   useSetContractForClaimMutation,
   useSetCoveringEmployeeMutation,
@@ -42,6 +44,7 @@ import {
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
+import { useMe } from 'portals/hope/features/user/hooks/use-me'
 
 const validateSelectOption = (value): ClaimState => {
   if (!Object.values(ClaimState).includes(value)) {
@@ -359,8 +362,16 @@ export const ClaimInformation: React.FC<{
             />
           </SelectWrapper>
         )}
-        {selectedAgreement ? null : (
-          // TODO: Show TermsAndConditions here instead of null, but it currently just yields 403
+        {selectedAgreement ? (
+          selectedContract && (
+            <TermsAndConditions
+              carrier={selectedAgreement.carrier}
+              createdAt={selectedAgreement.createdAt}
+              partner={selectedAgreement.partner ?? null}
+              typeOfContract={selectedContract.typeOfContract}
+            />
+          )
+        ) : (
           <NoAgreementWarning>
             ⚠️ No agreement covers the claim on the date of loss
           </NoAgreementWarning>
@@ -430,41 +441,38 @@ export const ClaimInformation: React.FC<{
   )
 }
 
-{
-  /*
-  const TermsAndConditions: React.FC<{
-    typeOfContract: string
-    partner: string | null
-    carrier: string
-    createdAt: string
-  }> = ({typeOfContract, partner, carrier, createdAt}) => {
-    const {settings} = useMe()
+const TermsAndConditions: React.FC<{
+  typeOfContract: string
+  partner: string | null
+  carrier: string
+  createdAt: string
+}> = ({ typeOfContract, partner, carrier, createdAt }) => {
+  const { settings } = useMe()
 
-    const {data} = useGetTermsAndConditionsQuery({
-      variables: {
-        contractType: typeOfContract,
-        partner,
-        carrier,
-        date: createdAt.split('T')[0],
-        locale: settings[UserSettingKey.Languages] || 'en_SE',
-      },
-    })
+  const { data } = useGetTermsAndConditionsQuery({
+    variables: {
+      contractType: typeOfContract,
+      partner,
+      carrier,
+      date: createdAt.split('T')[0],
+      locale: settings[UserSettingKey.Languages] || 'en_SE',
+    },
+  })
 
-    if (!data?.termsAndConditions) {
-      return null
-    }
-
-    return (
-      <Spacing top="small">
-        <a
-          href={data.termsAndConditions.url}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Terms and Conditions
-        </a>
-      </Spacing>
-    )
+  if (!data?.termsAndConditions) {
+    return null
   }
-   */
+
+  return (
+    <a
+      href={data.termsAndConditions.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        fontSize: '0.9rem',
+      }}
+    >
+      Terms and Conditions
+    </a>
+  )
 }
