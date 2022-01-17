@@ -240,7 +240,7 @@ export const TablePageSelect: React.FC<{
           },
           neighbors: {
             up: `Table Row ${rowCount - 1}`,
-            left: id ? `Table Pagination ${id}` : undefined,
+            left: id >= 0 ? `Table Pagination ${id}` : undefined,
             right: `Table Pagination ${id + 2}`,
           },
         })

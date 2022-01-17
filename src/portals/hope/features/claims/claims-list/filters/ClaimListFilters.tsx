@@ -202,6 +202,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       <FilterElement>
         <Label>States</Label>
         {Object.keys(ClaimState).map((key, index) => {
+          const states = Object.keys(ClaimState)
           const navigation = register(key, {
             focus: index === 0 ? Keys.F : undefined,
             resolve: () => {
@@ -211,11 +212,8 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
               )
             },
             neighbors: {
-              up: index ? Object.keys(ClaimState)[index - 1] : undefined,
-              down:
-                index < Object.keys(ClaimState).length - 1
-                  ? Object.keys(ClaimState)[index + 1]
-                  : undefined,
+              up: index ? states[index - 1] : undefined,
+              down: index < states.length - 1 ? states[index + 1] : undefined,
               right: Object.keys(ClaimComplexity)[0],
             },
           })
@@ -253,6 +251,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
         />
         {Object.keys(ClaimComplexity).map((key, index) => {
+          const complexities = Object.keys(ClaimComplexity)
           const navigation = register(key, {
             resolve: () => {
               updateFilterHandler(
@@ -262,10 +261,10 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
             },
             neighbors: {
               left: Object.keys(ClaimState)[0],
-              up: index ? Object.keys(ClaimComplexity)[index - 1] : undefined,
+              up: index ? complexities[index - 1] : undefined,
               down:
-                index < Object.keys(ClaimComplexity).length - 1
-                  ? Object.keys(ClaimComplexity)[index + 1]
+                index < complexities.length - 1
+                  ? complexities[index + 1]
                   : undefined,
               right: `Member Groups ${numberMemberGroupsOptions[0].label}`,
             },
@@ -396,17 +395,15 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       <FilterElement>
         <Label>Markets</Label>
         {Object.keys(Market).map((key, index) => {
+          const markets = Object.keys(Market)
           const navigation = register(key, {
             resolve: () => {
               updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
             },
             neighbors: {
               left: `Member Number ${range(numberMemberGroups)[0]}`,
-              up: index ? Object.keys(Market)[index - 1] : undefined,
-              down:
-                index < Object.keys(Market).length - 1
-                  ? Object.keys(Market)[index + 1]
-                  : undefined,
+              up: index ? markets[index - 1] : undefined,
+              down: index < markets.length - 1 ? markets[index + 1] : undefined,
               right: `Outcome Filter`,
             },
           })
