@@ -69,7 +69,7 @@ const ContractItem: React.FC<{
   )
 }
 
-export const ContractDropdown: React.FC<
+export const ClaimContractDropdown: React.FC<
   {
     memberId: string
     claimId: string

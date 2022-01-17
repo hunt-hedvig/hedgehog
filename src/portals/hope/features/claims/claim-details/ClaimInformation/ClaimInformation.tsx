@@ -29,7 +29,7 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
-import { ContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ContractDropdown/ContractDropdown'
+import { ClaimContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimContractDropdown/ClaimContractDropdown'
 import {
   ClaimOutcomes,
   OutcomeDropdown,
@@ -338,12 +338,10 @@ export const ClaimInformation: React.FC<{
             placeholder="When did it happen?"
           />
         </SelectWrapper>
-        {contracts && (
-          <SelectWrapper>
-            <Label>Contract for Claim</Label>
-            <ContractDropdown claimId={claimId} memberId={memberId} />
-          </SelectWrapper>
-        )}
+        <SelectWrapper>
+          <Label>Contract for Claim</Label>
+          <ClaimContractDropdown claimId={claimId} memberId={memberId} />
+        </SelectWrapper>
 
         {selectedAgreement ? (
           selectedContract && (

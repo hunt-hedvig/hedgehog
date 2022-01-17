@@ -8,13 +8,6 @@ import {
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
 
-interface UseClaimContractsResult {
-  contracts: PartialMemberContractFragment[]
-  trials: PartialMemberTrialFragment[]
-  selected: string | null
-  setSelected: (selected: string) => void
-}
-
 gql`
   query MemberContracts($memberId: ID!) {
     member(id: $memberId) {
@@ -83,6 +76,13 @@ gql`
     }
   }
 `
+
+interface UseClaimContractsResult {
+  contracts: PartialMemberContractFragment[]
+  trials: PartialMemberTrialFragment[]
+  selected: string | null
+  setSelected: (selected: string) => void
+}
 
 export const useClaimContracts = (
   memberId: string,
