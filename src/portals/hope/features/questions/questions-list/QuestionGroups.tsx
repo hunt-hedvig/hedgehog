@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import {
-  doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
 } from 'portals/hope/features/questions/utils'
@@ -28,7 +27,6 @@ export const QuestionGroups = ({ selectedFilters, questionGroups }) => {
                   doMemberGroupFilter(numberMemberGroups)(selectedFilters),
                 )
                 .filter(doMarketFilter(selectedFilters))
-                .filter(doClaimFilter(selectedFilters))
             : questionGroups
         }
       />

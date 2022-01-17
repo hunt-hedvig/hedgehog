@@ -57,6 +57,7 @@ export const doMarketFilter =
     )
   }
 
+/*
 export const doClaimFilter =
   (selectedFilters: ReadonlyArray<FilterStateType>) =>
   (questionGroup: QuestionGroup): boolean => {
@@ -69,4 +70,14 @@ export const doClaimFilter =
       (selectedFilters.includes(FilterState.NoOpenClaim) &&
         !hasOpenClaim(questionGroup.member.claims))
     )
+  }
+*/
+
+export const doClaimFilter =
+  () =>
+  (questionGroup: QuestionGroup): boolean => {
+    if (!questionGroup.member) {
+      return true
+    }
+    return true
   }
