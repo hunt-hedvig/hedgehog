@@ -15,10 +15,6 @@ query GetQuestionsGroups {
         market
       }
       pickedLocale
-      claims(filterByStates: [OPEN, REOPENED]) {
-        id
-        state
-      }
     }
   }
 }
