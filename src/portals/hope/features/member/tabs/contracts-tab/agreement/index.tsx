@@ -19,6 +19,7 @@ import {
   GenericAgreement as AgreementType,
 } from 'types/generated/graphql'
 import { CreateQuoteFromAgreement } from './CreateQuoteFromAgreement'
+import { TermsAndConditions } from 'portals/hope/features/member/tabs/contracts-tab/agreement/TermsAndConditions'
 
 const Divider = styled.hr`
   background: transparent;
@@ -34,7 +35,7 @@ export const Agreement: React.FC<{
   contract: Contract
   locale: string
   onRefetch: () => void
-}> = ({ agreement, contract, onRefetch }) => {
+}> = ({ agreement, contract, onRefetch, locale }) => {
   return (
     <>
       <CardsWrapper>
@@ -57,10 +58,7 @@ export const Agreement: React.FC<{
               />
             </Card>
 
-            {
-              // <TermsAndConditions agreement={agreement} locale={locale}/>
-              // TODO: Make this bad boy silent for now to not flood
-            }
+            <TermsAndConditions agreement={agreement} locale={locale} />
           </>
         )}
         <Card span={2}>
