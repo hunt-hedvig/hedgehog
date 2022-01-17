@@ -267,7 +267,7 @@ const DashboardPage: Page = () => {
                 setCreateFilter(true)
               },
               neighbors: {
-                left: !!templateFilters.length
+                left: templateFilters.length
                   ? templateFilters[templateFilters.length - 1].name
                   : settings[UserSettingKey.FeatureFlags] &&
                     settings[UserSettingKey.FeatureFlags]?.conversations

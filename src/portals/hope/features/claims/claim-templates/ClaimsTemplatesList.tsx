@@ -112,7 +112,7 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
               active={
                 templates.length === 1 && !!activeId
                   ? filter.id === activeId
-                  : !!activeId
+                  : activeId
                   ? filter.id !== activeId
                   : false
               }
