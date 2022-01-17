@@ -147,6 +147,10 @@ export const ContractDropdown: React.FC<
             key={contract.id}
             selected={contract.id === value}
             onClick={() => {
+              if (contract.id === value) {
+                return
+              }
+
               toast.promise(
                 setContractForClaim({
                   variables: {
@@ -203,6 +207,10 @@ export const ContractDropdown: React.FC<
             key={trial.id}
             selected={trial.id === value}
             onClick={() => {
+              if (trial.id === value) {
+                return
+              }
+
               toast.promise(
                 setTrialForClaim({
                   variables: {
