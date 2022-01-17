@@ -1,13 +1,10 @@
 import styled from '@emotion/styled'
-import { Button, Popover } from '@hedvig-ui'
 import {
   getMemberFlag,
   getMemberIdColor,
 } from 'portals/hope/features/member/utils'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React from 'react'
-import { ShieldShaded } from 'react-bootstrap-icons'
-import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { QuestionInfo } from './QuestionInfo'
 
