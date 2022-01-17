@@ -16,7 +16,6 @@ import { ConversationsOverview } from 'portals/hope/features/conversations/overv
 import { FilterStateType } from 'portals/hope/features/questions/FilterSelect'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 import {
-  doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
 } from 'portals/hope/features/questions/utils'
@@ -105,7 +104,6 @@ const ConversationsPage: Page<
         ? questionGroups
             .filter(doMemberGroupFilter(numberMemberGroups)(filters))
             .filter(doMarketFilter(filters))
-            .filter(doClaimFilter(filters))
         : [...questionGroups],
     [questionGroups, filters, numberMemberGroups],
   )
