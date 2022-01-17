@@ -246,7 +246,10 @@ type MutationType {
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
   setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign
+
   setContractForClaim(request: SetContractForClaim!): Claim!
+  setTrialForClaim(claimId: ID!, trialId: ID!): Claim!
+
   manualRedeemCampaign(
     memberId: ID!
     request: ManualRedeemCampaignInput!

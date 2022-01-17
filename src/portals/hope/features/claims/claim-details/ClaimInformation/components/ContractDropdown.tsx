@@ -4,7 +4,8 @@ import { DropdownProps } from '@hedvig-ui/Dropdown/dropdown'
 import React from 'react'
 import {
   useMemberContractsQuery,
-  useSetClaimContractMutation,
+  useSetContractForClaimMutation,
+  useSetTrialForClaimMutation,
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
 import { TypeOfContractType } from 'portals/hope/features/config/constants'
@@ -104,12 +105,18 @@ gql`
     }
   }
 
-  mutation SetClaimContract($request: SetContractForClaim!) {
+  mutation SetContractForClaim($request: SetContractForClaim!) {
     setContractForClaim(request: $request) {
       id
       contract {
         id
       }
+    }
+  }
+
+  mutation SetTrialForClaim($claimId: ID!, $trialId: ID!) {
+    setTrialForClaim(claimId: $claimId, trialId: $trialId) {
+      id
     }
   }
 `
@@ -121,7 +128,8 @@ export const ContractDropdown: React.FC<
     claimId: string
   } & Omit<DropdownProps, 'children'>
 > = ({ memberId, claimId, value, ...props }) => {
-  const [setClaimContract] = useSetClaimContractMutation()
+  const [setContractForClaim] = useSetContractForClaimMutation()
+  const [setTrialForClaim] = useSetTrialForClaimMutation()
   const { data, refetch } = useMemberContractsQuery({ variables: { memberId } })
 
   const contracts = data?.member?.contracts ?? []
@@ -135,7 +143,7 @@ export const ContractDropdown: React.FC<
             key={contract.id}
             selected={contract.id === value}
             onClick={() => {
-              setClaimContract({
+              setContractForClaim({
                 variables: {
                   request: { claimId, memberId, contractId: contract.id },
                 },
