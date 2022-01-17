@@ -29,7 +29,7 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
-import { ContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ContractDropdown'
+import { ContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ContractDropdown/ContractDropdown'
 import {
   ClaimOutcomes,
   OutcomeDropdown,
