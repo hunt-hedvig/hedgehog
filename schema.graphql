@@ -247,7 +247,7 @@ type MutationType {
   ): Boolean!
   setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign
 
-  setContractForClaim(request: SetContractForClaim!): Claim!
+  setContractForClaim(claimId: ID!, contractId: ID!): Claim!
   setTrialForClaim(claimId: ID!, trialId: ID!): Claim!
 
   manualRedeemCampaign(
@@ -1009,6 +1009,7 @@ type Claim {
   coveringEmployee: Boolean!
   claimFiles: [ClaimFileUpload!]!
   contract: Contract
+  trial: Trial
   agreement: GenericAgreement
   propertySelections: [ClaimPropertySelection!]!
   coInsured: CoInsured

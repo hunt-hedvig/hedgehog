@@ -139,6 +139,7 @@ export const ClaimInformation: React.FC<{
     coInsured,
     payments = [],
     outcome,
+    contract: selectedContract,
   } = data?.claim ?? {}
 
   const contracts = memberData?.member?.contracts ?? []
@@ -340,7 +341,7 @@ export const ClaimInformation: React.FC<{
           <SelectWrapper>
             <Label>Contract for Claim</Label>
             <ContractDropdown
-              value={data?.claim?.contract?.id}
+              value={data?.claim?.contract?.id ?? data?.claim?.trial?.id}
               claimId={claimId}
               memberId={memberId}
             />

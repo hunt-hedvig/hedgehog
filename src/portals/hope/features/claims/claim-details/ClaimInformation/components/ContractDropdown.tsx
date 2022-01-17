@@ -10,6 +10,7 @@ import {
 import gql from 'graphql-tag'
 import { TypeOfContractType } from 'portals/hope/features/config/constants'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { toast } from 'react-hot-toast'
 
 const ContractItemTypeName = styled.div`
   font-size: 1.2em;
@@ -105,8 +106,8 @@ gql`
     }
   }
 
-  mutation SetContractForClaim($request: SetContractForClaim!) {
-    setContractForClaim(request: $request) {
+  mutation SetContractForClaim($claimId: ID!, $contractId: ID!) {
+    setContractForClaim(claimId: $claimId, contractId: $contractId) {
       id
       contract {
         id
@@ -117,6 +118,9 @@ gql`
   mutation SetTrialForClaim($claimId: ID!, $trialId: ID!) {
     setTrialForClaim(claimId: $claimId, trialId: $trialId) {
       id
+      trial {
+        id
+      }
     }
   }
 `
@@ -130,7 +134,7 @@ export const ContractDropdown: React.FC<
 > = ({ memberId, claimId, value, ...props }) => {
   const [setContractForClaim] = useSetContractForClaimMutation()
   const [setTrialForClaim] = useSetTrialForClaimMutation()
-  const { data, refetch } = useMemberContractsQuery({ variables: { memberId } })
+  const { data } = useMemberContractsQuery({ variables: { memberId } })
 
   const contracts = data?.member?.contracts ?? []
   const trials = data?.member?.trials ?? []
@@ -143,22 +147,30 @@ export const ContractDropdown: React.FC<
             key={contract.id}
             selected={contract.id === value}
             onClick={() => {
-              setContractForClaim({
-                variables: {
-                  request: { claimId, memberId, contractId: contract.id },
-                },
-                optimisticResponse: {
-                  setContractForClaim: {
-                    __typename: 'Claim',
-                    id: claimId,
-                    contract: {
-                      __typename: 'Contract',
-                      ...contract,
-                      id: contract.id,
+              toast.promise(
+                setContractForClaim({
+                  variables: {
+                    claimId,
+                    contractId: contract.id,
+                  },
+                  optimisticResponse: {
+                    setContractForClaim: {
+                      __typename: 'Claim',
+                      id: claimId,
+                      contract: {
+                        __typename: 'Contract',
+                        ...contract,
+                        id: contract.id,
+                      },
                     },
                   },
+                }),
+                {
+                  loading: 'Assigning contract',
+                  success: 'Contract assigned',
+                  error: 'Could not assign contract',
                 },
-              }).then(() => refetch())
+              )
             }}
           >
             <ContractItem
@@ -190,7 +202,35 @@ export const ContractDropdown: React.FC<
           <DropdownOption
             key={trial.id}
             selected={trial.id === value}
-            onClick={() => void 0}
+            onClick={() => {
+              toast.promise(
+                setTrialForClaim({
+                  variables: {
+                    claimId,
+                    trialId: trial.id,
+                  },
+                  optimisticResponse: {
+                    setTrialForClaim: {
+                      __typename: 'Claim',
+                      id: claimId,
+                      trial: {
+                        __typename: 'Trial',
+                        ...trial,
+                        id: trial.id,
+                      },
+                    },
+                  },
+                }),
+                {
+                  loading: 'Assigning trial',
+                  success: 'Trial assigned',
+                  error: (e) => {
+                    console.error(e)
+                    return 'Could not assign trial'
+                  },
+                },
+              )
+            }}
           >
             <ContractItem
               title={trial.displayName}
