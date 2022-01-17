@@ -1,12 +1,13 @@
 import { parseISO } from 'date-fns'
-import { Message } from 'portals/hope/features/member/messages/Message'
+import { Message } from 'portals/hope/features/member/messages/components/Message'
 import React from 'react'
 import { Question } from 'types/generated/graphql'
 
 export const QuestionInfo: React.FC<{ question: Question }> = ({
   question,
 }) => {
-  let content: any
+  let content
+
   try {
     content = JSON.parse(question.messageJsonString).body
   } catch (error) {
@@ -16,9 +17,11 @@ export const QuestionInfo: React.FC<{ question: Question }> = ({
       error,
     )
   }
+
   if (!content) {
     return <>Unable to parse this message, please contact tech</>
   }
+
   return (
     <Message
       key={question.id}

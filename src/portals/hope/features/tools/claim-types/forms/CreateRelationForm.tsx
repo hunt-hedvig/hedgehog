@@ -108,7 +108,7 @@ const ClaimPropertyOptionDropdown: React.FC<{
   )
 }
 
-export const CreateRelationForm: React.FC<{}> = () => {
+export const CreateRelationForm: React.FC = () => {
   const [claimType, setClaimType] = useState('')
   const [claimPropertyId, setClaimPropertyId] = useState('')
   const [claimPropertyOptionId, setClaimPropertyOptionId] = useState('')

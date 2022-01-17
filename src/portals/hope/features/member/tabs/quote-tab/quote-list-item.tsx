@@ -11,7 +11,7 @@ import { QuoteActivation } from './quote-activation'
 import { QuoteContractCreation } from './quote-contract-creation'
 import { QuotePrice } from './QuotePrice'
 
-const OuterWrapper = styled('div')(({}) => ({
+const OuterWrapper = styled('div')(() => ({
   width: '100%',
 }))
 
@@ -54,9 +54,9 @@ const QuoteDetails: React.FC<{
             Quote breaches the following underwriting guidelines:
           </ThirdLevelHeadline>
           <ul>
-            {quote.breachedUnderwritingGuidelines!.map((guideline) => (
+            {quote.breachedUnderwritingGuidelines?.map((guideline) => (
               <li key={guideline}>{convertEnumToTitle(guideline)}</li>
-            ))}
+            )) ?? []}
           </ul>
         </BreachedUnderwritingGuidelines>
       </DetailWrapper>

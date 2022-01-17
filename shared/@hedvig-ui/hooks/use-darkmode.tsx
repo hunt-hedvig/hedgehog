@@ -5,11 +5,12 @@ import { darkTheme, lightTheme } from '@hedvig-ui'
 export const getDefaultIsDarkmode = () =>
   window.localStorage.getItem('hedvig:theming:darkmode') === 'true'
 
-export const UseDarkmode = createContext({
+export const UseDarkmode = createContext<{
+  isDarkmode: boolean
+  setIsDarkmode: (newIsDarkmode: boolean) => void
+}>({
   isDarkmode: getDefaultIsDarkmode(),
-  setIsDarkmode: (_: boolean) => {
-    /* noop */
-  },
+  setIsDarkmode: () => void 0,
 })
 
 export const useDarkmode = () => useContext(UseDarkmode)

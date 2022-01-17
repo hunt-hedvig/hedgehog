@@ -26,7 +26,7 @@ const getPaddingFromSize = (size?: BadgeSize, matchParentSize?: boolean) => {
   }
 }
 
-const getColorFromVariant = (theme: any, variant?: BadgeVariant) => {
+const getColorFromVariant = (theme, variant?: BadgeVariant) => {
   switch (variant) {
     case 'danger':
       return theme.danger

@@ -3,7 +3,7 @@ import React, { lazy, Suspense, useEffect, useState } from 'react'
 import TagManager from 'react-gtm-module'
 import { Redirect, Route, Switch, useLocation } from 'react-router'
 
-export type Page<T = {}> = React.FC<T>
+export type Page<T = void> = React.FC<T>
 
 const DashboardPage = lazy(() => import('./DashboardPage'))
 const ProfilePage = lazy(() => import('./settings/ProfilePage'))

@@ -1,16 +1,15 @@
 import styled from '@emotion/styled'
 import { Checkbox, RadioGroup } from '@hedvig-ui'
-import * as types from 'portals/hope/features/member/messages/message-types'
-import PropTypes from 'prop-types'
 import React from 'react'
+import { MessageContentType } from 'portals/hope/features/member/messages/components/Message'
 
 const List = styled.div`
   margin-top: 0.5em;
 `
 
-const SelectList = ({ content }) => (
+const SelectList = ({ content }: { content: MessageContentType }) => (
   <List>
-    {content.type === types.MULTIPLE_SELECT ? (
+    {content.type === 'MULTIPLE_SELECT' ? (
       content.choices.map((item, id) =>
         item.type === 'link' ? (
           <Checkbox
@@ -53,7 +52,3 @@ const SelectList = ({ content }) => (
 )
 
 export default SelectList
-
-SelectList.propTypes = {
-  content: PropTypes.object.isRequired,
-}

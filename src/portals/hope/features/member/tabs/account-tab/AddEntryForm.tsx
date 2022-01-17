@@ -100,7 +100,7 @@ export const AddEntryForm: React.FC<{
   const form = useForm()
   const { confirm } = useConfirmDialog()
 
-  if (!Boolean(contractMarketInfo?.preferredCurrency)) {
+  if (!contractMarketInfo?.preferredCurrency) {
     return (
       <StandaloneMessage>
         The member has no preferred currency
@@ -108,7 +108,7 @@ export const AddEntryForm: React.FC<{
     )
   }
 
-  const preferredCurrency = contractMarketInfo!.preferredCurrency
+  const { preferredCurrency } = contractMarketInfo
 
   const onSubmit = (data: FieldValues) => {
     confirm('Are you sure you want to add this entry?').then(() => {

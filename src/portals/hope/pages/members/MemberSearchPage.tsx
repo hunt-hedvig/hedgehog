@@ -20,7 +20,7 @@ const MemberSearchPage: Page = () => {
   const [includeAll, setIncludeAll] = React.useState(false)
   const [luckySearch, setLuckySearch] = React.useState(false)
   const history = useHistory()
-  const searchField = useRef<React.ReactElement>()
+  const searchField = useRef<HTMLInputElement>(null)
 
   const { memberHistory } = useMemberHistory()
 
@@ -57,7 +57,7 @@ const MemberSearchPage: Page = () => {
         includeAll={includeAll}
         setIncludeAll={setIncludeAll}
         currentResultSize={members.length}
-        searchFieldRef={searchField as any}
+        ref={searchField}
         setLuckySearch={setLuckySearch}
       />
       {members.length > 0 && (

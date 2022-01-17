@@ -89,7 +89,13 @@ export const TrialComponent: React.FC<{
           <ThirdLevelHeadline>Trial Insurance Certificate</ThirdLevelHeadline>
           {trial.certificateUrl ? (
             <Button
-              onClick={() => window.open(trial.certificateUrl!!, '_link')}
+              onClick={() => {
+                if (!trial.certificateUrl) {
+                  return
+                }
+
+                window.open(trial.certificateUrl, '_link')
+              }}
             >
               View
             </Button>

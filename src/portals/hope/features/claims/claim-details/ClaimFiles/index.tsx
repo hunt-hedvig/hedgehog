@@ -25,7 +25,7 @@ const sortClaimFileDate = (a: ClaimFileUpload, b: ClaimFileUpload) => {
   const aDate = new Date(a.uploadedAt)
   const bDate = new Date(b.uploadedAt)
 
-  return (bDate as any as number) - (aDate as any as number)
+  return bDate.getTime() - aDate.getTime()
 }
 
 const NoClaimFiles = styled('div')({

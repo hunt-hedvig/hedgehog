@@ -65,7 +65,6 @@ export const FileUpload: React.FC<{
       <FileUploadContainer>
         <Dropzone onDrop={handleDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => (
-            // @ts-ignore
             <Button {...getRootProps()}>
               <div style={{ width: '100%' }}>
                 <div style={{ fontSize: '4.0em' }}>

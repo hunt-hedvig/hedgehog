@@ -64,7 +64,7 @@ const UserCircle = withFadeIn(styled.div`
   background-color: ${({ theme }) => chroma(theme.accent).brighten(1).hex()};
 `)
 
-export const UsersOnPath: React.FC<{}> = () => {
+export const UsersOnPath: React.FC = () => {
   const location = useLocation()
   const { me } = useMe()
   const { data } = useUsersOnPathQuery({

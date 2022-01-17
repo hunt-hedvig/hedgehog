@@ -68,10 +68,6 @@ const refreshAccessToken = async () => {
 }
 
 export const apolloClient = (() => {
-  if (typeof window === 'undefined') {
-    return undefined
-  }
-
   return new ApolloClient({
     link: ApolloLink.from([
       onError((error) => {

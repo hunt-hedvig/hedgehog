@@ -23,7 +23,12 @@ import {
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 
 const areSwishPayoutsEnabled = () => {
-  return (window as any).HOPE_FEATURES?.swishPayoutsEnabled ?? false
+  return (
+    (
+      window as Window &
+        typeof global & { HOPE_FEATURES: { swishPayoutsEnabled?: boolean } }
+    ).HOPE_FEATURES?.swishPayoutsEnabled ?? false
+  )
 }
 
 const FormCheckbox = styled(Checkbox)`
@@ -124,7 +129,7 @@ export const ClaimPayment: React.FC<{
       exGratia: isExGratia,
       carrier,
       paidAt:
-        form.getValues().type !== ClaimPaymentType.Automatic
+        form.getValues().type !== ClaimPaymentType.Automatic && date
           ? `${date}T00:00:00.000Z`
           : null,
     }
@@ -136,8 +141,8 @@ export const ClaimPayment: React.FC<{
             id: claimId,
             payment: {
               ...(paymentInput as ClaimSwishPaymentInput),
-              phoneNumber: form.getValues().phoneNumber!,
-              message: form.getValues().message!,
+              phoneNumber: form.getValues().phoneNumber,
+              message: form.getValues().message,
             },
           },
         }),
@@ -171,7 +176,10 @@ export const ClaimPayment: React.FC<{
             setIsExGratia(false)
             return 'Claim payment done'
           },
-          error: 'Could not make payment',
+          error: (e) => {
+            console.error(e)
+            return 'Could not make payment'
+          },
         },
       )
     }

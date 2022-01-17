@@ -35,13 +35,14 @@ export const QuoteActivation: React.FC<{
   const [previousAgreementActiveTo] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!contracts) {
+    if (!contracts || !quote.originatingProductId) {
       return
     }
     const originatingContract = getContractByAgreementId(
       contracts,
-      quote.originatingProductId!,
+      quote.originatingProductId,
     )
+
     if (!originatingContract) {
       return
     }

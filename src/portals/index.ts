@@ -1,13 +1,11 @@
 import { SOSHotApp } from 'portals/sos/App'
 import { HOPEHotApp } from 'portals/hope/App'
 
-type Portal = 'SOS' | 'Hope'
-
-export const app = (portal: Portal) => {
-  switch (portal) {
+export const app = (portal: string) => {
+  switch (portal.toUpperCase()) {
     case 'SOS':
       return SOSHotApp
-    case 'Hope':
+    case 'HOPE':
       return HOPEHotApp
   }
 }

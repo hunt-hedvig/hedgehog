@@ -157,27 +157,29 @@ const ChargesPage: Page = () => {
         </TableHeader>
         <TableBody>
           <Row
-            paymentSchedule={data.paymentSchedule!.map((schedule) => {
+            paymentSchedule={data.paymentSchedule.map((schedule) => {
               if (!schedule) {
                 throw Error('Schedule not present when it should')
               }
+
               return {
-                id: schedule!.id!,
+                id: schedule.id,
                 member: {
-                  memberId: schedule.member?.memberId!,
-                  firstName: schedule.member?.firstName!,
-                  lastName: schedule.member?.lastName!,
-                  monthlySubscription: {
-                    amount: schedule.member?.monthlySubscription
-                      ?.amount! as MonetaryAmountV2,
+                  memberId: schedule?.member?.memberId,
+                  firstName: schedule?.member?.firstName as string | undefined,
+                  lastName: schedule?.member?.lastName as string | undefined,
+                  monthlySubscription: schedule?.member?.monthlySubscription
+                    ?.amount && {
+                    amount: schedule.member.monthlySubscription
+                      .amount as MonetaryAmountV2,
                   },
-                  account: {
-                    currentBalance: schedule.member?.account!
-                      ?.currentBalance! as MonetaryAmountV2,
+                  account: schedule.member?.account?.currentBalance && {
+                    currentBalance: schedule.member?.account
+                      ?.currentBalance as MonetaryAmountV2,
                   },
                 },
                 status: schedule.status,
-                amount: schedule.amount! as MonetaryAmountV2,
+                amount: schedule.amount as MonetaryAmountV2,
               }
             })}
           />
@@ -207,13 +209,12 @@ const ChargesPage: Page = () => {
                         toast.promise(
                           mutation({
                             variables: {
-                              approvals: data.paymentSchedule!.map(
-                                (payment) => ({
-                                  memberId: payment!.member!.memberId,
+                              approvals:
+                                data.paymentSchedule?.map((payment) => ({
+                                  memberId: payment?.member?.memberId ?? '',
                                   amount:
-                                    payment!.member!.account!.currentBalance,
-                                }),
-                              ),
+                                    payment?.member?.account?.currentBalance,
+                                })) ?? [],
                             },
                           }),
                           {

@@ -25,7 +25,7 @@ interface MeProviderProps {
   me: _Me | null
 }
 
-const MeContext = createContext<MeContextProps>({} as any)
+const MeContext = createContext<MeContextProps>({} as unknown as MeContextProps)
 
 export const useMe = () => useContext(MeContext)
 

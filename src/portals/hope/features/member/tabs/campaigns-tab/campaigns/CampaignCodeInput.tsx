@@ -54,8 +54,7 @@ export const CampaignCodeInput: React.FC<{
           onClick={() => {
             confirm(
               `Are you sure you want to redeem the campaign code ${campaignCode.toUpperCase()}?`,
-            )
-            if (confirm) {
+            ).then(() =>
               toast.promise(
                 manualRedeemCampaign({
                   variables: {
@@ -72,8 +71,8 @@ export const CampaignCodeInput: React.FC<{
                   },
                   error: 'Could not redeem campaign',
                 },
-              )
-            }
+              ),
+            )
           }}
         >
           Redeem

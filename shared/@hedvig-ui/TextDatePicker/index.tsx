@@ -40,16 +40,17 @@ const CalendarIcon = styled(Calendar)<{ focus?: boolean }>`
   width: 1em;
 `
 
+interface Dates {
+  dates: () => { get: (n: number) => { start: string } }
+}
+
 export const getDate = (value: string) => {
   nlp.extend(numbers)
   nlp.extend(dates)
 
-  return (
-    nlp(value)
-      // @ts-ignore
-      .dates()
-      .get(0)
-  )
+  const result = nlp(value) as unknown as Dates
+
+  return result.dates().get(0)
 }
 
 const InlineDatePicker = ({

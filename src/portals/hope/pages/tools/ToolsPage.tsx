@@ -21,7 +21,12 @@ const Card = styled(CardLink)`
 `
 
 const stagingToolsAvailable = () => {
-  return (window as any).HOPE_FEATURES?.stagingSpecificTools ?? false
+  return (
+    (
+      window as Window &
+        typeof global & { HOPE_FEATURES: { stagingSpecificTools?: boolean } }
+    ).HOPE_FEATURES?.stagingSpecificTools ?? false
+  )
 }
 
 const StagingTools: React.FC = () => {

@@ -28,5 +28,7 @@ query GetMe {
       key
       value
     }
+    portal
+    availablePortals
   }
 }

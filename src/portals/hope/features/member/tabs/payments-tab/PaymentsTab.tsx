@@ -133,50 +133,73 @@ const ChargeNotAvailableMessage = styled(StandaloneMessage)`
   padding: 1.5em 0;
 `
 
-const MemberTransactionsTable: React.FC<{
-  transactions: Transaction[]
-}> = ({ transactions }) => (
-  <PaymentTable>
-    <PaymentTableHeader>
-      <TableHeaderColumn>ID</TableHeaderColumn>
-      <TableHeaderColumn>Amount</TableHeaderColumn>
-      <TableHeaderColumn>Timestamp</TableHeaderColumn>
-      <TableHeaderColumn>Type</TableHeaderColumn>
-      <TableHeaderColumn>Status</TableHeaderColumn>
-    </PaymentTableHeader>
-    <TableBody>
-      {transactions.map((transaction) => (
-        <TableRowColored
-          border
-          key={transaction.id}
-          status={transaction.status!}
-          type={transaction.type!}
-        >
-          <PaymentColumn title={transaction.id?.toString()}>
-            {transaction.id}
-          </PaymentColumn>
-          <PaymentColumn title={formatMoney(transaction.amount!)}>
-            <strong>{formatMoney(transaction.amount!)}</strong>
-          </PaymentColumn>
-          <PaymentColumn
-            title={format(
-              parseISO(transaction.timestamp),
-              'yyyy-MM-dd HH:mm:ss',
-            )}
-          >
-            {format(parseISO(transaction.timestamp), 'yyyy-MM-dd HH:mm:ss')}
-          </PaymentColumn>
-          <PaymentColumn title={transaction.type?.toString()}>
-            {transaction.type}
-          </PaymentColumn>
-          <PaymentColumn title={transaction.status?.toString()}>
-            {transaction.status}
-          </PaymentColumn>
-        </TableRowColored>
-      ))}
-    </TableBody>
-  </PaymentTable>
-)
+const MemberTransactionsTable: React.FC<{ memberId: string }> = ({
+  memberId,
+}) => {
+  const { data } = useGetMemberTransactionsQuery({
+    variables: { id: memberId },
+  })
+
+  const transactions = (data?.member?.transactions ?? [])
+    .slice()
+    .sort(transactionDateSorter)
+    .reverse()
+
+  return (
+    <PaymentTable>
+      <PaymentTableHeader>
+        <TableHeaderColumn>ID</TableHeaderColumn>
+        <TableHeaderColumn>Amount</TableHeaderColumn>
+        <TableHeaderColumn>Timestamp</TableHeaderColumn>
+        <TableHeaderColumn>Type</TableHeaderColumn>
+        <TableHeaderColumn>Status</TableHeaderColumn>
+      </PaymentTableHeader>
+      <TableBody>
+        {transactions.map((transaction) => {
+          if (!transaction) {
+            return null
+          }
+
+          return (
+            <TableRowColored
+              border
+              key={transaction.id}
+              status={transaction.status}
+              type={transaction.type}
+            >
+              <PaymentColumn title={transaction.id?.toString()}>
+                {transaction.id}
+              </PaymentColumn>
+              <PaymentColumn
+                title={
+                  transaction.amount ? formatMoney(transaction.amount) : ''
+                }
+              >
+                <strong>
+                  {transaction.amount ? formatMoney(transaction.amount) : ''}
+                </strong>
+              </PaymentColumn>
+              <PaymentColumn
+                title={format(
+                  parseISO(transaction.timestamp),
+                  'yyyy-MM-dd HH:mm:ss',
+                )}
+              >
+                {format(parseISO(transaction.timestamp), 'yyyy-MM-dd HH:mm:ss')}
+              </PaymentColumn>
+              <PaymentColumn title={transaction.type?.toString()}>
+                {transaction.type}
+              </PaymentColumn>
+              <PaymentColumn title={transaction.status?.toString()}>
+                {transaction.status}
+              </PaymentColumn>
+            </TableRowColored>
+          )
+        })}
+      </TableBody>
+    </PaymentTable>
+  )
+}
 
 export const PaymentsTab: React.FC<{
   memberId: string
@@ -218,16 +241,20 @@ export const PaymentsTab: React.FC<{
   const { confirm } = useConfirmDialog()
 
   const handleChargeSubmit = () => {
+    if (!account?.currentBalance) {
+      return
+    }
+
     const chargeAmount = allowManualCharge
       ? {
-          ...account?.currentBalance!,
+          ...account.currentBalance,
           amount: manualAmount,
         }
-      : account?.currentBalance!
-    const confirmMessage = `Are you sure you want to charge ${formatMoney(
-      chargeAmount,
-    )}?`
-    confirm(confirmMessage).then(() => {
+      : account.currentBalance
+
+    confirm(
+      `Are you sure you want to charge ${formatMoney(chargeAmount)}?`,
+    ).then(() => {
       toast
         .promise(
           chargeMemberMutation({
@@ -376,13 +403,13 @@ export const PaymentsTab: React.FC<{
                 <ThirdLevelHeadline>Charge current balance</ThirdLevelHeadline>
                 {Number(account.currentBalance.amount) > 0.0 ? (
                   <Button onClick={() => handleChargeSubmit()}>
-                    Charge {formatMoney(account.currentBalance!)}
+                    Charge {formatMoney(account.currentBalance)}
                   </Button>
                 ) : (
                   <ChargeNotAvailableMessage opacity={0.6}>
                     Not available since the balance is{' '}
                     <Shadowed style={{ fontWeight: 'bold' }}>
-                      {formatMoney(account.currentBalance!)}
+                      {formatMoney(account.currentBalance)}
                     </Shadowed>
                   </ChargeNotAvailableMessage>
                 )}
@@ -399,14 +426,7 @@ export const PaymentsTab: React.FC<{
           )}
         <Card>
           <ThirdLevelHeadline>Transactions</ThirdLevelHeadline>
-          <MemberTransactionsTable
-            transactions={
-              memberData.member
-                .transactions!.slice()
-                .sort(transactionDateSorter)
-                .reverse() as Transaction[]
-            }
-          />
+          <MemberTransactionsTable memberId={memberId} />
         </Card>
       </CardsWrapper>
     </>

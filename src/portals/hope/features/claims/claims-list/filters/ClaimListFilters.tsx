@@ -125,7 +125,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
     if (!settings[field]) {
       return false
     }
-    return !!settings[field].claims
+    return settings[field].claims
       ? settings[field].claims.includes(value)
       : false
   }

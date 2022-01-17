@@ -34,8 +34,8 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
     )
   }
 
-  const memberMarket =
-    contractMarket?.market ?? PickedLocaleMarket[pickedLocale!]
+  const memberMarket: string | undefined =
+    contractMarket?.market ?? (pickedLocale && PickedLocaleMarket[pickedLocale])
 
   const getCategorisedQuotesBasedOnInsuranceType = (
     insuranceType: string,

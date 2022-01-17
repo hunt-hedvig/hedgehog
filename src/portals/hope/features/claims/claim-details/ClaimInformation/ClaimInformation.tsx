@@ -28,7 +28,6 @@ import {
   Label,
   Loadable,
   Paragraph,
-  Spacing,
   TextDatePicker,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
@@ -45,17 +44,14 @@ import {
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { useMe } from '../../../user/hooks/use-me'
+import { useMe } from 'portals/hope/features/user/hooks/use-me'
 
-const validateSelectOption = (value: any): ClaimState => {
-  if (!Object.values(ClaimState).includes(value as any)) {
+const validateSelectOption = (value): ClaimState => {
+  if (!Object.values(ClaimState).includes(value)) {
     throw new Error(`invalid ClaimState: ${value}`)
   }
-  return value as ClaimState
-}
 
-const validateSelectEmployeeClaimOption = (value: any): boolean => {
-  return value === 'True'
+  return value as ClaimState
 }
 
 const SelectWrapper = styled.div`
@@ -162,13 +158,13 @@ export const ClaimInformation: React.FC<{
     await setCoveringEmployee({
       variables: {
         id: claimId,
-        coveringEmployee: validateSelectEmployeeClaimOption(value),
+        coveringEmployee: value === 'True',
       },
       optimisticResponse: {
         setCoveringEmployee: {
           id: claimId,
           __typename: 'Claim',
-          coveringEmployee: validateSelectEmployeeClaimOption(value),
+          coveringEmployee: value === 'True',
           events: data?.claim?.events ?? [],
         },
       },
@@ -366,13 +362,15 @@ export const ClaimInformation: React.FC<{
             />
           </SelectWrapper>
         )}
-        {selectedAgreement && selectedAgreement.partner ? (
-          <TermsAndConditions
-            typeOfContract={selectedAgreement.typeOfContract}
-            partner={selectedAgreement.partner}
-            carrier={selectedAgreement.carrier}
-            createdAt={selectedAgreement.createdAt}
-          />
+        {selectedAgreement ? (
+          selectedContract && (
+            <TermsAndConditions
+              carrier={selectedAgreement.carrier}
+              createdAt={selectedAgreement.createdAt}
+              partner={selectedAgreement.partner ?? null}
+              typeOfContract={selectedContract.typeOfContract}
+            />
+          )
         ) : (
           <NoAgreementWarning>
             ⚠️ No agreement covers the claim on the date of loss
@@ -445,7 +443,7 @@ export const ClaimInformation: React.FC<{
 
 const TermsAndConditions: React.FC<{
   typeOfContract: string
-  partner: string
+  partner: string | null
   carrier: string
   createdAt: string
 }> = ({ typeOfContract, partner, carrier, createdAt }) => {
@@ -466,14 +464,15 @@ const TermsAndConditions: React.FC<{
   }
 
   return (
-    <Spacing top="small">
-      <a
-        href={data.termsAndConditions.url}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Terms and Conditions
-      </a>
-    </Spacing>
+    <a
+      href={data.termsAndConditions.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        fontSize: '0.9rem',
+      }}
+    >
+      Terms and Conditions
+    </a>
   )
 }

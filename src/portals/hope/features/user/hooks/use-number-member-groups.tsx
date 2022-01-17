@@ -20,7 +20,7 @@ const UseNumberMemberGroups = createContext<{
   setNumberMemberGroups: (value: number) => void
 }>({
   numberMemberGroups: getDefaultNumberMemberGroups(),
-  setNumberMemberGroups: (_value: number) => undefined,
+  setNumberMemberGroups: () => undefined,
 })
 
 export const NumberMemberGroupsProvider: React.FC = ({ children }) => {

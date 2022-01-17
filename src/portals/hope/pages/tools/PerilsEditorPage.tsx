@@ -92,7 +92,11 @@ const PerilsEditorPage: Page = () => {
 
     const reader = new FileReader()
     reader.onload = (event) => {
-      const result = event.target!.result as string
+      if (!event?.target?.result) {
+        return
+      }
+
+      const result = event.target.result as string
 
       if (!isValidJson(result)) {
         toast.error('Unable to parse file')
@@ -137,7 +141,8 @@ const PerilsEditorPage: Page = () => {
               typeof peril.title === 'string'
                 ? peril.title
                 : peril.title.props.children
-            const updateField = (field: string) => (value: any) => {
+
+            const updateField = (field: string) => (value) => {
               setParsedPerils(
                 parsedPerils.map((originalPeril, i_) => {
                   if (i_ === index) {

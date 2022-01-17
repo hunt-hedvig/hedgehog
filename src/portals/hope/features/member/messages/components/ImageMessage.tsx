@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-import PropTypes from 'prop-types'
 import React from 'react'
 
 const Image = styled.img`
@@ -19,7 +18,3 @@ const ImageMessage = ({ content }) => {
 }
 
 export default ImageMessage
-
-ImageMessage.propTypes = {
-  content: PropTypes.object.isRequired,
-}

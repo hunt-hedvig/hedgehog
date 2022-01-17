@@ -40,12 +40,12 @@ export const loginCallback: Middleware<object> = async (ctx) => {
   const refreshToken = getTokenFromQuery(ctx.request.query['refresh-token'])
   setTokenCookies(ctx, { accessToken, refreshToken })
 
-  ctx.redirect('/dashborad')
+  ctx.redirect('/')
 }
 
 export const logout: Middleware<object> = async (ctx) => {
   setTokenCookies(ctx, { accessToken: '', refreshToken: '' })
-  ctx.redirect('/login')
+  ctx.redirect('/gatekeeper')
 }
 
 export const refreshTokenCallback: Middleware<LoggingMiddleware> = async (
