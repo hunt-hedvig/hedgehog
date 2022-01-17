@@ -112,6 +112,8 @@ const ClaimDetailsPage: Page<
       return <RestrictedClaimMessage claimId={claimId} />
     }
 
+    console.error(error)
+
     return <StandaloneMessage>Claim not found</StandaloneMessage>
   }
 

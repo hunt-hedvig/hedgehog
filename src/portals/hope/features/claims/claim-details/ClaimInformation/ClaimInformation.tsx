@@ -340,11 +340,7 @@ export const ClaimInformation: React.FC<{
         {contracts && (
           <SelectWrapper>
             <Label>Contract for Claim</Label>
-            <ContractDropdown
-              value={data?.claim?.contract?.id ?? data?.claim?.trial?.id}
-              claimId={claimId}
-              memberId={memberId}
-            />
+            <ContractDropdown claimId={claimId} memberId={memberId} />
           </SelectWrapper>
         )}
         {selectedAgreement ? (
