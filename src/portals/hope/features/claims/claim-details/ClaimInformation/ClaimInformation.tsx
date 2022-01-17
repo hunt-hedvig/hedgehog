@@ -140,6 +140,7 @@ export const ClaimInformation: React.FC<{
     payments = [],
     outcome,
     contract: selectedContract,
+    trial,
   } = data?.claim ?? {}
 
   const contracts = memberData?.member?.contracts ?? []
@@ -343,6 +344,7 @@ export const ClaimInformation: React.FC<{
             <ContractDropdown claimId={claimId} memberId={memberId} />
           </SelectWrapper>
         )}
+
         {selectedAgreement ? (
           selectedContract && (
             <TermsAndConditions
@@ -352,7 +354,7 @@ export const ClaimInformation: React.FC<{
               typeOfContract={selectedContract.typeOfContract}
             />
           )
-        ) : (
+        ) : trial ? null : (
           <NoAgreementWarning>
             ⚠️ No agreement covers the claim on the date of loss
           </NoAgreementWarning>

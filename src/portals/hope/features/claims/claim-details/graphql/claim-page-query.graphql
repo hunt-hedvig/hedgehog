@@ -61,6 +61,13 @@ query ClaimPage($claimId: ID!) {
 
     trial {
       id
+      fromDate
+      toDate
+      displayName
+      address {
+        street
+      }
+      partner
     }
 
     contract {
