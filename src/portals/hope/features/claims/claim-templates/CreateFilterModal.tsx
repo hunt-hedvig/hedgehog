@@ -1,9 +1,5 @@
 import styled from '@emotion/styled'
 import { Button, Input, Modal } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ClaimFilterTemplate } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
 import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage'
 import React, { useState } from 'react'
@@ -60,8 +56,6 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
     })
     onClose()
   }
-
-  useKeyIsPressed(Keys.Enter, createFilterHandler)
 
   return (
     <Modal

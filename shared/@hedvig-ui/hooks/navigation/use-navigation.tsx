@@ -10,6 +10,8 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import { lightTheme } from '@hedvig-ui'
+import chroma from 'chroma-js'
 
 interface NavigationContextProps {
   cursor: string | null
@@ -237,6 +239,7 @@ interface NodeNavigationDirections {
 }
 
 interface UseNavigationRegisterOptions {
+  autoFocus?: boolean
   focus?: Key
   resolve?: string | ((ref: unknown) => string | void)
   parent?: string | ((ref: unknown) => string)
@@ -263,6 +266,18 @@ export const useNavigation = () => {
     localItems.current[name] = options
   }
 
+  useEffect(() => {
+    if (cursor) {
+      return
+    }
+
+    Object.keys(localItems.current).forEach((name) => {
+      if (localItems.current[name].autoFocus) {
+        setCursor(name)
+      }
+    })
+  }, [cursor, localItems.current])
+
   const itemExists = (name: string) => !!registry[name]
 
   useEffect(() => {
@@ -285,7 +300,9 @@ export const useNavigation = () => {
       }
 
       return {
-        style: { border: '2px solid blue' },
+        style: {
+          border: `2px solid ${chroma(lightTheme.accent).brighten(1).hex()}`,
+        },
         ref: (ref) => {
           assignRef(name, ref)
 
@@ -298,5 +315,7 @@ export const useNavigation = () => {
       }
     },
     focus: (name: string) => setCursor(name),
+    cursor,
+    setCursor,
   }
 }

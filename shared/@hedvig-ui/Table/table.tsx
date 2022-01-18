@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { useVerticalKeyboardNavigation } from '@hedvig-ui/hooks/keyboard/use-vertical-keyboard-navigation'
-import React, { TableHTMLAttributes, useEffect, useRef } from 'react'
+import React from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
+import { useNavigation } from '../hooks/navigation/use-navigation'
 
 const range = (start, end) =>
   start >= 0 && end >= start
@@ -16,55 +16,11 @@ export const Table = styled.table`
   width: 100%;
 `
 
-export const TableBody: React.FC<
-  {
-    onPerformNavigation?: (index) => void
-    setActiveRow?: (n: number) => void
-  } & TableHTMLAttributes<HTMLTableSectionElement>
-> = ({ onPerformNavigation, children, setActiveRow, ...props }) => {
-  const numberOfRows = React.Children.count(children)
-
-  const [navigationStep] = useVerticalKeyboardNavigation({
-    maxStep: numberOfRows - 1,
-    onPerformNavigation: (index) => {
-      if (onPerformNavigation) {
-        onPerformNavigation(index)
-      }
-    },
-    isActive: !!onPerformNavigation,
-  })
-
-  useEffect(() => {
-    if (setActiveRow) {
-      setActiveRow(navigationStep)
-    }
-  }, [navigationStep])
-
-  return (
-    <StyledTableBody
-      activeRow={onPerformNavigation ? navigationStep : -1}
-      {...props}
-    >
-      {children}
-    </StyledTableBody>
-  )
-}
-
-const StyledTableBody = styled.tbody<{ activeRow: number }>`
+export const TableBody = styled.tbody`
   border-collapse: collapse;
   font-weight: normal;
   text-align: left;
   width: 100%;
-
-  ${({ activeRow, theme }) => {
-    if (activeRow !== -1) {
-      return css`
-        tr:nth-of-type(${activeRow + 1}) td {
-          background-color: ${theme.accentLight};
-        }
-      `
-    }
-  }}
 `
 
 export const TableColumn = styled.td`
@@ -166,20 +122,47 @@ export const TableRowStyled = styled.tr<{ active?: boolean; border?: boolean }>`
 `
 
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
-  active?: boolean
+  index?: number
+  length?: number
+  id?: string
+  onResolve?: (idx: number) => void
   border?: boolean
+  active?: boolean
+  topElement?: string
 }
 
-export const TableRow: React.FC<TableRowProps> = ({ active, ...props }) => {
-  const rowRef = useRef<HTMLTableRowElement>(null)
+export const TableRow: React.FC<TableRowProps> = ({
+  index,
+  length,
+  onResolve,
+  topElement,
+  id,
+  ...props
+}) => {
+  const { register } = useNavigation()
 
-  useEffect(() => {
-    if (active && rowRef && rowRef.current) {
-      rowRef.current.focus()
-    }
-  }, [active])
+  const rowNavigation =
+    typeof index === 'number' && typeof length === 'number' && onResolve
+      ? register(`Table Row ${id ?? index}`, {
+          autoFocus: index === 0,
+          resolve: () => {
+            if (!onResolve || !index) {
+              return
+            }
 
-  return <TableRowStyled ref={rowRef} active={active} {...props} />
+            onResolve(index)
+          },
+          neighbors: {
+            up: index > 0 ? `Table Row ${index - 1}` : topElement,
+            down:
+              index < length - 1
+                ? `Table Row ${index + 1}`
+                : 'Table Pagination 0',
+          },
+        })
+      : null
+
+  return <TableRowStyled {...rowNavigation} {...props} />
 }
 
 export const TableHeader: React.FC<
@@ -222,31 +205,83 @@ export const TablePageSelect: React.FC<{
   currentPage: number
   totalPages: number
   onSelect: (page: number) => void
-}> = ({ currentPage, totalPages, onSelect }) => {
+  rowCount: number
+}> = ({ currentPage, totalPages, onSelect, rowCount }) => {
   const { startPage, endPage } = getPageLimits(totalPages, currentPage)
+  const { register } = useNavigation()
+
   return (
     <PageSelectWrapper>
-      <PageLink disabled={currentPage === 0} onClick={() => onSelect(1)}>
+      <PageLink
+        disabled={currentPage === 0}
+        onClick={() => onSelect(1)}
+        {...register(`Table Pagination 0`, {
+          resolve: () => {
+            if (currentPage === 0) {
+              return
+            }
+            onSelect(1)
+          },
+          neighbors: {
+            up: `Table Row ${rowCount - 1}`,
+            right: 'Table Pagination 1',
+          },
+        })}
+      >
         First
       </PageLink>
 
-      {range(startPage, endPage).map((page, id) => (
-        <PageLink
-          key={id}
-          disabled={currentPage === page}
-          onClick={() => {
+      {range(startPage, endPage).map((page, id) => {
+        const pagination = register(`Table Pagination ${id + 1}`, {
+          resolve: () => {
+            if (currentPage === page) {
+              return
+            }
+
             onSelect(page + 1)
-          }}
-        >
-          {page + 1}
-        </PageLink>
-      ))}
+          },
+          neighbors: {
+            up: `Table Row ${rowCount - 1}`,
+            left: id >= 0 ? `Table Pagination ${id}` : undefined,
+            right: `Table Pagination ${id + 2}`,
+          },
+        })
+
+        return (
+          <PageLink
+            style={{ ...pagination.style }}
+            key={id}
+            disabled={currentPage === page}
+            onClick={() => {
+              onSelect(page + 1)
+            }}
+          >
+            {page + 1}
+          </PageLink>
+        )
+      })}
 
       <PageLink
         disabled={currentPage === totalPages - 1}
         onClick={() => {
           onSelect(totalPages)
         }}
+        {...register(
+          `Table Pagination ${range(startPage, endPage).length + 1}`,
+          {
+            resolve: () => {
+              if (currentPage === totalPages - 1) {
+                return
+              }
+
+              onSelect(totalPages)
+            },
+            neighbors: {
+              up: `Table Row ${rowCount - 1}`,
+              left: `Table Pagination ${range(startPage, endPage).length}`,
+            },
+          },
+        )}
       >
         Last
       </PageLink>
