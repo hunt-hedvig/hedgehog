@@ -43,12 +43,14 @@ export const MemberGroups: Record<string, number> = {
   First: 1,
   Second: 2,
   Third: 3,
+  Fourth: 4,
 }
 
 export const MemberGroupColors: Record<string, string> = {
   [MemberGroups.First]: lightTheme.danger,
   [MemberGroups.Second]: lightTheme.success,
   [MemberGroups.Third]: lightTheme.highlight,
+  [MemberGroups.Fourth]: lightTheme.accent,
 }
 
 export enum InsuranceType {
