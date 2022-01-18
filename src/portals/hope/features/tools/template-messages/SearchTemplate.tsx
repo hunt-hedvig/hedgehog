@@ -31,13 +31,16 @@ const SearchInput = styled(Input)`
   border-radius: unset;
 `
 
-const Item = styled.div`
+const Item = styled.div<{ selected: boolean }>`
   padding: 0.5rem;
 
   display: flex;
   align-items: center;
 
   border-bottom: 1px solid ${({ theme }) => theme.border};
+
+  background-color: ${({ selected, theme }) =>
+    selected ? theme.accentLight : theme.background};
 
   cursor: pointer;
 
@@ -62,8 +65,8 @@ const getTemplates = (language: Languages) =>
 export const SearchTemplate: React.FC<{
   language: Languages
   selected: TemplateMessage | null
-  onSelect: (template: TemplateMessage) => void
-}> = ({ language }) => {
+  onSelect: (template: TemplateMessage | null) => void
+}> = ({ language, onSelect, selected }) => {
   const [currentTemplates, setCurrentTemplates] = useState(
     getTemplates(language),
   )
@@ -80,6 +83,8 @@ export const SearchTemplate: React.FC<{
   }, [query])
 
   useEffect(() => {
+    onSelect(null)
+
     if (!query) {
       setCurrentTemplates(getTemplates(language))
       return
@@ -92,7 +97,10 @@ export const SearchTemplate: React.FC<{
   }, [language])
 
   const selectHandler = (id: string) => {
-    console.log(id)
+    const selectedTemplate = currentTemplates.filter(
+      (template) => template.id === id,
+    )[0]
+    onSelect(selectedTemplate)
   }
 
   return (
@@ -115,6 +123,7 @@ export const SearchTemplate: React.FC<{
             id={template.id}
             name={template.name}
             onSelect={selectHandler}
+            selected={selected?.id === template.id}
           />
         ))}
       </Content>
@@ -122,9 +131,9 @@ export const SearchTemplate: React.FC<{
   )
 }
 
-const TemplateItem = ({ id, name, onSelect }) => {
+const TemplateItem = ({ id, name, onSelect, selected }) => {
   return (
-    <Item onClick={() => onSelect(id)}>
+    <Item selected={selected} onClick={() => onSelect(id)}>
       <FileText />
       <span>{name}</span>
     </Item>

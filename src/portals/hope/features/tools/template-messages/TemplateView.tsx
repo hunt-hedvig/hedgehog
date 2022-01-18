@@ -6,10 +6,17 @@ export const TemplateView: React.FC<{
   template: TemplateMessage | null
   onChange: (field: string, value: string) => void
   onSave: () => void
-}> = ({ language }) => {
+}> = ({ language, template }) => {
   return (
     <div>
-      <h1>Create Template ({language})</h1>
+      <h1>View Template ({language})</h1>
+      {template && (
+        <>
+          <h1>Selected Template: </h1>
+          <h1>ID: {template.id}</h1>
+          <h1>ID: {template.name}</h1>
+        </>
+      )}
     </div>
   )
 }
