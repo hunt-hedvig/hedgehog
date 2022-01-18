@@ -29,6 +29,7 @@ const PerilsEditorPage = lazy(() => import('./tools/PerilsEditorPage'))
 const EmployeesPage = lazy(() => import('./tools/EmployeesPage'))
 const CampaignCodesPage = lazy(() => import('./tools/CampaignCodesPage'))
 const UnsignMemberPage = lazy(() => import('./tools/UnsignMemberPage'))
+const TemplateMessagesPage = lazy(() => import('./tools/TemplateMessagesPage'))
 
 const NotificationsPage = lazy(() => import('./NotificationsPage'))
 
@@ -106,6 +107,10 @@ export const Routes: React.FC = () => {
         <Route path="/tools/employees" component={EmployeesPage} />
         <Route path="/tools/campaign-codes" component={CampaignCodesPage} />
         <Route path="/tools/unsign-member" component={UnsignMemberPage} />
+        <Route
+          path="/tools/template-messages"
+          component={TemplateMessagesPage}
+        />
         <Route
           component={() => (
             <StandaloneMessage paddingTop="25vh">

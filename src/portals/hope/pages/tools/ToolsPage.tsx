@@ -45,7 +45,7 @@ const StagingTools: React.FC = () => {
               history.push('/tools/unsign-member')
             },
             neighbors: {
-              up: 'CampaignCodes',
+              up: 'TemplateMessages',
             },
           })}
         >
@@ -130,7 +130,7 @@ const ToolsPage: React.FC = () => {
               neighbors: {
                 up: 'ApproveCharges',
                 right: 'Employees',
-                down: 'UnsignMember',
+                down: 'TemplateMessages',
               },
             })}
           >
@@ -148,7 +148,7 @@ const ToolsPage: React.FC = () => {
                 up: 'SwitcherAutomation',
                 right: 'ClaimTypes',
                 left: 'CampaignCodes',
-                down: 'UnsignMember',
+                down: 'TemplateMessages',
               },
             })}
           >
@@ -165,12 +165,29 @@ const ToolsPage: React.FC = () => {
               neighbors: {
                 up: 'PerilsEditor',
                 left: 'Employees',
-                down: 'UnsignMember',
+                down: 'TemplateMessages',
               },
             })}
           >
             <Icon>🧠</Icon>
             Claim Types
+          </Card>
+        </Row>
+        <Row>
+          <Card
+            to="/tools/template-messages"
+            {...register('TemplateMessages', {
+              resolve: () => {
+                history.push('/tools/template-messages')
+              },
+              neighbors: {
+                up: 'CampaignCodes',
+                down: 'UnsignMember',
+              },
+            })}
+          >
+            <Icon>📋</Icon>
+            Template Messages
           </Card>
         </Row>
       </CardsWrapper>
