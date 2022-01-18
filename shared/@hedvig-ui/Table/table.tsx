@@ -124,6 +124,7 @@ export const TableRowStyled = styled.tr<{ active?: boolean; border?: boolean }>`
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   index?: number
   length?: number
+  id?: string
   onResolve?: (idx: number) => void
   border?: boolean
   active?: boolean
@@ -135,13 +136,14 @@ export const TableRow: React.FC<TableRowProps> = ({
   length,
   onResolve,
   topElement,
+  id,
   ...props
 }) => {
   const { register } = useNavigation()
 
   const rowNavigation =
     typeof index === 'number' && typeof length === 'number' && onResolve
-      ? register(`Table Row ${index}`, {
+      ? register(`Table Row ${id ?? index}`, {
           autoFocus: index === 0,
           resolve: () => {
             if (!onResolve || !index) {

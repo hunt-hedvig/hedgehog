@@ -301,7 +301,6 @@ export const useNavigation = () => {
 
       return {
         style: {
-          // background: chroma(lightTheme.accent).brighten(0.5).alpha(0.5).hex(),
           border: `2px solid ${chroma(lightTheme.accent).brighten(1).hex()}`,
         },
         ref: (ref) => {
