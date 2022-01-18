@@ -12,7 +12,8 @@ import {
   SearchInputGroup,
   SearchTip,
 } from 'portals/hope/features/members-search/styles'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 interface SearchFieldProps {
   onSubmit: (query: string, includeAll: boolean) => void
@@ -24,6 +25,8 @@ interface SearchFieldProps {
   setIncludeAll: (includeAll: boolean) => void
   currentResultSize: number
   setLuckySearch: (luckySearch: boolean) => void
+  membersLength: number
+  suggestionsLength: number
 }
 
 const stagingToolsAvailable = () => {
@@ -47,11 +50,28 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
       setIncludeAll,
       currentResultSize,
       setLuckySearch,
+      membersLength,
+      suggestionsLength,
     },
-    ref,
+    forwardRef,
   ) => {
     const [textFieldFocused, setTextFieldFocused] = useState(false)
     const { isMetaKey, metaKey } = usePlatform()
+    const { focus, register, cursor } = useNavigation()
+
+    const defaultRef = useRef<HTMLInputElement>(null)
+    const ref = (forwardRef ?? defaultRef) as React.RefObject<HTMLInputElement>
+
+    useEffect(() => {
+      if (ref.current) {
+        if (cursor === 'Member Search Form') {
+          ref.current.focus()
+          return
+        }
+
+        ref.current.blur()
+      }
+    }, [cursor])
 
     return (
       <form
@@ -66,6 +86,7 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
           <SearchInputGroup>
             <Input
               style={{ borderRadius: '0.5rem' }}
+              {...register('Member Search Form', { autoFocus: true })}
               onChange={({ target: { value } }) => {
                 if (shouldIgnoreInput(value)) {
                   return
@@ -90,6 +111,14 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
               }}
               onBlur={() => setTextFieldFocused(false)}
               onKeyDown={(e) => {
+                if (isPressing(e, Keys.Down)) {
+                  if (membersLength) {
+                    focus('Table Row 0')
+                  } else if (suggestionsLength) {
+                    focus('Member Suggestion 1')
+                  }
+                }
+
                 if (
                   isMetaKey(e) &&
                   isPressing(e, Keys.Enter) &&

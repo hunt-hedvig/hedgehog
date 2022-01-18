@@ -17,7 +17,9 @@ import {
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 
 export const FilterState = {
   ...Object.keys(MemberGroups).reduce((acc, group, index) => {
@@ -110,14 +112,36 @@ export const FilterSelect: React.FC<{
 
   const { numberMemberGroups } = useNumberMemberGroups()
 
+  const { register } = useNavigation()
+
   return (
     <>
       <ButtonsGroup style={{ justifyContent: push ? push : 'center' }}>
-        {range(numberMemberGroups).map((memberGroup) => {
+        {range(numberMemberGroups).map((memberGroup, index) => {
+          const navigation = register(`Member Group ${memberGroup} Filter`, {
+            focus: index === 0 ? Keys.F : undefined,
+            resolve: () => {
+              onToggle(memberGroup, UserSettingKey.MemberGroupsFilter)
+            },
+            neighbors: {
+              left: index
+                ? `Member Group ${range(numberMemberGroups)[index - 1]} Filter`
+                : undefined,
+              right:
+                index < range(numberMemberGroups).length - 1
+                  ? `Member Group ${
+                      range(numberMemberGroups)[index + 1]
+                    } Filter`
+                  : undefined,
+              down: `Market ${Object.keys(Market)[index]} Filter`,
+            },
+          })
+
           return (
             <FadeIn
               delay={`${animationDelay + animationItemDelay * memberGroup}ms`}
               key={memberGroup}
+              {...navigation}
             >
               <FilterButton
                 small={small}
@@ -153,13 +177,31 @@ export const FilterSelect: React.FC<{
           marginTop: !small ? '1.0em' : '0.6em',
         }}
       >
-        {Object.keys(Market).map((market) => {
+        {Object.keys(Market).map((market, index) => {
+          const navigation = register(`Market ${market} Filter`, {
+            resolve: () => {
+              onToggle(FilterState[market], UserSettingKey.MarketFilter)
+            },
+            neighbors: {
+              up: `Member Group ${range(numberMemberGroups)[index]} Filter`,
+              left: index
+                ? `Market ${Object.keys(Market)[index - 1]} Filter`
+                : undefined,
+              right:
+                index < Object.keys(Market).length - 1
+                  ? `Market ${Object.keys(Market)[index + 1]} Filter`
+                  : undefined,
+              down: index === 2 ? `No Claims Filter` : 'Open Claims Filter',
+            },
+          })
+
           return (
             <FadeIn
               delay={`${
                 animationDelay + animationItemDelay * (numberMemberGroups + 1)
               }ms`}
               key={market}
+              {...navigation}
             >
               <FilterButton
                 small={small}
@@ -192,6 +234,18 @@ export const FilterSelect: React.FC<{
           delay={`${
             animationDelay + animationItemDelay * (numberMemberGroups + 4)
           }ms`}
+          {...register('Open Claims Filter', {
+            resolve: () => {
+              onToggle(
+                FilterState.HasOpenClaim,
+                UserSettingKey.ClaimStatesFilter,
+              )
+            },
+            neighbors: {
+              up: `Market ${Object.keys(Market)[0]} Filter`,
+              right: 'No Claims Filter',
+            },
+          })}
         >
           <FilterButton
             small={small}
@@ -216,6 +270,20 @@ export const FilterSelect: React.FC<{
           delay={`${
             animationDelay + animationItemDelay * (numberMemberGroups + 5)
           }ms`}
+          {...register('No Claims Filter', {
+            resolve: () => {
+              onToggle(
+                FilterState.NoOpenClaim,
+                UserSettingKey.ClaimStatesFilter,
+              )
+            },
+            neighbors: {
+              up: `Market ${
+                Object.keys(Market)[Object.keys(Market).length - 1]
+              } Filter`,
+              left: 'Open Claims Filter',
+            },
+          })}
         >
           <FilterButton
             small={small}
