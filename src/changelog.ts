@@ -12,6 +12,10 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2022-01-12',
+    change: 'Campaign owners can be changed',
+  },
+  {
     date: '2021-11-25',
     change:
       "Search for members wherever you are - press option + space and type '/'!",
