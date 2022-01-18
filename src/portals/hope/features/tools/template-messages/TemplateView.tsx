@@ -1,14 +1,15 @@
 import React from 'react'
 import { TemplateMessage } from 'portals/hope/pages/tools/TemplateMessagesPage'
 
-export const SearchTemplate: React.FC<{
+export const TemplateView: React.FC<{
   language: 'sweden' | 'denmark' | 'norway'
-  selected: TemplateMessage | null
-  onSelect: (template: TemplateMessage) => void
+  template: TemplateMessage | null
+  onChange: (field: string, value: string) => void
+  onSave: () => void
 }> = ({ language }) => {
   return (
     <div>
-      <h1>Search Template ({language})</h1>
+      <h1>Create Template ({language})</h1>
     </div>
   )
 }

@@ -1,11 +1,19 @@
 import React from 'react'
+import styled from '@emotion/styled'
 
-export const CreateTemplate: React.FC<{
-  language: 'sweden' | 'denmark' | 'norway'
-}> = ({ language }) => {
+const Content = styled.div`
+  flex: 1;
+  border: 2px solid red;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const CreateTemplate = () => {
   return (
-    <div>
-      <h1>Create Template ({language})</h1>
-    </div>
+    <Content>
+      <h1>Hello</h1>
+    </Content>
   )
 }

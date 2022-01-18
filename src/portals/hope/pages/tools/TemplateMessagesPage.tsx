@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline, Flex, Button, Tabs } from '@hedvig-ui'
-import { CreateTemplate } from '../../features/tools/template-messages/CreateTemplate'
+import { TemplateView } from '../../features/tools/template-messages/TemplateView'
 import { SearchTemplate } from '../../features/tools/template-messages/SearchTemplate'
+import { CreateTemplate } from '../../features/tools/template-messages/CreateTemplate'
 
 const Container = styled(FadeIn)`
   flex: 1;
@@ -18,13 +19,40 @@ const Content = styled.div`
   margin-top: 2rem;
 `
 
-const TemplateMessagesPage = () => {
-  const [language, setLanguage] = useState<'sweden' | 'denmark' | 'norway'>(
-    'sweden',
-  )
+export enum Languages {
+  Sweden = 'sweden',
+  Denmark = 'denmark',
+  Norway = 'norway',
+}
 
-  const createNewTemplateHandler = () => {
-    console.log('Creating Template')
+export interface TemplateMessage {
+  name?: string
+  id?: string
+}
+
+const TemplateMessagesPage = () => {
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<TemplateMessage | null>(null)
+  const [language, setLanguage] = useState<Languages>(Languages.Sweden)
+  const [isCreating, setIsCreating] = useState(false)
+
+  const onChangeHandler = (field: string, value: string) => {
+    setSelectedTemplate((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const onSaveHandler = () => {
+    console.log(selectedTemplate)
+  }
+
+  if (isCreating) {
+    return (
+      <Container>
+        <MainHeadline style={{ marginBottom: '2rem' }}>
+          📋 Create New Template
+        </MainHeadline>
+        <CreateTemplate />
+      </Container>
+    )
   }
 
   return (
@@ -35,35 +63,26 @@ const TemplateMessagesPage = () => {
       <Flex flex="0" align="center" justify="space-between">
         <Tabs
           style={{ width: '30%' }}
-          list={[
-            {
-              active: language === 'sweden',
-              action: () => {
-                setLanguage(`sweden`)
-              },
-              title: 'Sweden',
-            },
-            {
-              active: language === 'denmark',
-              action: () => {
-                setLanguage(`denmark`)
-              },
-              title: 'Denmark',
-            },
-            {
-              active: language === 'norway',
-              action: () => {
-                setLanguage(`norway`)
-              },
-              title: 'Norway',
-            },
-          ]}
+          list={Object.keys(Languages).map((tab) => ({
+            active: language === Languages[tab],
+            title: tab,
+            action: () => setLanguage(Languages[tab]),
+          }))}
         />
-        <Button onClick={createNewTemplateHandler}>Create New Template</Button>
+        <Button onClick={() => setIsCreating(true)}>Create New Template</Button>
       </Flex>
       <Content>
-        <SearchTemplate language={language} />
-        <CreateTemplate language={language} />
+        <SearchTemplate
+          language={language}
+          selected={selectedTemplate}
+          onSelect={setSelectedTemplate}
+        />
+        <TemplateView
+          language={language}
+          template={selectedTemplate}
+          onChange={onChangeHandler}
+          onSave={onSaveHandler}
+        />
       </Content>
     </Container>
   )
