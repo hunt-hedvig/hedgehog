@@ -26,6 +26,7 @@ interface OutcomeDropdownProps
   outcome: string | string[] | null
   onSelect?: (value: string | null) => void
   focus?: boolean
+  open?: boolean
 }
 
 export const OutcomeDropdown: React.FC<OutcomeDropdownProps> = ({
@@ -35,6 +36,7 @@ export const OutcomeDropdown: React.FC<OutcomeDropdownProps> = ({
   onSelect,
   focus,
   multi,
+  open,
   ...props
 }) => {
   const [setClaimOutcome] = useSetClaimOutcomeMutation()
@@ -77,6 +79,7 @@ export const OutcomeDropdown: React.FC<OutcomeDropdownProps> = ({
       <MultiDropdown
         {...props}
         value={outcome?.map((item) => convertEnumToTitle(item)) || null}
+        open={open}
         options={outcomeOptions.map((opt) => opt.text)}
         placeholder="Outcome filter"
         onChange={(value) => {

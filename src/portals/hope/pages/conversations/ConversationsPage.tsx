@@ -25,6 +25,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -113,13 +114,16 @@ const ConversationsPage: Page<
     [filteredGroups, memberId, filters],
   )
 
+  const { cursor } = useNavigation()
+
   useEffect(() => {
     if (
       chatFocused ||
       (!isUpKeyPressed && !isDownKeyPressed) ||
       !memberId ||
       filteredGroups.length <= 1 ||
-      currentQuestionOrder === filteredGroups.length
+      currentQuestionOrder === filteredGroups.length ||
+      !!cursor
     ) {
       return
     }

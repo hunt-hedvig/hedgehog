@@ -36,6 +36,7 @@ const Metric = styled.div`
   position: relative;
   cursor: pointer;
   max-width: 200px;
+  transition: none;
   ${({ theme }) => metricStyles(theme)};
 `
 
@@ -51,6 +52,7 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
   onRemove,
   onCreate,
   onEdit,
+  ...props
 }) => {
   const history = useHistory()
   const [edit, setEdit] = useState(false)
@@ -85,6 +87,7 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={clickHandler}
+      {...props}
     >
       <MetricNumber onClick={clickHandler}>{totalClaims || 0}</MetricNumber>
       <MetricName onClick={clickHandler} title={template.name}>

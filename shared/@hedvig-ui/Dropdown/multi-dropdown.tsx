@@ -1,8 +1,9 @@
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { X } from 'react-bootstrap-icons'
 import { isPressing, Keys } from '../hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '../hooks/navigation/use-navigation'
 import { useClickOutside } from '../hooks/use-click-outside'
 
 const show = keyframes`
@@ -113,6 +114,7 @@ interface DropdownProps
   value: string[] | null
   onChange: (opt: string) => void
   clearHandler: () => void
+  open?: boolean
 }
 
 export const MultiDropdown: React.FC<DropdownProps> = ({
@@ -121,12 +123,19 @@ export const MultiDropdown: React.FC<DropdownProps> = ({
   onChange,
   value,
   clearHandler,
+  open,
   ...props
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const [active, setActive] = React.useState(false)
+  const [active, setActive] = React.useState(open || false)
+
+  const { register } = useNavigation()
 
   useClickOutside(dropdownRef, () => setActive(false))
+
+  useEffect(() => {
+    setActive(open || false)
+  }, [open])
 
   return (
     <StyledDropdown
@@ -160,24 +169,39 @@ export const MultiDropdown: React.FC<DropdownProps> = ({
       )}
       {active && (
         <OptionsList>
-          {options.map((opt) => (
-            <Option
-              key={opt}
-              selected={value?.includes(opt)}
-              tabIndex={0}
-              onClick={() => {
+          {options.map((opt, index) => {
+            const navigation = register(opt, {
+              resolve: () => {
+                setActive(false)
                 onChange(opt)
-              }}
-              onKeyDown={(e) => {
-                if (isPressing(e, Keys.Enter)) {
+              },
+              neighbors: {
+                up: index ? options[index - 1] : undefined,
+                down:
+                  index < options.length - 1 ? options[index + 1] : undefined,
+              },
+            })
+
+            return (
+              <Option
+                key={opt}
+                selected={value?.includes(opt)}
+                tabIndex={0}
+                onClick={() => {
                   onChange(opt)
-                  return
-                }
-              }}
-            >
-              {opt}
-            </Option>
-          ))}
+                }}
+                onKeyDown={(e) => {
+                  if (isPressing(e, Keys.Enter)) {
+                    onChange(opt)
+                    return
+                  }
+                }}
+                {...navigation}
+              >
+                {opt}
+              </Option>
+            )
+          })}
         </OptionsList>
       )}
     </StyledDropdown>
