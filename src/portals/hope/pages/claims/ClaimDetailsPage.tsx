@@ -112,6 +112,8 @@ const ClaimDetailsPage: Page<
       return <RestrictedClaimMessage claimId={claimId} />
     }
 
+    console.error(error)
+
     return <StandaloneMessage>Claim not found</StandaloneMessage>
   }
 
@@ -177,7 +179,7 @@ const ClaimDetailsPage: Page<
             </>
           )}
 
-          {!carrier ? (
+          {!carrier && !claimPageData?.claim?.trial ? (
             <NoCarrierMessage opacity={0.6}>
               Cannot make a payment or set a reserve without a carrier.
               <NoCarrierSubtitle>

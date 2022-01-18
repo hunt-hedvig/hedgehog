@@ -247,7 +247,10 @@ type MutationType {
   ): Boolean!
   setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign
   setCampaignOwner(id: ID!, partnerId: String!): VoucherCampaign
-  setContractForClaim(request: SetContractForClaim!): Claim!
+
+  setContractForClaim(claimId: ID!, contractId: ID!): Claim!
+  setTrialForClaim(claimId: ID!, trialId: ID!): Claim!
+
   manualRedeemCampaign(
     memberId: ID!
     request: ManualRedeemCampaignInput!
@@ -452,6 +455,7 @@ type Contract {
   isTerminated: Boolean!
   terminationDate: LocalDate
   currentAgreementId: ID!
+  currentAgreement: GenericAgreement!
   hasPendingAgreement: Boolean!
   genericAgreements: [GenericAgreement!]!
   hasQueuedRenewal: Boolean!
@@ -1006,6 +1010,7 @@ type Claim {
   coveringEmployee: Boolean!
   claimFiles: [ClaimFileUpload!]!
   contract: Contract
+  trial: Trial
   agreement: GenericAgreement
   propertySelections: [ClaimPropertySelection!]!
   coInsured: CoInsured

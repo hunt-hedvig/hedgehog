@@ -2,15 +2,12 @@ import styled from '@emotion/styled'
 import {
   ClaimPageDocument,
   ClaimState,
-  Contract,
-  GenericAgreement,
   useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
   useGetTermsAndConditionsQuery,
   useRestrictResourceAccessMutation,
   UserSettingKey,
   useSetClaimDateMutation,
-  useSetContractForClaimMutation,
   useSetCoveringEmployeeMutation,
   useUpdateClaimStateMutation,
 } from 'types/generated/graphql'
@@ -32,7 +29,7 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
-import { ContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ContractDropdown'
+import { ClaimContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimContractDropdown/ClaimContractDropdown'
 import {
   ClaimOutcomes,
   OutcomeDropdown,
@@ -125,7 +122,6 @@ export const ClaimInformation: React.FC<{
     data,
     error: queryError,
     loading: claimInformationLoading,
-    refetch,
   } = useClaimPageQuery({
     variables: { claimId },
   })
@@ -139,17 +135,17 @@ export const ClaimInformation: React.FC<{
     recordingUrl,
     coveringEmployee,
     state,
-    contract: selectedContract,
     agreement: selectedAgreement,
     coInsured,
     payments = [],
     outcome,
+    contract: selectedContract,
+    trial,
   } = data?.claim ?? {}
 
   const contracts = memberData?.member?.contracts ?? []
   const trials = memberData?.member?.trials ?? []
 
-  const [setContractForClaim] = useSetContractForClaimMutation()
   const [setCoveringEmployee] = useSetCoveringEmployeeMutation()
   const [updateClaimState] = useUpdateClaimStateMutation()
   const [setClaimDate] = useSetClaimDateMutation()
@@ -342,26 +338,11 @@ export const ClaimInformation: React.FC<{
             placeholder="When did it happen?"
           />
         </SelectWrapper>
-        {contracts && (
-          <SelectWrapper>
-            <Label>Contract for Claim</Label>
-            <ContractDropdown
-              contracts={contracts as Contract[]}
-              selectedContract={selectedContract as Contract | undefined}
-              selectedAgreement={
-                selectedAgreement as GenericAgreement | undefined
-              }
-              onChange={async (value) => {
-                await setContractForClaim({
-                  variables: {
-                    request: { claimId, memberId, contractId: value },
-                  },
-                })
-                await refetch()
-              }}
-            />
-          </SelectWrapper>
-        )}
+        <SelectWrapper>
+          <Label>Contract for Claim</Label>
+          <ClaimContractDropdown claimId={claimId} memberId={memberId} />
+        </SelectWrapper>
+
         {selectedAgreement ? (
           selectedContract && (
             <TermsAndConditions
@@ -371,7 +352,7 @@ export const ClaimInformation: React.FC<{
               typeOfContract={selectedContract.typeOfContract}
             />
           )
-        ) : (
+        ) : trial ? null : (
           <NoAgreementWarning>
             ⚠️ No agreement covers the claim on the date of loss
           </NoAgreementWarning>
