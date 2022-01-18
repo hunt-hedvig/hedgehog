@@ -247,7 +247,6 @@ type MutationType {
   ): Boolean!
   setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign
   setCampaignOwner(id: ID!, partnerId: String!): VoucherCampaign
-
   setContractForClaim(claimId: ID!, contractId: ID!): Claim!
   setTrialForClaim(claimId: ID!, trialId: ID!): Claim!
 
@@ -1156,7 +1155,11 @@ type QuestionGroup {
   id: ID!
   memberId: ID!
   questions: [Question!]!
-  member: Member
+
+  market: String
+  firstName: String
+  lastName: String
+  pickedLocale: String
 }
 
 type Question {

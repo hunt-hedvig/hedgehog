@@ -2,19 +2,15 @@ query GetQuestionsGroups {
   questionGroups {
     id
     memberId
+    memberId
+    firstName
+    lastName
+    market
+    pickedLocale
     questions {
       id
       messageJsonString
       timestamp
-    }
-    member {
-      memberId
-      firstName
-      lastName
-      contractMarketInfo {
-        market
-      }
-      pickedLocale
     }
   }
 }
