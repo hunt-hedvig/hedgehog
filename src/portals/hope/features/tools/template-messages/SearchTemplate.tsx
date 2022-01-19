@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import {
-  Languages,
-  TemplateMessage,
-} from 'portals/hope/pages/tools/TemplateMessagesPage'
 import { Input } from '@hedvig-ui'
 import { SearchIcon as InputIcon } from '../../members-search/styles'
 import { FileText } from 'react-bootstrap-icons'
-import { denmarkTemplates, norwayTemplates, swedenTemplates } from './templates'
+import {
+  denmarkTemplates,
+  Languages,
+  norwayTemplates,
+  swedenTemplates,
+  TemplateMessage,
+} from './templates'
 
 const Container = styled.div`
   display: flex;
@@ -75,7 +77,9 @@ export const SearchTemplate: React.FC<{
   useEffect(() => {
     if (query) {
       setCurrentTemplates((prev) =>
-        prev.filter((template) => template.name.includes(query)),
+        prev.filter((template) =>
+          template.name?.toLowerCase().includes(query.toLowerCase()),
+        ),
       )
     } else {
       setCurrentTemplates(getTemplates(language))
@@ -83,16 +87,16 @@ export const SearchTemplate: React.FC<{
   }, [query])
 
   useEffect(() => {
-    onSelect(null)
+    const templates = getTemplates(language)
+    onSelect(templates[0])
 
     if (!query) {
-      setCurrentTemplates(getTemplates(language))
+      setCurrentTemplates(templates)
       return
     }
 
-    const templates = getTemplates(language)
     setCurrentTemplates(
-      templates.filter((template) => template.name.includes(query)),
+      templates.filter((template) => template.name?.includes(query)),
     )
   }, [language])
 
@@ -120,6 +124,7 @@ export const SearchTemplate: React.FC<{
       <Content>
         {currentTemplates.map((template) => (
           <TemplateItem
+            key={template.id}
             id={template.id}
             name={template.name}
             onSelect={selectHandler}

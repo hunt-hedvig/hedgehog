@@ -4,6 +4,10 @@ import { FadeIn, MainHeadline, Flex, Button, Tabs } from '@hedvig-ui'
 import { TemplateView } from '../../features/tools/template-messages/TemplateView'
 import { SearchTemplate } from '../../features/tools/template-messages/SearchTemplate'
 import { CreateTemplate } from '../../features/tools/template-messages/CreateTemplate'
+import {
+  Languages,
+  TemplateMessage,
+} from '../../features/tools/template-messages/templates'
 
 const Container = styled(FadeIn)`
   flex: 1;
@@ -18,17 +22,6 @@ const Content = styled.div`
   column-gap: 2rem;
   margin-top: 2rem;
 `
-
-export enum Languages {
-  Sweden = 'sweden',
-  Denmark = 'denmark',
-  Norway = 'norway',
-}
-
-export interface TemplateMessage {
-  name?: string
-  id?: string
-}
 
 const TemplateMessagesPage = () => {
   const [selectedTemplate, setSelectedTemplate] =
