@@ -5,11 +5,11 @@ export enum Languages {
 }
 
 export interface TemplateMessage {
-  name?: string
-  id?: string
-  market?: Languages
-  message?: string
-  messageEn?: string
+  name: string
+  id: string
+  market: Languages
+  message: string
+  messageEn: string
   withExpiry?: boolean
   expiryDate?: string | null
 }

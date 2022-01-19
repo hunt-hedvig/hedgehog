@@ -81,7 +81,15 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         />
       </Field>
       <Field>
-        <Label>Message (SV)</Label>
+        <Label>
+          Message (
+          {template?.market === Languages.Sweden
+            ? 'SV'
+            : template?.market === Languages.Denmark
+            ? 'DK'
+            : 'NO'}
+          )
+        </Label>
         <MessageField
           value={template?.message}
           onChange={({ currentTarget: { value } }) => {

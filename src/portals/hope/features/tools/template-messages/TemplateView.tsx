@@ -10,18 +10,13 @@ const Content = styled.div`
 `
 
 export const TemplateView: React.FC<{
-  language: 'sweden' | 'denmark' | 'norway'
   template: TemplateMessage | null
   onChange: (field: string, value?: string | boolean | number) => void
   onSave: () => void
-}> = ({ language, template, onChange, onSave }) => {
-  console.log(language)
-
-  return (
-    <Content>
-      {template && (
-        <TemplateForm template={template} onChange={onChange} onSave={onSave} />
-      )}
-    </Content>
-  )
-}
+}> = ({ template, onChange, onSave }) => (
+  <Content>
+    {template && (
+      <TemplateForm template={template} onChange={onChange} onSave={onSave} />
+    )}
+  </Content>
+)

@@ -23,21 +23,54 @@ const Content = styled.div`
   margin-top: 2rem;
 `
 
+const getTemplates = (language: Languages) => {
+  const templates = localStorage.getItem('hedvig:messages:templates')
+
+  if (!templates) {
+    return null
+  }
+
+  const parsedTemplates = JSON.parse(templates)
+  return parsedTemplates.filter((template) => template.market === language)
+}
+
 const TemplateMessagesPage = () => {
-  const [selectedTemplate, setSelectedTemplate] =
-    useState<TemplateMessage | null>(null)
   const [language, setLanguage] = useState<Languages>(Languages.Sweden)
   const [isCreating, setIsCreating] = useState(false)
+  const [templates, setTemplates] = useState<TemplateMessage[]>(() =>
+    getTemplates(language),
+  )
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<TemplateMessage | null>(null)
 
   const onChangeHandler = (
     field: string,
     value?: string | boolean | number,
   ) => {
-    setSelectedTemplate((prev) => ({ ...prev, [field]: value }))
+    const newTemplate = { ...selectedTemplate, [field]: value }
+    setSelectedTemplate(newTemplate as TemplateMessage)
   }
 
   const onSaveHandler = () => {
     console.log(selectedTemplate)
+    const currentTemplates = localStorage.getItem('hedvig:messages:templates')
+
+    if (!currentTemplates || !selectedTemplate) {
+      return
+    }
+
+    const parsedTemplates = JSON.parse(currentTemplates)
+    const uniqueTemplates = parsedTemplates.filter(
+      (template) => template.id !== selectedTemplate.id,
+    )
+
+    localStorage.setItem(
+      'hedvig:messages:templates',
+      JSON.stringify([...uniqueTemplates, selectedTemplate]),
+    )
+    setTemplates((prev) =>
+      prev.filter((template) => template.id !== selectedTemplate.id),
+    )
   }
 
   if (isCreating) {
@@ -62,7 +95,10 @@ const TemplateMessagesPage = () => {
           list={Object.keys(Languages).map((tab) => ({
             active: language === Languages[tab],
             title: tab,
-            action: () => setLanguage(Languages[tab]),
+            action: () => {
+              setTemplates(getTemplates(Languages[tab]))
+              setLanguage(Languages[tab])
+            },
           }))}
         />
         <Button onClick={() => setIsCreating(true)}>Create New Template</Button>
@@ -72,9 +108,9 @@ const TemplateMessagesPage = () => {
           language={language}
           selected={selectedTemplate}
           onSelect={setSelectedTemplate}
+          templates={templates}
         />
         <TemplateView
-          language={language}
           template={selectedTemplate}
           onChange={onChangeHandler}
           onSave={onSaveHandler}

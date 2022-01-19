@@ -3,13 +3,7 @@ import styled from '@emotion/styled'
 import { Input } from '@hedvig-ui'
 import { SearchIcon as InputIcon } from '../../members-search/styles'
 import { FileText } from 'react-bootstrap-icons'
-import {
-  denmarkTemplates,
-  Languages,
-  norwayTemplates,
-  swedenTemplates,
-  TemplateMessage,
-} from './templates'
+import { Languages, TemplateMessage } from './templates'
 
 const Container = styled.div`
   display: flex;
@@ -57,21 +51,14 @@ const Item = styled.div<{ selected: boolean }>`
   }
 `
 
-const getTemplates = (language: Languages) =>
-  language === Languages.Denmark
-    ? denmarkTemplates
-    : language === Languages.Norway
-    ? norwayTemplates
-    : swedenTemplates
-
 export const SearchTemplate: React.FC<{
   language: Languages
   selected: TemplateMessage | null
+  templates: TemplateMessage[]
   onSelect: (template: TemplateMessage | null) => void
-}> = ({ language, onSelect, selected }) => {
-  const [currentTemplates, setCurrentTemplates] = useState(
-    getTemplates(language),
-  )
+}> = ({ language, onSelect, selected, templates }) => {
+  const [currentTemplates, setCurrentTemplates] =
+    useState<TemplateMessage[]>(templates)
   const [query, setQuery] = useState<string>()
 
   useEffect(() => {
@@ -82,12 +69,11 @@ export const SearchTemplate: React.FC<{
         ),
       )
     } else {
-      setCurrentTemplates(getTemplates(language))
+      setCurrentTemplates(templates)
     }
   }, [query])
 
   useEffect(() => {
-    const templates = getTemplates(language)
     onSelect(templates[0])
 
     if (!query) {
@@ -99,6 +85,13 @@ export const SearchTemplate: React.FC<{
       templates.filter((template) => template.name?.includes(query)),
     )
   }, [language])
+
+  useEffect(() => {
+    const newTemplates = currentTemplates.map((template) =>
+      template.id === selected?.id ? selected : template,
+    )
+    setCurrentTemplates(newTemplates as TemplateMessage[])
+  }, [selected])
 
   const selectHandler = (id: string) => {
     const selectedTemplate = currentTemplates.filter(
