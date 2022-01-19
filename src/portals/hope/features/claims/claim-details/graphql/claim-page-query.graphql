@@ -4,7 +4,6 @@ query ClaimPage($claimId: ID!) {
     recordingUrl
     registrationDate
     state
-    coveringEmployee
     claimType
     dateOfOccurrence
     outcome

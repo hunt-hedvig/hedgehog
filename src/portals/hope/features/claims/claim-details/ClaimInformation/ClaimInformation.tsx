@@ -6,7 +6,6 @@ import {
   useGetTermsAndConditionsQuery,
   useRestrictResourceAccessMutation,
   UserSettingKey,
-  useSetCoveringEmployeeMutation,
   useUpdateClaimStateMutation,
 } from 'types/generated/graphql'
 
@@ -38,6 +37,7 @@ import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimDatePicker/ClaimDatePicker'
+import { ClaimEmployeeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimEmployeeDropdown/ClaimEmployeeDropdown'
 
 const validateSelectOption = (value): ClaimState => {
   if (!Object.values(ClaimState).includes(value)) {
@@ -125,7 +125,6 @@ export const ClaimInformation: React.FC<{
   const {
     registrationDate,
     recordingUrl,
-    coveringEmployee,
     state,
     agreement: selectedAgreement,
     coInsured,
@@ -135,25 +134,7 @@ export const ClaimInformation: React.FC<{
     trial,
   } = data?.claim ?? {}
 
-  const [setCoveringEmployee] = useSetCoveringEmployeeMutation()
   const [updateClaimState] = useUpdateClaimStateMutation()
-
-  const coverEmployeeHandler = async (value: string) => {
-    await setCoveringEmployee({
-      variables: {
-        id: claimId,
-        coveringEmployee: value === 'True',
-      },
-      optimisticResponse: {
-        setCoveringEmployee: {
-          id: claimId,
-          __typename: 'Claim',
-          coveringEmployee: value === 'True',
-          events: data?.claim?.events ?? [],
-        },
-      },
-    })
-  }
 
   const coInsureHandler = async (value: string) => {
     setCreatingCoInsured(value === 'True')
@@ -219,16 +200,6 @@ export const ClaimInformation: React.FC<{
       },
     )
   }
-
-  const coverEmployeeOptions = [
-    {
-      key: 0,
-      value: 'True',
-      text: 'True',
-      selected: coveringEmployee || false,
-    },
-    { key: 1, value: 'False', text: 'False', selected: !coveringEmployee },
-  ]
 
   const coInsuredClaimOptions = [
     {
@@ -317,17 +288,7 @@ export const ClaimInformation: React.FC<{
         )}
         <SelectWrapper>
           <Label>Employee Claim</Label>
-          <Dropdown>
-            {coverEmployeeOptions.map((opt) => (
-              <DropdownOption
-                key={opt.key}
-                selected={opt.selected}
-                onClick={() => coverEmployeeHandler(opt.value)}
-              >
-                {opt.text}
-              </DropdownOption>
-            ))}
-          </Dropdown>
+          <ClaimEmployeeDropdown claimId={claimId} />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Co-insured Claim</Label>
