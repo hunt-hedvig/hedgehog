@@ -316,18 +316,19 @@ export const ClaimPayments: React.FC<{
       )}
 
       <Spacing top="medium" />
-      {!loadingPayments &&
+      {((!loadingPayments &&
         paymentsData?.claim?.contract &&
-        paymentsData?.claim?.agreement?.carrier && (
-          <ClaimPayment
-            sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
-            claimId={claimId}
-            identified={Boolean(identity)}
-            memberId={memberId}
-            market={paymentsData?.claim?.contract?.market}
-            carrier={paymentsData?.claim?.agreement?.carrier}
-          />
-        )}
+        paymentsData?.claim?.agreement?.carrier) ||
+        paymentsData?.claim?.trial) && (
+        <ClaimPayment
+          sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
+          claimId={claimId}
+          identified={Boolean(identity)}
+          memberId={memberId}
+          market={paymentsData?.claim?.contract?.market}
+          carrier={paymentsData?.claim?.agreement?.carrier ?? 'HEDVIG'}
+        />
+      )}
     </CardContent>
   )
 }

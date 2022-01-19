@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import {
   Card,
   LoadingMessage,
-  Popover,
   SearchableDropdown,
   StandaloneMessage,
   Table,
@@ -14,17 +13,20 @@ import {
 } from '@hedvig-ui'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { usePartnerCampaigns } from 'portals/hope/features/tools/campaign-codes/hooks/use-partner-campaigns'
+import { usePartnerCampaignOwners } from 'portals/hope/features/tools/campaign-codes/hooks/use-get-partner-campaign-owners'
 import {
   getCodeTypeOptions,
   getDiscountDetails,
   getIncentiveText,
   getValidity,
+  mapCampaignOwners,
 } from 'portals/hope/features/tools/campaign-codes/utils'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
   CampaignFilter,
   useSetCampaignCodeTypeMutation,
+  useSetCampaignOwnerMutation,
 } from 'types/generated/graphql'
 
 const CenteredCell = styled(TableColumn)`
@@ -42,6 +44,8 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
   const codeTypeOptions = getCodeTypeOptions()
   const [setCodeType, { loading: loadingSetCodeType }] =
     useSetCampaignCodeTypeMutation()
+  const [campaignOwnerOptions] = usePartnerCampaignOwners()
+  const [setOwner, { loading: loadingSetOwner }] = useSetCampaignOwnerMutation()
 
   useTitle('Tools | Campaign Codes')
 
@@ -85,7 +89,7 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
               campaignCode,
               incentive,
               partnerId,
-              partnerName,
+
               codeType,
             } = campaign
 
@@ -93,8 +97,38 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
               <TableRow key={id} border>
                 <CenteredCell>{getValidity(campaign)}</CenteredCell>
                 <CenteredCell>{campaignCode}</CenteredCell>
-                <CenteredCell>
-                  <Popover contents={partnerId}>{partnerName}</Popover>
+                <CenteredCell style={{ width: '270px' }}>
+                  <SearchableDropdown
+                    value={
+                      partnerId
+                        ? mapCampaignOwners(campaignOwnerOptions).find(
+                            (c) => c.value === partnerId,
+                          )
+                        : null
+                    }
+                    placeholder="No owner"
+                    isLoading={loadingSetOwner}
+                    onChange={(data) =>
+                      toast.promise(
+                        setOwner({
+                          variables: { id, partnerId: data?.value },
+                          optimisticResponse: {
+                            setCampaignOwner: {
+                              __typename: 'VoucherCampaign',
+                              ...campaign,
+                            },
+                          },
+                        }),
+                        {
+                          loading: 'Updating campaign owner',
+                          success: 'Campaign owner updated',
+                          error: 'Could not update campaign owner',
+                        },
+                      )
+                    }
+                    noOptionsMessage={() => 'Option not found'}
+                    options={mapCampaignOwners(campaignOwnerOptions)}
+                  />
                 </CenteredCell>
                 <CenteredCell style={{ width: '270px' }}>
                   {getIncentiveText(incentive)}

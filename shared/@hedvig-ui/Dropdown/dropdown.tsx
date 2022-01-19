@@ -65,7 +65,7 @@ const OptionsList = styled.ul<{ activeOption: number }>`
   max-height: 500px;
   overflow-y: auto;
 
-  animation: ${show} 0.1s linear;
+  animation: ${show} 0.15s ease-out;
   background-color: ${({ theme }) => theme.backgroundLight};
   border-radius: 0 0 0.3rem 0.3rem;
   border: 1px solid ${({ theme }) => theme.border};
