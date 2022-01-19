@@ -29,7 +29,10 @@ const TemplateMessagesPage = () => {
   const [language, setLanguage] = useState<Languages>(Languages.Sweden)
   const [isCreating, setIsCreating] = useState(false)
 
-  const onChangeHandler = (field: string, value: string) => {
+  const onChangeHandler = (
+    field: string,
+    value?: string | boolean | number,
+  ) => {
     setSelectedTemplate((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -43,7 +46,7 @@ const TemplateMessagesPage = () => {
         <MainHeadline style={{ marginBottom: '2rem' }}>
           📋 Create New Template
         </MainHeadline>
-        <CreateTemplate />
+        <CreateTemplate onClose={() => setIsCreating(false)} />
       </Container>
     )
   }
