@@ -25,10 +25,12 @@ gql`
 
 interface UseClaimDatePickerResult {
   setDate: (date: string) => void
+  date: string | null
 }
 
 const useClaimDatePicker = (claimId: string): UseClaimDatePickerResult => {
   const [setClaimDateOfOccurrence] = useSetClaimDateOfOccurrenceMutation()
+  const { data } = useClaimDateOfOccurrenceQuery({ variables: { claimId } })
 
   const setDate = (date: string) => {
     toast.promise(
@@ -53,21 +55,21 @@ const useClaimDatePicker = (claimId: string): UseClaimDatePickerResult => {
     )
   }
 
-  return { setDate }
+  return { setDate, date: data?.claim?.dateOfOccurrence ?? null }
 }
 
 export const ClaimDatePicker: React.FC<{ claimId: string }> = ({ claimId }) => {
-  const { setDate } = useClaimDatePicker(claimId)
-  const { data } = useClaimDateOfOccurrenceQuery({ variables: { claimId } })
+  const { setDate, date } = useClaimDatePicker(claimId)
 
   return (
     <TextDatePicker
-      value={data?.claim?.dateOfOccurrence ?? null}
+      value={date}
       maxDate={new Date()}
-      onChange={(date) => {
-        if (!data?.claim || !date || data?.claim?.dateOfOccurrence === date) {
+      onChange={(newDate) => {
+        if (!newDate || !date) {
           return
         }
+
         setDate(date)
       }}
       placeholder="When did it happen?"
