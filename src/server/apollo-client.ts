@@ -122,6 +122,22 @@ export const apolloClient = (() => {
             questionGroups: {
               merge: false,
             },
+            claim: {
+              read(_, { args, toReference }) {
+                return toReference({
+                  __typename: 'Claim',
+                  id: args?.id,
+                })
+              },
+            },
+            member: {
+              read(_, { args, toReference }) {
+                return toReference({
+                  __typename: 'Member',
+                  id: args?.memberId,
+                })
+              },
+            },
           },
         },
       },
