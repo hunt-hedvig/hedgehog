@@ -24,10 +24,10 @@ import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-numb
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { numberMemberGroupsOptions } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
 import { Market, MarketFlags } from 'portals/hope/features/config/constants'
-import { ClaimOutcomes } from '../../claim-details/ClaimInformation/components/ClaimOutcomeDropdown/ClaimOutcomeDropdown'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { ClaimOutcomes } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
 
 export const FilterWrapper = styled.div`
   width: 100%;

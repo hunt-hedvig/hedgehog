@@ -3,9 +3,7 @@ import {
   ClaimPageDocument,
   ClaimState,
   useClaimPageQuery,
-  useGetTermsAndConditionsQuery,
   useRestrictResourceAccessMutation,
-  UserSettingKey,
   useUpdateClaimStateMutation,
 } from 'types/generated/graphql'
 
@@ -27,7 +25,7 @@ import { ClaimContractDropdown } from 'portals/hope/features/claims/claim-detail
 import {
   ClaimOutcomeDropdown,
   ClaimOutcomes,
-} from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown/ClaimOutcomeDropdown'
+} from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
 import {
   CoInsuredForm,
   useDeleteCoInsured,
@@ -35,9 +33,9 @@ import {
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { useMe } from 'portals/hope/features/user/hooks/use-me'
-import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimDatePicker/ClaimDatePicker'
-import { ClaimEmployeeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimEmployeeDropdown/ClaimEmployeeDropdown'
+import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimDatePicker'
+import { ClaimEmployeeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimEmployeeDropdown'
+import { TermsAndConditionsLink } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/TermsAndConditionsLink'
 
 const validateSelectOption = (value): ClaimState => {
   if (!Object.values(ClaimState).includes(value)) {
@@ -268,7 +266,7 @@ export const ClaimInformation: React.FC<{
 
         {selectedAgreement ? (
           selectedContract && (
-            <TermsAndConditions
+            <TermsAndConditionsLink
               carrier={selectedAgreement.carrier}
               createdAt={selectedAgreement.createdAt}
               partner={selectedAgreement.partner ?? null}
@@ -323,41 +321,5 @@ export const ClaimInformation: React.FC<{
         )}
       </Loadable>
     </CardContent>
-  )
-}
-
-const TermsAndConditions: React.FC<{
-  typeOfContract: string
-  partner: string | null
-  carrier: string
-  createdAt: string
-}> = ({ typeOfContract, partner, carrier, createdAt }) => {
-  const { settings } = useMe()
-
-  const { data } = useGetTermsAndConditionsQuery({
-    variables: {
-      contractType: typeOfContract,
-      partner,
-      carrier,
-      date: createdAt.split('T')[0],
-      locale: settings[UserSettingKey.Languages] || 'en_SE',
-    },
-  })
-
-  if (!data?.termsAndConditions) {
-    return null
-  }
-
-  return (
-    <a
-      href={data.termsAndConditions.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        fontSize: '0.9rem',
-      }}
-    >
-      Terms and Conditions
-    </a>
   )
 }
