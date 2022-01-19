@@ -8,6 +8,7 @@ import {
   Languages,
   TemplateMessage,
 } from '../../features/tools/template-messages/templates'
+import { v4 as uuidv4 } from 'uuid'
 
 const Container = styled(FadeIn)`
   flex: 1;
@@ -51,26 +52,75 @@ const TemplateMessagesPage = () => {
     setSelectedTemplate(newTemplate as TemplateMessage)
   }
 
-  const onSaveHandler = () => {
-    console.log(selectedTemplate)
-    const currentTemplates = localStorage.getItem('hedvig:messages:templates')
+  const saveChangesHandler = () => {
+    const allTemplates = localStorage.getItem('hedvig:messages:templates')
 
-    if (!currentTemplates || !selectedTemplate) {
+    if (!selectedTemplate || !allTemplates) {
       return
     }
 
-    const parsedTemplates = JSON.parse(currentTemplates)
-    const uniqueTemplates = parsedTemplates.filter(
-      (template) => template.id !== selectedTemplate.id,
+    localStorage.setItem(
+      'hedvig:messages:templates',
+      JSON.stringify([
+        ...JSON.parse(allTemplates).map((template) => {
+          if (template.id === selectedTemplate.id) {
+            return selectedTemplate
+          }
+          return template
+        }),
+      ]),
+    )
+
+    if (selectedTemplate.market !== language) {
+      setTemplates((prev) =>
+        prev.filter((template) => template.id !== selectedTemplate.id),
+      )
+      setSelectedTemplate(null)
+    }
+  }
+
+  const createHandler = (template: TemplateMessage) => {
+    const allTemplates = localStorage.getItem('hedvig:messages:templates')
+    const newTemplate = { ...template, id: uuidv4() }
+
+    if (!allTemplates) {
+      localStorage.setItem(
+        'hedvig:messages:templates',
+        JSON.stringify([newTemplate]),
+      )
+
+      setIsCreating(false)
+      return
+    }
+
+    const newTemplates = [...JSON.parse(allTemplates), newTemplate]
+    localStorage.setItem(
+      'hedvig:messages:templates',
+      JSON.stringify(newTemplates),
+    )
+    if (newTemplate.market === language) {
+      setTemplates((prev) => [...prev, newTemplate])
+    }
+    setIsCreating(false)
+  }
+
+  const deleteHandler = (id: string) => {
+    const allTemplates = localStorage.getItem('hedvig:messages:templates')
+
+    if (!allTemplates) {
+      return
+    }
+
+    const newTemplates = JSON.parse(allTemplates).filter(
+      (template) => template.id !== id,
     )
 
     localStorage.setItem(
       'hedvig:messages:templates',
-      JSON.stringify([...uniqueTemplates, selectedTemplate]),
+      JSON.stringify(newTemplates),
     )
-    setTemplates((prev) =>
-      prev.filter((template) => template.id !== selectedTemplate.id),
-    )
+    setTemplates((prev) => prev.filter((template) => template.id !== id))
+    setSelectedTemplate(null)
   }
 
   if (isCreating) {
@@ -79,7 +129,10 @@ const TemplateMessagesPage = () => {
         <MainHeadline style={{ marginBottom: '2rem' }}>
           📋 Create New Template
         </MainHeadline>
-        <CreateTemplate onClose={() => setIsCreating(false)} />
+        <CreateTemplate
+          onClose={() => setIsCreating(false)}
+          onCreate={createHandler}
+        />
       </Container>
     )
   }
@@ -105,16 +158,18 @@ const TemplateMessagesPage = () => {
       </Flex>
       <Content>
         <SearchTemplate
-          language={language}
           selected={selectedTemplate}
           onSelect={setSelectedTemplate}
           templates={templates}
         />
-        <TemplateView
-          template={selectedTemplate}
-          onChange={onChangeHandler}
-          onSave={onSaveHandler}
-        />
+        {selectedTemplate && (
+          <TemplateView
+            template={selectedTemplate}
+            onChange={onChangeHandler}
+            onSave={saveChangesHandler}
+            onDelete={deleteHandler}
+          />
+        )}
       </Content>
     </Container>
   )

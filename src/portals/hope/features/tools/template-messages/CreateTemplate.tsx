@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { Languages, TemplateMessage } from './templates'
 import { TemplateForm } from './TemplateForm'
-import { v4 as uuidv4 } from 'uuid'
 
 const Content = styled.div`
   flex: 1;
@@ -13,9 +12,10 @@ const Content = styled.div`
   flex-direction: column;
 `
 
-export const CreateTemplate: React.FC<{ onClose: () => void }> = ({
-  onClose,
-}) => {
+export const CreateTemplate: React.FC<{
+  onClose: () => void
+  onCreate: (template: TemplateMessage) => void
+}> = ({ onClose, onCreate }) => {
   const [template, setTemplate] = useState<TemplateMessage>({
     id: '',
     name: '',
@@ -28,33 +28,13 @@ export const CreateTemplate: React.FC<{ onClose: () => void }> = ({
     setTemplate((prev) => ({ ...prev, [field]: value }))
   }
 
-  const createHandler = () => {
-    const currentTemplates = localStorage.getItem('hedvig:messages:templates')
-
-    if (!currentTemplates) {
-      localStorage.setItem(
-        'hedvig:messages:templates',
-        JSON.stringify([{ ...template, id: uuidv4() }]),
-      )
-
-      return
-    }
-
-    const parsedTemplates = JSON.parse(currentTemplates)
-    const newTemplates = [...parsedTemplates, { ...template, id: uuidv4() }]
-    localStorage.setItem(
-      'hedvig:messages:templates',
-      JSON.stringify(newTemplates),
-    )
-  }
-
   return (
     <Content>
       {template && (
         <TemplateForm
           template={template}
           onChange={changeHandler}
-          onSave={createHandler}
+          onSave={() => onCreate(template)}
           isCreating
           onClose={onClose}
         />

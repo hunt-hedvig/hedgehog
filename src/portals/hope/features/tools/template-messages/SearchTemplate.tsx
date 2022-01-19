@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { Input } from '@hedvig-ui'
 import { SearchIcon as InputIcon } from '../../members-search/styles'
 import { FileText } from 'react-bootstrap-icons'
-import { Languages, TemplateMessage } from './templates'
+import { TemplateMessage } from './templates'
 
 const Container = styled.div`
   display: flex;
@@ -52,49 +52,14 @@ const Item = styled.div<{ selected: boolean }>`
 `
 
 export const SearchTemplate: React.FC<{
-  language: Languages
   selected: TemplateMessage | null
   templates: TemplateMessage[]
   onSelect: (template: TemplateMessage | null) => void
-}> = ({ language, onSelect, selected, templates }) => {
-  const [currentTemplates, setCurrentTemplates] =
-    useState<TemplateMessage[]>(templates)
+}> = ({ onSelect, selected, templates }) => {
   const [query, setQuery] = useState<string>()
 
-  useEffect(() => {
-    if (query) {
-      setCurrentTemplates((prev) =>
-        prev.filter((template) =>
-          template.name?.toLowerCase().includes(query.toLowerCase()),
-        ),
-      )
-    } else {
-      setCurrentTemplates(templates)
-    }
-  }, [query])
-
-  useEffect(() => {
-    onSelect(templates[0])
-
-    if (!query) {
-      setCurrentTemplates(templates)
-      return
-    }
-
-    setCurrentTemplates(
-      templates.filter((template) => template.name?.includes(query)),
-    )
-  }, [language])
-
-  useEffect(() => {
-    const newTemplates = currentTemplates.map((template) =>
-      template.id === selected?.id ? selected : template,
-    )
-    setCurrentTemplates(newTemplates as TemplateMessage[])
-  }, [selected])
-
   const selectHandler = (id: string) => {
-    const selectedTemplate = currentTemplates.filter(
+    const selectedTemplate = templates.filter(
       (template) => template.id === id,
     )[0]
     onSelect(selectedTemplate)
@@ -115,15 +80,21 @@ export const SearchTemplate: React.FC<{
         autoFocus
       />
       <Content>
-        {currentTemplates.map((template) => (
-          <TemplateItem
-            key={template.id}
-            id={template.id}
-            name={template.name}
-            onSelect={selectHandler}
-            selected={selected?.id === template.id}
-          />
-        ))}
+        {templates
+          .filter((template) =>
+            query
+              ? template.name.toLowerCase().includes(query.toLowerCase())
+              : true,
+          )
+          .map((template) => (
+            <TemplateItem
+              key={template.id}
+              id={template.id}
+              name={template.name}
+              onSelect={selectHandler}
+              selected={selected?.id === template.id}
+            />
+          ))}
       </Content>
     </Container>
   )

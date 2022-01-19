@@ -13,6 +13,7 @@ import { Languages, TemplateMessage } from './templates'
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
+  max-width: 20rem;
 `
 
 const MessageField = styled(TextArea)`
