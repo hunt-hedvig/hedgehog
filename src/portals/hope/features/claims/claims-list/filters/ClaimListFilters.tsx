@@ -15,6 +15,7 @@ import {
   Flex,
   Label,
   lightTheme,
+  MultiDropdown,
   Popover,
   Radio,
   TextDatePicker,
@@ -23,10 +24,7 @@ import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-numb
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { numberMemberGroupsOptions } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
 import { Market, MarketFlags } from 'portals/hope/features/config/constants'
-import {
-  ClaimOutcomes,
-  OutcomeDropdown,
-} from '../../claim-details/ClaimType/components/OutcomeDropdown'
+import { ClaimOutcomes } from '../../claim-details/ClaimInformation/components/ClaimOutcomeDropdown/ClaimOutcomeDropdown'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
@@ -72,9 +70,35 @@ export const StyledLabel = styled(Label)`
   }
 `
 
-const OutcomeFilter = styled(OutcomeDropdown)`
-  padding: 0.5rem;
-`
+const OutcomeFilter: React.FC<{
+  outcomes: ClaimOutcomes[]
+  onSelect: (value: string | null) => void
+  open: boolean
+  multi: boolean
+}> = ({ outcomes, onSelect, open }) => {
+  const options = [
+    ...Object.keys(ClaimOutcomes).map((value) => ({
+      value,
+      text: convertEnumToTitle(value),
+    })),
+    { value: 'not_specified', text: 'Not specified' },
+  ]
+
+  return (
+    <MultiDropdown
+      value={outcomes?.map((item) => convertEnumToTitle(item)) || null}
+      open={open}
+      options={options.map((opt) => opt.text)}
+      placeholder="Outcome filter"
+      onChange={(value) => {
+        const selectedValue = options.filter((opt) => opt.text === value)[0]
+        onSelect(selectedValue.value)
+      }}
+      clearHandler={() => onSelect(null)}
+      style={{ minWidth: '10rem' }}
+    />
+  )
+}
 
 export const complexityIcons = {
   Simple: '📱',
@@ -441,7 +465,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           open={outcomeOpen}
           multi
           onSelect={updateOutcomeFilterHandler}
-          outcome={
+          outcomes={
             (settings[UserSettingKey.OutcomeFilter] &&
               settings[UserSettingKey.OutcomeFilter].claims) ||
             null

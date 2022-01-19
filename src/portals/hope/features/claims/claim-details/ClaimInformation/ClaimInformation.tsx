@@ -25,9 +25,9 @@ import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
 import { ClaimContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimContractDropdown/ClaimContractDropdown'
 import {
+  ClaimOutcomeDropdown,
   ClaimOutcomes,
-  OutcomeDropdown,
-} from 'portals/hope/features/claims/claim-details/ClaimType/components/OutcomeDropdown'
+} from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown/ClaimOutcomeDropdown'
 import {
   CoInsuredForm,
   useDeleteCoInsured,
@@ -255,13 +255,7 @@ export const ClaimInformation: React.FC<{
         </SelectWrapper>
         <SelectWrapper>
           <Label>Claim outcome</Label>
-          {!!data?.claim?.state && (
-            <OutcomeDropdown
-              claimState={data.claim.state}
-              outcome={data?.claim?.outcome ?? null}
-              claimId={claimId}
-            />
-          )}
+          <ClaimOutcomeDropdown claimId={claimId} />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Date of Occurrence</Label>
