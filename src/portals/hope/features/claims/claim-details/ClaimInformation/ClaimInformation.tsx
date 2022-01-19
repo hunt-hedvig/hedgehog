@@ -2,7 +2,6 @@ import styled from '@emotion/styled'
 import {
   ClaimPageDocument,
   ClaimState,
-  useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
   useGetTermsAndConditionsQuery,
   useRestrictResourceAccessMutation,
@@ -14,9 +13,7 @@ import {
 import {
   Button,
   CardContent,
-  CardsWrapper,
   CardTitle,
-  DangerCard,
   Dropdown,
   DropdownOption,
   InfoRow,
@@ -125,10 +122,6 @@ export const ClaimInformation: React.FC<{
     variables: { claimId },
   })
 
-  const { data: memberData } = useClaimMemberContractsMasterInceptionQuery({
-    variables: { memberId },
-  })
-
   const {
     registrationDate,
     recordingUrl,
@@ -141,9 +134,6 @@ export const ClaimInformation: React.FC<{
     contract: selectedContract,
     trial,
   } = data?.claim ?? {}
-
-  const contracts = memberData?.member?.contracts ?? []
-  const trials = memberData?.member?.trials ?? []
 
   const [setCoveringEmployee] = useSetCoveringEmployeeMutation()
   const [updateClaimState] = useUpdateClaimStateMutation()
@@ -359,15 +349,6 @@ export const ClaimInformation: React.FC<{
             </>
           )}
         </SelectWrapper>
-        {contracts.length === 0 && trials.length > 0 && (
-          <CardsWrapper>
-            <DangerCard>
-              This member has a trial which may cover this claim, but no
-              contract. This case can not be handled in Hope yet, please contact
-              the MX tech team.
-            </DangerCard>
-          </CardsWrapper>
-        )}
         {!restricted && (
           <SelectWrapper>
             <Button
