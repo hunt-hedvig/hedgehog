@@ -7,6 +7,7 @@ import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-numb
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { QuestionInfo } from './QuestionInfo'
+import { QuestionGroup } from 'types/generated/graphql'
 
 const QuestionGroupInfoWrapper = styled.div<{
   memberId: string
@@ -25,29 +26,22 @@ const MemberInfoWrapper = styled.div`
   padding-bottom: 1rem;
 `
 
-export const QuestionGroupInfo = ({ questionGroup }) => {
-  const member = questionGroup?.member
-
+export const QuestionGroupInfo = ({ group }: { group: QuestionGroup }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
 
   return (
     <QuestionGroupInfoWrapper
-      memberId={questionGroup.memberId}
+      memberId={group.memberId}
       numberMemberGroups={numberMemberGroups}
     >
       <MemberInfoWrapper>
-        {member && (
-          <>
-            {member?.firstName} {member?.lastName}{' '}
-            {getMemberFlag(member?.contractMarketInfo, member.pickedLocale)}{' '}
-          </>
-        )}
-        <Link to={`/members/${questionGroup.memberId}`}>
-          {questionGroup.memberId}
-        </Link>
+        {group.firstName} {group.lastName}{' '}
+        {group.market &&
+          getMemberFlag({ market: group.market }, group.pickedLocale)}{' '}
+        <Link to={`/members/${group.memberId}`}>{group.memberId}</Link>
       </MemberInfoWrapper>
 
-      {questionGroup.questions.map((question) => {
+      {group.questions.map((question) => {
         return <QuestionInfo key={question.id} question={question} />
       })}
     </QuestionGroupInfoWrapper>

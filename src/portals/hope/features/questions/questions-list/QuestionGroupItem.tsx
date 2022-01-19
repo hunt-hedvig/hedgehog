@@ -58,7 +58,7 @@ export const QuestionGroupItem: React.FC<QuestionGroupItemProps> = ({
       ref={groupRef}
       tabIndex={0}
     >
-      <QuestionGroupInfo questionGroup={questionGroup} />
+      <QuestionGroupInfo group={questionGroup} />
       <AnswerForm
         memberId={questionGroup.memberId}
         onDone={() => setVisible(false)}

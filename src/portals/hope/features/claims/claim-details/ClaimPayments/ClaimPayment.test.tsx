@@ -21,7 +21,7 @@ it("doesn't submit empty form", async () => {
         claimId="abc123"
         identified={true}
         market={Market.Sweden}
-        carrier="Hedvig"
+        carrier="HEDVIG"
         memberId="496557264"
       />
     </MockedProvider>,
@@ -49,7 +49,7 @@ it('submits valid form with confirmation', async () => {
     sanctionListSkipped: false,
     note: 'test value with more than 5 chars',
     exGratia: false,
-    carrier: 'Hedvig',
+    carrier: 'HEDVIG',
     type: ClaimPaymentType.Automatic,
     paidAt: null,
   }
@@ -85,7 +85,7 @@ it('submits valid form with confirmation', async () => {
         claimId="abc123"
         identified={true}
         market={Market.Sweden}
-        carrier="Hedvig"
+        carrier="HEDVIG"
       />
     </MockedProvider>,
   )

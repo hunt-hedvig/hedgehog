@@ -2,12 +2,10 @@ import styled from '@emotion/styled'
 import {
   ClaimPageDocument,
   ClaimState,
-  useClaimMemberContractsMasterInceptionQuery,
   useClaimPageQuery,
   useGetTermsAndConditionsQuery,
   useRestrictResourceAccessMutation,
   UserSettingKey,
-  useSetClaimDateMutation,
   useSetCoveringEmployeeMutation,
   useUpdateClaimStateMutation,
 } from 'types/generated/graphql'
@@ -15,9 +13,7 @@ import {
 import {
   Button,
   CardContent,
-  CardsWrapper,
   CardTitle,
-  DangerCard,
   Dropdown,
   DropdownOption,
   InfoRow,
@@ -25,7 +21,6 @@ import {
   Label,
   Loadable,
   Paragraph,
-  TextDatePicker,
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
@@ -42,6 +37,7 @@ import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
+import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimDatePicker/ClaimDatePicker'
 
 const validateSelectOption = (value): ClaimState => {
   if (!Object.values(ClaimState).includes(value)) {
@@ -126,10 +122,6 @@ export const ClaimInformation: React.FC<{
     variables: { claimId },
   })
 
-  const { data: memberData } = useClaimMemberContractsMasterInceptionQuery({
-    variables: { memberId },
-  })
-
   const {
     registrationDate,
     recordingUrl,
@@ -143,12 +135,8 @@ export const ClaimInformation: React.FC<{
     trial,
   } = data?.claim ?? {}
 
-  const contracts = memberData?.member?.contracts ?? []
-  const trials = memberData?.member?.trials ?? []
-
   const [setCoveringEmployee] = useSetCoveringEmployeeMutation()
   const [updateClaimState] = useUpdateClaimStateMutation()
-  const [setClaimDate] = useSetClaimDateMutation()
 
   const coverEmployeeHandler = async (value: string) => {
     await setCoveringEmployee({
@@ -306,37 +294,7 @@ export const ClaimInformation: React.FC<{
         </SelectWrapper>
         <SelectWrapper>
           <Label>Date of Occurrence</Label>
-          <TextDatePicker
-            value={data?.claim?.dateOfOccurrence ?? null}
-            onChange={(date) => {
-              if (!data?.claim || !date) {
-                return
-              }
-
-              toast.promise(
-                setClaimDate({
-                  variables: {
-                    id: claimId,
-                    date,
-                  },
-                  optimisticResponse: {
-                    setDateOfOccurrence: {
-                      __typename: 'Claim',
-                      id: claimId,
-                      dateOfOccurrence: date,
-                      contract: data?.claim?.contract,
-                    },
-                  },
-                }),
-                {
-                  loading: 'Setting date of occurrence',
-                  success: 'Date of occurrence set',
-                  error: 'Could not set date of occurrence',
-                },
-              )
-            }}
-            placeholder="When did it happen?"
-          />
+          <ClaimDatePicker claimId={claimId} />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Contract for Claim</Label>
@@ -391,15 +349,6 @@ export const ClaimInformation: React.FC<{
             </>
           )}
         </SelectWrapper>
-        {contracts.length === 0 && trials.length > 0 && (
-          <CardsWrapper>
-            <DangerCard>
-              This member has a trial which may cover this claim, but no
-              contract. This case can not be handled in Hope yet, please contact
-              the MX tech team.
-            </DangerCard>
-          </CardsWrapper>
-        )}
         {!restricted && (
           <SelectWrapper>
             <Button
