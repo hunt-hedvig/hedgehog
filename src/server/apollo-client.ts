@@ -110,6 +110,7 @@ const cache = new InMemoryCache({
 const persistor = new CachePersistor({
   cache,
   storage: new LocalStorageWrapper(window.localStorage),
+  trigger: 'write',
 })
 
 const SCHEMA_VERSION = '1'
