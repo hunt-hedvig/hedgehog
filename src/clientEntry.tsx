@@ -11,6 +11,7 @@ import { GlobalStyles } from '@hedvig-ui/themes'
 import { useAuthenticate } from 'auth/use-authenticate'
 import { Route, Router, Switch } from 'react-router'
 import { PortalsPage } from 'auth/PortalsPage'
+import { Spinner, StandaloneMessage } from '@hedvig-ui'
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
@@ -24,7 +25,11 @@ const App: React.FC = () => {
   }
 
   if (!portal) {
-    return null
+    return (
+      <StandaloneMessage paddingTop="45vh" opacity={1}>
+        <Spinner />
+      </StandaloneMessage>
+    )
   }
 
   const Portal = app(portal)
