@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
-import { Fade, MainHeadline, useFadeAnimation } from '@hedvig-ui'
+import {
+  Fade,
+  MainHeadline,
+  Spacing,
+  StandaloneMessage,
+  useFadeAnimation,
+} from '@hedvig-ui'
 import {
   Keys,
   useKeyIsPressed,
@@ -155,60 +161,60 @@ const ConversationsPage: Page<
   return (
     <>
       <MainHeadline>Conversations</MainHeadline>
-      {/* {memberId ? ( */}
-      <Wrapper>
-        {/* {currentQuestionOrder !== -1 ? (
-          <> */}
-        <FadeWrapper {...fadeProps}>
-          <MemberSummary memberId={'210227659'} />
-        </FadeWrapper>
-        <FadeWrapper {...fadeProps}>
-          <ConversationChat
-            memberId={'210227659'}
-            onFocus={() => setChatFocused(true)}
-            onBlur={() => setChatFocused(false)}
-            onResolve={() =>
-              fade('up', 'out').then(() => {
-                if (currentQuestionOrder === 0) {
-                  history.push('/conversations')
-                }
+      {memberId ? (
+        <Wrapper>
+          {currentQuestionOrder !== -1 ? (
+            <>
+              <FadeWrapper {...fadeProps}>
+                <MemberSummary memberId={memberId} />
+              </FadeWrapper>
+              <FadeWrapper {...fadeProps}>
+                <ConversationChat
+                  memberId={memberId}
+                  onFocus={() => setChatFocused(true)}
+                  onBlur={() => setChatFocused(false)}
+                  onResolve={() =>
+                    fade('up', 'out').then(() => {
+                      if (currentQuestionOrder === 0) {
+                        history.push('/conversations')
+                      }
 
-                if (currentQuestionOrder < filteredGroups.length - 1) {
-                  history.push(
-                    `/conversations/${
-                      filteredGroups[currentQuestionOrder + 1].memberId
-                    }`,
-                  )
-                }
+                      if (currentQuestionOrder < filteredGroups.length - 1) {
+                        history.push(
+                          `/conversations/${
+                            filteredGroups[currentQuestionOrder + 1].memberId
+                          }`,
+                        )
+                      }
 
-                if (currentQuestionOrder === filteredGroups.length - 1) {
-                  history.push(
-                    `/conversations/${
-                      filteredGroups[currentQuestionOrder - 1].memberId
-                    }`,
-                  )
-                }
-              })
-            }
+                      if (currentQuestionOrder === filteredGroups.length - 1) {
+                        history.push(
+                          `/conversations/${
+                            filteredGroups[currentQuestionOrder - 1].memberId
+                          }`,
+                        )
+                      }
+                    })
+                  }
+                />
+              </FadeWrapper>
+            </>
+          ) : (
+            <>
+              <div />
+              <div />
+            </>
+          )}
+
+          <ConversationsOverview
+            currentQuestionOrder={currentQuestionOrder}
+            filteredGroups={filteredGroups}
+            currentMemberId={memberId}
+            filters={filters}
+            setFilters={toggleFilterHandler}
           />
-        </FadeWrapper>
-        {/* </>
-        ) : (
-          <>
-            <div />
-            <div />
-          </>
-        )} */}
-
-        <ConversationsOverview
-          currentQuestionOrder={currentQuestionOrder}
-          filteredGroups={filteredGroups}
-          currentMemberId={memberId}
-          filters={filters}
-          setFilters={toggleFilterHandler}
-        />
-      </Wrapper>
-      {/* ) : (
+        </Wrapper>
+      ) : (
         <div>
           <StandaloneMessage paddingTop="15vh">
             Nice, that's it for now!
@@ -222,7 +228,7 @@ const ConversationsPage: Page<
             setFilters={toggleFilterHandler}
           />
         </div>
-      )} */}
+      )}
     </>
   )
 }
