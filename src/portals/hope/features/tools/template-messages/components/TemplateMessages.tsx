@@ -98,7 +98,8 @@ export const TemplateMessages: React.FC<{
     getTemplates(language),
   )
 
-  const { select } = useTemplateMessages()
+  const { select, createTemplate, editTemplate, deleteTemplate } =
+    useTemplateMessages()
 
   const templatesRef = useRef<HTMLDivElement>(null)
 
@@ -120,21 +121,7 @@ export const TemplateMessages: React.FC<{
   }
 
   const deleteHandler = (id: string) => {
-    const allTemplates = localStorage.getItem('hedvig:messages:templates')
-
-    if (!allTemplates) {
-      return
-    }
-
-    const newTemplates = JSON.parse(allTemplates).filter(
-      (template) => template.id !== id,
-    )
-
-    localStorage.setItem(
-      'hedvig:messages:templates',
-      JSON.stringify(newTemplates),
-    )
-
+    deleteTemplate(id)
     setTemplates((prev) => prev.filter((template) => template.id !== id))
   }
 
@@ -159,42 +146,15 @@ export const TemplateMessages: React.FC<{
   }
 
   const saveHandler = () => {
-    const allTemplates = localStorage.getItem('hedvig:messages:templates')
-
     if (isCreating) {
-      if (!allTemplates) {
-        localStorage.setItem(
-          'hedvig:messages:templates',
-          JSON.stringify([{ ...newTemplate, id: uuidv4() }]),
-        )
+      const id = createTemplate(newTemplate)
+      const template = { ...newTemplate, id }
 
-        setIsCreating(false)
-        return
-      }
-
-      const newTemplates = [...JSON.parse(allTemplates), newTemplate]
-      localStorage.setItem(
-        'hedvig:messages:templates',
-        JSON.stringify(newTemplates),
-      )
+      setTemplates((prev) => [...prev, template as TemplateMessage])
 
       setIsCreating(false)
     } else if (editingTemplate) {
-      if (!editingTemplate || !allTemplates) {
-        return
-      }
-
-      localStorage.setItem(
-        'hedvig:messages:templates',
-        JSON.stringify([
-          ...JSON.parse(allTemplates).map((template) => {
-            if (template.id === editingTemplate.id) {
-              return editingTemplate
-            }
-            return template
-          }),
-        ]),
-      )
+      editTemplate(editingTemplate)
 
       setTemplates((prev) =>
         prev.map((template) => {
