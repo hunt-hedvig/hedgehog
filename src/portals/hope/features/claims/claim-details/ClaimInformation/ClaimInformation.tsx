@@ -1,10 +1,8 @@
 import styled from '@emotion/styled'
 import {
   ClaimPageDocument,
-  ClaimState,
   useClaimPageQuery,
   useRestrictResourceAccessMutation,
-  useUpdateClaimStateMutation,
 } from 'types/generated/graphql'
 
 import {
@@ -22,10 +20,7 @@ import {
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
 import { ClaimContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimContractDropdown/ClaimContractDropdown'
-import {
-  ClaimOutcomeDropdown,
-  ClaimOutcomes,
-} from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
+import { ClaimOutcomeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
 import {
   CoInsuredForm,
   useDeleteCoInsured,
@@ -36,14 +31,7 @@ import { toast } from 'react-hot-toast'
 import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimDatePicker'
 import { ClaimEmployeeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimEmployeeDropdown'
 import { TermsAndConditionsLink } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/TermsAndConditionsLink'
-
-const validateSelectOption = (value): ClaimState => {
-  if (!Object.values(ClaimState).includes(value)) {
-    throw new Error(`invalid ClaimState: ${value}`)
-  }
-
-  return value as ClaimState
-}
+import { ClaimStatusDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimStatusDropdown'
 
 const SelectWrapper = styled.div`
   margin-top: 1em;
@@ -123,16 +111,11 @@ export const ClaimInformation: React.FC<{
   const {
     registrationDate,
     recordingUrl,
-    state,
     agreement: selectedAgreement,
     coInsured,
-    payments = [],
-    outcome,
     contract: selectedContract,
     trial,
   } = data?.claim ?? {}
-
-  const [updateClaimState] = useUpdateClaimStateMutation()
 
   const coInsureHandler = async (value: string) => {
     setCreatingCoInsured(value === 'True')
@@ -141,33 +124,6 @@ export const ClaimInformation: React.FC<{
         deleteCoInsured(),
       )
     }
-  }
-
-  const setClaimStateHandler = async (value: string) => {
-    if (
-      (data?.claim?.state === ClaimState.Open ||
-        data?.claim?.state === ClaimState.Reopened) &&
-      (outcome === ClaimOutcomes.DUPLICATE ||
-        outcome === ClaimOutcomes.NOT_COVERED_BY_TERMS ||
-        outcome === ClaimOutcomes.RETRACTED_BY_MEMBER ||
-        outcome === ClaimOutcomes.RETRACTED_BY_HEDVIG) &&
-      payments.length !== 0
-    ) {
-      toast.error("This outcome can't be used to close when there are payments")
-      return
-    }
-
-    await updateClaimState({
-      variables: { id: claimId, state: validateSelectOption(value) },
-      optimisticResponse: {
-        updateClaimState: {
-          id: claimId,
-          __typename: 'Claim',
-          state: validateSelectOption(value),
-          events: data?.claim?.events ?? [],
-        },
-      },
-    })
   }
 
   const handleRestrictAccess = () => {
@@ -239,17 +195,7 @@ export const ClaimInformation: React.FC<{
         {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
         <SelectWrapper>
           <Label>Status</Label>
-          <Dropdown placeholder="State">
-            {Object.keys(ClaimState).map((key) => (
-              <DropdownOption
-                key={key}
-                onClick={() => setClaimStateHandler(ClaimState[key])}
-                selected={state === ClaimState[key]}
-              >
-                {key}
-              </DropdownOption>
-            ))}
-          </Dropdown>
+          <ClaimStatusDropdown claimId={claimId} />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Claim outcome</Label>

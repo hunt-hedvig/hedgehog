@@ -3,10 +3,8 @@ query ClaimPage($claimId: ID!) {
     id
     recordingUrl
     registrationDate
-    state
     claimType
     dateOfOccurrence
-    outcome
     restriction {
       resourceId
       restrictedByMe
