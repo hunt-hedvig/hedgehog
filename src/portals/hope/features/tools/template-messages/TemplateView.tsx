@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { Trash } from 'react-bootstrap-icons'
-import { TemplateMessage } from './templates'
-import { TemplateForm } from './TemplateForm'
+import { TemplateForm, TemplateMessage } from './TemplateForm'
 
 const Content = styled.div`
   position: relative;

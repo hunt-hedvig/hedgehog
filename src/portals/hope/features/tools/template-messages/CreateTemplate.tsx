@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
-import { Languages, TemplateMessage } from './templates'
-import { TemplateForm } from './TemplateForm'
+import { Languages, TemplateForm, TemplateMessage } from './TemplateForm'
 
 const Content = styled.div`
   flex: 1;

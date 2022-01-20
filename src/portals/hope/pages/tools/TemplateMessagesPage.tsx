@@ -4,11 +4,11 @@ import { FadeIn, MainHeadline, Flex, Button, Tabs } from '@hedvig-ui'
 import { TemplateView } from '../../features/tools/template-messages/TemplateView'
 import { SearchTemplate } from '../../features/tools/template-messages/SearchTemplate'
 import { CreateTemplate } from '../../features/tools/template-messages/CreateTemplate'
+import { v4 as uuidv4 } from 'uuid'
 import {
   Languages,
   TemplateMessage,
-} from '../../features/tools/template-messages/templates'
-import { v4 as uuidv4 } from 'uuid'
+} from '../../features/tools/template-messages/TemplateForm'
 
 const Container = styled(FadeIn)`
   flex: 1;
