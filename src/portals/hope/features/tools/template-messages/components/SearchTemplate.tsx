@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { Input } from '@hedvig-ui'
-import { SearchIcon as InputIcon } from '../../members-search/styles'
+import { SearchIcon as InputIcon } from '../../../members-search/styles'
 import { FileText } from 'react-bootstrap-icons'
 import { TemplateMessage } from './TemplateForm'
 

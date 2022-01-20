@@ -11,6 +11,8 @@ import {
   useMarkQuestionAsResolvedMutation,
   useSendMessageMutation,
 } from 'types/generated/graphql'
+import { FileText } from 'react-bootstrap-icons'
+import { useTemplateMessages } from '../../tools/template-messages/use-template-messages'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
@@ -27,14 +29,50 @@ const ConversationFooter = styled.div`
   width: 100%;
   padding: 1em;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
 `
 
 const ConversationTextArea = styled(TextArea)`
   &&&& {
     resize: none;
     border: none;
-    border-radius: 8px;
+    border-radius: 8px 8px 0 0;
     min-height: 100px;
+  }
+`
+
+const TextAreaBottom = styled.div`
+  position: relative;
+  padding: 7px 15px;
+  border-radius: 0 0 8px 8px;
+  background: ${({ theme }) => theme.backgroundLight};
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+
+  & * {
+    color: ${({ theme }) => theme.semiStrongForeground};
+  }
+
+  &:hover * {
+    color: ${({ theme }) => theme.foreground};
+  }
+
+  & span {
+    margin-left: 0.25rem;
+    line-height: 0;
+    font-size: 10px;
+  }
+
+  & .divider {
+    position: absolute;
+    top: -1px;
+    left: 15px;
+    width: calc(100% - 30px);
+    height: 1px;
+    background: ${({ theme }) => theme.accentBackground};
   }
 `
 
@@ -117,6 +155,8 @@ export const ConversationChat: React.FC<{
     }
   }
 
+  const { show } = useTemplateMessages()
+
   return (
     <FadeIn style={{ width: '100%', height: '100%' }}>
       <ConversationContent>
@@ -139,6 +179,11 @@ export const ConversationChat: React.FC<{
             }}
             onKeyDown={handleOnKeyDown}
           />
+          <TextAreaBottom onClick={show}>
+            <div className="divider" />
+            <FileText style={{ width: 10, height: 10 }} />
+            <span>templates</span>
+          </TextAreaBottom>
         </ConversationFooter>
       </ConversationContent>
       <Flex fullWidth justify={'space-between'} style={{ marginTop: '1.0em' }}>

@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline, Flex, Button, Tabs } from '@hedvig-ui'
-import { TemplateView } from '../../features/tools/template-messages/TemplateView'
-import { SearchTemplate } from '../../features/tools/template-messages/SearchTemplate'
-import { CreateTemplate } from '../../features/tools/template-messages/CreateTemplate'
 import { v4 as uuidv4 } from 'uuid'
 import {
   Languages,
   TemplateMessage,
-} from '../../features/tools/template-messages/TemplateForm'
+} from '../../features/tools/template-messages/components/TemplateForm'
+import { CreateTemplate } from '../../features/tools/template-messages/components/CreateTemplate'
+import { SearchTemplate } from '../../features/tools/template-messages/components/SearchTemplate'
+import { TemplateView } from '../../features/tools/template-messages/components/TemplateView'
 
 const Container = styled(FadeIn)`
   flex: 1;

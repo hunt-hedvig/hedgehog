@@ -23,6 +23,7 @@ import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Switch } from 'react-router'
 import { NavigationProvider } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { TemplateMessagesProvider } from 'portals/hope/features/tools/template-messages/use-template-messages'
 
 const Layout = styled(BaseStyle)`
   display: flex;
@@ -94,30 +95,34 @@ const App: React.FC = () => {
           <NumberMemberGroupsProvider>
             <MeProvider me={me}>
               <CommandLineProvider>
-                <ConfirmDialogProvider>
-                  <Layout>
-                    <Tracker />
-                    {!history.location.pathname.startsWith('/login') && (
-                      <VerticalMenu />
-                    )}
-                    <Main dark={history.location.pathname.startsWith('/login')}>
-                      <TopBar />
-                      <MainContent>
-                        <Switch>
-                          <Routes />
-                        </Switch>
-                        <Toaster
-                          position="top-center"
-                          toastOptions={{
-                            style: {
-                              padding: '20px 25px',
-                            },
-                          }}
-                        />
-                      </MainContent>
-                    </Main>
-                  </Layout>
-                </ConfirmDialogProvider>
+                <TemplateMessagesProvider>
+                  <ConfirmDialogProvider>
+                    <Layout>
+                      <Tracker />
+                      {!history.location.pathname.startsWith('/login') && (
+                        <VerticalMenu />
+                      )}
+                      <Main
+                        dark={history.location.pathname.startsWith('/login')}
+                      >
+                        <TopBar />
+                        <MainContent>
+                          <Switch>
+                            <Routes />
+                          </Switch>
+                          <Toaster
+                            position="top-center"
+                            toastOptions={{
+                              style: {
+                                padding: '20px 25px',
+                              },
+                            }}
+                          />
+                        </MainContent>
+                      </Main>
+                    </Layout>
+                  </ConfirmDialogProvider>
+                </TemplateMessagesProvider>
               </CommandLineProvider>
             </MeProvider>
           </NumberMemberGroupsProvider>
