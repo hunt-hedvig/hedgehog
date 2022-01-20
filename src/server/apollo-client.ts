@@ -9,7 +9,7 @@ import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
-import { LocalStorageWrapper, persistCache } from 'apollo3-cache-persist'
+import { CachePersistor, LocalStorageWrapper } from 'apollo3-cache-persist'
 
 const setItemWithExpiry = (key, value, ttl) =>
   localStorage.setItem(
@@ -107,10 +107,22 @@ const cache = new InMemoryCache({
   },
 })
 
-await persistCache({
+const persistor = new CachePersistor({
   cache,
   storage: new LocalStorageWrapper(window.localStorage),
 })
+
+const SCHEMA_VERSION = '1'
+const SCHEMA_VERSION_KEY = 'apollo-schema-version'
+
+const currentVersion = localStorage.getItem(SCHEMA_VERSION_KEY)
+
+if (currentVersion === SCHEMA_VERSION) {
+  await persistor.restore()
+} else {
+  await persistor.purge()
+  localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION)
+}
 
 export const apolloClient = (() => {
   return new ApolloClient({
