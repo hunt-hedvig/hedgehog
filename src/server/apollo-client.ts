@@ -9,6 +9,7 @@ import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
+import { LocalStorageWrapper, persistCache } from 'apollo3-cache-persist'
 
 const setItemWithExpiry = (key, value, ttl) =>
   localStorage.setItem(
@@ -67,6 +68,50 @@ const refreshAccessToken = async () => {
   }
 }
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    Member: {
+      keyFields: ['memberId'],
+    },
+    ResourceAccessInformation: {
+      keyFields: ['resourceId'],
+    },
+    Renewal: {
+      keyFields: ['draftOfAgreementId'],
+    },
+    ChatMessage: {
+      keyFields: ['globalId'],
+    },
+    MemberReferral: {
+      keyFields: ['memberId'],
+    },
+    ClaimEvent: {
+      keyFields: ['text', 'date'],
+    },
+    ClaimFileUpload: {
+      keyFields: ['claimFileId'],
+    },
+    ClaimNote: {
+      keyFields: ['date', 'handlerReference'],
+    },
+    Query: {
+      fields: {
+        employees: {
+          merge: false,
+        },
+        questionGroups: {
+          merge: false,
+        },
+      },
+    },
+  },
+})
+
+await persistCache({
+  cache,
+  storage: new LocalStorageWrapper(window.localStorage),
+})
+
 export const apolloClient = (() => {
   return new ApolloClient({
     link: ApolloLink.from([
@@ -88,43 +133,6 @@ export const apolloClient = (() => {
       new HttpLink({ uri: '/api/graphql', credentials: 'same-origin' }),
     ]),
     connectToDevTools: Boolean(localStorage.getItem('__debug:apollo')),
-    cache: new InMemoryCache({
-      typePolicies: {
-        Member: {
-          keyFields: ['memberId'],
-        },
-        ResourceAccessInformation: {
-          keyFields: ['resourceId'],
-        },
-        Renewal: {
-          keyFields: ['draftOfAgreementId'],
-        },
-        ChatMessage: {
-          keyFields: ['globalId'],
-        },
-        MemberReferral: {
-          keyFields: ['memberId'],
-        },
-        ClaimEvent: {
-          keyFields: ['text', 'date'],
-        },
-        ClaimFileUpload: {
-          keyFields: ['claimFileId'],
-        },
-        ClaimNote: {
-          keyFields: ['date', 'handlerReference'],
-        },
-        Query: {
-          fields: {
-            employees: {
-              merge: false,
-            },
-            questionGroups: {
-              merge: false,
-            },
-          },
-        },
-      },
-    }),
+    cache,
   })
 })()
