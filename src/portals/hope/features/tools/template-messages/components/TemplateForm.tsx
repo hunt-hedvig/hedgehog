@@ -139,7 +139,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         <Button onClick={onSave}>
           {isCreating ? 'Create' : 'Save Changes'}
         </Button>
-        {isCreating && onClose && (
+        {onClose && (
           <Button variant="secondary" onClick={onClose}>
             Discard
           </Button>

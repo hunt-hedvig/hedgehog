@@ -63,7 +63,7 @@ const TextAreaBottom = styled.div`
   & span {
     margin-left: 0.25rem;
     line-height: 0;
-    font-size: 10px;
+    font-size: 12px;
   }
 
   & .divider {
@@ -155,7 +155,14 @@ export const ConversationChat: React.FC<{
     }
   }
 
-  const { show } = useTemplateMessages()
+  const { show, selected } = useTemplateMessages()
+
+  useEffect(() => {
+    if (selected) {
+      setDraft(selected)
+      setMessage(selected)
+    }
+  }, [selected])
 
   return (
     <FadeIn style={{ width: '100%', height: '100%' }}>
@@ -181,7 +188,7 @@ export const ConversationChat: React.FC<{
           />
           <TextAreaBottom onClick={show}>
             <div className="divider" />
-            <FileText style={{ width: 10, height: 10 }} />
+            <FileText style={{ width: 12, height: 12 }} />
             <span>templates</span>
           </TextAreaBottom>
         </ConversationFooter>

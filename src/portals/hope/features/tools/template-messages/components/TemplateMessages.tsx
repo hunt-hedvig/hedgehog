@@ -5,6 +5,9 @@ import { keyframes } from '@emotion/react'
 import { Languages, TemplateForm, TemplateMessage } from './TemplateForm'
 import { SearchIcon } from '../../../members-search/styles'
 import { Input, Tabs, Button, SecondLevelHeadline } from '@hedvig-ui'
+import { Pen as EditIcon, PinAngle, Trash } from 'react-bootstrap-icons'
+import { useTemplateMessages } from '../use-template-messages'
+import { v4 as uuidv4 } from 'uuid'
 
 const show = keyframes`
   from {
@@ -37,7 +40,7 @@ const Container = styled.div<{ closing: boolean }>`
   width: 20%;
   height: 100%;
 
-  background-color: ${({ theme }) => theme.accentBackground};
+  background-color: ${({ theme }) => theme.background};
   box-shadow: -6px 0px 14px 0px rgba(34, 60, 80, 0.2);
 
   animation: ${({ closing }) => (closing ? hide : show)} 400ms;
@@ -80,11 +83,22 @@ export const TemplateMessages: React.FC<{
 }> = ({ hide }) => {
   const [language] = useState<Languages>(Languages.Sweden)
   const [query, setQuery] = useState('')
+  const [editingTemplate, setEditingTemplate] =
+    useState<TemplateMessage | null>(null)
+  const [newTemplate, setNewTemplate] = useState<TemplateMessage>({
+    id: '',
+    name: '',
+    message: '',
+    messageEn: '',
+    market: Languages.Sweden,
+  })
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
   const [templates, setTemplates] = useState<TemplateMessage[]>(() =>
     getTemplates(language),
   )
+
+  const { select } = useTemplateMessages()
 
   const templatesRef = useRef<HTMLDivElement>(null)
 
@@ -99,25 +113,118 @@ export const TemplateMessages: React.FC<{
   useClickOutside(templatesRef, smoothHideHandler)
 
   const selectHandler = (id: string) => {
-    console.log(id)
+    const selectedTemplate = templates.filter(
+      (template) => template.id === id,
+    )[0]
+    select(selectedTemplate.message)
   }
 
-  if (isCreating) {
+  const deleteHandler = (id: string) => {
+    const allTemplates = localStorage.getItem('hedvig:messages:templates')
+
+    if (!allTemplates) {
+      return
+    }
+
+    const newTemplates = JSON.parse(allTemplates).filter(
+      (template) => template.id !== id,
+    )
+
+    localStorage.setItem(
+      'hedvig:messages:templates',
+      JSON.stringify(newTemplates),
+    )
+
+    setTemplates((prev) => prev.filter((template) => template.id !== id))
+  }
+
+  const editHandler = (id: string) => {
+    const selectedTemplate = templates.filter(
+      (template) => template.id === id,
+    )[0]
+    setEditingTemplate(selectedTemplate)
+  }
+
+  const pinHandler = (id: string) => {
+    console.log('Need to pin: ' + id)
+  }
+
+  const changeHandler = (field: string, value?: string | number | boolean) => {
+    if (isCreating && !editingTemplate) {
+      setNewTemplate((prev) => ({ ...prev, [field]: value }))
+    } else {
+      const newTemplate = { ...editingTemplate, [field]: value }
+      setEditingTemplate(newTemplate as TemplateMessage)
+    }
+  }
+
+  const saveHandler = () => {
+    const allTemplates = localStorage.getItem('hedvig:messages:templates')
+
+    if (isCreating) {
+      if (!allTemplates) {
+        localStorage.setItem(
+          'hedvig:messages:templates',
+          JSON.stringify([{ ...newTemplate, id: uuidv4() }]),
+        )
+
+        setIsCreating(false)
+        return
+      }
+
+      const newTemplates = [...JSON.parse(allTemplates), newTemplate]
+      localStorage.setItem(
+        'hedvig:messages:templates',
+        JSON.stringify(newTemplates),
+      )
+
+      setIsCreating(false)
+    } else if (editingTemplate) {
+      if (!editingTemplate || !allTemplates) {
+        return
+      }
+
+      localStorage.setItem(
+        'hedvig:messages:templates',
+        JSON.stringify([
+          ...JSON.parse(allTemplates).map((template) => {
+            if (template.id === editingTemplate.id) {
+              return editingTemplate
+            }
+            return template
+          }),
+        ]),
+      )
+
+      setTemplates((prev) =>
+        prev.map((template) => {
+          if (template.id === editingTemplate.id) {
+            return editingTemplate
+          }
+
+          return template
+        }),
+      )
+
+      setEditingTemplate(null)
+    }
+  }
+
+  if (isCreating || !!editingTemplate) {
     return (
       <Container ref={templatesRef} closing={closing} style={{ padding: 15 }}>
         <SecondLevelHeadline>Create Template</SecondLevelHeadline>
         <TemplateForm
-          isCreating
-          template={{
-            id: '',
-            name: '',
-            message: '',
-            messageEn: '',
-            market: Languages.Sweden,
+          isCreating={isCreating}
+          template={
+            editingTemplate && !isCreating ? editingTemplate : newTemplate
+          }
+          onChange={changeHandler}
+          onSave={saveHandler}
+          onClose={() => {
+            setIsCreating(false)
+            setEditingTemplate(null)
           }}
-          onChange={() => {}}
-          onSave={() => {}}
-          onClose={() => setIsCreating(false)}
         />
       </Container>
     )
@@ -154,7 +261,7 @@ export const TemplateMessages: React.FC<{
               },
               {
                 active: false,
-                title: '7 Pinned',
+                title: 'Pinned',
                 action: () => {},
               },
             ]}
@@ -182,6 +289,9 @@ export const TemplateMessages: React.FC<{
               name={template.name}
               text={template.messageEn}
               onSelect={selectHandler}
+              onDelete={deleteHandler}
+              onEdit={editHandler}
+              onPin={pinHandler}
             />
           ))}
       </Content>
@@ -192,7 +302,8 @@ export const TemplateMessages: React.FC<{
 const TemplateContainer = styled.div`
   padding: 10px;
 
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.backgroundLight};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 0.5rem;
 
   height: 10rem;
@@ -207,14 +318,25 @@ const TemplateContainer = styled.div`
   &:not(:last-child) {
     margin-bottom: 0.625rem;
   }
+
+  &:hover {
+    cursor: pointer;
+    background-color: ${({ theme }) => theme.accentBackground};
+  }
 `
 
 const TemplateTop = styled.div`
-  display: flex;
+  display: grid;
   align-items: center;
-  justify-content: space-between;
+
+  grid-template-columns: 1fr 4rem;
+  column-gap: 1rem;
 
   margin-bottom: 0.3rem;
+
+  & h3 {
+    margin: 0;
+  }
 
   & * {
     font-weight: bold;
@@ -226,11 +348,47 @@ const TemplateContent = styled.div`
   overflow: hidden;
 `
 
-const TemplateItem = ({ id, name, text, onSelect }) => {
+const TemplateActions = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  & * {
+    transition: none !important;
+  }
+
+  & svg:hover {
+    cursor: pointer;
+    color: ${({ theme }) => theme.placeholderColor};
+  }
+`
+
+const TemplateItem = ({
+  id,
+  name,
+  text,
+  onSelect,
+  onDelete,
+  onEdit,
+  onPin,
+}) => {
+  const [isHover, setIsHover] = useState(false)
+
   return (
-    <TemplateContainer onClick={() => onSelect(id)}>
+    <TemplateContainer
+      onClick={() => onSelect(id)}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
+    >
       <TemplateTop>
         <h3>{name}</h3>
+        {isHover && (
+          <TemplateActions>
+            <EditIcon onClick={() => onEdit(id)} />
+            <PinAngle onClick={() => onPin(id)} />
+            <Trash onClick={() => onDelete(id)} />
+          </TemplateActions>
+        )}
       </TemplateTop>
       <TemplateContent>{text}</TemplateContent>
     </TemplateContainer>
