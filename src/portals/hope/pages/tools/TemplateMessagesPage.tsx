@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline, Flex, Button, Tabs } from '@hedvig-ui'
-import {
-  Languages,
-  TemplateMessage,
-} from '../../features/tools/template-messages/components/TemplateForm'
 import { CreateTemplate } from '../../features/tools/template-messages/components/CreateTemplate'
 import { SearchTemplate } from '../../features/tools/template-messages/components/SearchTemplate'
 import { TemplateView } from '../../features/tools/template-messages/components/TemplateView'
-import { useTemplateMessages } from '../../features/tools/template-messages/use-template-messages'
+import {
+  Languages,
+  TemplateMessage,
+  useTemplateMessages,
+} from '../../features/tools/template-messages/use-template-messages'
 
 const Container = styled(FadeIn)`
   flex: 1;
@@ -24,27 +24,31 @@ const Content = styled.div`
   margin-top: 2rem;
 `
 
-const getTemplates = (language: Languages) => {
+const getTemplates = () => {
   const templates = localStorage.getItem('hedvig:messages:templates')
 
   if (!templates) {
-    return null
+    return []
   }
 
-  const parsedTemplates = JSON.parse(templates)
-  return parsedTemplates.filter((template) => template.market === language)
+  return JSON.parse(templates)
 }
 
 const TemplateMessagesPage = () => {
-  const [language, setLanguage] = useState<Languages>(Languages.Sweden)
   const [isCreating, setIsCreating] = useState(false)
   const [templates, setTemplates] = useState<TemplateMessage[]>(() =>
-    getTemplates(language),
+    getTemplates(),
   )
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateMessage | null>(null)
 
-  const { createTemplate, editTemplate, deleteTemplate } = useTemplateMessages()
+  const {
+    createTemplate,
+    editTemplate,
+    deleteTemplate,
+    currentMarket,
+    changeCurrentMarket,
+  } = useTemplateMessages()
 
   const onChangeHandler = (
     field: string,
@@ -61,7 +65,7 @@ const TemplateMessagesPage = () => {
 
     editTemplate(selectedTemplate)
 
-    if (selectedTemplate.market !== language) {
+    if (selectedTemplate.market !== currentMarket) {
       setTemplates((prev) =>
         prev.filter((template) => template.id !== selectedTemplate.id),
       )
@@ -73,9 +77,10 @@ const TemplateMessagesPage = () => {
     const id = createTemplate(template)
     const newTemplate = { ...template, id }
 
-    if (template.market === language) {
+    if (template.market === currentMarket) {
       setTemplates((prev) => [...prev, newTemplate as TemplateMessage])
     }
+
     setIsCreating(false)
   }
 
@@ -108,11 +113,11 @@ const TemplateMessagesPage = () => {
         <Tabs
           style={{ width: '30%' }}
           list={Object.keys(Languages).map((tab) => ({
-            active: language === Languages[tab],
+            active: currentMarket === Languages[tab],
             title: tab,
             action: () => {
-              setTemplates(getTemplates(Languages[tab]))
-              setLanguage(Languages[tab])
+              setTemplates(getTemplates())
+              changeCurrentMarket(Languages[tab])
             },
           }))}
         />
@@ -122,7 +127,9 @@ const TemplateMessagesPage = () => {
         <SearchTemplate
           selected={selectedTemplate}
           onSelect={setSelectedTemplate}
-          templates={templates}
+          templates={templates?.filter(
+            (template) => template.market === currentMarket,
+          )}
         />
         {selectedTemplate && (
           <TemplateView

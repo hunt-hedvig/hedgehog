@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { Input } from '@hedvig-ui'
 import { SearchIcon as InputIcon } from '../../../members-search/styles'
 import { FileText } from 'react-bootstrap-icons'
-import { TemplateMessage } from './TemplateForm'
+import { TemplateMessage } from '../use-template-messages'
 
 const Container = styled.div`
   display: flex;
@@ -81,7 +81,7 @@ export const SearchTemplate: React.FC<{
       />
       <Content>
         {templates
-          .filter((template) =>
+          ?.filter((template) =>
             query
               ? template.name.toLowerCase().includes(query.toLowerCase())
               : true,

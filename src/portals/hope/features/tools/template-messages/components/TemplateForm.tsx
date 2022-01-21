@@ -9,6 +9,7 @@ import {
   Button,
   ButtonsGroup,
 } from '@hedvig-ui'
+import { Languages, TemplateMessage } from '../use-template-messages'
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
@@ -19,22 +20,6 @@ const MessageField = styled(TextArea)`
   height: 10rem;
   margin-top: 0.5rem;
 `
-
-export enum Languages {
-  Sweden = 'sweden',
-  Denmark = 'denmark',
-  Norway = 'norway',
-}
-
-export interface TemplateMessage {
-  name: string
-  id: string
-  market: Languages
-  message: string
-  messageEn: string
-  withExpiry?: boolean
-  expiryDate?: string | null
-}
 
 interface TemplateFormProps {
   template: TemplateMessage

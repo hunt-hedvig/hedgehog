@@ -2,12 +2,15 @@ import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { keyframes } from '@emotion/react'
-import { Languages, TemplateForm, TemplateMessage } from './TemplateForm'
+import { TemplateForm } from './TemplateForm'
 import { SearchIcon } from '../../../members-search/styles'
 import { Input, Tabs, Button, SecondLevelHeadline } from '@hedvig-ui'
 import { Pen as EditIcon, PinAngle, Trash } from 'react-bootstrap-icons'
-import { useTemplateMessages } from '../use-template-messages'
-import { v4 as uuidv4 } from 'uuid'
+import {
+  Languages,
+  TemplateMessage,
+  useTemplateMessages,
+} from '../use-template-messages'
 
 const show = keyframes`
   from {
@@ -67,21 +70,19 @@ const Content = styled.div`
   flex: 1;
 `
 
-const getTemplates = (language: Languages) => {
+const getTemplates = () => {
   const templates = localStorage.getItem('hedvig:messages:templates')
 
   if (!templates) {
     return null
   }
 
-  const parsedTemplates = JSON.parse(templates)
-  return parsedTemplates.filter((template) => template.market === language)
+  return JSON.parse(templates)
 }
 
 export const TemplateMessages: React.FC<{
   hide: () => void
 }> = ({ hide }) => {
-  const [language] = useState<Languages>(Languages.Sweden)
   const [query, setQuery] = useState('')
   const [editingTemplate, setEditingTemplate] =
     useState<TemplateMessage | null>(null)
@@ -95,11 +96,18 @@ export const TemplateMessages: React.FC<{
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
   const [templates, setTemplates] = useState<TemplateMessage[]>(() =>
-    getTemplates(language),
+    getTemplates(),
   )
+  const [isPinnedTab, setIsPinnedTab] = useState(false)
 
-  const { select, createTemplate, editTemplate, deleteTemplate } =
-    useTemplateMessages()
+  const {
+    select,
+    createTemplate,
+    editTemplate,
+    deleteTemplate,
+    pinTemplate,
+    currentMarket,
+  } = useTemplateMessages()
 
   const templatesRef = useRef<HTMLDivElement>(null)
 
@@ -133,7 +141,16 @@ export const TemplateMessages: React.FC<{
   }
 
   const pinHandler = (id: string) => {
-    console.log('Need to pin: ' + id)
+    pinTemplate(id)
+    setTemplates((prev) =>
+      prev.map((template) => {
+        if (template.id === id) {
+          return { ...template, pinned: template.pinned ? false : true }
+        }
+
+        return template
+      }),
+    )
   }
 
   const changeHandler = (field: string, value?: string | number | boolean) => {
@@ -215,14 +232,21 @@ export const TemplateMessages: React.FC<{
             style={{ width: '50%' }}
             list={[
               {
-                active: true,
+                active: !isPinnedTab,
                 title: 'All Templates',
-                action: () => {},
+                action: () => {
+                  setIsPinnedTab(false)
+                },
               },
               {
-                active: false,
-                title: 'Pinned',
-                action: () => {},
+                active: isPinnedTab,
+                title:
+                  templates
+                    ?.filter((template) => template.pinned)
+                    .length.toString() || '0' + ' Pinned',
+                action: () => {
+                  setIsPinnedTab(true)
+                },
               },
             ]}
           />
@@ -236,24 +260,30 @@ export const TemplateMessages: React.FC<{
         </HeaderBottom>
       </Header>
       <Content>
-        {templates
-          .filter((template) =>
-            query
-              ? template.name.toLowerCase().includes(query.toLowerCase())
-              : true,
-          )
-          .map((template) => (
-            <TemplateItem
-              key={template.id}
-              id={template.id}
-              name={template.name}
-              text={template.messageEn}
-              onSelect={selectHandler}
-              onDelete={deleteHandler}
-              onEdit={editHandler}
-              onPin={pinHandler}
-            />
-          ))}
+        {templates?.length
+          ? templates
+              .filter((template) =>
+                query
+                  ? template.name.toLowerCase().includes(query.toLowerCase())
+                  : true,
+              )
+              .filter((template) => template.market === currentMarket)
+              .filter((template) =>
+                isPinnedTab ? template.pinned : !template.pinned,
+              )
+              .map((template) => (
+                <TemplateItem
+                  key={template.id}
+                  id={template.id}
+                  name={template.name}
+                  text={template.messageEn}
+                  onSelect={selectHandler}
+                  onDelete={deleteHandler}
+                  onEdit={editHandler}
+                  onPin={pinHandler}
+                />
+              ))
+          : null}
       </Content>
     </Container>
   )

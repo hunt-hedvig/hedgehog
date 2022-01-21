@@ -3,10 +3,11 @@ import { TemplateMessages } from './components/TemplateMessages'
 import { v4 as uuidv4 } from 'uuid'
 
 export enum Languages {
-  Sweden = 'sweden',
-  Denmark = 'denmark',
-  Norway = 'norway',
+  Sweden = 'SWEDEN',
+  Denmark = 'DENMARK',
+  Norway = 'NORWAY',
 }
+
 export interface TemplateMessage {
   name: string
   id: string
@@ -15,6 +16,7 @@ export interface TemplateMessage {
   messageEn: string
   withExpiry?: boolean
   expiryDate?: string | null
+  pinned?: boolean
 }
 
 interface TemplateMessagesContextProps {
@@ -22,8 +24,11 @@ interface TemplateMessagesContextProps {
   createTemplate: (template: TemplateMessage) => string | undefined
   editTemplate: (template: TemplateMessage) => void
   deleteTemplate: (id: string) => void
+  pinTemplate: (id: string) => void
   select: (text: string) => void
   selected: string | null
+  currentMarket: Languages
+  changeCurrentMarket: (market: Languages) => void
 }
 
 const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
@@ -31,13 +36,19 @@ const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
   createTemplate: () => '',
   editTemplate: () => void 0,
   deleteTemplate: () => void 0,
+  pinTemplate: () => void 0,
   select: () => void 0,
   selected: null,
+  currentMarket: Languages.Sweden,
+  changeCurrentMarket: () => void 0,
 })
 
 export const useTemplateMessages = () => useContext(TemplateMessagesContext)
 
 export const TemplateMessagesProvider: React.FC = ({ children }) => {
+  const [currentMarket, setCurrentMarket] = useState<Languages>(
+    Languages.Sweden,
+  )
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
 
@@ -65,10 +76,10 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     return id
   }
 
-  const editHandler = (template: TemplateMessage) => {
+  const editHandler = (newTemplate: TemplateMessage) => {
     const allTemplates = localStorage.getItem('hedvig:messages:templates')
 
-    if (!template || !allTemplates) {
+    if (!newTemplate || !allTemplates) {
       return
     }
 
@@ -76,8 +87,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       'hedvig:messages:templates',
       JSON.stringify([
         ...JSON.parse(allTemplates).map((template) => {
-          if (template.id === template.id) {
-            return template
+          if (template.id === newTemplate.id) {
+            return newTemplate
           }
           return template
         }),
@@ -102,6 +113,28 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     )
   }
 
+  const pinHandler = (id: string) => {
+    const allTemplates = localStorage.getItem('hedvig:messages:templates')
+
+    if (!allTemplates) {
+      return
+    }
+
+    localStorage.setItem(
+      'hedvig:messages:templates',
+      JSON.stringify([
+        ...JSON.parse(allTemplates).map((template) => {
+          if (id === template.id) {
+            return { ...template, pinned: template.pinned ? false : true }
+          }
+          return template
+        }),
+      ]),
+    )
+  }
+
+  const changeCurrentMarket = (market: Languages) => setCurrentMarket(market)
+
   return (
     <TemplateMessagesContext.Provider
       value={{
@@ -109,8 +142,11 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         createTemplate: createHandler,
         editTemplate: editHandler,
         deleteTemplate: deleteHandler,
+        pinTemplate: pinHandler,
         select: (text: string) => setSelectedText(text),
         selected: selectedText,
+        currentMarket,
+        changeCurrentMarket,
       }}
     >
       {children}
