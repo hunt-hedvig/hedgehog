@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { TemplateMessages } from './components/TemplateMessages'
 import { v4 as uuidv4 } from 'uuid'
 
-export enum Languages {
+export enum Markets {
   Sweden = 'SWEDEN',
   Denmark = 'DENMARK',
   Norway = 'NORWAY',
@@ -11,7 +11,7 @@ export enum Languages {
 export interface TemplateMessage {
   name: string
   id: string
-  market: Languages
+  market: Markets
   message: string
   messageEn: string
   withExpiry?: boolean
@@ -27,8 +27,8 @@ interface TemplateMessagesContextProps {
   pinTemplate: (id: string) => void
   select: (text: string) => void
   selected: string | null
-  currentMarket: Languages
-  changeCurrentMarket: (market: Languages) => void
+  currentMarket: Markets
+  changeCurrentMarket: (market: Markets) => void
 }
 
 const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
@@ -39,16 +39,14 @@ const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
   pinTemplate: () => void 0,
   select: () => void 0,
   selected: null,
-  currentMarket: Languages.Sweden,
+  currentMarket: Markets.Sweden,
   changeCurrentMarket: () => void 0,
 })
 
 export const useTemplateMessages = () => useContext(TemplateMessagesContext)
 
 export const TemplateMessagesProvider: React.FC = ({ children }) => {
-  const [currentMarket, setCurrentMarket] = useState<Languages>(
-    Languages.Sweden,
-  )
+  const [currentMarket, setCurrentMarket] = useState<Markets>(Markets.Sweden)
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
 
@@ -137,7 +135,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     )
   }
 
-  const changeCurrentMarket = (market: Languages) => setCurrentMarket(market)
+  const changeCurrentMarket = (market: Markets) => setCurrentMarket(market)
 
   return (
     <TemplateMessagesContext.Provider

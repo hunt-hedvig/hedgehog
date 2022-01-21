@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { TemplateForm } from './TemplateForm'
-import { Languages, TemplateMessage } from '../use-template-messages'
+import { Markets, TemplateMessage } from '../use-template-messages'
 
 const Content = styled.div`
   flex: 1;
@@ -21,7 +21,7 @@ export const CreateTemplate: React.FC<{
     name: '',
     message: '',
     messageEn: '',
-    market: Languages.Sweden,
+    market: Markets.Sweden,
   })
 
   const changeHandler = (field: string, value?: string | boolean | number) => {

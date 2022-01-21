@@ -7,7 +7,7 @@ import { SearchIcon } from '../../../members-search/styles'
 import { Input, Tabs, Button, SecondLevelHeadline } from '@hedvig-ui'
 import { Pen as EditIcon, PinAngle, Trash } from 'react-bootstrap-icons'
 import {
-  Languages,
+  Markets,
   TemplateMessage,
   useTemplateMessages,
 } from '../use-template-messages'
@@ -112,7 +112,7 @@ export const TemplateMessages: React.FC<{
     name: '',
     message: '',
     messageEn: '',
-    market: Languages.Sweden,
+    market: Markets.Sweden,
   })
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
@@ -211,14 +211,14 @@ export const TemplateMessages: React.FC<{
 
   const switchMarketHandler = () => {
     // TODO: make normal logic of switching
-    if (currentMarket === Languages.Sweden) {
-      changeCurrentMarket(Languages.Denmark)
+    if (currentMarket === Markets.Sweden) {
+      changeCurrentMarket(Markets.Denmark)
     }
-    if (currentMarket === Languages.Denmark) {
-      changeCurrentMarket(Languages.Norway)
+    if (currentMarket === Markets.Denmark) {
+      changeCurrentMarket(Markets.Norway)
     }
-    if (currentMarket === Languages.Norway) {
-      changeCurrentMarket(Languages.Sweden)
+    if (currentMarket === Markets.Norway) {
+      changeCurrentMarket(Markets.Sweden)
     }
   }
 

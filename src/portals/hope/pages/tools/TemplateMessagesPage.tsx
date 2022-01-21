@@ -5,7 +5,7 @@ import { CreateTemplate } from '../../features/tools/template-messages/component
 import { SearchTemplate } from '../../features/tools/template-messages/components/SearchTemplate'
 import { TemplateView } from '../../features/tools/template-messages/components/TemplateView'
 import {
-  Languages,
+  Markets,
   TemplateMessage,
   useTemplateMessages,
 } from '../../features/tools/template-messages/use-template-messages'
@@ -112,12 +112,12 @@ const TemplateMessagesPage = () => {
       <Flex flex="0" align="center" justify="space-between">
         <Tabs
           style={{ width: '30%' }}
-          list={Object.keys(Languages).map((tab) => ({
-            active: currentMarket === Languages[tab],
+          list={Object.keys(Markets).map((tab) => ({
+            active: currentMarket === Markets[tab],
             title: tab,
             action: () => {
               setTemplates(getTemplates())
-              changeCurrentMarket(Languages[tab])
+              changeCurrentMarket(Markets[tab])
             },
           }))}
         />

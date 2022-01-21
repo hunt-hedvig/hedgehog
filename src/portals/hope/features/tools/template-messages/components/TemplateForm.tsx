@@ -9,7 +9,7 @@ import {
   Button,
   ButtonsGroup,
 } from '@hedvig-ui'
-import { Languages, TemplateMessage } from '../use-template-messages'
+import { Markets, TemplateMessage } from '../use-template-messages'
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
@@ -51,24 +51,24 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
         <Checkbox
           style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}
           label="Sweden 🇸🇪"
-          checked={template?.market === Languages.Sweden}
+          checked={template?.market === Markets.Sweden}
           onChange={({ currentTarget: { checked } }) => {
-            onChange('market', checked ? Languages.Sweden : undefined)
+            onChange('market', checked ? Markets.Sweden : undefined)
           }}
         />
         <Checkbox
           style={{ marginBottom: '0.5rem' }}
           label="Norway 🇳🇴"
-          checked={template?.market === Languages.Norway}
+          checked={template?.market === Markets.Norway}
           onChange={({ currentTarget: { checked } }) => {
-            onChange('market', checked ? Languages.Norway : undefined)
+            onChange('market', checked ? Markets.Norway : undefined)
           }}
         />
         <Checkbox
           label="Denmark 🇩🇰"
-          checked={template?.market === Languages.Denmark}
+          checked={template?.market === Markets.Denmark}
           onChange={({ currentTarget: { checked } }) => {
-            onChange('market', checked ? Languages.Denmark : undefined)
+            onChange('market', checked ? Markets.Denmark : undefined)
           }}
         />
       </Field>
@@ -84,9 +84,9 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
       <Field>
         <Label>
           Message (
-          {template?.market === Languages.Sweden
+          {template?.market === Markets.Sweden
             ? 'SV'
-            : template?.market === Languages.Denmark
+            : template?.market === Markets.Denmark
             ? 'DK'
             : 'NO'}
           )
