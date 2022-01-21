@@ -50,10 +50,6 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
 
-  useEffect(() => {
-    console.log(currentMarket)
-  }, [currentMarket])
-
   const createHandler = (template: TemplateMessage) => {
     const allTemplates = localStorage.getItem('hedvig:messages:templates')
 
