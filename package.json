@@ -133,7 +133,7 @@
     "webpack-stats-plugin": "^1.0.3"
   },
   "scripts": {
-    "start": "NODE_ENV=production ts-node -P tsconfig-server.json src/server/serverEntry.ts",
+    "start": "NODE_ENV=production ts-node -P tsconfig-server.json src/server/entry.ts",
     "prebuild": "yarn graphql:gen",
     "build": "NODE_ENV=production webpack --mode production --config webpack/webpack.config.client.production.js",
     "clean": "rm -rf ./build && rm -rf tsconfig.tsbuildinfo",
@@ -141,7 +141,7 @@
     "heroku-postbuild": "yarn build",
     "watch": "concurrently -n wds,srv,gql 'npm:watch-client' 'npm:watch-server' 'npm:watch-graphql'",
     "watch-client": "NODE_ENV=development webpack serve --config webpack/webpack.config.client.development.js",
-    "watch-server": "NODE_ENV=development BROWSER=false nodemon -q -w ./src/server -x 'ts-node -P tsconfig-server.json' src/server/serverEntry.ts",
+    "watch-server": "NODE_ENV=development BROWSER=false nodemon -q -w ./src/server -x 'ts-node -P tsconfig-server.json' src/server/entry.ts",
     "watch-graphql": "graphql-codegen -w",
     "test": "NODE_ENV=test jest --maxWorkers=1",
     "typecheck": "tsc",

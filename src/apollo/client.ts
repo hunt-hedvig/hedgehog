@@ -1,15 +1,12 @@
-import {
-  ApolloClient,
-  ApolloLink,
-  HttpLink,
-  InMemoryCache,
-  ServerError,
-} from '@apollo/client'
+import { ApolloClient, ApolloLink, HttpLink, ServerError } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
+import { cache } from 'apollo/cache'
 import { CachePersistor, LocalStorageWrapper } from 'apollo3-cache-persist'
+import { persistenceMapper } from 'apollo/persistence/mapper'
+import { createPersistLink } from 'apollo/persistence/link'
 
 const setItemWithExpiry = (key, value, ttl) =>
   localStorage.setItem(
@@ -68,49 +65,12 @@ const refreshAccessToken = async () => {
   }
 }
 
-const cache = new InMemoryCache({
-  typePolicies: {
-    Member: {
-      keyFields: ['memberId'],
-    },
-    ResourceAccessInformation: {
-      keyFields: ['resourceId'],
-    },
-    Renewal: {
-      keyFields: ['draftOfAgreementId'],
-    },
-    ChatMessage: {
-      keyFields: ['globalId'],
-    },
-    MemberReferral: {
-      keyFields: ['memberId'],
-    },
-    ClaimEvent: {
-      keyFields: ['text', 'date'],
-    },
-    ClaimFileUpload: {
-      keyFields: ['claimFileId'],
-    },
-    ClaimNote: {
-      keyFields: ['date', 'handlerReference'],
-    },
-    Query: {
-      fields: {
-        employees: {
-          merge: false,
-        },
-        questionGroups: {
-          merge: false,
-        },
-      },
-    },
-  },
-})
-
-const persistor = new CachePersistor({
+export const persistor = new CachePersistor({
+  persistenceMapper,
   cache,
   storage: new LocalStorageWrapper(window.localStorage),
   trigger: 'write',
+  debounce: 100,
 })
 
 const SCHEMA_VERSION = '1'
@@ -125,27 +85,26 @@ if (currentVersion === SCHEMA_VERSION) {
   localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION)
 }
 
-export const apolloClient = (() => {
-  return new ApolloClient({
-    link: ApolloLink.from([
-      onError((error) => {
-        if (
-          document.hidden ||
-          (error?.networkError as ServerError)?.response?.status !== 403
-        ) {
-          return
-        }
+export const client = new ApolloClient({
+  link: ApolloLink.from([
+    onError((error) => {
+      if (
+        document.hidden ||
+        (error?.networkError as ServerError)?.response?.status !== 403
+      ) {
+        return
+      }
 
-        refreshAccessToken().catch((e) => {
-          console.error('Failed to refresh access token', e)
-          toast.loading('Authentication failed')
-          window.location.pathname = '/login/logout'
-        })
-      }),
-      addTimezoneOffsetHeader,
-      new HttpLink({ uri: '/api/graphql', credentials: 'same-origin' }),
-    ]),
-    connectToDevTools: Boolean(localStorage.getItem('__debug:apollo')),
-    cache,
-  })
-})()
+      refreshAccessToken().catch((e) => {
+        console.error('Failed to refresh access token', e)
+        toast.loading('Authentication failed')
+        window.location.pathname = '/login/logout'
+      })
+    }),
+    addTimezoneOffsetHeader,
+    createPersistLink(),
+    new HttpLink({ uri: '/api/graphql', credentials: 'same-origin' }),
+  ]),
+  connectToDevTools: Boolean(localStorage.getItem('__debug:apollo')),
+  cache,
+})

@@ -3,7 +3,7 @@ import { createBrowserHistory, createMemoryHistory } from 'history'
 import React from 'react'
 import { CookiesProvider } from 'react-cookie'
 import ReactDOM from 'react-dom'
-import { apolloClient } from 'server/apollo-client'
+import { client } from 'apollo/client'
 import { app } from 'portals'
 import { Global } from '@emotion/react'
 import { DarkmodeProvider } from '@hedvig-ui/hooks/use-darkmode'
@@ -40,7 +40,7 @@ const App: React.FC = () => {
 ReactDOM.render(
   <CookiesProvider>
     <Router history={history}>
-      <ApolloProvider client={apolloClient}>
+      <ApolloProvider client={client}>
         <DarkmodeProvider>
           <Global styles={GlobalStyles} />
           <Switch>
