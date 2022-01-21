@@ -11,6 +11,7 @@ import {
   TemplateMessage,
   useTemplateMessages,
 } from '../use-template-messages'
+import toast from 'react-hot-toast'
 
 const show = keyframes`
   from {
@@ -66,7 +67,7 @@ const HeaderBottom = styled.div`
 
 const Content = styled.div`
   padding: 15px;
-  margin-bottom: 5rem;
+  margin-bottom: 6rem;
   overflow-y: scroll;
   flex: 1;
 `
@@ -77,7 +78,6 @@ const Bottom = styled.div`
   right: 0;
 
   width: 100%;
-  height: 5rem;
 
   background-color: ${({ theme }) => theme.accentLighter};
 
@@ -104,16 +104,19 @@ const getTemplates = () => {
 export const TemplateMessages: React.FC<{
   hide: () => void
 }> = ({ hide }) => {
-  const [query, setQuery] = useState('')
-  const [editingTemplate, setEditingTemplate] =
-    useState<TemplateMessage | null>(null)
-  const [newTemplate, setNewTemplate] = useState<TemplateMessage>({
+  const EMPTY_TEMPLATE: TemplateMessage = {
     id: '',
     name: '',
     message: '',
     messageEn: '',
     market: Markets.Sweden,
-  })
+  }
+
+  const [query, setQuery] = useState('')
+  const [editingTemplate, setEditingTemplate] =
+    useState<TemplateMessage | null>(null)
+  const [newTemplate, setNewTemplate] =
+    useState<TemplateMessage>(EMPTY_TEMPLATE)
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
   const [templates, setTemplates] = useState<TemplateMessage[]>(() =>
@@ -192,6 +195,7 @@ export const TemplateMessages: React.FC<{
       setTemplates((prev) => [...prev, template as TemplateMessage])
 
       setIsCreating(false)
+      setNewTemplate(EMPTY_TEMPLATE)
     } else if (editingTemplate) {
       editTemplate(editingTemplate)
 
@@ -211,14 +215,23 @@ export const TemplateMessages: React.FC<{
 
   const switchMarketHandler = () => {
     // TODO: make normal logic of switching
-    if (currentMarket === Markets.Sweden) {
-      changeCurrentMarket(Markets.Denmark)
-    }
-    if (currentMarket === Markets.Denmark) {
-      changeCurrentMarket(Markets.Norway)
-    }
-    if (currentMarket === Markets.Norway) {
-      changeCurrentMarket(Markets.Sweden)
+
+    switch (currentMarket) {
+      case Markets.Sweden: {
+        changeCurrentMarket(Markets.Denmark)
+        toast.success(`Switched to ${Markets.Denmark}`)
+        break
+      }
+      case Markets.Denmark: {
+        changeCurrentMarket(Markets.Norway)
+        toast.success(`Switched to ${Markets.Norway}`)
+        break
+      }
+      case Markets.Norway: {
+        changeCurrentMarket(Markets.Sweden)
+        toast.success(`Switched to ${Markets.Sweden}`)
+        break
+      }
     }
   }
 

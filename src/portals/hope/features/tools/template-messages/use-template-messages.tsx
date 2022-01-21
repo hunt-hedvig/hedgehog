@@ -77,7 +77,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const editHandler = (newTemplate: TemplateMessage) => {
     const allTemplates = localStorage.getItem('hedvig:messages:templates')
 
-    if (!newTemplate || !allTemplates) {
+    if (!allTemplates) {
       return
     }
 

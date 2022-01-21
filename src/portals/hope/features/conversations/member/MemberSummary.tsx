@@ -105,7 +105,7 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
 
   const { member } = data
 
-  //TODO: Add normal switching on current market
+  //TODO: Add normal automatic switching of market
 
   if (!member) {
     return (
