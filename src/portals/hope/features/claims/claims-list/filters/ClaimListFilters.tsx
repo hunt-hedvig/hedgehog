@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { MemberGroupColorBadge } from 'portals/hope/features/questions/MemberGroupColorBadge'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { range } from '@hedvig-ui/utils/range'
 import { InfoCircle } from 'react-bootstrap-icons'
@@ -15,18 +15,19 @@ import {
   Flex,
   Label,
   lightTheme,
+  MultiDropdown,
   Popover,
   Radio,
   TextDatePicker,
 } from '@hedvig-ui'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
-import {
-  numberMemberGroupsOptions,
-  NumberMemberGroupsRadioButtons,
-} from 'portals/hope/features/questions/number-member-groups-radio-buttons'
+import { numberMemberGroupsOptions } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
 import { Market, MarketFlags } from 'portals/hope/features/config/constants'
-import { OutcomeDropdown } from '../../claim-details/ClaimType/components/OutcomeDropdown'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { ClaimOutcomes } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
 
 export const FilterWrapper = styled.div`
   width: 100%;
@@ -69,9 +70,35 @@ export const StyledLabel = styled(Label)`
   }
 `
 
-const OutcomeFilter = styled(OutcomeDropdown)`
-  padding: 0.5rem;
-`
+const OutcomeFilter: React.FC<{
+  outcomes: ClaimOutcomes[]
+  onSelect: (value: string | null) => void
+  open: boolean
+  multi: boolean
+}> = ({ outcomes, onSelect, open }) => {
+  const options = [
+    ...Object.keys(ClaimOutcomes).map((value) => ({
+      value,
+      text: convertEnumToTitle(value),
+    })),
+    { value: 'not_specified', text: 'Not specified' },
+  ]
+
+  return (
+    <MultiDropdown
+      value={outcomes?.map((item) => convertEnumToTitle(item)) || null}
+      open={open}
+      options={options.map((opt) => opt.text)}
+      placeholder="Outcome filter"
+      onChange={(value) => {
+        const selectedValue = options.filter((opt) => opt.text === value)[0]
+        onSelect(selectedValue.value)
+      }}
+      clearHandler={() => onSelect(null)}
+      style={{ minWidth: '10rem' }}
+    />
+  )
+}
 
 export const complexityIcons = {
   Simple: '📱',
@@ -116,6 +143,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   const history = useHistory()
   const { settings, updateSetting } = useMe()
   const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
+  const [outcomeOpen, setOutcomeOpen] = useState(false)
 
   const settingExist = (field: UserSettingKey, value) => {
     if (!settings[field]) {
@@ -191,34 +219,54 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
     }
   }
 
+  const { register } = useNavigation()
+
   return (
     <FilterWrapper>
       <FilterElement>
         <Label>States</Label>
-        {Object.keys(ClaimState).map((key) => (
-          <Flex key={key} direction="row" align="center">
-            <Checkbox
-              label={key}
-              checked={settingExist(
+        {Object.keys(ClaimState).map((key, index) => {
+          const states = Object.keys(ClaimState)
+          const navigation = register(key, {
+            focus: index === 0 ? Keys.F : undefined,
+            resolve: () => {
+              updateFilterHandler(
                 UserSettingKey.ClaimStatesFilter,
                 ClaimState[key],
-              )}
-              onChange={() => {
-                updateFilterHandler(
+              )
+            },
+            neighbors: {
+              up: index ? states[index - 1] : undefined,
+              down: index < states.length - 1 ? states[index + 1] : undefined,
+              right: Object.keys(ClaimComplexity)[0],
+            },
+          })
+
+          return (
+            <Flex key={key} direction="row" align="center" {...navigation}>
+              <Checkbox
+                label={key}
+                checked={settingExist(
                   UserSettingKey.ClaimStatesFilter,
                   ClaimState[key],
-                )
-              }}
-            />
-            <MemberGroupColorBadge
-              style={{
-                height: '0.7em',
-                width: '0.7em',
-                backgroundColor: stateColors[key],
-              }}
-            />
-          </Flex>
-        ))}
+                )}
+                onChange={() => {
+                  updateFilterHandler(
+                    UserSettingKey.ClaimStatesFilter,
+                    ClaimState[key],
+                  )
+                }}
+              />
+              <MemberGroupColorBadge
+                style={{
+                  height: '0.7em',
+                  width: '0.7em',
+                  backgroundColor: stateColors[key],
+                }}
+              />
+            </Flex>
+          )
+        })}
       </FilterElement>
 
       <FilterElement>
@@ -226,104 +274,198 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           label="Complexities"
           popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
         />
-        {Object.keys(ClaimComplexity).map((key) => (
-          <Flex key={key} direction="row" align="center">
-            <Checkbox
-              label={key}
-              checked={settingExist(
+        {Object.keys(ClaimComplexity).map((key, index) => {
+          const complexities = Object.keys(ClaimComplexity)
+          const navigation = register(key, {
+            resolve: () => {
+              updateFilterHandler(
                 UserSettingKey.ClaimComplexityFilter,
                 ClaimComplexity[key],
-              )}
-              onChange={() => {
-                updateFilterHandler(
+              )
+            },
+            neighbors: {
+              left: Object.keys(ClaimState)[0],
+              up: index ? complexities[index - 1] : undefined,
+              down:
+                index < complexities.length - 1
+                  ? complexities[index + 1]
+                  : undefined,
+              right: `Member Groups ${numberMemberGroupsOptions[0].label}`,
+            },
+          })
+
+          return (
+            <Flex key={key} direction="row" align="center" {...navigation}>
+              <Checkbox
+                label={key}
+                checked={settingExist(
                   UserSettingKey.ClaimComplexityFilter,
                   ClaimComplexity[key],
-                )
-              }}
-            />
-            <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
-          </Flex>
-        ))}
+                )}
+                onChange={() => {
+                  updateFilterHandler(
+                    UserSettingKey.ClaimComplexityFilter,
+                    ClaimComplexity[key],
+                  )
+                }}
+              />
+              <span style={{ marginLeft: '0.5rem' }}>
+                {complexityIcons[key]}
+              </span>
+            </Flex>
+          )
+        })}
       </FilterElement>
 
       <FilterElement>
         <Label>Number of member groups</Label>
-        <div style={{ display: 'flex' }}>
-          <NumberMemberGroupsRadioButtons />
-        </div>
-      </FilterElement>
+        {numberMemberGroupsOptions.map((option, index) => {
+          const navigation = register(`Member Groups ${option.label}`, {
+            resolve: () => {
+              updateNumberMemberSetting(option.value)
+              updateSetting(UserSettingKey.NumberOfMemberGroups, {
+                value: option.value,
+              })
+              setNumberMemberGroups(option.value)
+            },
+            neighbors: {
+              left: Object.keys(ClaimComplexity)[0],
+              up: index
+                ? `Member Groups ${numberMemberGroupsOptions[index - 1].label}`
+                : undefined,
+              down:
+                index < numberMemberGroupsOptions.length - 1
+                  ? `Member Groups ${
+                      numberMemberGroupsOptions[index + 1].label
+                    }`
+                  : undefined,
+              right: `Member Number ${range(numberMemberGroups)[0]}`,
+            },
+          })
 
-      <FilterElement>
-        <Label>Number of member groups</Label>
-        {numberMemberGroupsOptions.map((option, index) => (
-          <Flex key={index} direction="row" align="center">
-            <Radio
-              key={`${option.value}` + index}
-              id={`${option.value}` + index}
-              value={option.value}
-              label={option.label}
-              onChange={() => {
-                updateNumberMemberSetting(option.value)
-                updateSetting(UserSettingKey.NumberOfMemberGroups, {
-                  value: option.value,
-                })
-                setNumberMemberGroups(option.value)
-              }}
-              checked={option.value === numberMemberGroups || false}
-            />
-          </Flex>
-        ))}
+          return (
+            <Flex key={index} direction="row" align="center" {...navigation}>
+              <Radio
+                key={`${option.value}` + index}
+                id={`${option.value}` + index}
+                value={option.value}
+                label={option.label}
+                onChange={() => {
+                  updateNumberMemberSetting(option.value)
+                  updateSetting(UserSettingKey.NumberOfMemberGroups, {
+                    value: option.value,
+                  })
+                  setNumberMemberGroups(option.value)
+                }}
+                checked={option.value === numberMemberGroups || false}
+              />
+            </Flex>
+          )
+        })}
       </FilterElement>
 
       <FilterElement>
         <Label>Groups</Label>
-        {range(numberMemberGroups).map((filterNumber) => (
-          <Flex key={filterNumber} direction="row" align="center">
-            <Checkbox
-              label={FilterGroupState[filterNumber]}
-              checked={settingExist(
+        {range(numberMemberGroups).map((filterNumber, index) => {
+          const navigation = register(`Member Number ${filterNumber}`, {
+            resolve: () => {
+              updateFilterHandler(
                 UserSettingKey.MemberGroupsFilter,
                 filterNumber,
-              )}
-              onChange={() => {
-                updateFilterHandler(
+              )
+            },
+            neighbors: {
+              left: `Member Groups ${numberMemberGroupsOptions[0].label}`,
+              up: index
+                ? `Member Number ${range(numberMemberGroups)[index - 1]}`
+                : undefined,
+              down:
+                index < range(numberMemberGroups).length - 1
+                  ? `Member Number ${range(numberMemberGroups)[index + 1]}`
+                  : undefined,
+              right: Object.keys(Market)[0],
+            },
+          })
+
+          return (
+            <Flex
+              key={filterNumber}
+              direction="row"
+              align="center"
+              {...navigation}
+            >
+              <Checkbox
+                label={FilterGroupState[filterNumber]}
+                checked={settingExist(
                   UserSettingKey.MemberGroupsFilter,
                   filterNumber,
-                )
-              }}
-            />
-            <MemberGroupColorBadge
-              filter={filterNumber}
-              style={{ height: '0.7em', width: '0.7em' }}
-            />
-          </Flex>
-        ))}
+                )}
+                onChange={() => {
+                  updateFilterHandler(
+                    UserSettingKey.MemberGroupsFilter,
+                    filterNumber,
+                  )
+                }}
+              />
+              <MemberGroupColorBadge
+                filter={filterNumber}
+                style={{ height: '0.7em', width: '0.7em' }}
+              />
+            </Flex>
+          )
+        })}
       </FilterElement>
 
       <FilterElement>
         <Label>Markets</Label>
-        {Object.keys(Market).map((key) => (
-          <Flex key={key} direction="row" align="center">
-            <Checkbox
-              label={key}
-              checked={settingExist(UserSettingKey.MarketFilter, Market[key])}
-              onChange={() => {
-                updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
-              }}
-            />
-            <span style={{ marginLeft: '0.5rem' }}>
-              {MarketFlags[key.toUpperCase()]}
-            </span>
-          </Flex>
-        ))}
+        {Object.keys(Market).map((key, index) => {
+          const markets = Object.keys(Market)
+          const navigation = register(key, {
+            resolve: () => {
+              updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
+            },
+            neighbors: {
+              left: `Member Number ${range(numberMemberGroups)[0]}`,
+              up: index ? markets[index - 1] : undefined,
+              down: index < markets.length - 1 ? markets[index + 1] : undefined,
+              right: `Outcome Filter`,
+            },
+          })
+
+          return (
+            <Flex key={key} direction="row" align="center" {...navigation}>
+              <Checkbox
+                label={key}
+                checked={settingExist(UserSettingKey.MarketFilter, Market[key])}
+                onChange={() => {
+                  updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
+                }}
+              />
+              <span style={{ marginLeft: '0.5rem' }}>
+                {MarketFlags[key.toUpperCase()]}
+              </span>
+            </Flex>
+          )
+        })}
       </FilterElement>
 
       <FilterElement>
         <Label>Outcome</Label>
         <OutcomeFilter
+          {...register('Outcome Filter', {
+            resolve: () => {
+              setOutcomeOpen((prev) => !prev)
+              return convertEnumToTitle(Object.keys(ClaimOutcomes)[0])
+            },
+            neighbors: {
+              left: Object.keys(Market)[0],
+              right: 'Date Filter',
+            },
+          })}
+          open={outcomeOpen}
           multi
           onSelect={updateOutcomeFilterHandler}
-          outcome={
+          outcomes={
             (settings[UserSettingKey.OutcomeFilter] &&
               settings[UserSettingKey.OutcomeFilter].claims) ||
             null
@@ -336,7 +478,15 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           label="Date up until"
           popover="The claim was registered either before or on this date."
         />
-        <TextDatePicker value={date} onChange={setDate} />
+        <TextDatePicker
+          value={date}
+          onChange={setDate}
+          {...register('Date Filter', {
+            neighbors: {
+              left: 'Outcome Filter',
+            },
+          })}
+        />
       </FilterElement>
     </FilterWrapper>
   )

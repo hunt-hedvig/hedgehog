@@ -1,6 +1,0 @@
-mutation SetClaimOutcome($id: ID!, $outcome: String) {
-  setClaimOutcome(id: $id, outcome: $outcome) {
-    id
-    outcome
-  }
-}

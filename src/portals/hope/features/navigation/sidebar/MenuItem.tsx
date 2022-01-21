@@ -3,6 +3,9 @@ import { colorsV3 } from '@hedviginsurance/brand'
 import React from 'react'
 import { ArrowUpRight, Icon } from 'react-bootstrap-icons'
 import { NavLink, NavLinkProps } from 'react-router-dom'
+import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Hotkey } from '@hedvig-ui'
 
 interface WithTransparent {
   transparent?: boolean
@@ -59,6 +62,8 @@ interface MenuItemProps extends NavLinkProps {
   shouldAlwaysCollapse: boolean
   isCollapsed: boolean
   transparent?: boolean
+  hotkey: string
+  hotkeyHandler: () => void
 }
 
 interface ExternalMenuItemProps
@@ -68,6 +73,8 @@ interface ExternalMenuItemProps
   icon: Icon
   shouldAlwaysCollapse: boolean
   isCollapsed: boolean
+  hotkey: string
+  hotkeyHandler: () => void
 }
 
 export const MenuItem: React.FC<MenuItemProps> = ({
@@ -76,14 +83,28 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   icon,
   shouldAlwaysCollapse,
   isCollapsed,
+  hotkey,
+  hotkeyHandler,
   ...props
 }) => {
+  const { registerActions, isHintingOption } = useCommandLine()
+
+  registerActions([
+    {
+      label: title,
+      keys: [Keys.Option, Keys[hotkey]],
+      onResolve: hotkeyHandler,
+    },
+  ])
+
   const ItemIcon = icon
 
   return (
     <MenuItemStyled to={to} {...props}>
       <ItemIcon />
-      {!(shouldAlwaysCollapse || isCollapsed) && title}
+      <Hotkey hotkey={hotkey} hinting={isHintingOption}>
+        {!(shouldAlwaysCollapse || isCollapsed) && title}
+      </Hotkey>
     </MenuItemStyled>
   )
 }
@@ -94,8 +115,20 @@ export const ExternalMenuItem: React.FC<ExternalMenuItemProps> = ({
   icon,
   shouldAlwaysCollapse,
   isCollapsed,
+  hotkey,
+  hotkeyHandler,
   ...props
 }) => {
+  const { registerActions, isHintingOption } = useCommandLine()
+
+  registerActions([
+    {
+      label: title,
+      keys: [Keys.Option, Keys[hotkey]],
+      onResolve: hotkeyHandler,
+    },
+  ])
+
   const ItemIcon = icon
 
   return (
@@ -107,7 +140,9 @@ export const ExternalMenuItem: React.FC<ExternalMenuItemProps> = ({
     >
       {!(shouldAlwaysCollapse || isCollapsed) && <ArrowUpRight />}
       <ItemIcon />
-      {!(shouldAlwaysCollapse || isCollapsed) && title}
+      <Hotkey hotkey={hotkey} hinting={isHintingOption}>
+        {!(shouldAlwaysCollapse || isCollapsed) && title}
+      </Hotkey>
     </MenuItemExternalLink>
   )
 }

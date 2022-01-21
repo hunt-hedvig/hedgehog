@@ -48,7 +48,7 @@ export const ClaimPayment: React.FC<{
   sanctionStatus?: SanctionStatus | null
   claimId: string
   identified: boolean
-  market: string
+  market?: string
   carrier: string
   memberId: string
 }> = ({ sanctionStatus, carrier, claimId, identified, market, memberId }) => {

@@ -10,23 +10,24 @@ import {
 } from 'portals/hope/features/members-search/styles'
 import React from 'react'
 import { useHistory } from 'react-router'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { useMemberNameAndContractMarketInfoQuery } from 'types/generated/graphql'
-import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
 
-export const MemberSuggestions: React.FC = () => {
-  const { memberHistory } = useMemberHistory()
-
+export const MemberSuggestions: React.FC<{
+  suggestions: ReadonlyArray<string>
+}> = ({ suggestions }) => {
   return (
     <MemberHistoryWrapper>
-      {memberHistory.length === 0 && (
+      {suggestions.length === 0 && (
         <EmptyState>No suggested members yet</EmptyState>
       )}
 
-      {memberHistory.map((memberId, index) => (
+      {suggestions.map((memberId, index) => (
         <MemberHistoryCard
           key={memberId}
           memberId={memberId}
           orderNumber={index + 1}
+          suggestionsCount={suggestions.length}
         />
       ))}
     </MemberHistoryWrapper>
@@ -36,14 +37,18 @@ export const MemberSuggestions: React.FC = () => {
 const MemberHistoryCard: React.FC<{
   memberId: string
   orderNumber: number
-}> = ({ memberId, orderNumber }) => {
+  suggestionsCount: number
+}> = ({ memberId, orderNumber, suggestionsCount }) => {
   const { data } = useMemberNameAndContractMarketInfoQuery({
     variables: { memberId },
   })
 
+  const { register } = useNavigation()
+
   const { registerActions, isHintingControl } = useCommandLine()
   const history = useHistory()
   const targetLocation = `/members/${memberId}`
+
   registerActions([
     {
       label: `Navigate to ${data?.member?.firstName} ${data?.member?.lastName} (${memberId})`,
@@ -51,8 +56,25 @@ const MemberHistoryCard: React.FC<{
       onResolve: () => history.push(targetLocation),
     },
   ])
+
   return (
-    <MemberHistoryCardWrapper muted={!data?.member} to={targetLocation}>
+    <MemberHistoryCardWrapper
+      muted={!data?.member}
+      to={targetLocation}
+      {...register(`Member Suggestion ${orderNumber}`, {
+        resolve: () => {
+          history.push(targetLocation)
+        },
+        neighbors: {
+          up: 'Member Search Form',
+          left: `Member Suggestion ${orderNumber - 1}`,
+          right:
+            orderNumber <= suggestionsCount
+              ? `Member Suggestion ${orderNumber + 1}`
+              : undefined,
+        },
+      })}
+    >
       <MemberName>
         {data?.member?.firstName} {data?.member?.lastName}&nbsp;
         {getMemberFlag(

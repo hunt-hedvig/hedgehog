@@ -1,13 +1,9 @@
 import styled from '@emotion/styled'
-import { BaseStyle, StandaloneMessage } from '@hedvig-ui'
+import { BaseStyle, Spinner, StandaloneMessage } from '@hedvig-ui'
 import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { history } from 'clientEntry'
 import { CommandLineProvider } from 'portals/hope/features/commands/use-command-line'
-import {
-  Logo,
-  LogoIcon,
-} from 'portals/hope/features/navigation/sidebar/elements'
 import { VerticalMenu } from 'portals/hope/features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'portals/hope/features/navigation/topbar/TopBar'
 import { TrackingProvider } from 'portals/hope/features/tracking/hooks/use-tracking'
@@ -47,17 +43,6 @@ const MainContent = styled.div`
   overflow-y: auto;
 `
 
-const HopeLogo = styled(Logo)`
-  width: 7rem;
-  fill: ${colorsV3.gray800};
-`
-
-const HopeLogoIcon = styled(LogoIcon)`
-  width: 1rem;
-  fill: ${colorsV3.gray800};
-  margin-bottom: 2rem;
-`
-
 const App: React.FC = () => {
   const { me, loading } = useAuthenticate()
 
@@ -75,17 +60,12 @@ const App: React.FC = () => {
     })
   }, [me])
 
-  if (loading) {
+  if (loading || !me) {
     return (
       <StandaloneMessage paddingTop="45vh" opacity={1}>
-        <HopeLogo />
-        <HopeLogoIcon />
+        <Spinner />
       </StandaloneMessage>
     )
-  }
-
-  if (!me) {
-    return null
   }
 
   return (

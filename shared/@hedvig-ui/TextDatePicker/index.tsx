@@ -10,6 +10,7 @@ import { Calendar } from 'react-bootstrap-icons'
 import DatePicker from 'react-datepicker'
 import { isPressing, Keys } from '../hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '../hooks/use-click-outside'
+import { toast } from 'react-hot-toast'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -130,6 +131,20 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
     }
 
     const newDate = new Date(date.start)
+
+    if (maxDate && maxDate < newDate) {
+      const formattedDate = formatDate(maxDate, 'yyyy-MM-dd')
+
+      const message =
+        formattedDate === formatDate(new Date(), 'yyyy-MM-dd')
+          ? 'Date cannot be in the future'
+          : `Date cannot be after ${formattedDate}`
+
+      toast.error(message)
+      setTextValue(value)
+
+      return
+    }
 
     formatAndSetDate(newDate)
   }

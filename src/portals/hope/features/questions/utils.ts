@@ -43,11 +43,10 @@ export const doMemberGroupFilter =
 export const doMarketFilter =
   (selectedFilters: ReadonlyArray<FilterStateType>) =>
   (questionGroup: QuestionGroup): boolean => {
-    const questionGroupMarket = questionGroup?.member?.contractMarketInfo
-      ?.market
-      ? questionGroup.member.contractMarketInfo.market
-      : questionGroup.member?.pickedLocale
-      ? PickedLocaleMarket[questionGroup.member.pickedLocale]
+    const questionGroupMarket = questionGroup?.market
+      ? questionGroup.market
+      : questionGroup.pickedLocale
+      ? PickedLocaleMarket[questionGroup.pickedLocale]
       : Market.Sweden
 
     return Object.keys(Market).some(
@@ -76,7 +75,7 @@ export const doClaimFilter =
 export const doClaimFilter =
   () =>
   (questionGroup: QuestionGroup): boolean => {
-    if (!questionGroup.member) {
+    if (!questionGroup.firstName) {
       return true
     }
     return true

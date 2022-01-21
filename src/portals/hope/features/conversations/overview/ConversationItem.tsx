@@ -71,7 +71,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
 
   const ref = useRef<HTMLDivElement>(null)
 
-  const nameAvailable = group.member?.firstName && group.member.lastName
+  const nameAvailable = group.firstName && group.lastName
 
   return (
     <Item
@@ -83,7 +83,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
     >
       <MemberName isPlaceholder={!nameAvailable}>
         {nameAvailable
-          ? group.member?.firstName + ' ' + group.member?.lastName
+          ? group.firstName + ' ' + group.lastName
           : 'Name not available'}
       </MemberName>
       <StatusLine

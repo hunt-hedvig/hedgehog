@@ -6,6 +6,7 @@ import { ClaimFilterTemplate } from 'portals/hope/features/claims/claim-template
 import { useListClaims } from 'portals/hope/features/claims/claims-list/graphql/use-list-claims'
 import React, { useEffect, useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const Wrapper = styled.div`
   margin-top: 2rem;
@@ -80,6 +81,8 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
 }) => {
   const [createFilter, setCreateFilter] = useState(false)
 
+  const { register } = useNavigation()
+
   if (!templates.length) {
     return null
   }
@@ -88,21 +91,46 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
     <Wrapper>
       <Label>Templates</Label>
       <List>
-        {templates.map((filter) => (
-          <TemplateCard
-            key={filter.id}
-            active={
-              templates.length === 1 && !!activeId
-                ? filter.id === activeId
-                : activeId
-                ? filter.id !== activeId
-                : false
-            }
-            template={filter}
-            onSelect={onSelect}
-          />
-        ))}
+        {templates.map((filter, index) => {
+          const templateNavigation = register(filter.id, {
+            focus: index === 0 ? Keys.T : undefined,
+            resolve: () => {
+              onSelect(filter.id)
+            },
+            neighbors: {
+              left: index ? templates[index - 1].id : undefined,
+              right:
+                index < templates.length - 1
+                  ? templates[index + 1].id
+                  : 'Add Template',
+            },
+          })
+
+          return (
+            <TemplateCard
+              key={filter.id}
+              active={
+                templates.length === 1 && !!activeId
+                  ? filter.id === activeId
+                  : activeId
+                  ? filter.id !== activeId
+                  : false
+              }
+              template={filter}
+              onSelect={onSelect}
+              {...templateNavigation}
+            />
+          )
+        })}
         <AddTemplateCard
+          {...register('Add Template', {
+            resolve: () => {
+              setCreateFilter(true)
+            },
+            neighbors: {
+              left: templates[templates.length - 1].id,
+            },
+          })}
           onClick={() => setCreateFilter(true)}
           tabIndex={0}
           onKeyDown={(e) => {
@@ -126,7 +154,8 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
   )
 }
 
-interface TemplateCardProps {
+interface TemplateCardProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   template: ClaimFilterTemplate
   onSelect: (id: string) => void
   active: boolean
@@ -136,6 +165,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   template,
   onSelect,
   active,
+  ...props
 }) => {
   const [{ totalClaims }, listClaims] = useListClaims()
 
@@ -155,6 +185,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           onSelect(template.id)
         }
       }}
+      {...props}
     >
       <TemplateName>
         {template.name} ({totalClaims || 0})
