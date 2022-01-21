@@ -7,6 +7,12 @@ import { cache } from 'apollo/cache'
 import { CachePersistor, LocalStorageWrapper } from 'apollo3-cache-persist'
 import { persistenceMapper } from 'apollo/persistence/mapper'
 import { createPersistLink } from 'apollo/persistence/link'
+import gql from 'graphql-tag'
+
+gql`
+  # Declare custom directive for IDE completion; don't want this to actually be resolved server-side
+  directive @persist on FIELD
+`
 
 const setItemWithExpiry = (key, value, ttl) =>
   localStorage.setItem(
