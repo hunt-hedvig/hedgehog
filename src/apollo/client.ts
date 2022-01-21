@@ -79,7 +79,7 @@ export const persistor = new CachePersistor({
   debounce: 100,
 })
 
-const SCHEMA_VERSION = '1'
+const SCHEMA_VERSION = '3'
 const SCHEMA_VERSION_KEY = 'apollo-schema-version'
 
 const currentVersion = localStorage.getItem(SCHEMA_VERSION_KEY)
