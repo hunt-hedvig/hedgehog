@@ -1,135 +1,195 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import {
   Label,
-  Input,
   Checkbox,
-  TextArea,
   TextDatePicker,
   Button,
   ButtonsGroup,
+  Form,
+  FormTextArea,
+  FormInput,
 } from '@hedvig-ui'
 import { Markets, TemplateMessage } from '../use-template-messages'
+import { FieldValues, FormProvider, useForm } from 'react-hook-form'
+import { v4 as uuidv4 } from 'uuid'
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
   max-width: 20rem;
 `
 
-const MessageField = styled(TextArea)`
+const MessageField = styled(FormTextArea)`
   height: 10rem;
-  margin-top: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+
+  & textarea {
+    margin-top: 0.5rem;
+    flex: 1;
+  }
 `
 
 interface TemplateFormProps {
-  template: TemplateMessage
-  onChange: (field: string, value?: string | boolean | number) => void
-  onSave: () => void
+  template?: TemplateMessage
+  onSubmit: (template: TemplateMessage) => void
   isCreating?: boolean
   onClose?: () => void
 }
 
 export const TemplateForm: React.FC<TemplateFormProps> = ({
   template,
-  onChange,
   isCreating,
-  onSave,
+  onSubmit,
   onClose,
 }) => {
+  const [market, setMarket] = useState(template?.market || Markets.Sweden)
+  const [withExpiry, setWithExpiry] = useState(template?.withExpiry || false)
+  const [expiryDate, setExpiryDate] = useState(template?.expiryDate || null)
+
+  const form = useForm()
+
+  useEffect(() => {
+    form.reset()
+    setWithExpiry(template?.withExpiry || false)
+    setExpiryDate(template?.expiryDate || null)
+    setMarket(template?.market || Markets.Sweden)
+  }, [template])
+
+  const submitHandler = ({ name, message, messageEn }: FieldValues) => {
+    const newTemplate = {
+      id: template?.id || uuidv4(),
+      name,
+      message,
+      messageEn,
+      market,
+      withExpiry,
+      expiryDate,
+    }
+
+    onSubmit(newTemplate)
+  }
+
   return (
-    <>
-      <Field>
-        <Label>Template Name</Label>
-        <Input
+    <FormProvider {...form}>
+      <Form onSubmit={submitHandler} style={{ height: '100%' }}>
+        <FormInput
+          label="Template Name"
+          placeholder="Write template name here..."
+          name="name"
+          defaultValue={template?.name || ''}
           style={{ marginTop: '0.5rem' }}
-          value={template?.name}
-          onChange={({ target: { value } }) => onChange('name', value)}
-        />
-      </Field>
-      <Field>
-        <Label>Apply to Market</Label>
-        <Checkbox
-          style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}
-          label="Sweden 🇸🇪"
-          checked={template?.market === Markets.Sweden}
-          onChange={({ currentTarget: { checked } }) => {
-            onChange('market', checked ? Markets.Sweden : undefined)
+          rules={{
+            required: 'Name is required',
+            pattern: {
+              value: /[^\s]/,
+              message: 'Name cannot be zero',
+            },
           }}
         />
-        <Checkbox
-          style={{ marginBottom: '0.5rem' }}
-          label="Norway 🇳🇴"
-          checked={template?.market === Markets.Norway}
-          onChange={({ currentTarget: { checked } }) => {
-            onChange('market', checked ? Markets.Norway : undefined)
-          }}
-        />
-        <Checkbox
-          label="Denmark 🇩🇰"
-          checked={template?.market === Markets.Denmark}
-          onChange={({ currentTarget: { checked } }) => {
-            onChange('market', checked ? Markets.Denmark : undefined)
-          }}
-        />
-      </Field>
-      <Field>
-        <Label>Message (EN)</Label>
-        <MessageField
-          value={template?.messageEn}
-          onChange={({ currentTarget: { value } }) => {
-            onChange('messageEn', value)
-          }}
-        />
-      </Field>
-      <Field>
-        <Label>
-          Message (
-          {template?.market === Markets.Sweden
-            ? 'SV'
-            : template?.market === Markets.Denmark
-            ? 'DK'
-            : 'NO'}
-          )
-        </Label>
-        <MessageField
-          value={template?.message}
-          onChange={({ currentTarget: { value } }) => {
-            onChange('message', value)
-          }}
-        />
-      </Field>
-      <Field>
-        <Checkbox
-          label="Set Expiry Date"
-          checked={template?.withExpiry}
-          onChange={({ currentTarget: { checked } }) => {
-            onChange('withExpiry', checked)
-          }}
-        />
-      </Field>
-      {template?.withExpiry && (
         <Field>
-          <Label>This template will be deleted after</Label>
-          <TextDatePicker
-            value={template?.expiryDate}
-            onChange={(value) => {
-              onChange('expiryDate', value || undefined)
+          <Label>Apply to Market</Label>
+          <Checkbox
+            style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}
+            name="market"
+            label="Sweden 🇸🇪"
+            checked={market === Markets.Sweden}
+            onChange={({ currentTarget: { checked } }) => {
+              if (checked) {
+                setMarket(Markets.Sweden)
+              }
             }}
-            style={{ marginTop: '0.5rem' }}
+          />
+          <Checkbox
+            style={{ marginBottom: '0.5rem' }}
+            name="market"
+            label="Norway 🇳🇴"
+            checked={market === Markets.Norway}
+            onChange={({ currentTarget: { checked } }) => {
+              if (checked) {
+                setMarket(Markets.Norway)
+              }
+            }}
+          />
+          <Checkbox
+            name="market"
+            label="Denmark 🇩🇰"
+            checked={market === Markets.Denmark}
+            onChange={({ currentTarget: { checked } }) => {
+              if (checked) {
+                setMarket(Markets.Denmark)
+              }
+            }}
           />
         </Field>
-      )}
-
-      <ButtonsGroup style={{ marginTop: 'auto' }}>
-        <Button onClick={onSave}>
-          {isCreating ? 'Create' : 'Save Changes'}
-        </Button>
-        {onClose && (
-          <Button variant="secondary" onClick={onClose}>
-            Discard
-          </Button>
+        <MessageField
+          label="Message (EN)"
+          name="messageEn"
+          style={{ marginTop: '0.5rem' }}
+          defaultValue={template?.messageEn || ''}
+          rules={{
+            required: 'Cannot save an empty message',
+            pattern: {
+              value: /[^\s]/,
+              message: 'Cannot send a message without text',
+            },
+          }}
+        />
+        <MessageField
+          label={`Message (
+              ${
+                template?.market === Markets.Sweden
+                  ? 'SV'
+                  : template?.market === Markets.Denmark
+                  ? 'DK'
+                  : 'NO'
+              }
+              )`}
+          name="message"
+          style={{ marginTop: '0.5rem' }}
+          defaultValue={template?.message || ''}
+          rules={{
+            required: 'Cannot save an empty message',
+            pattern: {
+              value: /[^\s]/,
+              message: 'Cannot send a message without text',
+            },
+          }}
+        />
+        <Field>
+          <Checkbox
+            label="Set Expiry Date"
+            checked={withExpiry}
+            onChange={({ currentTarget: { checked } }) => {
+              setWithExpiry(checked)
+            }}
+          />
+        </Field>
+        {withExpiry && (
+          <Field>
+            <Label>This template will be deleted after</Label>
+            <TextDatePicker
+              value={expiryDate}
+              onChange={(value) => {
+                setExpiryDate(value)
+              }}
+              style={{ marginTop: '0.5rem' }}
+            />
+          </Field>
         )}
-      </ButtonsGroup>
-    </>
+
+        <ButtonsGroup style={{ marginTop: 'auto' }}>
+          <Button type="submit">
+            {isCreating ? 'Create' : 'Save Changes'}
+          </Button>
+          {onClose && (
+            <Button variant="secondary" onClick={onClose}>
+              Discard
+            </Button>
+          )}
+        </ButtonsGroup>
+      </Form>
+    </FormProvider>
   )
 }

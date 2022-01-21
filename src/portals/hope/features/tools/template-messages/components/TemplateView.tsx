@@ -39,14 +39,11 @@ const DeleteWrapper = styled.div`
 
 export const TemplateView: React.FC<{
   template: TemplateMessage
-  onChange: (field: string, value?: string | boolean | number) => void
-  onSave: () => void
+  onSave: (template: TemplateMessage) => void
   onDelete: (id: string) => void
-}> = ({ template, onChange, onSave, onDelete }) => (
+}> = ({ template, onSave, onDelete }) => (
   <Content>
-    {template && (
-      <TemplateForm template={template} onChange={onChange} onSave={onSave} />
-    )}
+    {template && <TemplateForm template={template} onSubmit={onSave} />}
     <DeleteWrapper onClick={() => onDelete(template.id)}>
       <Trash style={{ width: '1rem', height: '1rem' }} />
       <span>Delete</span>

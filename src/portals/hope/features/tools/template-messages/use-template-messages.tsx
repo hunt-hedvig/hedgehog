@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react'
+import toast from 'react-hot-toast'
 import { TemplateMessages } from './components/TemplateMessages'
-import { v4 as uuidv4 } from 'uuid'
 
 export enum Markets {
   Sweden = 'SWEDEN',
@@ -21,7 +21,7 @@ export interface TemplateMessage {
 
 interface TemplateMessagesContextProps {
   show: () => void
-  createTemplate: (template: TemplateMessage) => string | undefined
+  createTemplate: (template: TemplateMessage) => void
   editTemplate: (template: TemplateMessage) => void
   deleteTemplate: (id: string) => void
   pinTemplate: (id: string) => void
@@ -33,7 +33,7 @@ interface TemplateMessagesContextProps {
 
 const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
   show: () => void 0,
-  createTemplate: () => '',
+  createTemplate: () => void 0,
   editTemplate: () => void 0,
   deleteTemplate: () => void 0,
   pinTemplate: () => void 0,
@@ -53,25 +53,24 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const createHandler = (template: TemplateMessage) => {
     const allTemplates = localStorage.getItem('hedvig:messages:templates')
 
-    const id = uuidv4()
-    const newTemplate = { ...template, id }
-
     if (!allTemplates) {
       localStorage.setItem(
         'hedvig:messages:templates',
-        JSON.stringify([newTemplate]),
+        JSON.stringify([template]),
       )
+
+      toast.success(`Template ${template.name} successfully created`)
 
       return
     }
 
-    const newTemplates = [...JSON.parse(allTemplates), newTemplate]
+    const newTemplates = [...JSON.parse(allTemplates), template]
     localStorage.setItem(
       'hedvig:messages:templates',
       JSON.stringify(newTemplates),
     )
 
-    return id
+    toast.success(`Template ${template.name} successfully created`)
   }
 
   const editHandler = (newTemplate: TemplateMessage) => {
@@ -92,6 +91,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         }),
       ]),
     )
+
+    toast.success('Template successfully edited')
   }
 
   const deleteHandler = (id: string) => {

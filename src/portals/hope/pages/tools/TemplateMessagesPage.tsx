@@ -50,35 +50,35 @@ const TemplateMessagesPage = () => {
     changeCurrentMarket,
   } = useTemplateMessages()
 
-  const onChangeHandler = (
-    field: string,
-    value?: string | boolean | number,
-  ) => {
-    const newTemplate = { ...selectedTemplate, [field]: value }
-    setSelectedTemplate(newTemplate as TemplateMessage)
-  }
-
-  const saveChangesHandler = () => {
+  const saveChangesHandler = (newTemplate: TemplateMessage) => {
     if (!selectedTemplate) {
       return
     }
 
-    editTemplate(selectedTemplate)
+    editTemplate(newTemplate)
 
-    if (selectedTemplate.market !== currentMarket) {
+    if (newTemplate.market !== currentMarket) {
       setTemplates((prev) =>
-        prev.filter((template) => template.id !== selectedTemplate.id),
+        prev.filter((template) => template.id !== newTemplate.id),
       )
       setSelectedTemplate(null)
+    } else {
+      setTemplates((prev) =>
+        prev.map((template) => {
+          if (template.id === newTemplate.id) {
+            return newTemplate
+          }
+          return template
+        }),
+      )
     }
   }
 
   const createHandler = (template: TemplateMessage) => {
-    const id = createTemplate(template)
-    const newTemplate = { ...template, id }
+    createTemplate(template)
 
     if (template.market === currentMarket) {
-      setTemplates((prev) => [...prev, newTemplate as TemplateMessage])
+      setTemplates((prev) => [...prev, template])
     }
 
     setIsCreating(false)
@@ -116,6 +116,7 @@ const TemplateMessagesPage = () => {
             active: currentMarket === Markets[tab],
             title: tab,
             action: () => {
+              setSelectedTemplate(null)
               setTemplates(getTemplates())
               changeCurrentMarket(Markets[tab])
             },
@@ -134,7 +135,6 @@ const TemplateMessagesPage = () => {
         {selectedTemplate && (
           <TemplateView
             template={selectedTemplate}
-            onChange={onChangeHandler}
             onSave={saveChangesHandler}
             onDelete={deleteHandler}
           />

@@ -104,19 +104,9 @@ const getTemplates = () => {
 export const TemplateMessages: React.FC<{
   hide: () => void
 }> = ({ hide }) => {
-  const EMPTY_TEMPLATE: TemplateMessage = {
-    id: '',
-    name: '',
-    message: '',
-    messageEn: '',
-    market: Markets.Sweden,
-  }
-
   const [query, setQuery] = useState('')
   const [editingTemplate, setEditingTemplate] =
     useState<TemplateMessage | null>(null)
-  const [newTemplate, setNewTemplate] =
-    useState<TemplateMessage>(EMPTY_TEMPLATE)
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
   const [templates, setTemplates] = useState<TemplateMessage[]>(() =>
@@ -178,31 +168,20 @@ export const TemplateMessages: React.FC<{
     )
   }
 
-  const changeHandler = (field: string, value?: string | number | boolean) => {
-    if (isCreating && !editingTemplate) {
-      setNewTemplate((prev) => ({ ...prev, [field]: value }))
-    } else {
-      const newTemplate = { ...editingTemplate, [field]: value }
-      setEditingTemplate(newTemplate as TemplateMessage)
-    }
-  }
-
-  const saveHandler = () => {
+  const submitHandler = (newTemplate: TemplateMessage) => {
     if (isCreating) {
-      const id = createTemplate(newTemplate)
-      const template = { ...newTemplate, id }
+      createTemplate(newTemplate)
 
-      setTemplates((prev) => [...prev, template as TemplateMessage])
+      setTemplates((prev) => [...prev, newTemplate])
 
       setIsCreating(false)
-      setNewTemplate(EMPTY_TEMPLATE)
     } else if (editingTemplate) {
-      editTemplate(editingTemplate)
+      editTemplate(newTemplate)
 
       setTemplates((prev) =>
         prev.map((template) => {
-          if (template.id === editingTemplate.id) {
-            return editingTemplate
+          if (template.id === newTemplate.id) {
+            return newTemplate
           }
 
           return template
@@ -235,19 +214,29 @@ export const TemplateMessages: React.FC<{
     }
   }
 
-  if (isCreating || !!editingTemplate) {
+  if (isCreating) {
     return (
       <Container ref={templatesRef} closing={closing} style={{ padding: 15 }}>
         <SecondLevelHeadline>Create Template</SecondLevelHeadline>
         <TemplateForm
           isCreating={isCreating}
-          template={
-            editingTemplate && !isCreating ? editingTemplate : newTemplate
-          }
-          onChange={changeHandler}
-          onSave={saveHandler}
+          onSubmit={submitHandler}
           onClose={() => {
             setIsCreating(false)
+          }}
+        />
+      </Container>
+    )
+  }
+
+  if (editingTemplate) {
+    return (
+      <Container ref={templatesRef} closing={closing} style={{ padding: 15 }}>
+        <SecondLevelHeadline>Edit Template</SecondLevelHeadline>
+        <TemplateForm
+          template={editingTemplate}
+          onSubmit={submitHandler}
+          onClose={() => {
             setEditingTemplate(null)
           }}
         />
@@ -318,6 +307,7 @@ export const TemplateMessages: React.FC<{
               .filter((template) =>
                 isPinnedTab ? template.pinned : !template.pinned,
               )
+              .reverse()
               .map((template) => (
                 <TemplateItem
                   key={template.id}

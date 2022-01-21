@@ -86,6 +86,7 @@ export const SearchTemplate: React.FC<{
               ? template.name.toLowerCase().includes(query.toLowerCase())
               : true,
           )
+          .reverse()
           .map((template) => (
             <TemplateItem
               key={template.id}
