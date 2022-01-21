@@ -11,10 +11,6 @@ import {
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React from 'react'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
-import {
-  Languages,
-  useTemplateMessages,
-} from '../../tools/template-messages/use-template-messages'
 
 const MemberPlaceholder = styled.div`
   border-radius: 8px;
@@ -98,7 +94,6 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   const { data } = useGetMemberInfoQuery({
     variables: { memberId },
   })
-  const { changeCurrentMarket } = useTemplateMessages()
 
   if (!data) {
     return (
@@ -109,7 +104,8 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   }
 
   const { member } = data
-  changeCurrentMarket(member?.contractMarketInfo?.market as Languages)
+
+  //TODO: Add normal switching on current market
 
   if (!member) {
     return (

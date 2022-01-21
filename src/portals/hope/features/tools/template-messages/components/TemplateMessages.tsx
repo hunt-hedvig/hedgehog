@@ -66,15 +66,36 @@ const HeaderBottom = styled.div`
 
 const Content = styled.div`
   padding: 15px;
+  margin-bottom: 5rem;
   overflow-y: scroll;
   flex: 1;
+`
+
+const Bottom = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  width: 100%;
+  height: 5rem;
+
+  background-color: ${({ theme }) => theme.accentLighter};
+
+  padding: 15px;
+
+  font-size: 14px;
+
+  & span {
+    color: ${({ theme }) => theme.accent};
+    cursor: pointer;
+  }
 `
 
 const getTemplates = () => {
   const templates = localStorage.getItem('hedvig:messages:templates')
 
   if (!templates) {
-    return null
+    return []
   }
 
   return JSON.parse(templates)
@@ -107,6 +128,7 @@ export const TemplateMessages: React.FC<{
     deleteTemplate,
     pinTemplate,
     currentMarket,
+    changeCurrentMarket,
   } = useTemplateMessages()
 
   const templatesRef = useRef<HTMLDivElement>(null)
@@ -187,6 +209,19 @@ export const TemplateMessages: React.FC<{
     }
   }
 
+  const switchMarketHandler = () => {
+    // TODO: make normal logic of switching
+    if (currentMarket === Languages.Sweden) {
+      changeCurrentMarket(Languages.Denmark)
+    }
+    if (currentMarket === Languages.Denmark) {
+      changeCurrentMarket(Languages.Norway)
+    }
+    if (currentMarket === Languages.Norway) {
+      changeCurrentMarket(Languages.Sweden)
+    }
+  }
+
   if (isCreating || !!editingTemplate) {
     return (
       <Container ref={templatesRef} closing={closing} style={{ padding: 15 }}>
@@ -240,10 +275,9 @@ export const TemplateMessages: React.FC<{
               },
               {
                 active: isPinnedTab,
-                title:
-                  templates
-                    ?.filter((template) => template.pinned)
-                    .length.toString() || '0' + ' Pinned',
+                title: `${
+                  templates.filter((template) => template.pinned).length
+                } Pinned`,
                 action: () => {
                   setIsPinnedTab(true)
                 },
@@ -285,6 +319,11 @@ export const TemplateMessages: React.FC<{
               ))
           : null}
       </Content>
+      <Bottom onClick={switchMarketHandler}>
+        This user speaks in another language instead?
+        <br />
+        <span>Switch Language</span>
+      </Bottom>
     </Container>
   )
 }

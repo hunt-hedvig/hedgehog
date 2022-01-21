@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { TemplateMessages } from './components/TemplateMessages'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -51,6 +51,10 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   )
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
+
+  useEffect(() => {
+    console.log(currentMarket)
+  }, [currentMarket])
 
   const createHandler = (template: TemplateMessage) => {
     const allTemplates = localStorage.getItem('hedvig:messages:templates')
