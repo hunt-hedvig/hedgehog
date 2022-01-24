@@ -1,5 +1,5 @@
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
-import { format, parseISO } from 'date-fns'
+import { addSeconds, format, parseISO } from 'date-fns'
 import React, { useState } from 'react'
 import {
   ClaimNote as ClaimNoteType,
@@ -25,17 +25,12 @@ import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
+import formatDate from 'date-fns/format'
 
 const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {
     return new Date(noteB.date).getTime() - new Date(noteA.date).getTime()
   })
-
-const getTodayInUTC = () => {
-  const isoDate = new Date().toISOString()
-
-  return `${isoDate.substr(0, 10)} ${isoDate.substr(11, 8)}`
-}
 
 const ClaimNoteWrapper = styled.div`
   display: flex;
@@ -90,7 +85,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const { me } = useMe()
 
   const handleSubmitNote = () => {
-    const today = getTodayInUTC()
+    const today = formatDate(addSeconds(new Date(), 1), 'yyyy-MM-dd HH:mm:ss')
 
     setSubmitting(true)
     addClaimNote({

@@ -1,13 +1,8 @@
 import styled from '@emotion/styled'
 import {
   ClaimPageDocument,
-  ClaimState,
   useClaimPageQuery,
-  useGetTermsAndConditionsQuery,
   useRestrictResourceAccessMutation,
-  UserSettingKey,
-  useSetCoveringEmployeeMutation,
-  useUpdateClaimStateMutation,
 } from 'types/generated/graphql'
 
 import {
@@ -25,10 +20,7 @@ import {
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
 import { ClaimContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimContractDropdown/ClaimContractDropdown'
-import {
-  ClaimOutcomes,
-  OutcomeDropdown,
-} from 'portals/hope/features/claims/claim-details/ClaimType/components/OutcomeDropdown'
+import { ClaimOutcomeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
 import {
   CoInsuredForm,
   useDeleteCoInsured,
@@ -36,16 +28,10 @@ import {
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import { useMe } from 'portals/hope/features/user/hooks/use-me'
-import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimDatePicker/ClaimDatePicker'
-
-const validateSelectOption = (value): ClaimState => {
-  if (!Object.values(ClaimState).includes(value)) {
-    throw new Error(`invalid ClaimState: ${value}`)
-  }
-
-  return value as ClaimState
-}
+import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimDatePicker'
+import { ClaimEmployeeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimEmployeeDropdown'
+import { TermsAndConditionsLink } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/TermsAndConditionsLink'
+import { ClaimStatusDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimStatusDropdown'
 
 const SelectWrapper = styled.div`
   margin-top: 1em;
@@ -125,35 +111,11 @@ export const ClaimInformation: React.FC<{
   const {
     registrationDate,
     recordingUrl,
-    coveringEmployee,
-    state,
     agreement: selectedAgreement,
     coInsured,
-    payments = [],
-    outcome,
     contract: selectedContract,
     trial,
   } = data?.claim ?? {}
-
-  const [setCoveringEmployee] = useSetCoveringEmployeeMutation()
-  const [updateClaimState] = useUpdateClaimStateMutation()
-
-  const coverEmployeeHandler = async (value: string) => {
-    await setCoveringEmployee({
-      variables: {
-        id: claimId,
-        coveringEmployee: value === 'True',
-      },
-      optimisticResponse: {
-        setCoveringEmployee: {
-          id: claimId,
-          __typename: 'Claim',
-          coveringEmployee: value === 'True',
-          events: data?.claim?.events ?? [],
-        },
-      },
-    })
-  }
 
   const coInsureHandler = async (value: string) => {
     setCreatingCoInsured(value === 'True')
@@ -162,33 +124,6 @@ export const ClaimInformation: React.FC<{
         deleteCoInsured(),
       )
     }
-  }
-
-  const setClaimStateHandler = async (value: string) => {
-    if (
-      (data?.claim?.state === ClaimState.Open ||
-        data?.claim?.state === ClaimState.Reopened) &&
-      (outcome === ClaimOutcomes.DUPLICATE ||
-        outcome === ClaimOutcomes.NOT_COVERED_BY_TERMS ||
-        outcome === ClaimOutcomes.RETRACTED_BY_MEMBER ||
-        outcome === ClaimOutcomes.RETRACTED_BY_HEDVIG) &&
-      payments.length !== 0
-    ) {
-      toast.error("This outcome can't be used to close when there are payments")
-      return
-    }
-
-    await updateClaimState({
-      variables: { id: claimId, state: validateSelectOption(value) },
-      optimisticResponse: {
-        updateClaimState: {
-          id: claimId,
-          __typename: 'Claim',
-          state: validateSelectOption(value),
-          events: data?.claim?.events ?? [],
-        },
-      },
-    })
   }
 
   const handleRestrictAccess = () => {
@@ -219,16 +154,6 @@ export const ClaimInformation: React.FC<{
       },
     )
   }
-
-  const coverEmployeeOptions = [
-    {
-      key: 0,
-      value: 'True',
-      text: 'True',
-      selected: coveringEmployee || false,
-    },
-    { key: 1, value: 'False', text: 'False', selected: !coveringEmployee },
-  ]
 
   const coInsuredClaimOptions = [
     {
@@ -270,27 +195,11 @@ export const ClaimInformation: React.FC<{
         {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
         <SelectWrapper>
           <Label>Status</Label>
-          <Dropdown placeholder="State">
-            {Object.keys(ClaimState).map((key) => (
-              <DropdownOption
-                key={key}
-                onClick={() => setClaimStateHandler(ClaimState[key])}
-                selected={state === ClaimState[key]}
-              >
-                {key}
-              </DropdownOption>
-            ))}
-          </Dropdown>
+          <ClaimStatusDropdown claimId={claimId} />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Claim outcome</Label>
-          {!!data?.claim?.state && (
-            <OutcomeDropdown
-              claimState={data.claim.state}
-              outcome={data?.claim?.outcome ?? null}
-              claimId={claimId}
-            />
-          )}
+          <ClaimOutcomeDropdown claimId={claimId} />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Date of Occurrence</Label>
@@ -303,7 +212,7 @@ export const ClaimInformation: React.FC<{
 
         {selectedAgreement ? (
           selectedContract && (
-            <TermsAndConditions
+            <TermsAndConditionsLink
               carrier={selectedAgreement.carrier}
               createdAt={selectedAgreement.createdAt}
               partner={selectedAgreement.partner ?? null}
@@ -317,17 +226,7 @@ export const ClaimInformation: React.FC<{
         )}
         <SelectWrapper>
           <Label>Employee Claim</Label>
-          <Dropdown>
-            {coverEmployeeOptions.map((opt) => (
-              <DropdownOption
-                key={opt.key}
-                selected={opt.selected}
-                onClick={() => coverEmployeeHandler(opt.value)}
-              >
-                {opt.text}
-              </DropdownOption>
-            ))}
-          </Dropdown>
+          <ClaimEmployeeDropdown claimId={claimId} />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Co-insured Claim</Label>
@@ -368,41 +267,5 @@ export const ClaimInformation: React.FC<{
         )}
       </Loadable>
     </CardContent>
-  )
-}
-
-const TermsAndConditions: React.FC<{
-  typeOfContract: string
-  partner: string | null
-  carrier: string
-  createdAt: string
-}> = ({ typeOfContract, partner, carrier, createdAt }) => {
-  const { settings } = useMe()
-
-  const { data } = useGetTermsAndConditionsQuery({
-    variables: {
-      contractType: typeOfContract,
-      partner,
-      carrier,
-      date: createdAt.split('T')[0],
-      locale: settings[UserSettingKey.Languages] || 'en_SE',
-    },
-  })
-
-  if (!data?.termsAndConditions) {
-    return null
-  }
-
-  return (
-    <a
-      href={data.termsAndConditions.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        fontSize: '0.9rem',
-      }}
-    >
-      Terms and Conditions
-    </a>
   )
 }

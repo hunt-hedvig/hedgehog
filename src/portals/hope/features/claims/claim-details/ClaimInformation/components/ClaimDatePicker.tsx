@@ -1,5 +1,4 @@
 import React from 'react'
-import { toast } from 'react-hot-toast'
 import { TextDatePicker } from '@hedvig-ui'
 import gql from 'graphql-tag'
 import {
@@ -24,7 +23,7 @@ gql`
 `
 
 interface UseClaimDatePickerResult {
-  setDate: (date: string) => void
+  setDate: (date: string | null) => void
   date: string | null
 }
 
@@ -32,27 +31,20 @@ const useClaimDatePicker = (claimId: string): UseClaimDatePickerResult => {
   const [setClaimDateOfOccurrence] = useSetClaimDateOfOccurrenceMutation()
   const { data } = useClaimDateOfOccurrenceQuery({ variables: { claimId } })
 
-  const setDate = (date: string) => {
-    toast.promise(
-      setClaimDateOfOccurrence({
-        variables: {
-          claimId,
-          date,
-        },
-        optimisticResponse: {
-          setDateOfOccurrence: {
-            __typename: 'Claim',
-            id: claimId,
-            dateOfOccurrence: date,
-          },
-        },
-      }),
-      {
-        loading: 'Setting date of occurrence',
-        success: 'Date of occurrence set',
-        error: 'Could not set date of occurrence',
+  const setDate = (date: string | null) => {
+    setClaimDateOfOccurrence({
+      variables: {
+        claimId,
+        date,
       },
-    )
+      optimisticResponse: {
+        setDateOfOccurrence: {
+          __typename: 'Claim',
+          id: claimId,
+          dateOfOccurrence: date,
+        },
+      },
+    })
   }
 
   return { setDate, date: data?.claim?.dateOfOccurrence ?? null }
@@ -66,11 +58,7 @@ export const ClaimDatePicker: React.FC<{ claimId: string }> = ({ claimId }) => {
       value={date}
       maxDate={new Date()}
       onChange={(newDate) => {
-        if (!newDate || !date) {
-          return
-        }
-
-        setDate(date)
+        setDate(newDate)
       }}
       placeholder="When did it happen?"
     />

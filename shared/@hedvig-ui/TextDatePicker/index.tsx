@@ -134,8 +134,15 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
 
     if (maxDate && maxDate < newDate) {
       const formattedDate = formatDate(maxDate, 'yyyy-MM-dd')
-      toast.error('Date cannot be after ' + formattedDate)
+
+      const message =
+        formattedDate === formatDate(new Date(), 'yyyy-MM-dd')
+          ? 'Date cannot be in the future'
+          : `Date cannot be after ${formattedDate}`
+
+      toast.error(message)
       setTextValue(value)
+
       return
     }
 

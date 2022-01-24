@@ -64,5 +64,8 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
       moduleIds: 'named',
     },
     bail: true,
+    experiments: {
+      topLevelAwait: true,
+    },
     ...rest,
   })
