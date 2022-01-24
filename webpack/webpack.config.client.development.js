@@ -7,7 +7,7 @@ const root = path.resolve(__dirname, '..')
 
 module.exports = webpackConfig({
   entry: {
-    app: path.resolve(root, 'src/clientEntry.tsx'),
+    app: path.resolve(root, 'src/entry.tsx'),
     hot: 'webpack/hot/dev-server.js',
     client: 'webpack-dev-server/client/index.js?hot=true&live-reload=true',
   },

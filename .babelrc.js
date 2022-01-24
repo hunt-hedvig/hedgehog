@@ -30,6 +30,7 @@ module.exports = (api) => {
           '@babel/transform-modules-commonjs',
           '@babel/plugin-transform-runtime',
           'babel-plugin-dynamic-import-node',
+          '@babel/plugin-syntax-top-level-await',
         ],
       },
     },

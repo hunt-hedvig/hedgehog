@@ -3,7 +3,7 @@ import { createBrowserHistory, createMemoryHistory } from 'history'
 import React from 'react'
 import { CookiesProvider } from 'react-cookie'
 import ReactDOM from 'react-dom'
-import { apolloClient } from 'server/apollo-client'
+import { client } from 'apollo/client'
 import { app } from 'portals'
 import { Global } from '@emotion/react'
 import { DarkmodeProvider } from '@hedvig-ui/hooks/use-darkmode'
@@ -11,6 +11,7 @@ import { GlobalStyles } from '@hedvig-ui/themes'
 import { useAuthenticate } from 'auth/use-authenticate'
 import { Route, Router, Switch } from 'react-router'
 import { PortalsPage } from 'auth/PortalsPage'
+import { Spinner, StandaloneMessage } from '@hedvig-ui'
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
@@ -24,7 +25,11 @@ const App: React.FC = () => {
   }
 
   if (!portal) {
-    return null
+    return (
+      <StandaloneMessage paddingTop="45vh" opacity={1}>
+        <Spinner />
+      </StandaloneMessage>
+    )
   }
 
   const Portal = app(portal)
@@ -35,7 +40,7 @@ const App: React.FC = () => {
 ReactDOM.render(
   <CookiesProvider>
     <Router history={history}>
-      <ApolloProvider client={apolloClient}>
+      <ApolloProvider client={client}>
         <DarkmodeProvider>
           <Global styles={GlobalStyles} />
           <Switch>

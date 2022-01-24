@@ -2,7 +2,11 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import chroma from 'chroma-js'
-import { useSetPortalMutation } from 'types/generated/graphql'
+import {
+  AuthenticationDocument,
+  AuthenticationQuery,
+  useSetPortalMutation,
+} from 'types/generated/graphql'
 import { useHistory } from 'react-router'
 import { FadeIn } from '@hedvig-ui'
 import gql from 'graphql-tag'
@@ -131,10 +135,30 @@ export const AvailablePortals: React.FC<{
                   } portal?`,
                 )
               ) {
-                setPortal({ variables: { portal } }).then(() => {
-                  history.push('/')
-                  window.location.reload()
-                })
+                setPortal({
+                  variables: { portal },
+                  update: (cache) => {
+                    const cachedData = cache.readQuery({
+                      query: AuthenticationDocument,
+                    })
+
+                    const cachedMe = (cachedData as AuthenticationQuery)?.me
+
+                    if (!cachedMe) {
+                      return
+                    }
+
+                    cache.writeQuery({
+                      query: AuthenticationDocument,
+                      data: {
+                        me: {
+                          ...cachedMe,
+                          portal,
+                        },
+                      },
+                    })
+                  },
+                }).then(() => history.push('/'))
               }
             }}
           >
