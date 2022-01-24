@@ -1,4 +1,4 @@
-import { FetchResult } from '@apollo/client'
+import { ApolloCache, FetchResult, NormalizedCacheObject } from '@apollo/client'
 import React, { createContext, useContext } from 'react'
 import {
   GetMeDocument,
@@ -67,7 +67,10 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
           { __typename: 'UserSetting', key, value: payload },
         ],
       },
-      update: (cache, { data: response }) => {
+      update: (
+        cache: ApolloCache<NormalizedCacheObject>,
+        { data: response },
+      ) => {
         if (!response?.upsertUserSettings) {
           return
         }

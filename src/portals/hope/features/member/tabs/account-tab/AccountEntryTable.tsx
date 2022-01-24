@@ -15,8 +15,9 @@ import React from 'react'
 import { InfoCircleFill } from 'react-bootstrap-icons'
 import { AccountEntry } from 'types/generated/graphql'
 import { PopoverItem } from './MonthlyEntriesTable'
+import { Theme } from '@emotion/react'
 
-const getAccountEntryColor = (theme, entry: AccountEntry) => {
+const getAccountEntryColor = (theme: Theme, entry: AccountEntry) => {
   if (entry.failedAt) {
     return theme.lightDanger
   }

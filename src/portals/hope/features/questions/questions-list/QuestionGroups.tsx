@@ -17,7 +17,7 @@ const ListContainer = styled.div`
 
 export const QuestionGroups: React.FC<{
   selectedFilters: number[]
-  questionGroups: QuestionGroup[]
+  questionGroups: readonly QuestionGroup[]
 }> = ({ selectedFilters, questionGroups }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
 

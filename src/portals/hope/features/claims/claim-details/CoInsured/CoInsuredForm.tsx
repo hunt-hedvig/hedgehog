@@ -75,7 +75,10 @@ export const useDeleteCoInsured = ({
         optimisticResponse: {
           deleteCoInsured: true,
         },
-        update: (cache, { data: response }) => {
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
           if (!response) {
             return
           }

@@ -15,6 +15,7 @@ import { Member } from 'types/generated/graphql'
 import { MemberDetails } from './MemberDetails'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
+import { PickedLocale } from 'portals/hope/features/config/constants'
 
 const MemberPageWrapper = styled('div')({
   display: 'flex',
@@ -105,7 +106,10 @@ export const MemberTabs: React.FC<
           {member && (
             <>
               <Flag>
-                {getMemberFlag(member?.contractMarketInfo, member.pickedLocale)}
+                {getMemberFlag(
+                  member?.contractMarketInfo,
+                  member.pickedLocale as PickedLocale,
+                )}
               </Flag>
               <Badge
                 memberId={member.memberId}

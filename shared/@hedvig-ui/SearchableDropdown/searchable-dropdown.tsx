@@ -58,7 +58,7 @@ export interface SelectOption {
 interface CreatableSelectProps {
   formatCreateLabel: (value: React.ReactNode) => React.ReactNode
   onCreateOption: (option: string) => void
-  value: SelectOption | null
+  value?: SelectOption | null
   placeholder?: string
   isLoading?: boolean
   isClearable?: boolean

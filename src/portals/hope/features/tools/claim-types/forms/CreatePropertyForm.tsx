@@ -7,6 +7,7 @@ import {
   useCreateClaimPropertyMutation,
   useGetClaimPropertiesQuery,
 } from 'types/generated/graphql'
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 
 export const CreatePropertyForm: React.FC = () => {
   const { data } = useGetClaimPropertiesQuery()
@@ -23,7 +24,10 @@ export const CreatePropertyForm: React.FC = () => {
     toast.promise(
       createProperty({
         variables: { name: newPropertyName },
-        update: (cache, { data: response }) => {
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
           const newClaimProperty = response?.createClaimProperty
 
           if (!newClaimProperty) {

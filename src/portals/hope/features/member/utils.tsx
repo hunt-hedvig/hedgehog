@@ -4,6 +4,7 @@ import {
   Market,
   MarketFlags,
   MemberGroupColors,
+  PickedLocale,
   PickedLocaleMarket,
 } from 'portals/hope/features/config/constants'
 import { FilterState } from 'portals/hope/features/questions/FilterSelect'
@@ -66,7 +67,7 @@ export const getMemberFlag = (
   contractMarketInfo?: {
     market: ContractMarketInfo['market']
   } | null,
-  pickedLocale: string | null = null,
+  pickedLocale: PickedLocale | null = null,
 ): string => {
   if (contractMarketInfo?.market) {
     return MarketFlags[contractMarketInfo.market as Market]

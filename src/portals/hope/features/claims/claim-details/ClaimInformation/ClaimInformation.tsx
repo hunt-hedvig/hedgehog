@@ -134,7 +134,10 @@ export const ClaimInformation: React.FC<{
     toast.promise(
       restrictResourceAccess({
         variables: { resourceId: claimId },
-        update: (cache, { data: response }) => {
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
           cache.writeQuery({
             query: ClaimPageDocument,
             data: {

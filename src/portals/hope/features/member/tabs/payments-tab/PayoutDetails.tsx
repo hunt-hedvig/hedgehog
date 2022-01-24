@@ -1,3 +1,4 @@
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { Form, FormDropdown, FormInput, SubmitButton } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
@@ -40,7 +41,10 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   const preferredCurrency =
     contractMarketInfo?.member?.contractMarketInfo?.preferredCurrency ?? 'SEK'
 
-  const updateCache = (cache, response: PayoutMemberMutation) => {
+  const updateCache = (
+    cache: ApolloCache<NormalizedCacheObject>,
+    response: PayoutMemberMutation,
+  ) => {
     const transaction = response?.payoutMember
     const cachedData = cache.readQuery({
       query: GetMemberTransactionsDocument,
@@ -79,7 +83,10 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
               note: data.note,
             },
           },
-          update: (cache, { data: response }) => {
+          update: (
+            cache: ApolloCache<NormalizedCacheObject>,
+            { data: response },
+          ) => {
             if (!response) {
               return
             }

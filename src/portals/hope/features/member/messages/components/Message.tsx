@@ -130,7 +130,7 @@ export const Message = React.forwardRef<
     content: MessageContentType
     isQuestionMessage?: boolean
     timestamp: Date | null
-    from?: string
+    from?: string | null
   }
 >(({ left, content, isQuestionMessage, timestamp, from }, ref) => {
   const [isVisible, setVisible] = React.useState(false)

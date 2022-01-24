@@ -20,6 +20,7 @@ import {
   useGetClaimTypeRelationsQuery,
   useGetClaimTypesQuery,
 } from 'types/generated/graphql'
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 
 const ClaimTypeDropdown: React.FC<{
   value: string
@@ -137,7 +138,10 @@ export const CreateRelationForm: React.FC = () => {
             propertyOptionId: claimPropertyOptionId,
           },
         },
-        update: (cache, { data: response }) => {
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
           if (!response) {
             return
           }

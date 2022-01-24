@@ -13,6 +13,7 @@ import {
 } from '@hedvig-ui'
 import {
   Market,
+  PickedLocale,
   PickedLocaleMarket,
 } from 'portals/hope/features/config/constants'
 import { useGetPerson } from 'portals/hope/features/member/tabs/debt-tab/hooks/use-get-person'
@@ -44,7 +45,7 @@ export const DebtTab: React.FC<{
   // FIXME: We should not make market specific features like this, should use "have debt" or "don't have debt" instead
   const memberMarket: string | undefined =
     contractMarketInfo?.market ??
-    (pickedLocale && PickedLocaleMarket[pickedLocale])
+    (pickedLocale && PickedLocaleMarket[pickedLocale as PickedLocale])
 
   if (memberMarket !== Market.Sweden) {
     return (

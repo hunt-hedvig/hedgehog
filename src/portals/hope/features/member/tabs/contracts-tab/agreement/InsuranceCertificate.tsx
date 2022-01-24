@@ -17,7 +17,7 @@ export const InsuranceCertificate: React.FC<{
 
   const { confirm } = useConfirmDialog()
 
-  const onUpload = (files, agreementId) => {
+  const onUpload = (files: (string | Blob)[], agreementId: string) => {
     const certificateForm = new FormData()
     certificateForm.set('file', files[0])
 
