@@ -135,14 +135,17 @@ const SwitcherAutomationPage: Page = () => {
                   if (!email.switcherType) {
                     return true
                   }
-                  if (!SwitcherTypeMarket[email.switcherType]) {
+                  if (
+                    !SwitcherTypeMarket[email.switcherType as SwitcherTypes]
+                  ) {
                     return true
                   }
                   const status = getSwitcherEmailStatus(email)
                   return (
                     (!selectedMarket ||
-                      SwitcherTypeMarket[email.switcherType] ===
-                        selectedMarket) &&
+                      SwitcherTypeMarket[
+                        email.switcherType as SwitcherTypes
+                      ] === selectedMarket) &&
                     (!selectedStatus || selectedStatus === status)
                   )
                 })

@@ -10,7 +10,9 @@ import {
 export const EmployeeFilter: React.FC<{
   scopes: string[]
   filter: { email: string; role: string; label: string }
-  setFilter: React.Dispatch<React.SetStateAction<{ email; role; label }>>
+  setFilter: React.Dispatch<
+    React.SetStateAction<{ email: string; role: string; label: string }>
+  >
 }> = ({ scopes, filter, setFilter }) => {
   const { data } = useAvailableEmployeeRolesQuery()
   const roles = data?.availableEmployeeRoles ?? []
@@ -43,11 +45,13 @@ export const EmployeeFilter: React.FC<{
           value={
             filter.role ? { value: filter.role, label: filter.label } : null
           }
-          onChange={(val) =>
+          onChange={({ value, label }: { value: string; label: string }) =>
+            value &&
+            label &&
             setFilter({
               ...filter,
-              role: val?.value,
-              label: val?.label,
+              role: value,
+              label: label,
             })
           }
           isClearable

@@ -6,7 +6,7 @@
     "lib": ["dom", "es6"],
     "sourceMap": true,
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
 

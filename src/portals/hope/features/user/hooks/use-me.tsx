@@ -17,7 +17,7 @@ interface PartialMe {
 
 interface MeContextProps {
   me: PartialMe
-  settings: object
+  settings: Record<string, any>
   updateSetting: (key: UserSettingKey, value: object) => Promise<FetchResult>
 }
 
@@ -37,7 +37,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
   }
 
   const settings =
-    me.settings.reduce((acc, setting) => {
+    me.settings.reduce<Record<string, any>>((acc, setting) => {
       try {
         acc[setting.key] = JSON.parse(setting.value)
       } catch (e) {

@@ -57,7 +57,7 @@ const ConversationsPage: Page<
   const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
   const { settings, updateSetting } = useMe()
 
-  const getQuestionsFilter = (field) =>
+  const getQuestionsFilter = (field: string | number) =>
     (settings[field] && settings[field].questions) || []
 
   const [filters, setFilters] = useState<number[]>([
@@ -77,7 +77,7 @@ const ConversationsPage: Page<
           ...settings[settingField],
           questions: settings[settingField].questions.includes(filter)
             ? settings[settingField].questions.filter(
-                (prevFilter) => filter !== prevFilter,
+                (prevFilter: number) => filter !== prevFilter,
               )
             : [...settings[settingField].questions, filter],
         })

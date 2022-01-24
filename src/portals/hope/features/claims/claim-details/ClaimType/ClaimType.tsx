@@ -2,6 +2,7 @@ import {
   CardContent,
   CardTitle,
   Flex,
+  SearchableDropdown,
   SearchableDropdownWithRef,
 } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
@@ -59,7 +60,7 @@ export const ClaimType: React.FC<{
                   : null
               }
             />
-            <SearchableDropdownWithRef
+            <SearchableDropdown
               value={
                 selectedClaimType && {
                   value: selectedClaimType,

@@ -1,9 +1,9 @@
-import { SearchableDropdown } from '@hedvig-ui'
 import { usePartnerCampaignOwners } from 'portals/hope/features/tools/campaign-codes/hooks/use-get-partner-campaign-owners'
 import { mapCampaignOwners } from 'portals/hope/features/tools/campaign-codes/utils'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useCreateCampaignPartnerMutation } from 'types/generated/graphql'
+import { CreatableDropdown } from '@hedvig-ui/SearchableDropdown/searchable-dropdown'
 
 export const PartnerDropdown: React.FC<{
   onChange: (data) => void
@@ -11,19 +11,12 @@ export const PartnerDropdown: React.FC<{
   loading?: boolean
   creatable?: boolean
   placeholder?: string
-}> = ({
-  onChange,
-  value,
-  loading = false,
-  creatable = true,
-  placeholder = 'Which partner?',
-}) => {
+}> = ({ onChange, value, loading = false, placeholder = 'Which partner?' }) => {
   const [partnerCampaignOwners, { refetch }] = usePartnerCampaignOwners()
   const [createCampaignPartner] = useCreateCampaignPartnerMutation()
 
   return (
-    <SearchableDropdown
-      creatable={creatable}
+    <CreatableDropdown
       formatCreateLabel={(optionValue) => (
         <span>
           Create partner "<b>{optionValue}</b>"?
@@ -61,7 +54,6 @@ export const PartnerDropdown: React.FC<{
       placeholder={placeholder}
       isLoading={loading}
       isClearable={true}
-      isCreatable={true}
       onChange={onChange}
       noOptionsMessage={() => 'No partners found'}
       options={mapCampaignOwners(partnerCampaignOwners)}
