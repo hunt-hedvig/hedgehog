@@ -20,7 +20,7 @@ import {
   GetMessageHistoryDocument,
   useSendMessageMutation,
 } from 'types/generated/graphql'
-import { useDraftMessage } from 'portals/hope/features/member/messages/hooks/use-draft-message'
+import { useDraft } from '@hedvig-ui/hooks/use-draft'
 
 const MessagesPanelContainer = styled.div`
   display: flex;
@@ -100,7 +100,7 @@ const ChatTip = styled.div`
 `
 
 export const ChatPanel = ({ memberId }) => {
-  const [draft, setDraft] = useDraftMessage({ memberId })
+  const [draft, setDraft] = useDraft({ id: memberId, section: 'chat' })
   const [error, setError] = useState(false)
   const [currentMessage, setCurrentMessage] = useState(draft)
   const [forceSendMessage, setForceSendMessage] = useState(false)

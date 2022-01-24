@@ -2,10 +2,10 @@ import styled from '@emotion/styled'
 import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
-import { useDraftMessage } from 'portals/hope/features/member/messages/hooks/use-draft-message'
 import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { useDraft } from '@hedvig-ui/hooks/use-draft'
 import {
   GetQuestionsGroupsDocument,
   useMarkQuestionAsResolvedMutation,
@@ -49,7 +49,7 @@ export const ConversationChat: React.FC<{
   onBlur: () => void
   onResolve: () => void
 }> = ({ memberId, onFocus, onBlur, onResolve }) => {
-  const [draft, setDraft] = useDraftMessage({ memberId })
+  const [draft, setDraft] = useDraft({ id: memberId, section: 'conversation' })
   const [message, setMessage] = useState(draft)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()

@@ -26,7 +26,7 @@ import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import formatDate from 'date-fns/format'
-import { useDraftNote } from './hooks/use-draft-notes'
+import { useDraft } from '@hedvig-ui/hooks/use-draft'
 
 const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {
@@ -83,7 +83,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [submitting, setSubmitting] = useState(false)
   const [textFieldFocused, setTextFieldFocused] = useState(false)
 
-  const [draft, setDraft] = useDraftNote({ claimId })
+  const [draft, setDraft] = useDraft({ id: claimId, section: 'notes' })
 
   const { me } = useMe()
 
