@@ -19,12 +19,15 @@ import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import {
+  EditMemberInfoInput,
+  EditMemberInformationQuery,
   GetMemberInfoDocument,
-  Member,
   useEditMemberInfoMutation,
+  useEditMemberInformationQuery,
   useSetFraudulentStatusMutation,
 } from 'types/generated/graphql'
 import { FraudulentStatusEdit } from 'portals/hope/features/member/tabs/member-tab/FraudulentStatus'
+import gql from 'graphql-tag'
 
 const ButtonWrapper = styled.div`
   width: 100%;
@@ -33,56 +36,91 @@ const ButtonWrapper = styled.div`
   justify-content: flex-end;
 `
 
-const memberFieldFormatters = {
-  signedOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
-  createdOn: (date) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
+const memberFieldFormatters: Record<
+  'signedOn' | 'createdOn',
+  (date: string) => string | undefined | 0
+> = {
+  signedOn: (date: string) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
+  createdOn: (date: string) => dateTimeFormatter(date, 'yyyy-MM-dd HH:mm:ss'),
 }
 
 const capitalize = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 }
 
-const getFieldName = (field) =>
+const getFieldName = (field: string) =>
   capitalize(
     field
-      .match(/([A-Z]?[^A-Z]*)/g)
-      .slice(0, -1)
-      .join(' '),
+      ?.match(/([A-Z]?[^A-Z]*)/g)
+      ?.slice(0, -1)
+      ?.join(' ') ?? '',
   )
 
-const getFieldValue = (value) => {
+const getFieldValue = (value: string | string[]): string => {
   if (!value) {
     return ''
   }
+
+  if (value && typeof value === 'object' && value.constructor === Object) {
+    return 'N/A'
+  }
+
   if (Array.isArray(value)) {
     return value.join(', ')
   }
-  if (value && typeof value === 'object' && value.constructor === Object) {
-    return Object.keys(value).map((key) => `${key}: ${value[key]}, `)
-  }
+
   return value.toString()
 }
 
+gql`
+  query EditMemberInformation($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      email
+      phoneNumber
+      firstName
+      lastName
+      birthDate
+      personalNumber
+      status
+      signedOn
+      createdOn
+      pickedLocale
+      fraudulentStatus
+      fraudulentStatusDescription
+    }
+  }
+`
+
 export const MemberTab: React.FC<{
-  member: Member
-}> = ({ member }) => {
+  memberId: string
+}> = ({ memberId }) => {
+  const { data } = useEditMemberInformationQuery({ variables: { memberId } })
+
+  const member = data?.member
+
   const [modalOpen, setModalOpen] = useState(false)
-  const [editMemberInfoRequest, setEditMemberInfoRequest] = useState({
-    memberId: member.memberId,
-  })
-  const [editingFraud, setEditFraud] = useState(false)
-  const [fraudStatus, setFraudStatus] = useState(null)
-  const [fraudDescription, setFraudDescription] = useState(null)
+  const [editMemberInfoRequest, setEditMemberInfoRequest] =
+    useState<EditMemberInfoInput>({
+      memberId,
+    })
+  const [editingFraud, setEditFraud] = useState<boolean>(false)
+  const [fraudStatus, setFraudStatus] = useState<string | null>(null)
+  const [fraudDescription, setFraudDescription] = useState<string | null>(null)
   const [editMemberInfo] = useEditMemberInfoMutation()
   const [setFraudulentStatus] = useSetFraudulentStatusMutation()
 
   const form = useForm()
 
+  if (!member) {
+    return null
+  }
+
   const handleOpen = () => setModalOpen(true)
 
   const handleClose = () => setModalOpen(false)
 
-  const isDisabled = (field) => {
+  const isDisabled = (field: string) => {
     switch (field.toLowerCase()) {
       case 'memberid':
       case 'personalnumber':
@@ -96,21 +134,15 @@ export const MemberTab: React.FC<{
     }
   }
 
-  const setFieldValue = (field, value) => {
-    const editedMemberDetails = { ...editMemberInfoRequest }
-    editedMemberDetails[field] = value
-    setEditMemberInfoRequest(editedMemberDetails)
+  const setFieldValue = (field: string, value: string) => {
+    setEditMemberInfoRequest({ ...editMemberInfoRequest, [field]: value })
   }
 
-  const handleChange = (e) => {
-    const field = e.target.name
-
+  const handleChange = (field: string, value: string) => {
     if (field === 'firstName' || field === 'lastName') {
-      const value =
-        e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
-      setFieldValue(field, value)
+      setFieldValue(field, value.charAt(0).toUpperCase() + value.slice(1))
     } else {
-      setFieldValue(field, e.target.value)
+      setFieldValue(field, value)
     }
   }
 
@@ -137,50 +169,55 @@ export const MemberTab: React.FC<{
     }).then(() => handleClose())
   }
 
-  const { fraudulentStatusDescription, fraudulentStatus, ...memberInfo } =
-    member || {}
-
-  const memberInfoWithoutSsn = {
-    ...memberInfo,
-    personalNumber: memberInfo.signedOn ? memberInfo.personalNumber : null,
+  const memberInfoWithoutSsn: EditMemberInformationQuery['member'] = {
+    ...member,
+    personalNumber: member?.signedOn ? member?.personalNumber : null,
   }
-
-  delete memberInfoWithoutSsn.__typename
-  delete memberInfoWithoutSsn.contractMarketInfo
 
   return memberInfoWithoutSsn ? (
     <FadeIn>
       <Table>
         <TableBody>
           {Object.keys(memberInfoWithoutSsn).map((field, id) => {
-            const formatter = memberFieldFormatters[field]
+            const isDate = field === ('createdOn' || 'signedOn')
+
             return (
               <TableRow key={id} border>
                 <TableColumn>{getFieldName(field)}</TableColumn>
                 <TableColumn>
-                  {formatter
-                    ? formatter(memberInfoWithoutSsn[field])
-                    : getFieldValue(memberInfoWithoutSsn[field])}
+                  {isDate
+                    ? memberFieldFormatters[field](memberInfoWithoutSsn[field])
+                    : getFieldValue(
+                        memberInfoWithoutSsn[
+                          field as keyof EditMemberInformationQuery['member']
+                        ],
+                      )}
                 </TableColumn>
               </TableRow>
             )
           })}
           <FraudulentStatusEdit
             getFraudStatusInfo={() => ({
-              status: fraudStatus || fraudulentStatus,
-              description: fraudDescription || fraudulentStatusDescription,
+              status: fraudStatus || member.fraudulentStatus || '',
+              description:
+                fraudDescription || member.fraudulentStatusDescription || '',
             })}
             setState={(val, fs, desc) => {
               setEditFraud(val)
-              setFraudStatus(fs)
-              setFraudDescription(desc)
+              if (fs) {
+                setFraudStatus(fs)
+              }
+
+              if (desc) {
+                setFraudDescription(desc)
+              }
             }}
             getState={() => editingFraud}
-            action={(newFraudulentStatus, newFraudulentStatusDescription) => {
+            onEdit={(newFraudulentStatus, newFraudulentStatusDescription) => {
               toast.promise(
                 setFraudulentStatus({
                   variables: {
-                    memberId: memberInfo.memberId,
+                    memberId,
                     request: {
                       fraudulentStatus: newFraudulentStatus,
                       fraudulentStatusDescription:
@@ -215,7 +252,12 @@ export const MemberTab: React.FC<{
           style={{ overflowY: 'auto' }}
         >
           <FormProvider {...form}>
-            <Form onSubmit={handleSubmit} onChange={handleChange}>
+            <Form
+              onSubmit={handleSubmit}
+              onChange={(e) =>
+                handleChange(e.currentTarget.name, e.currentTarget.value)
+              }
+            >
               <>
                 {Object.keys(memberInfoWithoutSsn).map((field) => (
                   <React.Fragment key={field}>
@@ -224,7 +266,11 @@ export const MemberTab: React.FC<{
                       name={field}
                       key={field}
                       disabled={isDisabled(field)}
-                      defaultValue={getFieldValue(member[field])}
+                      defaultValue={getFieldValue(
+                        member[
+                          field as keyof EditMemberInformationQuery['member']
+                        ],
+                      )}
                     />
                   </React.Fragment>
                 ))}

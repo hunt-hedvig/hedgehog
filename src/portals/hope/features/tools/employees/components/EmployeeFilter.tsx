@@ -45,17 +45,16 @@ export const EmployeeFilter: React.FC<{
           value={
             filter.role ? { value: filter.role, label: filter.label } : null
           }
-          onChange={({ value, label }: { value: string; label: string }) =>
-            value &&
-            label &&
+          onChange={(option) =>
+            option?.value &&
+            option?.label &&
             setFilter({
               ...filter,
-              role: value,
-              label: label,
+              role: option.value as string,
+              label: option.label as string,
             })
           }
           isClearable
-          isSearchable={false}
           placeholder="Filter role"
         />
       </Row>

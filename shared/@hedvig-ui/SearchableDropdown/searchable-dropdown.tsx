@@ -48,12 +48,14 @@ const Wrapper = styled.div`
   }
 `
 
-interface SelectOption {
-  value: string
-  label: string
+export interface SelectOption {
+  key?: string | number
+  value: string | number
+  label: string | number
+  searchTerms?: string
 }
 
-interface SelectProps {
+interface CreatableSelectProps {
   formatCreateLabel: (value: React.ReactNode) => React.ReactNode
   onCreateOption: (option: string) => void
   value: SelectOption | null
@@ -61,11 +63,11 @@ interface SelectProps {
   isLoading?: boolean
   isClearable?: boolean
   onChange: (option: SelectOption | null) => void
-  noOptionsMessage: () => string
+  noOptionsMessage?: () => string
   options: SelectOption[]
 }
 
-export const CreatableDropdown: React.FC<SelectProps> = (props) => {
+export const CreatableDropdown: React.FC<CreatableSelectProps> = (props) => {
   return (
     <Wrapper>
       <CreatableSelect
@@ -77,7 +79,9 @@ export const CreatableDropdown: React.FC<SelectProps> = (props) => {
   )
 }
 
-export const SearchableDropdown: React.FC = (props) => {
+export const SearchableDropdown: React.FC<
+  Omit<CreatableSelectProps, 'formatCreateLabel' | 'onCreateOption'>
+> = (props) => {
   return (
     <Wrapper>
       <Select

@@ -71,9 +71,9 @@ export const MemberTabs: React.FC<
 
   const memberId = match.params.memberId
 
-  const panes = memberPagePanes(memberId, member)
+  const panes = memberPagePanes(memberId)
 
-  const navigateToTab = (tabName) =>
+  const navigateToTab = (tabName: string) =>
     history.replace(`/members/${memberId}/${tabName}`)
 
   const { pushToMemberHistory } = useMemberHistory()

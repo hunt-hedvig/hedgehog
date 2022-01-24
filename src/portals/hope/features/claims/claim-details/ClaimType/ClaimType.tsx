@@ -1,10 +1,4 @@
-import {
-  CardContent,
-  CardTitle,
-  Flex,
-  SearchableDropdown,
-  SearchableDropdownWithRef,
-} from '@hedvig-ui'
+import { CardContent, CardTitle, Flex, SearchableDropdown } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { ClaimPropertyForm } from 'portals/hope/features/claims/claim-details/ClaimType/components/ClaimPropertyForm'
 import React from 'react'
@@ -62,15 +56,19 @@ export const ClaimType: React.FC<{
             />
             <SearchableDropdown
               value={
-                selectedClaimType && {
-                  value: selectedClaimType,
-                  label: convertEnumToTitle(selectedClaimType),
-                  searchTerms: selectedClaimType,
-                }
+                selectedClaimType
+                  ? {
+                      value: selectedClaimType,
+                      label: convertEnumToTitle(selectedClaimType),
+                      searchTerms: selectedClaimType,
+                    }
+                  : null
               }
               placeholder="What type of claim is this?"
               isClearable={false}
-              onChange={(selection) => handleSetClaimType(selection.value)}
+              onChange={(selection) =>
+                selection && handleSetClaimType(selection.value as string)
+              }
               noOptionsMessage={() => 'No types found'}
               options={claimTypes.map((claimType) => ({
                 value: claimType,

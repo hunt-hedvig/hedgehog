@@ -102,7 +102,7 @@ export const VisibleNoDiscountForm: React.FC = () => {
       <SearchableDropdown
         value={
           formData.codeType
-            ? codeTypeOptions.find((c) => c.value === formData.codeType)
+            ? codeTypeOptions.find((c) => c.value === formData.codeType) ?? null
             : null
         }
         placeholder="Code Type"
@@ -111,7 +111,7 @@ export const VisibleNoDiscountForm: React.FC = () => {
         onChange={(data) =>
           setFormData({
             ...formData,
-            codeType: data ? data.value : null,
+            codeType: data ? (data.value as string) : null,
           })
         }
         noOptionsMessage={() => 'Option not found'}
