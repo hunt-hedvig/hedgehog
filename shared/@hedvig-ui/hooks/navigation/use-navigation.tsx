@@ -31,7 +31,9 @@ const NavigationContext = createContext<NavigationContextProps>({
   removeRegistryItem: () => false,
 })
 
-export const NavigationProvider = ({ children }) => {
+export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [cursor, setCursor] = useState<string | null>(null)
   const cursorRef = useRef<string | null>(null)
   const registry = useRef<Record<string, UseNavigationRegisterOptions>>({})
@@ -45,7 +47,11 @@ export const NavigationProvider = ({ children }) => {
     return true
   }
 
-  const handleKeydown = (e) => {
+  const handleKeydown = (e: KeyboardEvent) => {
+    if (!(e.target instanceof Node)) {
+      return
+    }
+
     if (e.target?.nodeName === 'INPUT' || e.target?.nodeName === 'TEXTAREA') {
       return
     }
@@ -303,7 +309,8 @@ export const useNavigation = () => {
         style: {
           border: `2px solid ${chroma(lightTheme.accent).brighten(1).hex()}`,
         },
-        ref: (ref) => {
+        // eslint-disable-next-line
+        ref: (ref: any) => {
           assignRef(name, ref)
 
           ref?.scrollIntoView({

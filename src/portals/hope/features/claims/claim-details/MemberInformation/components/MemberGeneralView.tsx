@@ -185,7 +185,9 @@ export const MemberGeneralView: React.FC<{
                   }}
                   status={
                     member?.fraudulentStatus
-                      ? fraudulentStatusMap[member.fraudulentStatus]
+                      ? fraudulentStatusMap[
+                          member.fraudulentStatus as FraudulentStatus
+                        ]
                       : 'neutral'
                   }
                 >

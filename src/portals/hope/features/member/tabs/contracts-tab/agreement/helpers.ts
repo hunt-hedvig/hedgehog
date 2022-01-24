@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { differenceInDays, parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
+import { GenericAgreement } from 'types/generated/graphql'
 
 export const DialogWarning = styled.span`
   margin-top: 1rem;
@@ -13,7 +14,10 @@ export const DateSpan = styled.span`
   white-space: nowrap;
 `
 
-export const checkGapBetweenAgreements = (previousAgreement, nextAgreement) =>
+export const checkGapBetweenAgreements = (
+  previousAgreement: GenericAgreement,
+  nextAgreement: GenericAgreement,
+) =>
   differenceInDays(
     new Date(nextAgreement.fromDate),
     new Date(previousAgreement.toDate),

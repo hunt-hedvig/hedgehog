@@ -7,9 +7,16 @@ const Image = styled.img`
   height: 300px;
 `
 
-const ImageMessage = ({ content }) => {
+const ImageMessage: React.FC<{
+  content: {
+    URL?: string
+    imageUri?: string
+    imageURL?: string
+  }
+}> = ({ content }) => {
   const { URL, imageUri, imageURL } = content
   const url = URL || imageUri || imageURL
+
   return url ? (
     <a target="_blank" href={url}>
       <Image src={url} />

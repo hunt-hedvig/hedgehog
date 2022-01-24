@@ -12,6 +12,7 @@ import { toast } from 'react-hot-toast'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { useGetMemberInfoQuery } from 'types/generated/graphql'
+import { PickedLocale } from 'portals/hope/features/config/constants'
 
 const MemberCard = styled.div`
   display: flex;
@@ -93,7 +94,10 @@ export const MemberInformation: React.FC<{
           <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
         </div>
         <div>
-          {getMemberFlag(member.contractMarketInfo, member.pickedLocale)}
+          {getMemberFlag(
+            member.contractMarketInfo,
+            member.pickedLocale as PickedLocale,
+          )}
         </div>
       </MemberCard>
       <Spacing top="small" />

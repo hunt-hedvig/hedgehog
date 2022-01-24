@@ -11,7 +11,7 @@ import { AccountTab } from './account-tab'
 import { CampaignsTab } from './campaigns-tab'
 import { DebtTab } from './debt-tab'
 
-export const memberPagePanes = (memberId, member) => [
+export const memberPagePanes = (memberId: string) => [
   {
     tabTitle: 'Claims',
     tabName: 'claims',
@@ -40,9 +40,7 @@ export const memberPagePanes = (memberId, member) => [
       key: Keys.Three,
     },
     path: `members/${memberId}/contracts`,
-    component: () => (
-      <ContractTab memberId={memberId} locale={member.pickedLocale} />
-    ),
+    component: () => <ContractTab memberId={memberId} />,
   },
   {
     tabTitle: 'Quotes',
@@ -82,7 +80,7 @@ export const memberPagePanes = (memberId, member) => [
       key: Keys.Seven,
     },
     path: `members/${memberId}/member`,
-    component: () => <MemberTab member={member} />,
+    component: () => <MemberTab memberId={memberId} />,
   },
   {
     tabTitle: 'Debt',

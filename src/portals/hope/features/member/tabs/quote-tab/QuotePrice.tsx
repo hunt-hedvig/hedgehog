@@ -45,7 +45,7 @@ export const QuotePrice = ({ quote }: Props) => {
   const [overrideQuotePrice] = useOverrideQuotePriceMutation()
   const { confirm } = useConfirmDialog()
 
-  const onPriceChange = (e) => setNewPrice(e.target.value)
+  const onPriceChange = (value: number) => setNewPrice(value)
   const restorePrice = () => setNewPrice(quote.price || 0)
 
   const onCancel = () => {
@@ -87,13 +87,12 @@ export const QuotePrice = ({ quote }: Props) => {
     )
   }
 
-  const onSubmitNewPrice = async (e) => {
-    e.preventDefault()
+  const onSubmitNewPrice = () => {
     const confirmMessage = `Are you sure you want to change the price from ${
       quote.price
     } ${quote.currency ?? ''} to ${newPrice} ${quote.currency ?? ''}?`
 
-    await confirm(confirmMessage)
+    confirm(confirmMessage)
       .then(async () => updateQuotePrice())
       .catch(() => restorePrice())
 
@@ -103,14 +102,27 @@ export const QuotePrice = ({ quote }: Props) => {
   return (
     <PriceWrapper>
       {editPrice ? (
-        <form onSubmit={onSubmitNewPrice}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            onSubmitNewPrice()
+          }}
+        >
           <AlignCenter>
             <PriceInput>
               <Input
                 autoFocus
                 type="number"
                 value={newPrice}
-                onChange={onPriceChange}
+                onChange={(e) => {
+                  const number = parseFloat(e.target.value)
+
+                  if (isNaN(number)) {
+                    return
+                  }
+
+                  onPriceChange(number)
+                }}
               />
             </PriceInput>
             <Button variant="tertiary" type="submit">

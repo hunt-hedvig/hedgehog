@@ -8,6 +8,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { QuestionInfo } from './QuestionInfo'
 import { QuestionGroup } from 'types/generated/graphql'
+import { PickedLocale } from 'portals/hope/features/config/constants'
 
 const QuestionGroupInfoWrapper = styled.div<{
   memberId: string
@@ -37,7 +38,10 @@ export const QuestionGroupInfo = ({ group }: { group: QuestionGroup }) => {
       <MemberInfoWrapper>
         {group.firstName} {group.lastName}{' '}
         {group.market &&
-          getMemberFlag({ market: group.market }, group.pickedLocale)}{' '}
+          getMemberFlag(
+            { market: group.market },
+            group.pickedLocale as PickedLocale,
+          )}{' '}
         <Link to={`/members/${group.memberId}`}>{group.memberId}</Link>
       </MemberInfoWrapper>
 

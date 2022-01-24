@@ -64,8 +64,12 @@ export const CommandLineProvider: React.FC = ({ children }) => {
     setShowCommandLine(false)
   })
 
-  const onMouseDown = (event) => {
-    if (commandLine.current && commandLine.current.contains(event.target)) {
+  const onMouseDown = (event: MouseEvent) => {
+    if (
+      commandLine.current &&
+      event.target instanceof Node &&
+      commandLine.current.contains(event.target)
+    ) {
       return
     }
     setShowCommandLine(false)

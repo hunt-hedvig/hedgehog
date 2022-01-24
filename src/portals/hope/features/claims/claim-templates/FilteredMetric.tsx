@@ -61,7 +61,7 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
   const [{ totalClaims }, listClaims] = useListClaims()
   const { confirm } = useConfirmDialog()
 
-  const clickHandler = (e) => {
+  const clickHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.currentTarget !== e.target) {
       return
     }

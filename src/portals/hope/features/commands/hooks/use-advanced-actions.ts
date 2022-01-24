@@ -4,28 +4,20 @@ import { useMemberSearch } from 'portals/hope/features/members-search/hooks/use-
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { useEffect } from 'react'
 import { toast } from 'react-hot-toast'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import {
   User,
+  UsersQuery,
   useSharePathMutation,
   useUsersQuery,
 } from 'types/generated/graphql'
+import { ArrayElement } from '@hedvig-ui/utils/array-element'
 
-const handleShare = (
-  user: Omit<User, 'notifications' | 'signature'>,
-  sharePath,
+const getFilteredUsers = (
+  searchValue: string,
+  users: UsersQuery['users'],
+  myEmail: string,
 ) => {
-  toast.promise(
-    sharePath({ variables: { path: location.pathname, userId: user.id } }),
-    {
-      loading: 'Sharing page',
-      success: `Page shared with ${user.fullName.split(' ')[0]}`,
-      error: 'Could not share page',
-    },
-  )
-}
-
-const getFilteredUsers = (searchValue, users, myEmail) => {
   const name = searchValue.split('@')[searchValue.split('@').length - 1]
 
   return (
@@ -37,7 +29,11 @@ const getFilteredUsers = (searchValue, users, myEmail) => {
   )
 }
 
-const getOnlineUsers = (searchValue, users, myEmail) => {
+const getOnlineUsers = (
+  searchValue: string,
+  users: UsersQuery['users'],
+  myEmail: string,
+) => {
   const now = new Date()
 
   const filteredUsers = getFilteredUsers(searchValue, users, myEmail)
@@ -60,6 +56,7 @@ export const useAdvancedActions = (
   onHide: () => void,
 ) => {
   const history = useHistory()
+  const location = useLocation()
 
   const {
     me: { email: myEmail },
@@ -85,17 +82,28 @@ export const useAdvancedActions = (
   ]
 
   const setUsersAsOptions = (
-    users: User[],
-    action: (value: User) => void,
-    field: string,
+    users: UsersQuery['users'],
+    action: (value: ArrayElement<UsersQuery['users']>) => void,
+    field: keyof ArrayElement<UsersQuery['users']>,
   ) => {
     setResult(
-      users.map((value) => ({
-        label: value[field],
+      users.map((user) => ({
+        label: user[field],
         onResolve: () => {
-          action(value)
+          action(user)
         },
       })),
+    )
+  }
+
+  const handleShare = (user: ArrayElement<UsersQuery['users']>) => {
+    toast.promise(
+      sharePath({ variables: { path: location.pathname, userId: user.id } }),
+      {
+        loading: 'Sharing page',
+        success: `Page shared with ${user.fullName.split(' ')[0]}`,
+        error: 'Could not share page',
+      },
     )
   }
 
@@ -131,9 +139,9 @@ export const useAdvancedActions = (
 
     if (searchValue.includes('/share')) {
       setUsersAsOptions(
-        getFilteredUsers(searchValue, data?.users, myEmail),
+        getFilteredUsers(searchValue, data?.users ?? [], myEmail),
         (user) => {
-          handleShare(user, sharePath)
+          handleShare(user)
           onHide()
         },
         'fullName',
@@ -141,7 +149,7 @@ export const useAdvancedActions = (
     }
     if (searchValue.includes('/goto')) {
       setUsersAsOptions(
-        getOnlineUsers(searchValue, data?.users, myEmail),
+        getOnlineUsers(searchValue, data?.users ?? [], myEmail),
         (user) => {
           handleToUser(user)
           onHide()

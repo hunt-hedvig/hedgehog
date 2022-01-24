@@ -54,30 +54,27 @@ export const getDate = (value: string) => {
   return result.dates().get(0)
 }
 
-const InlineDatePicker = ({
-  value,
-  setValue,
-  setView,
-  maxDate,
-  showTimePicker,
-}) => {
+const InlineDatePicker: React.FC<{
+  setValue: (dateValue: Date) => void
+  onClose: () => void
+  maxDate?: Date
+  showTimePicker?: boolean
+}> = ({ setValue, onClose, maxDate, showTimePicker }) => {
   const pickerRef = React.useRef<HTMLDivElement>(null)
 
-  useClickOutside(pickerRef, () => setView(false))
+  useClickOutside(pickerRef, () => onClose())
 
   return (
     <DatePickerWrapper ref={pickerRef}>
       <FadeIn duration={250}>
         <DatePicker
           inline
-          date={value || null}
-          onChange={(date) => {
+          onChange={(date: Date) => {
             setValue(date)
-            setView(false)
+            onClose()
           }}
           showTimeSelect={showTimePicker}
           maxDate={maxDate}
-          fullWidth={true}
         />
       </FadeIn>
     </DatePickerWrapper>
@@ -171,9 +168,8 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
       {error && <ErrorMessage>{errorMessage || 'Invalid Date'}</ErrorMessage>}
       {showOldDatepicker && (
         <InlineDatePicker
-          value={value}
-          setValue={(dateValue) => formatAndSetDate(dateValue)}
-          setView={setShowOldDatepicker}
+          setValue={(dateValue: Date) => formatAndSetDate(dateValue)}
+          onClose={() => setShowOldDatepicker(false)}
           maxDate={maxDate}
           showTimePicker={showTimePicker}
         />

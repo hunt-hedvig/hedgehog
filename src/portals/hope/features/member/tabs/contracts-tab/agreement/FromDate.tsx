@@ -23,8 +23,11 @@ import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-
 const initialFromDate = (agreement: GenericAgreement): string =>
   agreement.fromDate || getTodayFormatDate()
 
-const getPreviousAgreement = (agreements, selectedAgreement) =>
-  agreements.reduce((previousAgreement, current) => {
+const getPreviousAgreement = (
+  agreements: GenericAgreement[],
+  selectedAgreement: GenericAgreement,
+) =>
+  agreements.reduce<GenericAgreement | null>((previousAgreement, current) => {
     if (
       current.toDate < selectedAgreement.fromDate &&
       (!previousAgreement || current.toDate > previousAgreement.toDate)

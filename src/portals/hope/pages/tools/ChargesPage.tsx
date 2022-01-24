@@ -1,4 +1,3 @@
-import { Mutation } from '@apollo/client/react/components'
 import styled from '@emotion/styled'
 import {
   FadeIn,
@@ -22,12 +21,13 @@ import { Link } from 'react-router-dom'
 import {
   MonetaryAmountV2,
   PaymentScheduleQueryDocument,
+  useApproveMemberChargeMutation,
   usePaymentScheduleQueryQuery,
 } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
 
-const approveMemberCharge = gql`
-  mutation approveMemberCharge($approvals: [MemberChargeApproval!]!) {
+gql`
+  mutation ApproveMemberCharge($approvals: [MemberChargeApproval!]!) {
     approveMemberCharge(approvals: $approvals)
   }
 `
@@ -126,6 +126,8 @@ const Row: React.FC<{
 )
 
 const ChargesPage: Page = () => {
+  const [approveMemberCharge, { loading: memberChargeLoading }] =
+    useApproveMemberChargeMutation()
   const [confirming, setConfirming] = useState(false)
   const { data, loading, error } = usePaymentScheduleQueryQuery({
     variables: {
@@ -186,52 +188,46 @@ const ChargesPage: Page = () => {
         </TableBody>
       </Table>
       <ButtonWrapper>
-        <Mutation
-          mutation={approveMemberCharge}
-          refetchQueries={() => [
-            {
-              query: PaymentScheduleQueryDocument,
-              variables: { month: format(new Date(), 'yyyy-MM') },
-            },
-          ]}
-        >
-          {(mutation, mutationProps) => {
-            return (
-              <Button
-                disabled={mutationProps.loading}
-                onClick={
-                  confirming
-                    ? () => {
-                        if (mutationProps.loading) {
-                          return
-                        }
+        <Button
+          disabled={memberChargeLoading}
+          onClick={
+            confirming
+              ? () => {
+                  if (memberChargeLoading) {
+                    return
+                  }
 
-                        toast.promise(
-                          mutation({
-                            variables: {
-                              approvals:
-                                data.paymentSchedule?.map((payment) => ({
-                                  memberId: payment?.member?.memberId ?? '',
-                                  amount:
-                                    payment?.member?.account?.currentBalance,
-                                })) ?? [],
-                            },
-                          }),
-                          {
-                            loading: 'Approving',
-                            success: 'Charges sent for approval',
-                            error: 'An error occurred',
+                  toast.promise(
+                    approveMemberCharge({
+                      variables: {
+                        approvals:
+                          data.paymentSchedule?.map((payment) => ({
+                            memberId: payment?.member?.memberId ?? '',
+                            amount: payment?.member?.account?.currentBalance,
+                          })) ?? [],
+                      },
+                      refetchQueries: [
+                        {
+                          query: PaymentScheduleQueryDocument,
+                          variables: {
+                            month: format(new Date(), 'yyyy-MM'),
                           },
-                        )
-                      }
-                    : () => setConfirming(true)
+                        },
+                      ],
+                    }),
+                    {
+                      loading: 'Approving',
+                      success: 'Charges sent for approval',
+                      error: 'An error occurred',
+                    },
+                  )
                 }
-              >
-                {confirming ? "Yes, I'm sure" : 'Do it'}
-              </Button>
-            )
-          }}
-        </Mutation>
+              : () => setConfirming(true)
+          }
+        >
+          {confirming ? "Yes, I'm sure" : 'Do it'}
+        </Button>
+
         {confirming ? <ConfirmMessage>Are you sure?</ConfirmMessage> : null}
       </ButtonWrapper>
     </FadeIn>

@@ -77,12 +77,8 @@ const MemberAgeWrapper = styled.span`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-type NumberOfContracts = {
-  [key in ContractStatus]?: number
-}
-
-const countContractsByStatus = (contracts: Contract[]): NumberOfContracts =>
-  contracts.reduce((acc, { status }) => {
+const countContractsByStatus = (contracts: Contract[]) =>
+  contracts.reduce<Record<string, number>>((acc, { status }) => {
     const groupedStatus = [
       ContractStatus.Pending,
       ContractStatus.Terminated,

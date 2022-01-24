@@ -114,7 +114,7 @@ app.use(
     logLevel: 'silent',
     changeOrigin: false,
     ssl: {
-      checkServerIdentity(_host, cert) {
+      checkServerIdentity(_: unknown, cert: tls.PeerCertificate) {
         if (!process.env.API_URL) {
           logger.error('No API_URL defined, exiting')
           server.close()

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
+import { Theme } from '@emotion/react'
 
-const getThemeFromStatus = (theme, status) => {
+const getThemeFromStatus = (theme: Theme, status?: string) => {
   switch (status) {
     case 'ACTIVE':
       return theme.success

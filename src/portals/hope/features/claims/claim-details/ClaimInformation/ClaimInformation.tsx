@@ -32,6 +32,7 @@ import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/Clai
 import { ClaimEmployeeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimEmployeeDropdown'
 import { TermsAndConditionsLink } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/TermsAndConditionsLink'
 import { ClaimStatusDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimStatusDropdown'
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 
 const SelectWrapper = styled.div`
   margin-top: 1em;
@@ -134,7 +135,10 @@ export const ClaimInformation: React.FC<{
     toast.promise(
       restrictResourceAccess({
         variables: { resourceId: claimId },
-        update: (cache, { data: response }) => {
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
           cache.writeQuery({
             query: ClaimPageDocument,
             data: {

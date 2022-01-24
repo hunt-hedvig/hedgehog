@@ -21,17 +21,23 @@ import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 
-export const FilterState = {
-  ...Object.keys(MemberGroups).reduce((acc, group, index) => {
-    acc[group] = index
-    return acc
-  }, {}),
+export const FilterState: Record<string, number> = {
+  ...Object.keys(MemberGroups).reduce<Record<string, number>>(
+    (acc, group, index) => {
+      acc[group] = index
+      return acc
+    },
+    {},
+  ),
   HasOpenClaim: Object.keys(MemberGroups).length,
   NoOpenClaim: Object.keys(MemberGroups).length + 1,
-  ...Object.keys(Market).reduce((acc, market, index) => {
-    acc[market] = Object.keys(MemberGroups).length + 2 + index
-    return acc
-  }, {}),
+  ...Object.keys(Market).reduce<Record<string, number>>(
+    (acc, market, index) => {
+      acc[market] = Object.keys(MemberGroups).length + 2 + index
+      return acc
+    },
+    {},
+  ),
 }
 
 export type FilterStateType = number
@@ -212,7 +218,7 @@ export const FilterSelect: React.FC<{
               >
                 {convertEnumToTitle(market)}{' '}
                 <span style={{ marginLeft: !small ? '0.5em' : '0.3em' }}>
-                  {MarketFlags[market.toUpperCase()]}
+                  {MarketFlags[market.toUpperCase() as Market]}
                 </span>
                 <CountBadge selected={filters.includes(FilterState[market])}>
                   <div>

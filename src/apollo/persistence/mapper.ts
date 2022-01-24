@@ -1,13 +1,15 @@
-export const persistenceMapper = async (data) => {
+export const persistenceMapper = async (data: string) => {
   const parsed = JSON.parse(data)
 
-  const mapped = {}
+  // eslint-disable-next-line
+  const mapped: Record<string, any> = {}
 
   // eslint-disable-next-line
   const persistEntities: Array<any> = []
   const rootQuery = parsed['ROOT_QUERY']
 
-  mapped['ROOT_QUERY'] = Object.keys(rootQuery).reduce(
+  // eslint-disable-next-line
+  mapped['ROOT_QUERY'] = Object.keys(rootQuery).reduce<Record<string, any>>(
     (obj, key: string) => {
       if (key === '__typename') return obj
 
@@ -15,7 +17,9 @@ export const persistenceMapper = async (data) => {
         obj[key] = rootQuery[key]
 
         if (Array.isArray(rootQuery[key])) {
-          const entities = rootQuery[key].map((item) => item.__ref)
+          const entities = rootQuery[key].map(
+            (item: { __ref: unknown }) => item.__ref,
+          )
           persistEntities.push(...entities)
         } else {
           const entity = rootQuery[key].__ref
