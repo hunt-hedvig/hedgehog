@@ -126,9 +126,10 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   const memberGroup = getMemberGroupName(memberId, numberMemberGroups)
   const memberGroupColor = getMemberIdColor(memberId, numberMemberGroups)
 
-  const openClaims = member.claims.filter(
-    (claim) => claim.state === ClaimState.Open || ClaimState.Reopened,
-  )
+  const openClaims =
+    member.claims?.filter(
+      (claim) => claim.state === ClaimState.Open || ClaimState.Reopened,
+    ) ?? []
 
   return (
     <Flex direction="column" style={{ maxHeight: '70vh' }}>
