@@ -1,8 +1,11 @@
 import { addDays, addMinutes } from 'date-fns'
 import { ExtendableContext, Middleware } from 'koa'
-import fetch from 'node-fetch'
 import { config } from './config'
 import { LoggingMiddleware } from './request-enhancers'
+import { RequestInfo, RequestInit } from 'node-fetch'
+
+const fetch = (url: RequestInfo, init?: RequestInit) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(url, init))
 
 interface Tokens {
   accessToken: string
@@ -67,7 +70,7 @@ export const refreshTokenCallback: Middleware<LoggingMiddleware> = async (
     body: request.join('&'),
   })
 
-  const body = await response.json()
+  const body = (await response.json()) as Record<string, string>
 
   if (!response.ok) {
     ctx.status = response.status
@@ -78,8 +81,8 @@ export const refreshTokenCallback: Middleware<LoggingMiddleware> = async (
     return
   }
   setTokenCookies(ctx, {
-    accessToken: body.access_token,
-    refreshToken: body.refresh_token,
+    accessToken: body['access_token'],
+    refreshToken: body['refresh_token'],
   })
 
   ctx.status = 200
