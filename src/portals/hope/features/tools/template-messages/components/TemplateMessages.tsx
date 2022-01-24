@@ -12,7 +12,6 @@ import {
   useTemplateMessages,
 } from '../use-template-messages'
 import toast from 'react-hot-toast'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 
 const show = keyframes`
   from {
@@ -100,13 +99,11 @@ export const TemplateMessages: React.FC<{
     useState<TemplateMessage | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
-  const [templates, setTemplates] = useInsecurePersistentState<
-    TemplateMessage[]
-  >('messages:templates', [])
   const [isPinnedTab, setIsPinnedTab] = useState(false)
 
   const {
     select,
+    templates,
     createTemplate,
     editTemplate,
     deleteTemplate,
@@ -128,15 +125,15 @@ export const TemplateMessages: React.FC<{
   useClickOutside(templatesRef, smoothHideHandler)
 
   const selectHandler = (id: string) => {
-    const selectedTemplate = templates.filter(
-      (template) => template.id === id,
-    )[0]
-    select(selectedTemplate.message)
+    const message = templates
+      .filter((template) => template.id === id)[0]
+      .messages.filter((msg) => msg.market === currentMarket)[0].text
+
+    select(message)
   }
 
   const deleteHandler = (id: string) => {
     deleteTemplate(id)
-    setTemplates((prev) => prev.filter((template) => template.id !== id))
   }
 
   const editHandler = (id: string) => {
@@ -148,36 +145,15 @@ export const TemplateMessages: React.FC<{
 
   const pinHandler = (id: string) => {
     pinTemplate(id)
-    setTemplates((prev) =>
-      prev.map((template) => {
-        if (template.id === id) {
-          return { ...template, pinned: template.pinned ? false : true }
-        }
-
-        return template
-      }),
-    )
   }
 
   const submitHandler = (newTemplate: TemplateMessage) => {
     if (isCreating) {
       createTemplate(newTemplate)
 
-      setTemplates((prev) => [...prev, newTemplate])
-
       setIsCreating(false)
     } else if (editingTemplate) {
       editTemplate(newTemplate)
-
-      setTemplates((prev) =>
-        prev.map((template) => {
-          if (template.id === newTemplate.id) {
-            return newTemplate
-          }
-
-          return template
-        }),
-      )
 
       setEditingTemplate(null)
     }
@@ -294,7 +270,7 @@ export const TemplateMessages: React.FC<{
                   ? template.name.toLowerCase().includes(query.toLowerCase())
                   : true,
               )
-              .filter((template) => template.market === currentMarket)
+              .filter((template) => template.markets.includes(currentMarket))
               .filter((template) =>
                 isPinnedTab ? template.pinned : !template.pinned,
               )

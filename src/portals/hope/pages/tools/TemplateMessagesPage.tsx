@@ -9,7 +9,6 @@ import {
   TemplateMessage,
   useTemplateMessages,
 } from '../../features/tools/template-messages/use-template-messages'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 
 const Container = styled(FadeIn)`
   flex: 1;
@@ -27,13 +26,11 @@ const Content = styled.div`
 
 const TemplateMessagesPage = () => {
   const [isCreating, setIsCreating] = useState(false)
-  const [templates, setTemplates] = useInsecurePersistentState<
-    TemplateMessage[]
-  >('messages:templates', [])
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateMessage | null>(null)
 
   const {
+    templates,
     createTemplate,
     editTemplate,
     deleteTemplate,
@@ -47,37 +44,16 @@ const TemplateMessagesPage = () => {
     }
 
     editTemplate(newTemplate)
-
-    if (newTemplate.market !== currentMarket) {
-      setTemplates((prev) =>
-        prev.filter((template) => template.id !== newTemplate.id),
-      )
-      setSelectedTemplate(null)
-    } else {
-      setTemplates((prev) =>
-        prev.map((template) => {
-          if (template.id === newTemplate.id) {
-            return newTemplate
-          }
-          return template
-        }),
-      )
-    }
   }
 
-  const createHandler = (template: TemplateMessage) => {
-    createTemplate(template)
-
-    if (template.market === currentMarket) {
-      setTemplates((prev) => [...prev, template])
-    }
+  const createHandler = (newTemplate: TemplateMessage) => {
+    createTemplate(newTemplate)
 
     setIsCreating(false)
   }
 
   const deleteHandler = (id: string) => {
     deleteTemplate(id)
-    setTemplates((prev) => prev.filter((template) => template.id !== id))
     setSelectedTemplate(null)
   }
 
@@ -118,8 +94,8 @@ const TemplateMessagesPage = () => {
         <SearchTemplate
           selected={selectedTemplate}
           onSelect={setSelectedTemplate}
-          templates={templates?.filter(
-            (template) => template.market === currentMarket,
+          templates={templates?.filter((template) =>
+            template.markets.includes(currentMarket),
           )}
         />
         {selectedTemplate && (

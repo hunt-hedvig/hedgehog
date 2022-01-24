@@ -9,11 +9,16 @@ export enum Markets {
   Norway = 'NORWAY',
 }
 
+export interface Message {
+  market: Markets
+  text: string
+}
+
 export interface TemplateMessage {
   name: string
   id: string
-  market: Markets
-  message: string
+  markets: Markets[]
+  messages: Message[]
   messageEn: string
   withExpiry?: boolean
   expiryDate?: string | null
@@ -21,6 +26,7 @@ export interface TemplateMessage {
 }
 
 interface TemplateMessagesContextProps {
+  templates: TemplateMessage[]
   show: () => void
   createTemplate: (template: TemplateMessage) => void
   editTemplate: (template: TemplateMessage) => void
@@ -33,6 +39,7 @@ interface TemplateMessagesContextProps {
 }
 
 const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
+  templates: [],
   show: () => void 0,
   createTemplate: () => void 0,
   editTemplate: () => void 0,
@@ -96,6 +103,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   return (
     <TemplateMessagesContext.Provider
       value={{
+        templates,
         show: () => setShowTemplateMessages(true),
         createTemplate: createHandler,
         editTemplate: editHandler,

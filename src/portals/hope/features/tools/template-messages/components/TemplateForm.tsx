@@ -10,7 +10,7 @@ import {
   FormTextArea,
   FormInput,
 } from '@hedvig-ui'
-import { Markets, TemplateMessage } from '../use-template-messages'
+import { Markets, Message, TemplateMessage } from '../use-template-messages'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -44,7 +44,9 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
   onSubmit,
   onClose,
 }) => {
-  const [market, setMarket] = useState(template?.market || Markets.Sweden)
+  const [markets, setMarkets] = useState<Markets[]>(
+    template?.markets || [Markets.Sweden],
+  )
   const [withExpiry, setWithExpiry] = useState(template?.withExpiry || false)
   const [expiryDate, setExpiryDate] = useState(template?.expiryDate || null)
 
@@ -54,16 +56,27 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
     form.reset()
     setWithExpiry(template?.withExpiry || false)
     setExpiryDate(template?.expiryDate || null)
-    setMarket(template?.market || Markets.Sweden)
+    setMarkets(template?.markets || [Markets.Sweden])
   }, [template])
 
-  const submitHandler = ({ name, message, messageEn }: FieldValues) => {
-    const newTemplate = {
+  const submitHandler = (values: FieldValues) => {
+    const messages: Message[] = []
+
+    Object.values(Markets).forEach((market) => {
+      if (values[`message-${market}`]) {
+        messages.push({
+          text: values[`message-${market}`],
+          market,
+        })
+      }
+    })
+
+    const newTemplate: TemplateMessage = {
       id: template?.id || uuidv4(),
-      name,
-      message,
-      messageEn,
-      market,
+      name: values.name,
+      messages,
+      messageEn: values.messageEn,
+      markets,
       withExpiry,
       expiryDate,
     }
@@ -94,10 +107,15 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
             style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}
             name="market"
             label="Sweden 🇸🇪"
-            checked={market === Markets.Sweden}
+            checked={markets.includes(Markets.Sweden)}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setMarket(Markets.Sweden)
+                setMarkets((prev) => [...prev, Markets.Sweden])
+              } else {
+                setMarkets((prev) =>
+                  prev.filter((market) => market !== Markets.Sweden),
+                )
+                form.unregister(`message-${Markets.Sweden}`)
               }
             }}
           />
@@ -105,20 +123,30 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
             style={{ marginBottom: '0.5rem' }}
             name="market"
             label="Norway 🇳🇴"
-            checked={market === Markets.Norway}
+            checked={markets.includes(Markets.Norway)}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setMarket(Markets.Norway)
+                setMarkets((prev) => [...prev, Markets.Norway])
+              } else {
+                setMarkets((prev) =>
+                  prev.filter((market) => market !== Markets.Norway),
+                )
+                form.unregister(`message-${Markets.Norway}`)
               }
             }}
           />
           <Checkbox
             name="market"
             label="Denmark 🇩🇰"
-            checked={market === Markets.Denmark}
+            checked={markets.includes(Markets.Denmark)}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setMarket(Markets.Denmark)
+                setMarkets((prev) => [...prev, Markets.Denmark])
+              } else {
+                setMarkets((prev) =>
+                  prev.filter((market) => market !== Markets.Denmark),
+                )
+                form.unregister(`message-${Markets.Denmark}`)
               }
             }}
           />
@@ -136,27 +164,66 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
             },
           }}
         />
-        <MessageField
-          label={`Message (
-              ${
-                template?.market === Markets.Sweden
-                  ? 'SV'
-                  : template?.market === Markets.Denmark
-                  ? 'DK'
-                  : 'NO'
-              }
-              )`}
-          name="message"
-          style={{ marginTop: '0.5rem' }}
-          defaultValue={template?.message || ''}
-          rules={{
-            required: 'Cannot save an empty message',
-            pattern: {
-              value: /[^\s]/,
-              message: 'Cannot send a message without text',
-            },
-          }}
-        />
+        {markets.includes(Markets.Sweden) && (
+          <MessageField
+            label={`Message (SE)`}
+            name={`message-${Markets.Sweden}`}
+            style={{ marginTop: '0.5rem' }}
+            defaultValue={
+              template?.messages.filter(
+                (msg) => msg.market === Markets.Sweden,
+              )[0].text || ''
+            }
+            rules={{
+              required: 'Cannot save an empty message',
+              pattern: {
+                value: /[^\s]/,
+                message: 'Cannot send a message without text',
+              },
+            }}
+          />
+        )}
+
+        {markets.includes(Markets.Denmark) && (
+          <MessageField
+            label={`Message (DK)`}
+            name={`message-${Markets.Denmark}`}
+            style={{ marginTop: '0.5rem' }}
+            defaultValue={
+              template?.messages.filter(
+                (msg) => msg.market === Markets.Denmark,
+              )[0].text || ''
+            }
+            rules={{
+              required: 'Cannot save an empty message',
+              pattern: {
+                value: /[^\s]/,
+                message: 'Cannot send a message without text',
+              },
+            }}
+          />
+        )}
+
+        {markets.includes(Markets.Norway) && (
+          <MessageField
+            label={`Message (NO)`}
+            name={`message-${Markets.Norway}`}
+            style={{ marginTop: '0.5rem' }}
+            defaultValue={
+              template?.messages.filter(
+                (msg) => msg.market === Markets.Norway,
+              )[0].text || ''
+            }
+            rules={{
+              required: 'Cannot save an empty message',
+              pattern: {
+                value: /[^\s]/,
+                message: 'Cannot send a message without text',
+              },
+            }}
+          />
+        )}
+
         <Field>
           <Checkbox
             label="Set Expiry Date"
