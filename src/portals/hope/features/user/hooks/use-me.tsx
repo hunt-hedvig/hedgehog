@@ -17,6 +17,7 @@ interface PartialMe {
 
 interface MeContextProps {
   me: PartialMe
+  // eslint-disable-next-line
   settings: Record<string, any>
   updateSetting: (key: UserSettingKey, value: object) => Promise<FetchResult>
 }
@@ -37,6 +38,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
   }
 
   const settings =
+    // eslint-disable-next-line
     me.settings.reduce<Record<string, any>>((acc, setting) => {
       try {
         acc[setting.key] = JSON.parse(setting.value)
