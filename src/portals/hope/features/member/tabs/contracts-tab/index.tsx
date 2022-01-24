@@ -4,21 +4,37 @@ import {
   MainHeadline,
   StandaloneMessage,
 } from '@hedvig-ui'
+import gql from 'graphql-tag'
 import { Contract } from 'portals/hope/features/member/tabs/contracts-tab/contract'
 import { useContracts } from 'portals/hope/features/member/tabs/contracts-tab/hooks/use-contracts'
 import { TrialComponent } from 'portals/hope/features/member/tabs/contracts-tab/trial'
 import { RefreshButton } from 'portals/hope/features/member/tabs/shared/refresh-button'
 import React from 'react'
 import { ArrowRepeat } from 'react-bootstrap-icons'
-import { Trial, useGetTrialsQuery } from 'types/generated/graphql'
+import {
+  Trial,
+  useGetTrialsQuery,
+  useMemberPickedLocaleQuery,
+} from 'types/generated/graphql'
+
+gql`
+  query MemberPickedLocale($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      pickedLocale
+    }
+  }
+`
 
 export const ContractTab: React.FC<{
   memberId: string
-  locale: string
-}> = ({ memberId, locale }) => {
+}> = ({ memberId }) => {
+  const { data } = useMemberPickedLocaleQuery({ variables: { memberId } })
   const [contracts, { loading, refetch }] = useContracts(memberId)
   const trialsResult = useGetTrialsQuery({ variables: { memberId } })
   const trials = (trialsResult.data?.member?.trials ?? []) as Trial[]
+
+  const locale = data?.member?.pickedLocale
 
   if (loading) {
     return <LoadingMessage paddingTop="10vh" />
@@ -28,6 +44,14 @@ export const ContractTab: React.FC<{
     return (
       <StandaloneMessage paddingTop="10vh">
         No contract for member
+      </StandaloneMessage>
+    )
+  }
+
+  if (!locale) {
+    return (
+      <StandaloneMessage paddingTop="10vh">
+        No locale set for member
       </StandaloneMessage>
     )
   }

@@ -103,15 +103,16 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                       partnerId
                         ? mapCampaignOwners(campaignOwnerOptions).find(
                             (c) => c.value === partnerId,
-                          )
+                          ) ?? null
                         : null
                     }
                     placeholder="No owner"
                     isLoading={loadingSetOwner}
                     onChange={(data) =>
+                      data?.value &&
                       toast.promise(
                         setOwner({
-                          variables: { id, partnerId: data?.value },
+                          variables: { id, partnerId: data.value as string },
                           optimisticResponse: {
                             setCampaignOwner: {
                               __typename: 'VoucherCampaign',
@@ -140,19 +141,21 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
                   <SearchableDropdown
                     value={
                       codeType
-                        ? codeTypeOptions.find((c) => c.value === codeType)
+                        ? codeTypeOptions.find((c) => c.value === codeType) ??
+                          null
                         : null
                     }
                     placeholder="No channel"
                     isLoading={loadingSetCodeType}
                     onChange={(data) =>
+                      data?.value &&
                       toast.promise(
                         setCodeType({
-                          variables: { id, codeType: data?.value },
+                          variables: { id, codeType: data.value as string },
                           optimisticResponse: {
                             setCampaignCodeType: {
                               __typename: 'VoucherCampaign',
-                              codeType: data?.value,
+                              codeType: data.value as string,
                               ...campaign,
                             },
                           },

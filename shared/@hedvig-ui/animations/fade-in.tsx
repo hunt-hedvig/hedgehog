@@ -1,7 +1,7 @@
 import { keyframes } from '@emotion/react'
 import styled, { StyledComponent } from '@emotion/styled'
 
-const fadeInKeyframes = (maxOpacity, translateTo) =>
+const fadeInKeyframes = (maxOpacity: number, translateTo: string) =>
   keyframes({
     from: { opacity: 0, transform: translateTo },
     to: { opacity: maxOpacity, transform: 'translateY(0)' },
@@ -10,11 +10,16 @@ const fadeInKeyframes = (maxOpacity, translateTo) =>
 interface FadeInProps {
   delay?: string
   duration?: number
+  translateTo?: string
 }
 
+// FIXME: Type-wise this is really messy
+
 export const withFadeIn: <T extends object>(
-  component,
-  ...args
+  // eslint-disable-next-line
+  component: any,
+  // eslint-disable-next-line
+  ...args: any
 ) => // eslint-disable-next-line
 StyledComponent<FadeInProps, T, any> = (component, ...args) =>
   styled(

@@ -51,11 +51,11 @@ export const ClaimsTab: React.FC<{
         {showForm ? (
           <FormWrapper>
             <Dropdown placeholder="Source">
-              {Object.keys(ClaimSource).map((source) => (
+              {Object.values(ClaimSource).map((source) => (
                 <DropdownOption
                   key={source}
-                  selected={claimSource === ClaimSource[source] || false}
-                  onClick={() => setClaimSource(ClaimSource[source])}
+                  selected={claimSource === source || false}
+                  onClick={() => setClaimSource(source)}
                 >
                   {convertEnumToTitle(source)}
                 </DropdownOption>

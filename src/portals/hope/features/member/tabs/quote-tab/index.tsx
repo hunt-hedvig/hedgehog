@@ -3,7 +3,10 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import {
   ContractMarketTypes,
   InsuranceType,
+  Market,
+  PickedLocale,
   PickedLocaleMarket,
+  QuoteProductType,
   QuoteProductTypeContractMap,
 } from 'portals/hope/features/config/constants'
 import { useQuotes } from 'portals/hope/features/member/tabs/quote-tab/hooks/use-get-quotes'
@@ -35,7 +38,8 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   }
 
   const memberMarket: string | undefined =
-    contractMarket?.market ?? (pickedLocale && PickedLocaleMarket[pickedLocale])
+    contractMarket?.market ??
+    (pickedLocale && PickedLocaleMarket[pickedLocale as PickedLocale])
 
   const getCategorisedQuotesBasedOnInsuranceType = (
     insuranceType: string,
@@ -43,7 +47,9 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
     quotes.filter(
       (quote) =>
         !!quote.productType &&
-        QuoteProductTypeContractMap[quote.productType].includes(insuranceType),
+        QuoteProductTypeContractMap[
+          quote.productType as QuoteProductType
+        ].includes(insuranceType as InsuranceType),
     )
 
   return (
@@ -52,12 +58,14 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
         style={{ marginBottom: '2em' }}
         list={
           memberMarket
-            ? ContractMarketTypes[memberMarket].map((type, index) => ({
-                active: type === activeTab,
-                title: convertEnumToTitle(type),
-                action: () => setActiveTab(type),
-                key: index,
-              }))
+            ? ContractMarketTypes[memberMarket as Market].map(
+                (type, index) => ({
+                  active: type === activeTab,
+                  title: convertEnumToTitle(type),
+                  action: () => setActiveTab(type),
+                  key: index,
+                }),
+              )
             : []
         }
       />

@@ -104,7 +104,7 @@ export const ConversationChat: React.FC<{
     setMessage(draft)
   }, [memberId])
 
-  const handleOnKeyDown = (e) => {
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (isMetaKey(e) && isPressing(e, Keys.Enter) && !loading && message) {
       toast.promise(
         sendMessage({
@@ -184,7 +184,7 @@ export const ConversationChat: React.FC<{
               setDraft(e.currentTarget.value)
               setMessage(e.currentTarget.value)
             }}
-            onKeyDown={handleOnKeyDown}
+            onKeyDown={(e) => handleOnKeyDown(e)}
           />
           <TextAreaFooter onClick={show}>
             <div className="divider" />

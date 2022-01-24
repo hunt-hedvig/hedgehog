@@ -11,6 +11,7 @@ import {
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React from 'react'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
+import { PickedLocale } from 'portals/hope/features/config/constants'
 
 const MemberPlaceholder = styled.div`
   border-radius: 8px;
@@ -150,7 +151,10 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
             {memberGroup}
           </MemberGroupTag>
           <Tag style={{ marginLeft: '1em' }}>
-            {getMemberFlag(member?.contractMarketInfo, member.pickedLocale)}
+            {getMemberFlag(
+              member?.contractMarketInfo,
+              member.pickedLocale as PickedLocale,
+            )}
           </Tag>
           {!openClaims.length && (
             <Tag style={{ marginLeft: '1em' }}>No open claims</Tag>

@@ -41,19 +41,6 @@ import { PayoutDetails } from './PayoutDetails'
 
 const numberRegex = /^\d+$/
 
-const transactionDateSorter = (a, b) => {
-  const aDate = new Date(a.timestamp)
-  const bDate = new Date(b.timestamp)
-
-  if (aDate > bDate) {
-    return 1
-  }
-  if (bDate > aDate) {
-    return -1
-  }
-  return 0
-}
-
 const CHARGE_MEMBER_MUTATION = gql`
   mutation ChargeMember(
     $id: ID!
@@ -142,7 +129,11 @@ const MemberTransactionsTable: React.FC<{ memberId: string }> = ({
 
   const transactions = (data?.member?.transactions ?? [])
     .slice()
-    .sort(transactionDateSorter)
+    .sort((a, b) =>
+      a && b
+        ? new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        : 0,
+    )
     .reverse()
 
   return (

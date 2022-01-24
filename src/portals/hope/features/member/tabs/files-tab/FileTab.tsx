@@ -13,13 +13,6 @@ import { dateTimeFormatter } from '@hedvig-ui/utils/date'
 import React from 'react'
 import { FileUpload, useFileUploadsQueryQuery } from 'types/generated/graphql'
 
-const sortFileDate = (a, b) => {
-  const aDate = new Date(a.timestamp)
-  const bDate = new Date(b.timestamp)
-
-  return bDate.getTime() - aDate.getTime()
-}
-
 const Image = styled.img`
   width: 300px;
 `
@@ -34,17 +27,22 @@ const MemberFileTable: React.FC<{
       <TableHeaderColumn>File Type</TableHeaderColumn>
     </TableHeader>
     <TableBody>
-      {[...memberFiles].sort(sortFileDate).map((memberFile) => (
-        <TableRow border key={memberFile.fileUploadUrl}>
-          <TableColumn>
-            <Image src={memberFile.fileUploadUrl} />
-          </TableColumn>
-          <TableColumn>
-            {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
-          </TableColumn>
-          <TableColumn>{memberFile.mimeType}</TableColumn>
-        </TableRow>
-      ))}
+      {[...memberFiles]
+        .sort(
+          (a, b) =>
+            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+        )
+        .map((memberFile) => (
+          <TableRow border key={memberFile.fileUploadUrl}>
+            <TableColumn>
+              <Image src={memberFile.fileUploadUrl} />
+            </TableColumn>
+            <TableColumn>
+              {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
+            </TableColumn>
+            <TableColumn>{memberFile.mimeType}</TableColumn>
+          </TableRow>
+        ))}
     </TableBody>
   </Table>
 )

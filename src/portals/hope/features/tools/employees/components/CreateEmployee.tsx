@@ -37,7 +37,10 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
 }) => {
   const [createPressed, setCreatePressed] = useState(false)
   const [email, setEmail] = useState('')
-  const [selectedRole, setSelectedRole] = useState({ role: '', label: '' })
+  const [selectedRole, setSelectedRole] = useState<{
+    role: string
+    label: string
+  }>({ role: '', label: '' })
   const { data } = useAvailableEmployeeRolesQuery()
   const roles = data?.availableEmployeeRoles ?? []
   const options =
@@ -88,10 +91,14 @@ export const CreateEmployee: React.FC<{ scopes: readonly string[] }> = ({
               ? { value: selectedRole.role, label: selectedRole.label }
               : null
           }
-          onChange={(val) => {
-            setSelectedRole({ role: val?.value, label: val?.label })
-          }}
-          isSearchable={false}
+          onChange={(option) =>
+            option?.value &&
+            option?.label &&
+            setSelectedRole({
+              role: option.value as string,
+              label: option.label as string,
+            })
+          }
           placeholder="Select role"
         />
       </Row>

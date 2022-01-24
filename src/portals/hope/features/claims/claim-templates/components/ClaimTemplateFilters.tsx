@@ -6,7 +6,6 @@ import {
   FilterGroupState,
   FilterWrapper,
   LabelWithPopover,
-  stateColors,
 } from 'portals/hope/features/claims/claims-list/filters/ClaimListFilters'
 import { Market, MarketFlags } from 'portals/hope/features/config/constants'
 import { MemberGroupColorBadge } from 'portals/hope/features/questions/MemberGroupColorBadge'
@@ -33,39 +32,66 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
 
-  const filterExists = (state: string | number, field: string) => {
+  const filterExists = (
+    state: string | number,
+    field: keyof ClaimsFiltersType,
+  ) => {
     if (!filters) {
       return false
     }
 
-    if (!filters[field]) {
+    const value = filters[field]
+
+    if (!value) {
       return false
     }
 
-    return filters[field].some((filterState) => filterState === state)
+    if (typeof value === 'string' || typeof value === 'number') {
+      return true
+    }
+
+    return value.some((filterState) => filterState === state)
   }
 
-  const setFilterHandler = (state: string | number, field: string) => {
+  const setFilterHandler = (
+    state: string | number,
+    field: keyof ClaimsFiltersType,
+  ) => {
     if (page && page !== '1') {
       history.push(`/claims/list/1`)
     }
 
     if (filterExists(state, field)) {
+      const value = filters[field]
+
+      if (!Array.isArray(value)) {
+        return
+      }
+
       setFilters({
         ...filters,
-        [field]: filters[field].filter((st) => st !== state),
+        [field]: (value as unknown[]).filter((st) => st !== state),
       })
 
       return
     }
 
+    const value = filters[field]
+
+    if (!Array.isArray(value)) {
+      return
+    }
+
     setFilters({
       ...filters,
-      [field]: filters[field] ? [...filters[field], state] : [state],
+      [field]: filters[field] ? [...value, state] : [state],
     })
   }
 
-  const changeNumberMemberGroupsHandler = (state: number, field: string) => {
+  const changeNumberMemberGroupsHandler = (
+    state: number,
+    field: keyof ClaimsFiltersType,
+  ) => {
     if (state === 2 && filters.filterSelectedMemberGroups?.includes(2)) {
       setFilters({
         ...filters,
@@ -86,20 +112,18 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
     <FilterWrapper {...props}>
       <FilterElement>
         <Label>States</Label>
-        {Object.keys(ClaimState).map((key) => (
-          <Flex key={key} direction="row" align="center">
+        {Object.values(ClaimState).map((state) => (
+          <Flex key={state} direction="row" align="center">
             <Checkbox
-              label={key}
-              checked={filterExists(ClaimState[key], 'filterClaimStates')}
-              onChange={() =>
-                setFilterHandler(ClaimState[key], 'filterClaimStates')
-              }
+              label={state}
+              checked={filterExists(state, 'filterClaimStates')}
+              onChange={() => setFilterHandler(state, 'filterClaimStates')}
             />
             <MemberGroupColorBadge
               style={{
                 height: '0.7em',
                 width: '0.7em',
-                backgroundColor: stateColors[key],
+                backgroundColor: state,
               }}
             />
           </Flex>
@@ -111,16 +135,18 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
           label="Complexities"
           popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
         />
-        {Object.keys(ClaimComplexity).map((key) => (
-          <Flex key={key} direction="row" align="center">
+        {Object.values(ClaimComplexity).map((complexity) => (
+          <Flex key={complexity} direction="row" align="center">
             <Checkbox
-              label={key}
-              checked={filterExists(ClaimComplexity[key], 'filterComplexities')}
+              label={complexity}
+              checked={filterExists(complexity, 'filterComplexities')}
               onChange={() =>
-                setFilterHandler(ClaimComplexity[key], 'filterComplexities')
+                setFilterHandler(complexity, 'filterComplexities')
               }
             />
-            <span style={{ marginLeft: '0.5rem' }}>{complexityIcons[key]}</span>
+            <span style={{ marginLeft: '0.5rem' }}>
+              {complexityIcons[complexity]}
+            </span>
           </Flex>
         ))}
       </FilterElement>
@@ -163,16 +189,14 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
 
       <FilterElement>
         <Label>Markets</Label>
-        {Object.keys(Market).map((key) => (
-          <Flex key={key} direction="row" align="center">
+        {Object.values(Market).map((market) => (
+          <Flex key={market} direction="row" align="center">
             <Checkbox
-              label={key}
-              checked={filterExists(Market[key], 'filterMarkets')}
-              onChange={() => setFilterHandler(Market[key], 'filterMarkets')}
+              label={market}
+              checked={filterExists(market, 'filterMarkets')}
+              onChange={() => setFilterHandler(market, 'filterMarkets')}
             />
-            <span style={{ marginLeft: '0.5rem' }}>
-              {MarketFlags[key.toUpperCase()]}
-            </span>
+            <span style={{ marginLeft: '0.5rem' }}>{MarketFlags[market]}</span>
           </Flex>
         ))}
       </FilterElement>

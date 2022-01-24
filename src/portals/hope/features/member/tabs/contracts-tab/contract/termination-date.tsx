@@ -9,7 +9,7 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
-import React from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   Contract,
@@ -56,13 +56,14 @@ const initialTerminationDate = (contract: Contract): string =>
 export const TerminationDate: React.FC<{
   contract: Contract
 }> = ({ contract }) => {
-  const [datePickerEnabled, setDatePickerEnabled] = React.useState(false)
-  const [terminationDate, setTerminationDate] = React.useState<string | null>(
+  const [datePickerEnabled, setDatePickerEnabled] = useState(false)
+  const [terminationDate, setTerminationDate] = useState<string | null>(
     initialTerminationDate(contract),
   )
   const [terminationReason, setTerminationReason] =
-    React.useState<TerminationReason | null>(null)
-  const [comment, setComment] = React.useState('')
+    useState<TerminationReason | null>(null)
+  const [comment, setComment] = useState('')
+
   const reset = () => {
     setTerminationDate(initialTerminationDate(contract))
     setTerminationReason(null)
@@ -203,12 +204,14 @@ export const TerminationDate: React.FC<{
           <div style={{ width: '100%' }}>
             <SearchableDropdown
               placeholder="Reason"
-              onChange={(data) => setTerminationReason(data.value)}
+              onChange={(data) =>
+                data && setTerminationReason(data.value as TerminationReason)
+              }
               noOptionsMessage={() => 'Reason not found'}
-              options={Object.keys(TerminationReason).map((key) => ({
-                label: convertEnumToTitle(TerminationReason[key]),
-                value: TerminationReason[key],
-                text: convertEnumToTitle(TerminationReason[key]),
+              options={Object.values(TerminationReason).map((reason) => ({
+                label: convertEnumToTitle(reason),
+                value: reason,
+                text: convertEnumToTitle(reason),
               }))}
             />
           </div>

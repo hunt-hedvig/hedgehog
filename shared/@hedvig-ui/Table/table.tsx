@@ -4,7 +4,7 @@ import React from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
 import { useNavigation } from '../hooks/navigation/use-navigation'
 
-const range = (start, end) =>
+const range = (start: number, end: number) =>
   start >= 0 && end >= start
     ? Array.from({ length: end - start }, (_v, k) => k + start)
     : []

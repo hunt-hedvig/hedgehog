@@ -12,7 +12,7 @@ import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-
 
 export const QuoteContractCreation: React.FC<{
   quote: Quote
-  memberId
+  memberId: string
   onSubmitted?: () => void
   onWipChange?: (isWip: boolean) => void
 }> = ({

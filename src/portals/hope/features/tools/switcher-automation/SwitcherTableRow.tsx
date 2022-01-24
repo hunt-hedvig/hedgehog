@@ -319,18 +319,16 @@ export const SwitcherEmailRow: React.FC<
                 <OverlayItem>
                   <Label>Termination Reason</Label>
                   <Dropdown placeholder="Reasons" style={{ width: 300 }}>
-                    {Object.keys(TerminationReason).map((reason) => (
-                      <DropdownOption
-                        selected={
-                          terminationReason === TerminationReason[reason]
-                        }
-                        onClick={() =>
-                          setTerminationReason(TerminationReason[reason])
-                        }
-                      >
-                        {convertEnumToTitle(TerminationReason[reason])}
-                      </DropdownOption>
-                    ))}
+                    {Object.values(TerminationReason).map((reason) => {
+                      return (
+                        <DropdownOption
+                          selected={terminationReason === reason}
+                          onClick={() => setTerminationReason(reason)}
+                        >
+                          {convertEnumToTitle(reason)}
+                        </DropdownOption>
+                      )
+                    })}
                   </Dropdown>
                 </OverlayItem>
                 <OverlayItem>

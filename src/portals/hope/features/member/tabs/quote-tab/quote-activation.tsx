@@ -17,7 +17,7 @@ const getInitialActiveFrom = (contract: Contract): string | null =>
 
 export const QuoteActivation: React.FC<{
   quote: Quote
-  memberId
+  memberId: string
   onSubmitted?: () => void
   onWipChange?: (isWip: boolean) => void
 }> = ({

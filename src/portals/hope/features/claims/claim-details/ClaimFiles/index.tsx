@@ -102,7 +102,7 @@ export const ClaimFileTable: React.FC<{
                     key={claimId}
                     claimId={claimId}
                     claimFile={claimFile}
-                    refetch={refetch}
+                    refetch={() => refetch()}
                   />
                 ))
             )}

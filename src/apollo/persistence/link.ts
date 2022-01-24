@@ -14,7 +14,7 @@ const createPersistLink = () =>
     }
 
     const cacheKey = JSON.stringify(operation.query)
-    let sanitizedQuery = sanitizedQueryCache[cacheKey]
+    let sanitizedQuery = sanitizedQueryCache.get(cacheKey)
     if (!sanitizedQuery) {
       checkDocument(operation.query)
 
@@ -23,7 +23,7 @@ const createPersistLink = () =>
         operation.query,
       )
 
-      sanitizedQueryCache[cacheKey] = sanitizedQuery
+      sanitizedQueryCache.set(cacheKey, sanitizedQuery)
     }
 
     operation.query = sanitizedQuery

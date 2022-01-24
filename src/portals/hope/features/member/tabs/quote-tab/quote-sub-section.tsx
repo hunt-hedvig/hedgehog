@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { Button, Card, CardsWrapper, MainHeadline } from '@hedvig-ui'
 import {
   InsuranceType,
+  TypeOfContract,
   TypeOfContractType,
 } from 'portals/hope/features/config/constants'
 import { useContracts } from 'portals/hope/features/member/tabs/contracts-tab/hooks/use-contracts'
@@ -30,8 +31,8 @@ export const QuotesSubSection: React.FC<{
   const hasActiveContracts =
     contracts.filter(
       (contract) =>
-        TypeOfContractType[contract.typeOfContract] === insuranceType &&
-        !contract.terminationDate,
+        TypeOfContractType[contract.typeOfContract as TypeOfContract] ===
+          insuranceType && !contract.terminationDate,
     ).length > 0
 
   return (

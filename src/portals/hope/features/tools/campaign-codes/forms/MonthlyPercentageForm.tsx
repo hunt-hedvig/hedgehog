@@ -151,7 +151,7 @@ export const MonthlyPercentageForm: React.FC = () => {
       <SearchableDropdown
         value={
           formData.codeType
-            ? codeTypeOptions.find((c) => c.value === formData.codeType)
+            ? codeTypeOptions.find((c) => c.value === formData.codeType) ?? null
             : null
         }
         placeholder="Code Type"
@@ -160,7 +160,7 @@ export const MonthlyPercentageForm: React.FC = () => {
         onChange={(data) =>
           setFormData({
             ...formData,
-            codeType: data ? data.value : null,
+            codeType: data ? (data.value as string) : null,
           })
         }
         noOptionsMessage={() => 'Option not found'}

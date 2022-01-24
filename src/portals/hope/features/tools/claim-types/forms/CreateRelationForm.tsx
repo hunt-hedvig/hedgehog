@@ -20,6 +20,7 @@ import {
   useGetClaimTypeRelationsQuery,
   useGetClaimTypesQuery,
 } from 'types/generated/graphql'
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 
 const ClaimTypeDropdown: React.FC<{
   value: string
@@ -67,10 +68,12 @@ const ClaimPropertyDropdown: React.FC<{
     <div style={{ width: '100%' }}>
       <SearchableDropdown
         value={
-          value ? properties.find((option) => option.value === value) : null
+          value
+            ? properties.find((option) => option.value === value) ?? null
+            : null
         }
         placeholder="Select property"
-        onChange={({ value: newValue }) => onChange(newValue)}
+        onChange={(option) => option?.value && onChange(option.value as string)}
         noOptionsMessage={() => 'No properties found'}
         options={properties}
       />
@@ -84,11 +87,8 @@ const ClaimPropertyOptionDropdown: React.FC<{
   filter: (property: ClaimPropertyOption) => boolean
 }> = ({ value, onChange, filter }) => {
   const { data } = useGetClaimPropertyOptionsQuery()
-  const claimPropertyOptions = data?.claimPropertyOptions
-
-  if (!claimPropertyOptions) {
-    return null
-  }
+  const claimPropertyOptions = (data?.claimPropertyOptions ??
+    []) as ClaimPropertyOption[]
 
   const options = claimPropertyOptions.filter(filter).map((option) => ({
     value: option.id,
@@ -98,9 +98,13 @@ const ClaimPropertyOptionDropdown: React.FC<{
   return (
     <div style={{ width: '100%' }}>
       <SearchableDropdown
-        value={value ? options.find((option) => option.value === value) : null}
+        value={
+          value
+            ? options.find((option) => option.value === value) ?? null
+            : null
+        }
         placeholder="Select option"
-        onChange={({ value: newValue }) => onChange(newValue)}
+        onChange={(option) => option?.value && onChange(option.value as string)}
         noOptionsMessage={() => 'No options found'}
         options={options}
       />
@@ -134,7 +138,10 @@ export const CreateRelationForm: React.FC = () => {
             propertyOptionId: claimPropertyOptionId,
           },
         },
-        update: (cache, { data: response }) => {
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
           if (!response) {
             return
           }

@@ -2,7 +2,10 @@ import styled from '@emotion/styled'
 import { Dropdown, DropdownOption } from '@hedvig-ui'
 import { DropdownProps } from '@hedvig-ui/Dropdown/dropdown'
 import React from 'react'
-import { TypeOfContractType } from 'portals/hope/features/config/constants'
+import {
+  TypeOfContract,
+  TypeOfContractType,
+} from 'portals/hope/features/config/constants'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { useClaimContracts } from './use-claim-contracts'
 
@@ -91,7 +94,9 @@ export const ClaimContractDropdown: React.FC<
           >
             <ContractItem
               title={convertEnumToTitle(
-                TypeOfContractType[contract.currentAgreement.typeOfContract],
+                TypeOfContractType[
+                  contract.currentAgreement.typeOfContract as TypeOfContract
+                ],
               )}
               address={contract?.currentAgreement?.address?.street}
               activeFrom={contract.masterInception}

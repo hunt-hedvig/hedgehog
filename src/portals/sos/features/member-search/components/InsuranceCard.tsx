@@ -2,7 +2,10 @@ import styled from '@emotion/styled'
 import React from 'react'
 import { Flex, Spacing } from '@hedvig-ui'
 import chroma from 'chroma-js'
-import { TypeOfContractType } from 'portals/hope/features/config/constants'
+import {
+  TypeOfContract,
+  TypeOfContractType,
+} from 'portals/hope/features/config/constants'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { SimpleMemberLookupContract } from 'types/generated/graphql'
 
@@ -72,7 +75,9 @@ export const InsuranceCard: React.FC<{
     <Card>
       <Flex justify="space-between" align="center">
         <div id="insurance-name">
-          {convertEnumToTitle(TypeOfContractType[typeOfContract])}
+          {convertEnumToTitle(
+            TypeOfContractType[typeOfContract as TypeOfContract],
+          )}
         </div>
       </Flex>
       <Flex>

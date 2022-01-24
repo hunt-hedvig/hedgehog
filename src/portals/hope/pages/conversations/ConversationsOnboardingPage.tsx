@@ -30,7 +30,7 @@ const ConversationsOnboardingPage: Page = () => {
 
   const history = useHistory()
 
-  const getQuestionsFilter = (field) =>
+  const getQuestionsFilter = (field: string | number) =>
     (settings[field] && settings[field].questions) || []
 
   const [selectedFilters, setSelectedFilters] = useState<number[]>([
@@ -76,7 +76,7 @@ const ConversationsOnboardingPage: Page = () => {
           ...settings[settingField],
           questions: settings[settingField].questions.includes(filter)
             ? settings[settingField].questions.filter(
-                (prevFilter) => filter !== prevFilter,
+                (prevFilter: number) => filter !== prevFilter,
               )
             : [...settings[settingField].questions, filter],
         })
