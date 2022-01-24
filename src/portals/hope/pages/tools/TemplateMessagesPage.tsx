@@ -5,10 +5,11 @@ import { CreateTemplate } from '../../features/tools/template-messages/component
 import { SearchTemplate } from '../../features/tools/template-messages/components/SearchTemplate'
 import { TemplateView } from '../../features/tools/template-messages/components/TemplateView'
 import {
-  Markets,
   TemplateMessage,
   useTemplateMessages,
 } from '../../features/tools/template-messages/use-template-messages'
+import { Market } from '../../features/config/constants'
+import { Page } from 'portals/sos/pages/routes'
 
 const Container = styled(FadeIn)`
   flex: 1;
@@ -24,18 +25,18 @@ const Content = styled.div`
   margin-top: 2rem;
 `
 
-const TemplateMessagesPage = () => {
+const TemplateMessagesPage: Page = () => {
   const [isCreating, setIsCreating] = useState(false)
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateMessage | null>(null)
 
   const {
     templates,
-    createTemplate,
-    editTemplate,
-    deleteTemplate,
-    currentMarket,
-    changeCurrentMarket,
+    create: createTemplate,
+    edit: editTemplate,
+    delete: deleteTemplate,
+    market: currentMarket,
+    setMarket: changeCurrentMarket,
   } = useTemplateMessages()
 
   const saveChangesHandler = (newTemplate: TemplateMessage) => {
@@ -79,12 +80,12 @@ const TemplateMessagesPage = () => {
       <Flex flex="0" align="center" justify="space-between">
         <Tabs
           style={{ width: '30%' }}
-          list={Object.keys(Markets).map((tab) => ({
-            active: currentMarket === Markets[tab],
+          list={Object.keys(Market).map((tab) => ({
+            active: currentMarket === Market[tab],
             title: tab,
             action: () => {
               setSelectedTemplate(null)
-              changeCurrentMarket(Markets[tab])
+              changeCurrentMarket(Market[tab])
             },
           }))}
         />
@@ -95,7 +96,7 @@ const TemplateMessagesPage = () => {
           selected={selectedTemplate}
           onSelect={setSelectedTemplate}
           templates={templates?.filter((template) =>
-            template.markets.includes(currentMarket),
+            template.market.includes(currentMarket),
           )}
         />
         {selectedTemplate && (

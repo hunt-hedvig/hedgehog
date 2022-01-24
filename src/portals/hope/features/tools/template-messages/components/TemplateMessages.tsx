@@ -6,12 +6,9 @@ import { TemplateForm } from './TemplateForm'
 import { SearchIcon } from '../../../members-search/styles'
 import { Input, Tabs, Button, SecondLevelHeadline } from '@hedvig-ui'
 import { Pen as EditIcon, PinAngle, Trash } from 'react-bootstrap-icons'
-import {
-  Markets,
-  TemplateMessage,
-  useTemplateMessages,
-} from '../use-template-messages'
+import { TemplateMessage, useTemplateMessages } from '../use-template-messages'
 import toast from 'react-hot-toast'
+import { Market } from '../../../config/constants'
 
 const show = keyframes`
   from {
@@ -104,12 +101,12 @@ export const TemplateMessages: React.FC<{
   const {
     select,
     templates,
-    createTemplate,
-    editTemplate,
-    deleteTemplate,
-    pinTemplate,
-    currentMarket,
-    changeCurrentMarket,
+    create: createTemplate,
+    edit: editTemplate,
+    delete: deleteTemplate,
+    pin: pinTemplate,
+    market: currentMarket,
+    setMarket: changeCurrentMarket,
   } = useTemplateMessages()
 
   const templatesRef = useRef<HTMLDivElement>(null)
@@ -160,22 +157,20 @@ export const TemplateMessages: React.FC<{
   }
 
   const switchMarketHandler = () => {
-    // TODO: make normal logic of switching
-
     switch (currentMarket) {
-      case Markets.Sweden: {
-        changeCurrentMarket(Markets.Denmark)
-        toast.success(`Switched to ${Markets.Denmark}`)
+      case Market.Sweden: {
+        changeCurrentMarket(Market.Denmark)
+        toast.success(`Switched to ${Market.Denmark}`)
         break
       }
-      case Markets.Denmark: {
-        changeCurrentMarket(Markets.Norway)
-        toast.success(`Switched to ${Markets.Norway}`)
+      case Market.Denmark: {
+        changeCurrentMarket(Market.Norway)
+        toast.success(`Switched to ${Market.Norway}`)
         break
       }
-      case Markets.Norway: {
-        changeCurrentMarket(Markets.Sweden)
-        toast.success(`Switched to ${Markets.Sweden}`)
+      case Market.Norway: {
+        changeCurrentMarket(Market.Sweden)
+        toast.success(`Switched to ${Market.Sweden}`)
         break
       }
     }
@@ -270,7 +265,7 @@ export const TemplateMessages: React.FC<{
                   ? template.name.toLowerCase().includes(query.toLowerCase())
                   : true,
               )
-              .filter((template) => template.markets.includes(currentMarket))
+              .filter((template) => template.market.includes(currentMarket))
               .filter((template) =>
                 isPinnedTab ? template.pinned : !template.pinned,
               )

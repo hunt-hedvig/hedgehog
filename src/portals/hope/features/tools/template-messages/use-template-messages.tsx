@@ -2,59 +2,53 @@ import React, { createContext, useContext, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { TemplateMessages } from './components/TemplateMessages'
-
-export enum Markets {
-  Sweden = 'SWEDEN',
-  Denmark = 'DENMARK',
-  Norway = 'NORWAY',
-}
+import { Market } from '../../config/constants'
 
 export interface Message {
-  market: Markets
+  market: Market
   text: string
 }
 
 export interface TemplateMessage {
   name: string
   id: string
-  markets: Markets[]
+  market: Market[]
   messages: Message[]
   messageEn: string
-  withExpiry?: boolean
-  expiryDate?: string | null
+  expiryDate: string | null
   pinned?: boolean
 }
 
 interface TemplateMessagesContextProps {
   templates: TemplateMessage[]
   show: () => void
-  createTemplate: (template: TemplateMessage) => void
-  editTemplate: (template: TemplateMessage) => void
-  deleteTemplate: (id: string) => void
-  pinTemplate: (id: string) => void
+  create: (template: TemplateMessage) => void
+  edit: (template: TemplateMessage) => void
+  delete: (id: string) => void
+  pin: (id: string) => void
   select: (text: string) => void
   selected: string | null
-  currentMarket: Markets
-  changeCurrentMarket: (market: Markets) => void
+  market: Market
+  setMarket: (market: Market) => void
 }
 
 const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
   templates: [],
   show: () => void 0,
-  createTemplate: () => void 0,
-  editTemplate: () => void 0,
-  deleteTemplate: () => void 0,
-  pinTemplate: () => void 0,
+  create: () => void 0,
+  edit: () => void 0,
+  delete: () => void 0,
+  pin: () => void 0,
   select: () => void 0,
   selected: null,
-  currentMarket: Markets.Sweden,
-  changeCurrentMarket: () => void 0,
+  market: Market.Sweden,
+  setMarket: () => void 0,
 })
 
 export const useTemplateMessages = () => useContext(TemplateMessagesContext)
 
 export const TemplateMessagesProvider: React.FC = ({ children }) => {
-  const [currentMarket, setCurrentMarket] = useState<Markets>(Markets.Sweden)
+  const [market, setMarket] = useState<Market>(Market.Sweden)
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
   const [templates, setTemplates] = useInsecurePersistentState<
@@ -98,21 +92,19 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     toast.success('Template successfully pinned')
   }
 
-  const changeCurrentMarket = (market: Markets) => setCurrentMarket(market)
-
   return (
     <TemplateMessagesContext.Provider
       value={{
         templates,
         show: () => setShowTemplateMessages(true),
-        createTemplate: createHandler,
-        editTemplate: editHandler,
-        deleteTemplate: deleteHandler,
-        pinTemplate: pinHandler,
+        create: createHandler,
+        edit: editHandler,
+        delete: deleteHandler,
+        pin: pinHandler,
         select: (text: string) => setSelectedText(text),
         selected: selectedText,
-        currentMarket,
-        changeCurrentMarket,
+        market,
+        setMarket: (market: Market) => setMarket(market),
       }}
     >
       {children}

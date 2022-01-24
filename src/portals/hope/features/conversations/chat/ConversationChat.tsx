@@ -42,7 +42,7 @@ const ConversationTextArea = styled(TextArea)`
   }
 `
 
-const TextAreaBottom = styled.div`
+const TextAreaFooter = styled.div`
   position: relative;
   padding: 7px 15px;
   border-radius: 0 0 8px 8px;
@@ -186,11 +186,11 @@ export const ConversationChat: React.FC<{
             }}
             onKeyDown={handleOnKeyDown}
           />
-          <TextAreaBottom onClick={show}>
+          <TextAreaFooter onClick={show}>
             <div className="divider" />
             <FileText style={{ width: 12, height: 12 }} />
             <span>templates</span>
-          </TextAreaBottom>
+          </TextAreaFooter>
         </ConversationFooter>
       </ConversationContent>
       <Flex fullWidth justify={'space-between'} style={{ marginTop: '1.0em' }}>
