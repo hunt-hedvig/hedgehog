@@ -25,7 +25,7 @@ export const useDraftMessage = ({
 
       return Object.keys(prevDrafts)
         .filter((draftMemberId) => prevDrafts[draftMemberId].expiry > now)
-        .reduce((obj, key) => {
+        .reduce<Record<string, DraftMessage>>((obj, key) => {
           obj[key] = prevDrafts[key]
           return obj
         }, {})

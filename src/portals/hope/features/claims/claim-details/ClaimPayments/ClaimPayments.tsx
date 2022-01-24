@@ -141,7 +141,7 @@ export const ClaimPayments: React.FC<{
     .map((payment) => +payment?.deductible?.amount)
     .reduce((acc, amount) => acc + amount, 0)
 
-  const setFilterHandler = (field) => {
+  const setFilterHandler = (field: 'amount' | 'deductible' | 'timestamp') => {
     setFilter((prev) => ({
       field,
       desc: prev.field === field ? !prev.desc : true,

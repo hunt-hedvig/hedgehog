@@ -12,9 +12,11 @@ const getDayPartGreeting = (name: string) => {
   } else if (hours >= 18 && hours <= 23) {
     return `Good evening ${name}!`
   }
+
+  return ''
 }
 
-const GREETINGS = (name: string) => ({
+const GREETINGS = (name: string): Record<number, string> => ({
   0: `Hi there, ${name}!`,
   1: `Hello, ${name}!`,
   2: getDayPartGreeting(name),

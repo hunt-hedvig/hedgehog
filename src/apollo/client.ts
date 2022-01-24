@@ -14,7 +14,7 @@ gql`
   directive @persist on FIELD
 `
 
-const setItemWithExpiry = (key, value, ttl) =>
+const setItemWithExpiry = (key: string, value: string, ttl: number) =>
   localStorage.setItem(
     key,
     JSON.stringify({
@@ -23,7 +23,7 @@ const setItemWithExpiry = (key, value, ttl) =>
     }),
   )
 
-const getItemWithExpiry = (key) => {
+const getItemWithExpiry = (key: string) => {
   const itemStr = localStorage.getItem(key)
 
   if (!itemStr) {

@@ -92,16 +92,16 @@ export const ClaimStatusDropdown: React.FC<{ claimId: string }> = ({
 }) => {
   const { status, setStatus } = useClaimStatus(claimId)
 
-  const options = Object.keys(ClaimState)
+  const options = Object.values(ClaimState)
   return (
     <Dropdown placeholder="State">
-      {options.map((key) => (
+      {options.map((state) => (
         <DropdownOption
-          key={key}
-          onClick={() => setStatus(ClaimState[key])}
-          selected={status === ClaimState[key]}
+          key={state}
+          onClick={() => setStatus(state)}
+          selected={status === state}
         >
-          {key}
+          {state}
         </DropdownOption>
       ))}
     </Dropdown>

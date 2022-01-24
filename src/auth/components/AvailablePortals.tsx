@@ -131,7 +131,7 @@ export const AvailablePortals: React.FC<{
               if (
                 window.confirm(
                   `Are you sure you want to go to the ${
-                    displayNames[portal] ?? portal
+                    displayNames[portal as Portal] ?? portal
                   } portal?`,
                 )
               ) {
@@ -162,8 +162,8 @@ export const AvailablePortals: React.FC<{
               }
             }}
           >
-            <div>{displayNames[portal] ?? portal}</div>
-            <div>{descriptions[portal] ?? portal}</div>
+            <div>{displayNames[portal as Portal] ?? portal}</div>
+            <div>{descriptions[portal as Portal] ?? portal}</div>
             <div>
               {currentPortal === portal ? (
                 <ActiveBadge>current</ActiveBadge>

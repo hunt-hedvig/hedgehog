@@ -97,6 +97,7 @@
     "@types/koa-static": "^4.0.1",
     "@types/node-fetch": "^2.5.4",
     "@types/react": "^17.0.3",
+    "@types/react-datepicker": "^4.3.4",
     "@types/react-dom": "^17.0.3",
     "@types/react-gtm-module": "^2.0.1",
     "@types/react-hot-loader": "^4.1.0",

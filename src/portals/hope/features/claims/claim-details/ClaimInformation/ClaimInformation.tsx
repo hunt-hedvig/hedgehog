@@ -32,6 +32,7 @@ import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/Clai
 import { ClaimEmployeeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimEmployeeDropdown'
 import { TermsAndConditionsLink } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/TermsAndConditionsLink'
 import { ClaimStatusDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimStatusDropdown'
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 
 const SelectWrapper = styled.div`
   margin-top: 1em;

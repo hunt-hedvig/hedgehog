@@ -214,7 +214,7 @@ const transformErrors = (errors: AjvError[]): AjvError[] => {
   })
 }
 
-const getPropertyTitle = (property) => {
+const getPropertyTitle = (property: string) => {
   return convertCamelcaseToTitle(property.substring(1))
 }
 

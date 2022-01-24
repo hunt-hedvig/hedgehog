@@ -99,7 +99,7 @@ const ChatTip = styled.div`
   }
 `
 
-export const ChatPanel = ({ memberId }) => {
+export const ChatPanel: React.FC<{ memberId: string }> = ({ memberId }) => {
   const [draft, setDraft] = useDraftMessage({ memberId })
   const [error, setError] = useState(false)
   const [currentMessage, setCurrentMessage] = useState(draft)
