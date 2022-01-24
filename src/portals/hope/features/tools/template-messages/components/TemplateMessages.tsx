@@ -12,6 +12,7 @@ import {
   useTemplateMessages,
 } from '../use-template-messages'
 import toast from 'react-hot-toast'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 
 const show = keyframes`
   from {
@@ -91,16 +92,6 @@ const Bottom = styled.div`
   }
 `
 
-const getTemplates = () => {
-  const templates = localStorage.getItem('hedvig:messages:templates')
-
-  if (!templates) {
-    return []
-  }
-
-  return JSON.parse(templates)
-}
-
 export const TemplateMessages: React.FC<{
   hide: () => void
 }> = ({ hide }) => {
@@ -109,9 +100,9 @@ export const TemplateMessages: React.FC<{
     useState<TemplateMessage | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
-  const [templates, setTemplates] = useState<TemplateMessage[]>(() =>
-    getTemplates(),
-  )
+  const [templates, setTemplates] = useInsecurePersistentState<
+    TemplateMessage[]
+  >('messages:templates', [])
   const [isPinnedTab, setIsPinnedTab] = useState(false)
 
   const {

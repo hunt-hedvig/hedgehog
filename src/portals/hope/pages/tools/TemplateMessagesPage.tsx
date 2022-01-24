@@ -9,6 +9,7 @@ import {
   TemplateMessage,
   useTemplateMessages,
 } from '../../features/tools/template-messages/use-template-messages'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 
 const Container = styled(FadeIn)`
   flex: 1;
@@ -24,21 +25,11 @@ const Content = styled.div`
   margin-top: 2rem;
 `
 
-const getTemplates = () => {
-  const templates = localStorage.getItem('hedvig:messages:templates')
-
-  if (!templates) {
-    return []
-  }
-
-  return JSON.parse(templates)
-}
-
 const TemplateMessagesPage = () => {
   const [isCreating, setIsCreating] = useState(false)
-  const [templates, setTemplates] = useState<TemplateMessage[]>(() =>
-    getTemplates(),
-  )
+  const [templates, setTemplates] = useInsecurePersistentState<
+    TemplateMessage[]
+  >('messages:templates', [])
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateMessage | null>(null)
 
@@ -117,7 +108,6 @@ const TemplateMessagesPage = () => {
             title: tab,
             action: () => {
               setSelectedTemplate(null)
-              setTemplates(getTemplates())
               changeCurrentMarket(Markets[tab])
             },
           }))}

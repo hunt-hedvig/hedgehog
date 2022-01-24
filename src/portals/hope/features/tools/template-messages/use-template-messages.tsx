@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { TemplateMessages } from './components/TemplateMessages'
 
 export enum Markets {
@@ -49,87 +50,45 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [currentMarket, setCurrentMarket] = useState<Markets>(Markets.Sweden)
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
+  const [templates, setTemplates] = useInsecurePersistentState<
+    TemplateMessage[]
+  >('messages:templates', [])
 
   const createHandler = (template: TemplateMessage) => {
-    const allTemplates = localStorage.getItem('hedvig:messages:templates')
-
-    if (!allTemplates) {
-      localStorage.setItem(
-        'hedvig:messages:templates',
-        JSON.stringify([template]),
-      )
-
-      toast.success(`Template ${template.name} successfully created`)
-
-      return
-    }
-
-    const newTemplates = [...JSON.parse(allTemplates), template]
-    localStorage.setItem(
-      'hedvig:messages:templates',
-      JSON.stringify(newTemplates),
-    )
+    setTemplates((prev) => [...prev, template])
 
     toast.success(`Template ${template.name} successfully created`)
   }
 
   const editHandler = (newTemplate: TemplateMessage) => {
-    const allTemplates = localStorage.getItem('hedvig:messages:templates')
-
-    if (!allTemplates) {
-      return
-    }
-
-    localStorage.setItem(
-      'hedvig:messages:templates',
-      JSON.stringify([
-        ...JSON.parse(allTemplates).map((template) => {
-          if (template.id === newTemplate.id) {
-            return newTemplate
-          }
-          return template
-        }),
-      ]),
+    setTemplates((prev) =>
+      prev.map((template) =>
+        template.id !== newTemplate.id ? template : newTemplate,
+      ),
     )
 
     toast.success('Template successfully edited')
   }
 
-  const deleteHandler = (id: string) => {
-    const allTemplates = localStorage.getItem('hedvig:messages:templates')
-
-    if (!allTemplates) {
-      return
-    }
-
-    const newTemplates = JSON.parse(allTemplates).filter(
-      (template) => template.id !== id,
+  const deleteHandler = (templateId: string) => {
+    const newTemplates = templates.filter(
+      (template) => template.id !== templateId,
     )
+    setTemplates(newTemplates)
 
-    localStorage.setItem(
-      'hedvig:messages:templates',
-      JSON.stringify(newTemplates),
-    )
+    toast.success('Template successfully deleted')
   }
 
-  const pinHandler = (id: string) => {
-    const allTemplates = localStorage.getItem('hedvig:messages:templates')
-
-    if (!allTemplates) {
-      return
-    }
-
-    localStorage.setItem(
-      'hedvig:messages:templates',
-      JSON.stringify([
-        ...JSON.parse(allTemplates).map((template) => {
-          if (id === template.id) {
-            return { ...template, pinned: template.pinned ? false : true }
-          }
-          return template
-        }),
-      ]),
+  const pinHandler = (templateId: string) => {
+    setTemplates((prev) =>
+      prev.map((template) =>
+        template.id !== templateId
+          ? template
+          : { ...template, pinned: !template.pinned },
+      ),
     )
+
+    toast.success('Template successfully pinned')
   }
 
   const changeCurrentMarket = (market: Markets) => setCurrentMarket(market)
