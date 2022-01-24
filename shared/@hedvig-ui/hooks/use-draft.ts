@@ -35,6 +35,13 @@ export const useDraft = ({
     })
   }, [id])
 
+  window.onstorage = (e) => {
+    if (e.key === `hvg:drafts:${section}`) {
+      const newDrafts = JSON.parse(e.newValue)
+      setDrafts(newDrafts)
+    }
+  }
+
   const update = (draft: string) => {
     setDrafts((prevDrafts) => {
       if (draft) {

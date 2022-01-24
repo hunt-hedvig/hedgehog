@@ -91,6 +91,12 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
     setNote(draft)
   }, [claimId])
 
+  useEffect(() => {
+    if (draft !== note) {
+      setNote(draft)
+    }
+  }, [draft])
+
   const handleSubmitNote = () => {
     const today = formatDate(addSeconds(new Date(), 1), 'yyyy-MM-dd HH:mm:ss')
 
