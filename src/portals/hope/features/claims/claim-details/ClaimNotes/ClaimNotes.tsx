@@ -1,6 +1,6 @@
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { addSeconds, format, parseISO } from 'date-fns'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   ClaimNote as ClaimNoteType,
   useClaimAddClaimNoteMutation,
@@ -26,6 +26,7 @@ import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import formatDate from 'date-fns/format'
+import { useDraftNote } from './hooks/use-draft-notes'
 
 const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
   [...notes].sort((noteA, noteB) => {
@@ -82,7 +83,13 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [submitting, setSubmitting] = useState(false)
   const [textFieldFocused, setTextFieldFocused] = useState(false)
 
+  const [draft, setDraft] = useDraftNote({ claimId })
+
   const { me } = useMe()
+
+  useEffect(() => {
+    setNote(draft)
+  }, [claimId])
 
   const handleSubmitNote = () => {
     const today = formatDate(addSeconds(new Date(), 1), 'yyyy-MM-dd HH:mm:ss')
@@ -114,6 +121,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
     })
       .then(() => {
         setNote('')
+        setDraft('')
         setSubmitting(false)
       })
       .catch(() => {
@@ -160,7 +168,10 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
         resize
         placeholder="Your note goes here..."
         value={submitting ? '' : note}
-        onChange={(e) => setNote(e.currentTarget.value)}
+        onChange={(e) => {
+          setDraft(e.currentTarget.value)
+          setNote(e.currentTarget.value)
+        }}
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
         onKeyDown={(e) => {
