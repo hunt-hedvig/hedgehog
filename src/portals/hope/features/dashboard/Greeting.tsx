@@ -13,7 +13,7 @@ const getDayPartGreeting = (name: string) => {
     return `Good evening ${name}!`
   }
 
-  return ''
+  return `Hello ${name}`
 }
 
 const GREETINGS = (name: string): Record<number, string> => ({
