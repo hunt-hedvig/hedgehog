@@ -174,6 +174,10 @@ export const MemberTab: React.FC<{
     personalNumber: member?.signedOn ? member?.personalNumber : null,
   }
 
+  delete memberInfoWithoutSsn.__typename
+  delete memberInfoWithoutSsn.fraudulentStatus
+  delete memberInfoWithoutSsn.fraudulentStatusDescription
+
   return memberInfoWithoutSsn ? (
     <FadeIn>
       <Table>

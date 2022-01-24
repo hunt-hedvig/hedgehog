@@ -8,6 +8,7 @@ import { Dropdown, DropdownOption } from '@hedvig-ui'
 import gql from 'graphql-tag'
 import { ClaimOutcomes } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
 import { toast } from 'react-hot-toast'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 
 gql`
   query ClaimStatus($claimId: ID!) {
@@ -101,7 +102,7 @@ export const ClaimStatusDropdown: React.FC<{ claimId: string }> = ({
           onClick={() => setStatus(state)}
           selected={status === state}
         >
-          {state}
+          {convertEnumToTitle(state)}
         </DropdownOption>
       ))}
     </Dropdown>
