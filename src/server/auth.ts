@@ -2,10 +2,8 @@ import { addDays, addMinutes } from 'date-fns'
 import { ExtendableContext, Middleware } from 'koa'
 import { config } from './config'
 import { LoggingMiddleware } from './request-enhancers'
-import { RequestInfo, RequestInit } from 'node-fetch'
-
-const fetch = (url: RequestInfo, init?: RequestInit) =>
-  import('node-fetch').then(({ default: fetch }) => fetch(url, init))
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const fetch = require('node-fetch')
 
 interface Tokens {
   accessToken: string
