@@ -50,56 +50,59 @@ const UnsignMemberPage: Page = () => {
       />
 
       <Spacing top="small" />
-      <Button
-        variant="primary"
-        disabled={
-          loadingUnsign ||
-          loadingTerminateContracts ||
-          (ssn === '' && email === '')
-        }
-        onClick={() => {
-          toast.promise(
-            useUnsignMember({
-              variables: {
-                ssn,
-                email,
+      <div>
+        <Button
+          variant="primary"
+          disabled={
+            loadingUnsign ||
+            loadingTerminateContracts ||
+            (ssn === '' && email === '')
+          }
+          onClick={() => {
+            toast.promise(
+              useUnsignMember({
+                variables: {
+                  ssn,
+                  email,
+                },
+              }),
+              {
+                loading: 'Unsigning member',
+                success: 'Member unsigned',
+                error: 'Could not unsign member',
               },
-            }),
-            {
-              loading: 'Unsigning member',
-              success: 'Member unsigned',
-              error: 'Could not unsign member',
-            },
-          )
-        }}
-      >
-        Unsign
-      </Button>
-      <Button
-        variant="primary"
-        disabled={
-          loadingUnsign ||
-          loadingTerminateContracts ||
-          (ssn === '' && email === '')
-        }
-        onClick={() => {
-          toast.promise(
-            useTerminateContracts({
-              variables: {
-                ssn,
-                email,
+            )
+          }}
+        >
+          Unsign
+        </Button>
+        <Spacing top="small" />
+        <Button
+          variant="primary"
+          disabled={
+            loadingUnsign ||
+            loadingTerminateContracts ||
+            (ssn === '' && email === '')
+          }
+          onClick={() => {
+            toast.promise(
+              useTerminateContracts({
+                variables: {
+                  ssn,
+                  email,
+                },
+              }),
+              {
+                loading: 'Terminating contracts',
+                success: 'Contracts terminated',
+                error: 'Could not terminate contracts',
               },
-            }),
-            {
-              loading: 'Terminating contracts',
-              success: 'Contracts terminated',
-              error: 'Could not terminate contracts',
-            },
-          )
-        }}
-      >
-        Terminate contracts
-      </Button>
+            )
+          }}
+        >
+          Terminate contracts
+        </Button>
+      </div>
     </>
   )
 }
