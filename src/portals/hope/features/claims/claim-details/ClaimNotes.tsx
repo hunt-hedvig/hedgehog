@@ -1,6 +1,6 @@
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { addSeconds, format, parseISO } from 'date-fns'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   ClaimNote as ClaimNoteType,
   useClaimAddClaimNoteMutation,
@@ -79,23 +79,11 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const events = claimNotesData?.claim?.events ?? []
 
   const [addClaimNote] = useClaimAddClaimNoteMutation()
-  const [note, setNote] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [textFieldFocused, setTextFieldFocused] = useState(false)
-
-  const [draft, setDraft] = useDraft(claimId)
+  const [note, setNote] = useDraft(claimId)
 
   const { me } = useMe()
-
-  useEffect(() => {
-    setNote(draft)
-  }, [claimId])
-
-  useEffect(() => {
-    if (draft !== note) {
-      setNote(draft)
-    }
-  }, [draft])
 
   const handleSubmitNote = () => {
     const today = formatDate(addSeconds(new Date(), 1), 'yyyy-MM-dd HH:mm:ss')
@@ -127,7 +115,6 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
     })
       .then(() => {
         setNote('')
-        setDraft('')
         setSubmitting(false)
       })
       .catch(() => {
@@ -174,10 +161,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
         resize
         placeholder="Your note goes here..."
         value={submitting ? '' : note}
-        onChange={(e) => {
-          setDraft(e.currentTarget.value)
-          setNote(e.currentTarget.value)
-        }}
+        onChange={(e) => setNote(e.currentTarget.value)}
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
         onKeyDown={(e) => {
