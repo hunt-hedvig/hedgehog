@@ -1,23 +1,32 @@
-import { useMutation } from '@apollo/client'
 import { Button, Input, MainHeadline, Spacing } from '@hedvig-ui'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Page } from 'portals/hope/pages/routes'
 import gql from 'graphql-tag'
+import {
+  useTerminateStagingContractsMutation,
+  useUnsignMemberMutation,
+} from 'types/generated/graphql'
 
-const UNSIGN_MEMBER = gql`
+gql`
   mutation UnsignMember($ssn: String, $email: String) {
     unsignMember(ssn: $ssn, email: $email)
+  }
+
+  mutation TerminateStagingContracts($ssn: String, $email: String) {
+    terminateContracts(ssn: $ssn, email: $email)
   }
 `
 
 const UnsignMemberPage: Page = () => {
   const [ssn, setSsn] = React.useState('')
   const [email, setEmail] = React.useState('')
-  const [useUnsignMember, { loading }] = useMutation(UNSIGN_MEMBER)
-  const { confirm } = useConfirmDialog()
+  const [useUnsignMember, unsignResult] = useUnsignMemberMutation()
+  const loadingUnsign = unsignResult.loading
+  const [useTerminateContracts, terminateContractsResult] =
+    useTerminateStagingContractsMutation()
+  const loadingTerminateContracts = terminateContractsResult.loading
 
   useTitle('Tools | Unsign Member')
 
@@ -42,19 +51,15 @@ const UnsignMemberPage: Page = () => {
       />
 
       <Spacing top="small" />
-      <Button
-        variant="primary"
-        disabled={loading || (ssn === '' && email === '')}
-        onClick={() => {
-          let confirmMessage = ''
-          if (ssn !== '' && email !== '') {
-            confirmMessage = `Are you sure you want to unsign members with SSN ${ssn} and/or email ${email}?`
-          } else if (ssn !== '') {
-            confirmMessage = `Are you sure you want to unsign members with SSN ${ssn}`
-          } else if (email !== '') {
-            confirmMessage = `Are you sure you want to unsign members with email ${email}?`
+      <div>
+        <Button
+          variant="primary"
+          disabled={
+            loadingUnsign ||
+            loadingTerminateContracts ||
+            (ssn === '' && email === '')
           }
-          confirm(confirmMessage).then(() => {
+          onClick={() => {
             toast.promise(
               useUnsignMember({
                 variables: {
@@ -68,11 +73,37 @@ const UnsignMemberPage: Page = () => {
                 error: 'Could not unsign member',
               },
             )
-          })
-        }}
-      >
-        Unsign
-      </Button>
+          }}
+        >
+          Unsign
+        </Button>
+        <Spacing top="small" />
+        <Button
+          variant="primary"
+          disabled={
+            loadingUnsign ||
+            loadingTerminateContracts ||
+            (ssn === '' && email === '')
+          }
+          onClick={() => {
+            toast.promise(
+              useTerminateContracts({
+                variables: {
+                  ssn,
+                  email,
+                },
+              }),
+              {
+                loading: 'Terminating contracts',
+                success: 'Contracts terminated',
+                error: 'Could not terminate contracts',
+              },
+            )
+          }}
+        >
+          Terminate contracts
+        </Button>
+      </div>
     </>
   )
 }
