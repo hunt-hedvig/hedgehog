@@ -42,7 +42,7 @@ export {
 export { CasualList, CasualListItem } from './CasualList/casual-list'
 export { Checkbox } from './Checkbox/checkbox'
 export { Copyable } from './Copyable/copyable'
-export { DateTimePicker } from './DateTimePicker/date-time-picker'
+export { DateTimePicker } from './DateTimePicker/DateTimePicker'
 
 export { Dropdown, Option as DropdownOption } from './Dropdown/dropdown'
 export type DropdownProps = _DropdownProps
