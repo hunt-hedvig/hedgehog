@@ -101,7 +101,14 @@ export const SearchTemplate: React.FC<{
   )
 }
 
-const TemplateItem = ({ id, name, onSelect, selected }) => {
+interface TemplateItemProps {
+  id: string
+  name: string
+  onSelect: (id: string) => void
+  selected: boolean
+}
+
+const TemplateItem = ({ id, name, onSelect, selected }: TemplateItemProps) => {
   return (
     <Item selected={selected} onClick={() => onSelect(id)}>
       <FileText />

@@ -357,6 +357,16 @@ const TemplateActions = styled.div`
   }
 `
 
+interface TemplateItemProps {
+  id: string
+  name: string
+  text: string
+  onSelect: (id: string) => void
+  onDelete: (id: string) => void
+  onEdit: (id: string) => void
+  onPin: (id: string) => void
+}
+
 const TemplateItem = ({
   id,
   name,
@@ -365,7 +375,7 @@ const TemplateItem = ({
   onDelete,
   onEdit,
   onPin,
-}) => {
+}: TemplateItemProps) => {
   const [isHover, setIsHover] = useState(false)
 
   return (

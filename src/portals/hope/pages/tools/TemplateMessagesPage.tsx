@@ -80,14 +80,32 @@ const TemplateMessagesPage: Page = () => {
       <Flex flex="0" align="center" justify="space-between">
         <Tabs
           style={{ width: '30%' }}
-          list={Object.keys(Market).map((tab) => ({
-            active: currentMarket === Market[tab],
-            title: tab,
-            action: () => {
-              setSelectedTemplate(null)
-              changeCurrentMarket(Market[tab])
+          list={[
+            {
+              active: currentMarket === Market.Sweden,
+              title: 'Sweden',
+              action: () => {
+                setSelectedTemplate(null)
+                changeCurrentMarket(Market.Sweden)
+              },
             },
-          }))}
+            {
+              active: currentMarket === Market.Denmark,
+              title: 'Denmark',
+              action: () => {
+                setSelectedTemplate(null)
+                changeCurrentMarket(Market.Denmark)
+              },
+            },
+            {
+              active: currentMarket === Market.Norway,
+              title: 'Norway',
+              action: () => {
+                setSelectedTemplate(null)
+                changeCurrentMarket(Market.Norway)
+              },
+            },
+          ]}
         />
         <Button onClick={() => setIsCreating(true)}>Create New Template</Button>
       </Flex>
