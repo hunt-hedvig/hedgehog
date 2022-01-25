@@ -12,6 +12,12 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2022-01-25',
+    change:
+      'Added drafts to claims notes. Also added sync of notes between two tabs!',
+    authorGithubHandle: 'maxplt',
+  },
+  {
     date: '2022-01-12',
     change: 'Campaign owners can be changed',
   },
