@@ -50,13 +50,17 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
     <Wrapper>
       <DatePicker
         tabIndex={tabIndex}
-        wrapperClassName={fullWidth ? 'datePicker' : null}
+        wrapperClassName={fullWidth ? 'datePicker' : undefined}
         autoComplete="off"
         locale="enGB"
         selected={date}
         disabled={disabled}
         placeholderText={placeholder}
         onChange={(newDate) => {
+          if (!newDate) {
+            return
+          }
+
           setDate(newDate)
         }}
         showTimeSelect={showTimePicker}

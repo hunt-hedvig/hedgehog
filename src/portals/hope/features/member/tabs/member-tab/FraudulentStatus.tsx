@@ -17,7 +17,7 @@ const ButtonsBlock = styled('div')(() => ({
   marginTop: '10px',
 }))
 
-const fraudulentStatuses = {
+const fraudulentStatuses: Record<string, string> = {
   NOT_FRAUD: '#21ba45',
   SUSPECTED_FRAUD: '#f2711c',
   CONFIRMED_FRAUD: '#db2828',
@@ -33,27 +33,33 @@ const FraudulentStatus: React.FC<{
     style={{ marginRight: 15 }}
     size="14px"
     color={
-      props.stateInfo && fraudulentStatuses[props.stateInfo.state || 0]
+      props.stateInfo.state && fraudulentStatuses[props.stateInfo.state]
         ? fraudulentStatuses[props.stateInfo.state || 0]
         : 'green'
     }
   />
 )
 
-const FraudulentStatusEdit = (props) => {
+const FraudulentStatusEdit: React.FC<{
+  onEdit: (status: string, description: string) => void
+  getFraudStatusInfo: () => { status: string; description: string }
+  getState: () => boolean
+  setState: (editing: boolean, status?: string, description?: string) => void
+}> = ({ onEdit, getFraudStatusInfo, getState, setState }) => {
   const [descriptionValue, setDescriptionValue] = React.useState<string>(
-    props.getFraudStatusInfo().description,
+    getFraudStatusInfo().description,
   )
   const [fraudulentStatusValue, setFraudulentStatusValue] =
-    React.useState<string>(props.getFraudStatusInfo().status)
+    React.useState<string>(getFraudStatusInfo().status)
+
   return (
     <TableRow>
       <TableColumn>Fraudulent Status</TableColumn>
       <TableColumn>
-        {!props.getState() ? (
+        {!getState() ? (
           <>
-            Status: {props.getFraudStatusInfo().status} <br />
-            {props.getFraudStatusInfo().description}
+            Status: {getFraudStatusInfo().status} <br />
+            {getFraudStatusInfo().description}
           </>
         ) : (
           <>
@@ -86,10 +92,10 @@ const FraudulentStatusEdit = (props) => {
           </>
         )}
         <ButtonsBlock>
-          {!props.getState() ? (
+          {!getState() ? (
             <Button
               onClick={() =>
-                props.setState(true, fraudulentStatusValue, descriptionValue)
+                setState(true, fraudulentStatusValue, descriptionValue)
               }
             >
               Edit
@@ -98,14 +104,14 @@ const FraudulentStatusEdit = (props) => {
             <ButtonsGroup>
               <Button
                 onClick={() => {
-                  props.action(fraudulentStatusValue, descriptionValue)
-                  props.setState(false, fraudulentStatusValue, descriptionValue)
+                  onEdit(fraudulentStatusValue, descriptionValue)
+                  setState(false, fraudulentStatusValue, descriptionValue)
                 }}
                 variant="primary"
               >
                 Save
               </Button>
-              <Button variant="secondary" onClick={() => props.setState(false)}>
+              <Button variant="secondary" onClick={() => setState(false)}>
                 Cancel
               </Button>
             </ButtonsGroup>

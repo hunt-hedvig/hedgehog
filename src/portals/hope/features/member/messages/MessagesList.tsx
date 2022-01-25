@@ -30,7 +30,7 @@ const EmptyList = styled.h3`
   text-align: center;
 `
 
-const getAuthor = (author) => {
+const getAuthor = (author?: string | null) => {
   return author ? author : 'bot'
 }
 

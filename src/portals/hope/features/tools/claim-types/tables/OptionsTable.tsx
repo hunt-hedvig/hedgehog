@@ -24,6 +24,7 @@ import {
   useGetClaimPropertyOptionsQuery,
   useUpdateClaimPropertyOptionMutation,
 } from 'types/generated/graphql'
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 
 export const OptionsTable: React.FC<{ filter: string }> = ({ filter }) => {
   const [updateOption, { loading: updateLoading }] =
@@ -73,7 +74,10 @@ export const OptionsTable: React.FC<{ filter: string }> = ({ filter }) => {
     toast.promise(
       deprecateOption({
         variables: { id: option.id },
-        update: (cache, { data: response }) => {
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
           if (!response) {
             return
           }

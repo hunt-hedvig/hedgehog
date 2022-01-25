@@ -1,4 +1,4 @@
-import { FetchResult } from '@apollo/client'
+import { ApolloCache, FetchResult, NormalizedCacheObject } from '@apollo/client'
 import React, { createContext, useContext } from 'react'
 import {
   GetMeDocument,
@@ -17,7 +17,8 @@ interface PartialMe {
 
 interface MeContextProps {
   me: PartialMe
-  settings: object
+  // eslint-disable-next-line
+  settings: Record<string, any>
   updateSetting: (key: UserSettingKey, value: object) => Promise<FetchResult>
 }
 
@@ -37,7 +38,8 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
   }
 
   const settings =
-    me.settings.reduce((acc, setting) => {
+    // eslint-disable-next-line
+    me.settings.reduce<Record<string, any>>((acc, setting) => {
       try {
         acc[setting.key] = JSON.parse(setting.value)
       } catch (e) {
@@ -67,7 +69,10 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
           { __typename: 'UserSetting', key, value: payload },
         ],
       },
-      update: (cache, { data: response }) => {
+      update: (
+        cache: ApolloCache<NormalizedCacheObject>,
+        { data: response },
+      ) => {
         if (!response?.upsertUserSettings) {
           return
         }

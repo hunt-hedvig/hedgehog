@@ -1,4 +1,4 @@
-import { css } from '@emotion/react'
+import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
 import _chroma from 'chroma-js'
 import React, { ButtonHTMLAttributes } from 'react'
@@ -9,9 +9,9 @@ const chroma = (c: string) => _chroma(c ?? 'white')
 const color = ({
   theme,
   variant = 'primary',
-  status = '',
+  status,
   disabled = false,
-}) => {
+}: ButtonProps & { theme: Theme }) => {
   if (disabled) {
     return css`
       color: ${chroma(theme.semiStrongForeground).brighten(0.5).hex()};
@@ -56,9 +56,9 @@ const color = ({
 const backgroundColor = ({
   theme,
   variant = 'primary',
-  status = '',
+  status,
   disabled = false,
-}) => {
+}: ButtonProps & { theme: Theme }) => {
   if (disabled) {
     return css`
       background-color: ${chroma(theme.mutedBackground).darken(0.4).hex()};
@@ -133,7 +133,7 @@ const paddingSize: Record<'small' | 'medium' | 'large', string> = {
   large: 'padding: 1rem 1.5rem;',
 }
 
-const padding = ({ size = 'medium' }) => paddingSize[size]
+const padding = ({ size = 'medium' }: ButtonProps) => paddingSize[size]
 
 const fontSize = ({ size = 'medium' }) => {
   if (size === 'small') {

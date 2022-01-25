@@ -19,6 +19,7 @@ import {
   useDeleteCoInsuredMutation,
   useUpsertCoInsuredMutation,
 } from 'types/generated/graphql'
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 
 const CoInsuredCard = styled.div`
   background-color: ${({ theme }) => theme.accent};
@@ -47,7 +48,7 @@ export const useDeleteCoInsured = ({
 }: UseDeleteCoInsuredVariables) => {
   const [deleteCoInsured] = useDeleteCoInsuredMutation()
 
-  const updateCache = (cache) => {
+  const updateCache = (cache: ApolloCache<NormalizedCacheObject>) => {
     const cachedData = cache.readQuery({
       query: ClaimPageDocument,
       variables: { claimId },
@@ -75,7 +76,10 @@ export const useDeleteCoInsured = ({
         optimisticResponse: {
           deleteCoInsured: true,
         },
-        update: (cache, { data: response }) => {
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
           if (!response) {
             return
           }

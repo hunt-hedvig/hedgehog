@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Theme } from '@emotion/react'
 
 export type BadgeSize = 'small' | 'medium' | 'large'
 export type BadgeVariant = 'danger' | 'warning' | 'success' | 'default'
@@ -26,7 +27,7 @@ const getPaddingFromSize = (size?: BadgeSize, matchParentSize?: boolean) => {
   }
 }
 
-const getColorFromVariant = (theme, variant?: BadgeVariant) => {
+const getColorFromVariant = (theme: Theme, variant?: BadgeVariant) => {
   switch (variant) {
     case 'danger':
       return theme.danger

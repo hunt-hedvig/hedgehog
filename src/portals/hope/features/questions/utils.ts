@@ -1,6 +1,7 @@
 import { range } from '@hedvig-ui/utils/range'
 import {
   Market,
+  PickedLocale,
   PickedLocaleMarket,
 } from 'portals/hope/features/config/constants'
 import {
@@ -46,7 +47,7 @@ export const doMarketFilter =
     const questionGroupMarket = questionGroup?.market
       ? questionGroup.market
       : questionGroup.pickedLocale
-      ? PickedLocaleMarket[questionGroup.pickedLocale]
+      ? PickedLocaleMarket[questionGroup.pickedLocale as PickedLocale]
       : Market.Sweden
 
     return Object.keys(Market).some(

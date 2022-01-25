@@ -56,12 +56,12 @@ export const EmployeeTable: React.FC<{
     }) ?? []
 
   const currentRoles =
-    employees.reduce((acc, curr) => {
+    employees.reduce<Record<string, string>>((acc, curr) => {
       acc[curr.id] = curr.role
       return acc
     }, {}) ?? {}
 
-  const [selectedRoles, setSelectedRoles] = useState({})
+  const [selectedRoles, setSelectedRoles] = useState<Record<string, string>>({})
 
   const filterEmployee = (employee: Employee) => {
     return (

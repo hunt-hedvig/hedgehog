@@ -3,7 +3,10 @@ import { Dropdown, DropdownOption, TableColumn, TableRow } from '@hedvig-ui'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
 import { sleep } from '@hedvig-ui/utils/sleep'
 import React from 'react'
-import { useSetClaimFileCategoryMutation } from 'types/generated/graphql'
+import {
+  ClaimFileUpload,
+  useSetClaimFileCategoryMutation,
+} from 'types/generated/graphql'
 import { DeleteButton } from './DeleteClaimFileButton'
 
 const Image = styled.img`
@@ -43,12 +46,20 @@ const fileUploadOptions = [
   },
 ]
 
-export const FileRow = ({ claimId, claimFile, refetch }) => {
+export const FileRow: React.FC<{
+  claimId: string
+  claimFile: ClaimFileUpload
+  refetch: () => void
+}> = ({ claimId, claimFile, refetch }) => {
   const [selectedCategory, setSelectedCategory] = React.useState(
     claimFile.category,
   )
 
   const [setClaimFileCategory] = useSetClaimFileCategoryMutation()
+
+  if (!claimFile.claimFileId) {
+    return null
+  }
 
   return (
     <TableRow>
@@ -73,7 +84,7 @@ export const FileRow = ({ claimId, claimFile, refetch }) => {
                 setClaimFileCategory({
                   variables: {
                     claimId,
-                    claimFileId: claimFile.claimFileId,
+                    claimFileId: claimFile.claimFileId ?? '',
                     category: file.value,
                   },
                 })

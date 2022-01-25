@@ -3,7 +3,10 @@ import { HotkeyStyled, Popover } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import copy from 'copy-to-clipboard'
 import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
-import { PickedLocaleFlag } from 'portals/hope/features/config/constants'
+import {
+  PickedLocale,
+  PickedLocaleFlag,
+} from 'portals/hope/features/config/constants'
 import { formatSsn } from 'portals/hope/features/member/utils'
 import React from 'react'
 import { Clipboard } from 'react-bootstrap-icons'
@@ -131,7 +134,7 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
 
       {member?.pickedLocale && (
         <MemberDetail style={{ paddingLeft: '1rem' }}>
-          Language: {PickedLocaleFlag[member.pickedLocale]}
+          Language: {PickedLocaleFlag[member.pickedLocale as PickedLocale]}
         </MemberDetail>
       )}
     </Wrapper>

@@ -12,6 +12,7 @@ import React from 'react'
 import { useHistory } from 'react-router'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { useMemberNameAndContractMarketInfoQuery } from 'types/generated/graphql'
+import { PickedLocale } from 'portals/hope/features/config/constants'
 
 export const MemberSuggestions: React.FC<{
   suggestions: ReadonlyArray<string>
@@ -79,7 +80,7 @@ const MemberHistoryCard: React.FC<{
         {data?.member?.firstName} {data?.member?.lastName}&nbsp;
         {getMemberFlag(
           data?.member?.contractMarketInfo,
-          data?.member?.pickedLocale,
+          data?.member?.pickedLocale as PickedLocale | null | undefined,
         )}
         {isHintingControl && <>({orderNumber})</>}
       </MemberName>

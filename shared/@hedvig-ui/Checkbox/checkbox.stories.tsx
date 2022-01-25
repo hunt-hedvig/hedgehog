@@ -11,7 +11,7 @@ export default {
 export const StandardCheckbox: React.FC = () => {
   const [isChecked, setIsChecked] = React.useState(false)
 
-  const checkHandler = (e) => {
+  const checkHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.currentTarget.checked)
   }
 

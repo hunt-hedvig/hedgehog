@@ -102,9 +102,7 @@ export const MemberSearchForm: React.FC = () => {
     return true
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
+  const handleSubmit = () => {
     if (!valid()) {
       return
     }
@@ -143,7 +141,12 @@ export const MemberSearchForm: React.FC = () => {
         <HopeLogoIcon />
       </LogoContainer>
       <FormContainer>
-        <Wrapper onSubmit={handleSubmit}>
+        <Wrapper
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleSubmit()
+          }}
+        >
           {ssn ? (
             <FadeIn duration={200}>
               <Label>Social Security Number</Label>

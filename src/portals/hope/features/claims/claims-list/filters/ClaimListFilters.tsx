@@ -100,15 +100,15 @@ const OutcomeFilter: React.FC<{
   )
 }
 
-export const complexityIcons = {
-  Simple: '📱',
-  Complex: '🌊',
+export const complexityIcons: Record<ClaimComplexity, string> = {
+  SIMPLE: '📱',
+  COMPLEX: '🌊',
 }
 
-export const stateColors = {
-  Open: lightTheme.accent,
-  Closed: lightTheme.activeInsuranceBackground,
-  Reopened: lightTheme.accentLight,
+export const stateColors: Record<ClaimState, string> = {
+  OPEN: lightTheme.accent,
+  CLOSED: lightTheme.activeInsuranceBackground,
+  REOPENED: lightTheme.accentLight,
 }
 
 export const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
@@ -145,7 +145,10 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
   const [outcomeOpen, setOutcomeOpen] = useState(false)
 
-  const settingExist = (field: UserSettingKey, value) => {
+  const settingExist = (
+    field: UserSettingKey,
+    value: number | ClaimState | ClaimComplexity | Market,
+  ) => {
     if (!settings[field]) {
       return false
     }
@@ -175,7 +178,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       ...settings[field],
       claims: settings[field].claims.includes(value)
         ? settings[field].claims.filter(
-            (currentValue) => currentValue !== value,
+            (currentValue: string) => currentValue !== value,
           )
         : [...settings[field].claims, value],
     })
@@ -199,7 +202,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         ? []
         : settings[field].claims.includes(value)
         ? settings[field].claims.filter(
-            (currentValue) => currentValue !== value,
+            (currentValue: string) => currentValue !== value,
           )
         : [...settings[field].claims, value],
     })
@@ -213,7 +216,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       updateSetting(UserSettingKey.MemberGroupsFilter, {
         ...settings[UserSettingKey.MemberGroupsFilter],
         claims: settings[UserSettingKey.MemberGroupsFilter].claims.filter(
-          (memberGroup) => memberGroup !== 2,
+          (memberGroup: number) => memberGroup !== 2,
         ),
       })
     }
@@ -225,15 +228,12 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
     <FilterWrapper>
       <FilterElement>
         <Label>States</Label>
-        {Object.keys(ClaimState).map((key, index) => {
+        {Object.values(ClaimState).map((state, index) => {
           const states = Object.keys(ClaimState)
-          const navigation = register(key, {
+          const navigation = register(state, {
             focus: index === 0 ? Keys.F : undefined,
             resolve: () => {
-              updateFilterHandler(
-                UserSettingKey.ClaimStatesFilter,
-                ClaimState[key],
-              )
+              updateFilterHandler(UserSettingKey.ClaimStatesFilter, state)
             },
             neighbors: {
               up: index ? states[index - 1] : undefined,
@@ -243,25 +243,19 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           })
 
           return (
-            <Flex key={key} direction="row" align="center" {...navigation}>
+            <Flex key={state} direction="row" align="center" {...navigation}>
               <Checkbox
-                label={key}
-                checked={settingExist(
-                  UserSettingKey.ClaimStatesFilter,
-                  ClaimState[key],
-                )}
+                label={state}
+                checked={settingExist(UserSettingKey.ClaimStatesFilter, state)}
                 onChange={() => {
-                  updateFilterHandler(
-                    UserSettingKey.ClaimStatesFilter,
-                    ClaimState[key],
-                  )
+                  updateFilterHandler(UserSettingKey.ClaimStatesFilter, state)
                 }}
               />
               <MemberGroupColorBadge
                 style={{
                   height: '0.7em',
                   width: '0.7em',
-                  backgroundColor: stateColors[key],
+                  backgroundColor: stateColors[state],
                 }}
               />
             </Flex>
@@ -274,13 +268,13 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           label="Complexities"
           popover="A complex claim either has a reserve over 50k or is of type Water, Fire, Liability, Legal Protection or Flooding."
         />
-        {Object.keys(ClaimComplexity).map((key, index) => {
+        {Object.values(ClaimComplexity).map((complexity, index) => {
           const complexities = Object.keys(ClaimComplexity)
-          const navigation = register(key, {
+          const navigation = register(complexity, {
             resolve: () => {
               updateFilterHandler(
                 UserSettingKey.ClaimComplexityFilter,
-                ClaimComplexity[key],
+                complexity,
               )
             },
             neighbors: {
@@ -295,22 +289,27 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           })
 
           return (
-            <Flex key={key} direction="row" align="center" {...navigation}>
+            <Flex
+              key={complexity}
+              direction="row"
+              align="center"
+              {...navigation}
+            >
               <Checkbox
-                label={key}
+                label={complexity}
                 checked={settingExist(
                   UserSettingKey.ClaimComplexityFilter,
-                  ClaimComplexity[key],
+                  complexity,
                 )}
                 onChange={() => {
                   updateFilterHandler(
                     UserSettingKey.ClaimComplexityFilter,
-                    ClaimComplexity[key],
+                    complexity,
                   )
                 }}
               />
               <span style={{ marginLeft: '0.5rem' }}>
-                {complexityIcons[key]}
+                {complexityIcons[complexity]}
               </span>
             </Flex>
           )
@@ -418,11 +417,12 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
 
       <FilterElement>
         <Label>Markets</Label>
-        {Object.keys(Market).map((key, index) => {
+        {Object.values(Market).map((market, index) => {
           const markets = Object.keys(Market)
-          const navigation = register(key, {
+
+          const navigation = register(market, {
             resolve: () => {
-              updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
+              updateFilterHandler(UserSettingKey.MarketFilter, market)
             },
             neighbors: {
               left: `Member Number ${range(numberMemberGroups)[0]}`,
@@ -433,16 +433,16 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           })
 
           return (
-            <Flex key={key} direction="row" align="center" {...navigation}>
+            <Flex key={market} direction="row" align="center" {...navigation}>
               <Checkbox
-                label={key}
-                checked={settingExist(UserSettingKey.MarketFilter, Market[key])}
+                label={market}
+                checked={settingExist(UserSettingKey.MarketFilter, market)}
                 onChange={() => {
-                  updateFilterHandler(UserSettingKey.MarketFilter, Market[key])
+                  updateFilterHandler(UserSettingKey.MarketFilter, market)
                 }}
               />
               <span style={{ marginLeft: '0.5rem' }}>
-                {MarketFlags[key.toUpperCase()]}
+                {MarketFlags[market]}
               </span>
             </Flex>
           )

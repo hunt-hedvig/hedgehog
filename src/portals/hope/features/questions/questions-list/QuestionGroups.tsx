@@ -6,6 +6,7 @@ import {
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React from 'react'
 import { FilteredQuestionGroups } from './FilteredQuestionGroups'
+import { QuestionGroup } from 'types/generated/graphql'
 
 const ListContainer = styled.div`
   display: flex;
@@ -14,7 +15,10 @@ const ListContainer = styled.div`
   margin: 0;
 `
 
-export const QuestionGroups = ({ selectedFilters, questionGroups }) => {
+export const QuestionGroups: React.FC<{
+  selectedFilters: number[]
+  questionGroups: readonly QuestionGroup[]
+}> = ({ selectedFilters, questionGroups }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
 
   return (

@@ -7,6 +7,7 @@ import {
   useCreateClaimPropertyOptionMutation,
   useGetClaimPropertyOptionsQuery,
 } from 'types/generated/graphql'
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 
 export const CreateOptionForm: React.FC = () => {
   const { data } = useGetClaimPropertyOptionsQuery()
@@ -23,7 +24,10 @@ export const CreateOptionForm: React.FC = () => {
     toast.promise(
       createOption({
         variables: { name: newOptionName },
-        update: (cache, { data: response }) => {
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
           const newClaimPropertyOption = response?.createClaimPropertyOption
 
           if (!newClaimPropertyOption) {

@@ -74,10 +74,7 @@ export type OrbFlagsType = _FlagProp
 
 export { Popover } from './Popover/popover'
 export { RadioGroup, Radio } from './Radio/radio'
-export {
-  SearchableDropdown,
-  SearchableDropdownWithRef,
-} from './SearchableDropdown/searchable-dropdown'
+export { SearchableDropdown } from './SearchableDropdown/searchable-dropdown'
 export { Spinner } from './Spinner/spinner'
 export { TextArea } from './TextArea/text-area'
 export type TextAreaProps = _TextAreaProps

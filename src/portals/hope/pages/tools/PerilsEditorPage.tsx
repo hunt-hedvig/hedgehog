@@ -70,6 +70,7 @@ const PerilsEditorPage: Page = () => {
   )
   const [parsedPerils, reallySetParsedPerils] =
     React.useState<ReadonlyArray<Peril> | null>(null)
+
   const setParsedPerils = (perils: ReadonlyArray<Peril>) => {
     reallySetParsedPerils(perils)
     localStorage.setItem(PERIL_CONTENTS_KEY, JSON.stringify(perils))
@@ -142,6 +143,8 @@ const PerilsEditorPage: Page = () => {
                 ? peril.title
                 : peril.title.props.children
 
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             const updateField = (field: string) => (value) => {
               setParsedPerils(
                 parsedPerils.map((originalPeril, i_) => {

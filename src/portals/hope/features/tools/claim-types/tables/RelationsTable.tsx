@@ -18,6 +18,7 @@ import {
   useDeleteClaimTypeRelationMutation,
   useGetClaimTypeRelationsQuery,
 } from 'types/generated/graphql'
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 
 const NonClickableColumn = styled(TableColumn)`
   cursor: default;
@@ -89,7 +90,10 @@ export const RelationsTable: React.FC<{ filter: string }> = ({ filter }) => {
                     toast.promise(
                       deleteRelation({
                         variables: { id: relation.id },
-                        update: (cache, { data: response }) => {
+                        update: (
+                          cache: ApolloCache<NormalizedCacheObject>,
+                          { data: response },
+                        ) => {
                           if (!response) {
                             return
                           }
