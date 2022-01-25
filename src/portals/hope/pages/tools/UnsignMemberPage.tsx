@@ -1,19 +1,20 @@
-import { useMutation } from '@apollo/client'
 import { Button, Input, MainHeadline, Spacing } from '@hedvig-ui'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Page } from 'portals/hope/pages/routes'
 import gql from 'graphql-tag'
+import {
+  useTerminateStagingContractsMutation,
+  useUnsignMemberMutation,
+} from 'types/generated/graphql'
 
-const UNSIGN_MEMBER = gql`
+gql`
   mutation UnsignMember($ssn: String, $email: String) {
     unsignMember(ssn: $ssn, email: $email)
   }
-`
 
-const TERMINATE_CONTRACTS = gql`
-  mutation TerminateContracts($ssn: String, $email: String) {
+  mutation TerminateStagingContracts($ssn: String, $email: String) {
     terminateContracts(ssn: $ssn, email: $email)
   }
 `
@@ -21,10 +22,10 @@ const TERMINATE_CONTRACTS = gql`
 const UnsignMemberPage: Page = () => {
   const [ssn, setSsn] = React.useState('')
   const [email, setEmail] = React.useState('')
-  const [useUnsignMember, unsignResult] = useMutation(UNSIGN_MEMBER)
+  const [useUnsignMember, unsignResult] = useUnsignMemberMutation()
   const loadingUnsign = unsignResult.loading
   const [useTerminateContracts, terminateContractsResult] =
-    useMutation(TERMINATE_CONTRACTS)
+    useTerminateStagingContractsMutation()
   const loadingTerminateContracts = terminateContractsResult.loading
 
   useTitle('Tools | Unsign Member')
