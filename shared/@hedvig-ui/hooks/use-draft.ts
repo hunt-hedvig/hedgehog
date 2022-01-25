@@ -28,7 +28,7 @@ export const useDraft = ({
 
       return Object.keys(prevDrafts)
         .filter((draftId) => prevDrafts[draftId].expiry > now)
-        .reduce((obj, key) => {
+        .reduce<Record<string, Draft>>((obj, key) => {
           obj[key] = prevDrafts[key]
           return obj
         }, {})
@@ -36,7 +36,7 @@ export const useDraft = ({
   }, [id])
 
   window.onstorage = (e) => {
-    if (e.key === `hvg:drafts:${section}`) {
+    if (e.key === `hvg:drafts:${section}` && e.newValue) {
       const newDrafts = JSON.parse(e.newValue)
       setDrafts(newDrafts)
     }
