@@ -100,7 +100,11 @@ export const ConversationsOverview: React.FC<{
 
         <ConversationWrapper>
           {filteredGroups.map((group) => (
-            <ConversationItem group={group} currentMemberId={currentMemberId} />
+            <ConversationItem
+              key={group.id}
+              group={group}
+              currentMemberId={currentMemberId}
+            />
           ))}
         </ConversationWrapper>
       </Flex>

@@ -49,7 +49,7 @@ export const ConversationChat: React.FC<{
   onBlur: () => void
   onResolve: () => void
 }> = ({ memberId, onFocus, onBlur, onResolve }) => {
-  const [draft, setDraft] = useDraft({ id: memberId, section: 'conversation' })
+  const [draft, setDraft] = useDraft(memberId)
   const [message, setMessage] = useState(draft)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()

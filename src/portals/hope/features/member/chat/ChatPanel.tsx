@@ -100,7 +100,7 @@ const ChatTip = styled.div`
 `
 
 export const ChatPanel: React.FC<{ memberId: string }> = ({ memberId }) => {
-  const [draft, setDraft] = useDraft({ id: memberId, section: 'chat' })
+  const [draft, setDraft] = useDraft(memberId)
   const [error, setError] = useState(false)
   const [currentMessage, setCurrentMessage] = useState(draft)
   const [forceSendMessage, setForceSendMessage] = useState(false)

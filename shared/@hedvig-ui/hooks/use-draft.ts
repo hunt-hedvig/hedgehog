@@ -1,24 +1,16 @@
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { useEffect } from 'react'
 
-interface useDraftVariables {
-  id: string
-  section: string
-}
-
 interface Draft {
   content: string
   expiry: number
 }
 
-export const useDraft = ({
-  id,
-  section,
-}: useDraftVariables): [string, (draft: string) => void] => {
+export const useDraft = (id: string): [string, (draft: string) => void] => {
   const hour = 60 * 60 * 1000
   const ttl = 24 * hour
   const [drafts, setDrafts] = useInsecurePersistentState<Record<string, Draft>>(
-    `drafts:${section}`,
+    `drafts`,
     {},
   )
 
@@ -36,7 +28,7 @@ export const useDraft = ({
   }, [id])
 
   window.onstorage = (e) => {
-    if (e.key === `hvg:drafts:${section}` && e.newValue) {
+    if (e.key === `hvg:drafts` && e.newValue) {
       const newDrafts = JSON.parse(e.newValue)
       setDrafts(newDrafts)
     }

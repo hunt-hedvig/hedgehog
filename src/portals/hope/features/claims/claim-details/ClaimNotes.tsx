@@ -83,7 +83,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [submitting, setSubmitting] = useState(false)
   const [textFieldFocused, setTextFieldFocused] = useState(false)
 
-  const [draft, setDraft] = useDraft({ id: claimId, section: 'notes' })
+  const [draft, setDraft] = useDraft(claimId)
 
   const { me } = useMe()
 
