@@ -5,7 +5,12 @@ import { keyframes } from '@emotion/react'
 import { TemplateForm } from './TemplateForm'
 import { SearchIcon } from '../../../members-search/styles'
 import { Input, Tabs, Button, SecondLevelHeadline } from '@hedvig-ui'
-import { Pen as EditIcon, PinAngle, Trash } from 'react-bootstrap-icons'
+import {
+  Pen as EditIcon,
+  PinAngle,
+  PinAngleFill,
+  Trash,
+} from 'react-bootstrap-icons'
 import { TemplateMessage, useTemplateMessages } from '../use-template-messages'
 import toast from 'react-hot-toast'
 import { Market } from '../../../config/constants'
@@ -65,7 +70,7 @@ const HeaderBottom = styled.div`
 const Content = styled.div`
   padding: 15px;
   margin-bottom: 6rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   flex: 1;
 `
 
@@ -178,9 +183,14 @@ export const TemplateMessages: React.FC<{
 
   if (isCreating) {
     return (
-      <Container ref={templatesRef} closing={closing} style={{ padding: 15 }}>
+      <Container
+        ref={templatesRef}
+        closing={closing}
+        style={{ padding: 15, overflowY: 'auto' }}
+      >
         <SecondLevelHeadline>Create Template</SecondLevelHeadline>
         <TemplateForm
+          isModal
           isCreating={isCreating}
           onSubmit={submitHandler}
           onClose={() => {
@@ -193,9 +203,14 @@ export const TemplateMessages: React.FC<{
 
   if (editingTemplate) {
     return (
-      <Container ref={templatesRef} closing={closing} style={{ padding: 15 }}>
+      <Container
+        ref={templatesRef}
+        closing={closing}
+        style={{ padding: 15, overflowY: 'auto' }}
+      >
         <SecondLevelHeadline>Edit Template</SecondLevelHeadline>
         <TemplateForm
+          isModal
           template={editingTemplate}
           onSubmit={submitHandler}
           onClose={() => {
@@ -266,9 +281,7 @@ export const TemplateMessages: React.FC<{
                   : true,
               )
               .filter((template) => template.market.includes(currentMarket))
-              .filter((template) =>
-                isPinnedTab ? template.pinned : !template.pinned,
-              )
+              .filter((template) => (isPinnedTab ? template.pinned : true))
               .reverse()
               .map((template) => (
                 <TemplateItem
@@ -276,6 +289,7 @@ export const TemplateMessages: React.FC<{
                   id={template.id}
                   name={template.name}
                   text={template.messageEn}
+                  pinned={template.pinned || false}
                   onSelect={selectHandler}
                   onDelete={deleteHandler}
                   onEdit={editHandler}
@@ -300,7 +314,7 @@ const TemplateContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 0.5rem;
 
-  height: 10rem;
+  max-height: 10rem;
 
   display: flex;
   flex-direction: column;
@@ -361,6 +375,7 @@ interface TemplateItemProps {
   id: string
   name: string
   text: string
+  pinned: boolean
   onSelect: (id: string) => void
   onDelete: (id: string) => void
   onEdit: (id: string) => void
@@ -371,6 +386,7 @@ const TemplateItem = ({
   id,
   name,
   text,
+  pinned,
   onSelect,
   onDelete,
   onEdit,
@@ -389,7 +405,11 @@ const TemplateItem = ({
         {isHover && (
           <TemplateActions>
             <EditIcon onClick={() => onEdit(id)} />
-            <PinAngle onClick={() => onPin(id)} />
+            {pinned ? (
+              <PinAngleFill onClick={() => onPin(id)} />
+            ) : (
+              <PinAngle onClick={() => onPin(id)} />
+            )}
             <Trash onClick={() => onDelete(id)} />
           </TemplateActions>
         )}

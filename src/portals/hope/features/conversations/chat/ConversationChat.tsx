@@ -46,7 +46,7 @@ const TextAreaFooter = styled.div`
   position: relative;
   padding: 4px 15px;
   border-radius: 0 0 8px 8px;
-  background: ${({ theme }) => theme.backgroundLight};
+  background: ${({ theme }) => theme.accentContrast};
   display: flex;
   align-items: center;
   justify-content: flex-end;

@@ -38,14 +38,12 @@ interface TemplateFormProps {
   onSubmit: (template: TemplateMessage) => void
   isCreating?: boolean
   onClose?: () => void
+  isModal?: boolean
 }
 
-export const TemplateForm: React.FC<TemplateFormProps> = ({
-  template,
-  isCreating,
-  onSubmit,
-  onClose,
-}) => {
+export const TemplateForm: React.FC<
+  TemplateFormProps & Omit<React.HTMLAttributes<HTMLFormElement>, 'onSubmit'>
+> = ({ template, isCreating, onSubmit, onClose, isModal, ...props }) => {
   const [markets, setMarkets] = useState<Market[]>(
     template?.market || [Market.Sweden],
   )
@@ -85,7 +83,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
 
   return (
     <FormProvider {...form}>
-      <Form onSubmit={submitHandler} style={{ height: '100%' }}>
+      <Form onSubmit={submitHandler} style={{ height: '100%' }} {...props}>
         <FormInput
           label="Template Name"
           placeholder="Write template name here..."
@@ -244,7 +242,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({
           </Field>
         )}
 
-        <ButtonsGroup style={{ marginTop: 'auto' }}>
+        <ButtonsGroup style={{ marginTop: isModal ? 15 : 'auto' }}>
           <Button type="submit">
             {isCreating ? 'Create' : 'Save Changes'}
           </Button>
