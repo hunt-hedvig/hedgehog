@@ -282,7 +282,15 @@ export const TemplateMessages: React.FC<{
               )
               .filter((template) => template.market.includes(currentMarket))
               .filter((template) => (isPinnedTab ? template.pinned : true))
-              .reverse()
+              .sort((a, b) => {
+                if (a.name < b.name) {
+                  return -1
+                }
+                if (a.name > b.name) {
+                  return 1
+                }
+                return 0
+              })
               .map((template) => (
                 <TemplateItem
                   key={template.id}

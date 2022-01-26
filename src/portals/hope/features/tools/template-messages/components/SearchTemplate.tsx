@@ -86,7 +86,15 @@ export const SearchTemplate: React.FC<{
               ? template.name.toLowerCase().includes(query.toLowerCase())
               : true,
           )
-          .reverse()
+          .sort((a, b) => {
+            if (a.name < b.name) {
+              return -1
+            }
+            if (a.name > b.name) {
+              return 1
+            }
+            return 0
+          })
           .map((template) => (
             <TemplateItem
               key={template.id}
