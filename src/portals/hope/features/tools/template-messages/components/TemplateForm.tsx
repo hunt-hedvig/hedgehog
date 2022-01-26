@@ -10,11 +10,16 @@ import {
   FormTextArea,
   FormInput,
 } from '@hedvig-ui'
-import { Message, TemplateMessage } from '../use-template-messages'
+import {
+  Message,
+  TemplateMessage,
+  useTemplateMessages,
+} from '../use-template-messages'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import formatDate from 'date-fns/format'
 import { Market } from '../../../config/constants'
+import toast from 'react-hot-toast'
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
@@ -48,6 +53,7 @@ export const TemplateForm: React.FC<
     template?.market || [Market.Sweden],
   )
   const [expiryDate, setExpiryDate] = useState(template?.expiryDate || null)
+  const { templates } = useTemplateMessages()
 
   const form = useForm()
 
@@ -58,6 +64,11 @@ export const TemplateForm: React.FC<
   }, [template])
 
   const submitHandler = (values: FieldValues) => {
+    if (templates.find((template) => template.name === values.name)) {
+      toast.error(`Template with name '${values.name}' already exist`)
+      return
+    }
+
     const messages: Message[] = []
 
     Object.values(Market).forEach((market) => {
@@ -79,6 +90,7 @@ export const TemplateForm: React.FC<
     }
 
     onSubmit(newTemplate)
+    toast.success(`Template ${newTemplate.name} successfully created`)
   }
 
   return (
