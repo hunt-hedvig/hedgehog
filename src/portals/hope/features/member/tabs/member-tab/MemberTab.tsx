@@ -139,7 +139,6 @@ export const MemberTab: React.FC<{
   }
 
   const handleChange = (field: string, value: string) => {
-    console.log(field, value)
     if (field === 'firstName' || field === 'lastName') {
       setFieldValue(field, value.charAt(0).toUpperCase() + value.slice(1))
     } else {
@@ -155,7 +154,6 @@ export const MemberTab: React.FC<{
   }
 
   const handleSubmit = () => {
-    console.log(editMemberInfoRequest)
     editMemberInfo({
       variables: {
         request: editMemberInfoRequest,
