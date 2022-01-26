@@ -20,6 +20,7 @@ import { v4 as uuidv4 } from 'uuid'
 import formatDate from 'date-fns/format'
 import { Market } from '../../../config/constants'
 import toast from 'react-hot-toast'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
@@ -53,7 +54,9 @@ export const TemplateForm: React.FC<
     template?.market || [Market.Sweden],
   )
   const [expiryDate, setExpiryDate] = useState(template?.expiryDate || null)
+
   const { templates } = useTemplateMessages()
+  const { confirm } = useConfirmDialog()
 
   const form = useForm()
 
@@ -266,7 +269,15 @@ export const TemplateForm: React.FC<
             {isCreating ? 'Create' : 'Save Changes'}
           </Button>
           {onClose && (
-            <Button variant="secondary" onClick={onClose}>
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={() => {
+                confirm('Confirm leaving without saving?').then(() => {
+                  onClose()
+                })
+              }}
+            >
               Discard
             </Button>
           )}

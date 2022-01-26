@@ -93,6 +93,12 @@ const Bottom = styled.div`
   }
 `
 
+const EmptyContainer = styled.div`
+  text-align: center;
+  color: ${({ theme }) => theme.placeholderColor};
+  font-size: 12px;
+`
+
 export const TemplateMessages: React.FC<{
   hide: () => void
 }> = ({ hide }) => {
@@ -162,24 +168,57 @@ export const TemplateMessages: React.FC<{
   }
 
   const switchMarketHandler = () => {
+    let message =
+      'By switching this setting, The default language used by this member will be changing to '
+
     switch (currentMarket) {
       case Market.Sweden: {
-        changeCurrentMarket(Market.Denmark)
-        toast.success(`Switched to ${Market.Denmark}`)
+        message += 'Denmark'
+
+        // Don't work useConfirmDialog in some reason
+        if (confirm(message)) {
+          changeCurrentMarket(Market.Denmark)
+          toast.success(`Switched to ${Market.Denmark}`)
+        }
         break
       }
       case Market.Denmark: {
-        changeCurrentMarket(Market.Norway)
-        toast.success(`Switched to ${Market.Norway}`)
+        message += 'Norway'
+        if (confirm(message)) {
+          changeCurrentMarket(Market.Norway)
+          toast.success(`Switched to ${Market.Norway}`)
+        }
         break
       }
       case Market.Norway: {
-        changeCurrentMarket(Market.Sweden)
-        toast.success(`Switched to ${Market.Sweden}`)
+        message += 'Sweden'
+        if (confirm(message)) {
+          changeCurrentMarket(Market.Sweden)
+          toast.success(`Switched to ${Market.Sweden}`)
+        }
         break
       }
     }
   }
+
+  const getFilteredTemplates = () =>
+    templates
+      .filter((template) =>
+        query
+          ? template.name.toLowerCase().includes(query.toLowerCase())
+          : true,
+      )
+      .filter((template) => template.market.includes(currentMarket))
+      .filter((template) => (isPinnedTab ? template.pinned : true))
+      .sort((a, b) => {
+        if (a.name < b.name) {
+          return -1
+        }
+        if (a.name > b.name) {
+          return 1
+        }
+        return 0
+      })
 
   if (isCreating) {
     return (
@@ -273,38 +312,23 @@ export const TemplateMessages: React.FC<{
         </HeaderBottom>
       </Header>
       <Content>
-        {templates?.length
-          ? templates
-              .filter((template) =>
-                query
-                  ? template.name.toLowerCase().includes(query.toLowerCase())
-                  : true,
-              )
-              .filter((template) => template.market.includes(currentMarket))
-              .filter((template) => (isPinnedTab ? template.pinned : true))
-              .sort((a, b) => {
-                if (a.name < b.name) {
-                  return -1
-                }
-                if (a.name > b.name) {
-                  return 1
-                }
-                return 0
-              })
-              .map((template) => (
-                <TemplateItem
-                  key={template.id}
-                  id={template.id}
-                  name={template.name}
-                  text={template.messageEn}
-                  pinned={template.pinned || false}
-                  onSelect={selectHandler}
-                  onDelete={deleteHandler}
-                  onEdit={editHandler}
-                  onPin={pinHandler}
-                />
-              ))
-          : null}
+        {getFilteredTemplates()?.length ? (
+          getFilteredTemplates().map((template) => (
+            <TemplateItem
+              key={template.id}
+              id={template.id}
+              name={template.name}
+              text={template.messageEn}
+              pinned={template.pinned || false}
+              onSelect={selectHandler}
+              onDelete={deleteHandler}
+              onEdit={editHandler}
+              onPin={pinHandler}
+            />
+          ))
+        ) : (
+          <EmptyContainer>No records found</EmptyContainer>
+        )}
       </Content>
       <Bottom onClick={switchMarketHandler}>
         This user speaks in another language instead?
@@ -418,7 +442,18 @@ const TemplateItem = ({
             ) : (
               <PinAngle onClick={() => onPin(id)} />
             )}
-            <Trash onClick={() => onDelete(id)} />
+            <Trash
+              onClick={() => {
+                // Don't work useConfirmDialog in some reason
+                if (
+                  confirm(
+                    'Are you sure you want to delete this message template?',
+                  )
+                ) {
+                  onDelete(id)
+                }
+              }}
+            />
           </TemplateActions>
         )}
       </TemplateTop>

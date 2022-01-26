@@ -10,6 +10,7 @@ import {
 } from '../../features/tools/template-messages/use-template-messages'
 import { Market } from '../../features/config/constants'
 import { Page } from 'portals/sos/pages/routes'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 
 const Container = styled(FadeIn)`
   flex: 1;
@@ -39,6 +40,8 @@ const TemplateMessagesPage: Page = () => {
     setMarket: changeCurrentMarket,
   } = useTemplateMessages()
 
+  const { confirm } = useConfirmDialog()
+
   const saveChangesHandler = (newTemplate: TemplateMessage) => {
     if (!selectedTemplate) {
       return
@@ -54,8 +57,12 @@ const TemplateMessagesPage: Page = () => {
   }
 
   const deleteHandler = (id: string) => {
-    deleteTemplate(id)
-    setSelectedTemplate(null)
+    confirm('Are you sure you want to delete this message template?').then(
+      () => {
+        deleteTemplate(id)
+        setSelectedTemplate(null)
+      },
+    )
   }
 
   if (isCreating) {
