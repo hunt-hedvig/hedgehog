@@ -9,9 +9,10 @@ import {
   getMemberIdColor,
 } from 'portals/hope/features/member/utils'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
-import { PickedLocale } from 'portals/hope/features/config/constants'
+import { Market, PickedLocale } from 'portals/hope/features/config/constants'
+import { useTemplateMessages } from '../../tools/template-messages/use-template-messages'
 
 const MemberPlaceholder = styled.div`
   border-radius: 8px;
@@ -96,7 +97,15 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
     variables: { memberId },
   })
 
-  if (!data) {
+  const { setMarket } = useTemplateMessages()
+
+  useEffect(() => {
+    setMarket(
+      (data?.member?.contractMarketInfo?.market as Market) || Market.Sweden,
+    )
+  }, [data])
+
+  if (!data?.member) {
     return (
       <Loadable loading>
         <MemberPlaceholder />
@@ -105,16 +114,6 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   }
 
   const { member } = data
-
-  //TODO: Add normal automatic switching of market
-
-  if (!member) {
-    return (
-      <Loadable loading>
-        <MemberPlaceholder />
-      </Loadable>
-    )
-  }
 
   const { birthDate, claims } = member
   const age = differenceInYears(new Date(), parseISO(birthDate))
