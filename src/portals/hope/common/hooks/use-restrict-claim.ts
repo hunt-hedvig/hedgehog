@@ -29,6 +29,7 @@ gql`
       rolesRestricted
       restrictedBy {
         id
+        email
         fullName
       }
       restrictedByMe
@@ -115,13 +116,17 @@ export const useRestrictClaim = (claimId: string): UseRestrictClaimResult => {
           cache: ApolloCache<NormalizedCacheObject>,
           { data: response },
         ) => {
+          if (!response) {
+            return
+          }
+
           cache.writeQuery({
             query: ClaimRestrictionInformationDocument,
             data: {
               claim: {
                 __typename: 'Claim',
                 id: claimId,
-                restriction: response,
+                restriction: response.restrictResourceAccess,
               },
             },
           })

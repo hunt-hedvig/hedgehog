@@ -13,9 +13,10 @@ import {
 import { sleep } from '@hedvig-ui/utils/sleep'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
-import { ClaimFileUpload, useClaimPageQuery } from 'types/generated/graphql'
+import { ClaimFileUpload, useClaimFilesQuery } from 'types/generated/graphql'
 import { FileRow } from './FileRow'
 import { FileUpload } from './FileUpload'
+import gql from 'graphql-tag'
 
 const TableWithOverflow = styled(Table)`
   overflow: visible !important;
@@ -28,31 +29,37 @@ const sortClaimFileDate = (a: ClaimFileUpload, b: ClaimFileUpload) => {
   return bDate.getTime() - aDate.getTime()
 }
 
-const NoClaimFiles = styled('div')({
-  padding: '1rem',
-})
+const NoClaimFiles = styled.div`
+  padding: 1rem;
+`
+
+gql`
+  query ClaimFiles($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      claimFiles {
+        claimFileId
+      }
+    }
+  }
+`
 
 export const ClaimFileTable: React.FC<{
   claimId: string
   memberId: string
 }> = ({ claimId, memberId }) => {
-  const {
-    data: claimFilesData,
-    refetch,
-    loading,
-    error: queryError,
-  } = useClaimPageQuery({
+  const { data, error, loading, refetch } = useClaimFilesQuery({
     variables: { claimId },
   })
 
-  const claimFiles = claimFilesData?.claim?.claimFiles ?? []
+  const files = data?.claim?.claimFiles ?? []
 
   return (
     <CardContent>
       <CardTitle
         title="Files"
         badge={
-          queryError
+          error
             ? {
                 icon: BugFill,
                 status: 'danger',
@@ -69,7 +76,7 @@ export const ClaimFileTable: React.FC<{
           await refetch()
         }}
       />
-      {claimFiles.length !== 0 && (
+      {files.length !== 0 && (
         <TableWithOverflow>
           <TableHeader>
             <TableHeaderColumn>Claim Files</TableHeaderColumn>
@@ -86,7 +93,7 @@ export const ClaimFileTable: React.FC<{
               </TableRow>
             )}
 
-            {!claimFiles && !loading ? (
+            {!files && !loading ? (
               <TableRow>
                 <TableColumn>
                   <NoClaimFiles>
@@ -95,7 +102,8 @@ export const ClaimFileTable: React.FC<{
                 </TableColumn>
               </TableRow>
             ) : (
-              [...claimFiles]
+              files
+                .slice()
                 .sort(sortClaimFileDate)
                 .map((claimFile) => (
                   <FileRow

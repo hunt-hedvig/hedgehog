@@ -162,6 +162,7 @@ interface UseClaimCoInsuredResult {
   removeCoInsured: () => void
 }
 
+// FIXME: Extract this logic to separate file
 export const useClaimCoInsured = (claimId: string): UseClaimCoInsuredResult => {
   const [upsert] = useUpsertCoInsuredMutation()
   const [remove] = useDeleteCoInsuredMutation()
@@ -182,6 +183,7 @@ export const useClaimCoInsured = (claimId: string): UseClaimCoInsuredResult => {
             query: ClaimCoInsuredInformationDocument,
             data: {
               claim: {
+                __typename: 'Claim',
                 id: claimId,
                 coInsured: null,
               },

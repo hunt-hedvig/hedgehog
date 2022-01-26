@@ -126,7 +126,7 @@ export const useClaimNotes = (claimId: string): UseClaimNotesResult => {
     })
   }
 
-  const notes = (data?.claim?.notes ?? []).sort((noteA, noteB) => {
+  const notes = (data?.claim?.notes ?? []).slice().sort((noteA, noteB) => {
     return new Date(noteB.date).getTime() - new Date(noteA.date).getTime()
   })
 
