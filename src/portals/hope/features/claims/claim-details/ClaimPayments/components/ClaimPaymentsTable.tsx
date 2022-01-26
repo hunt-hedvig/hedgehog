@@ -98,7 +98,7 @@ export const ClaimPaymentsTable: FC<{ claimId: string }> = ({ claimId }) => {
               withSort
               sorting={sortBy.field === 'amount'}
               desc={sortBy.desc}
-              onClick={() => setSortBy({ field: 'amount' })}
+              onClick={() => setSortBy({ field: 'amount', desc: !sortBy.desc })}
             >
               Amount
             </TableHeaderColumn>
@@ -106,7 +106,9 @@ export const ClaimPaymentsTable: FC<{ claimId: string }> = ({ claimId }) => {
               withSort
               sorting={sortBy.field === 'deductible'}
               desc={sortBy.desc}
-              onClick={() => setSortBy({ field: 'deductible' })}
+              onClick={() =>
+                setSortBy({ field: 'deductible', desc: !sortBy.desc })
+              }
             >
               Deductible
             </TableHeaderColumn>
@@ -114,7 +116,7 @@ export const ClaimPaymentsTable: FC<{ claimId: string }> = ({ claimId }) => {
               withSort
               sorting={sortBy.field === 'paidAt'}
               desc={sortBy.desc}
-              onClick={() => setSortBy({ field: 'paidAt' })}
+              onClick={() => setSortBy({ field: 'paidAt', desc: !sortBy.desc })}
             >
               Date
             </TableHeaderColumn>
@@ -143,9 +145,11 @@ export const ClaimPaymentsTable: FC<{ claimId: string }> = ({ claimId }) => {
                 <TableColumn>
                   <FlexVertically>
                     {format(parseISO(payment.paidAt), 'yyyy-MM-dd')}
-                    <TableColumnSubtext>
-                      {format(parseISO(payment.paidAt), 'HH:mm:ss')}
-                    </TableColumnSubtext>
+                    {payment.paidAt === payment.timestamp && (
+                      <TableColumnSubtext>
+                        {format(parseISO(payment.paidAt), 'HH:mm:ss')}
+                      </TableColumnSubtext>
+                    )}
                   </FlexVertically>
                 </TableColumn>
                 <TableColumn>

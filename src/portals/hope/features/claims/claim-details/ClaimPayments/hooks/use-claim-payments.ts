@@ -24,6 +24,7 @@ gql`
       note
       type
       paidAt
+      timestamp
     }
   }
 `
