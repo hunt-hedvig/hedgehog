@@ -12,6 +12,7 @@ import {
   Trash,
 } from 'react-bootstrap-icons'
 import { TemplateMessage, useTemplateMessages } from '../use-template-messages'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 
 const show = keyframes`
   from {
@@ -106,7 +107,10 @@ export const TemplateMessages: React.FC<{
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
   const [isPinnedTab, setIsPinnedTab] = useState(false)
-  const [isEnDisplay, setIsEnDisplay] = useState(true)
+  const [isEnDisplay, setIsEnDisplay] = useInsecurePersistentState<boolean>(
+    'templates:language',
+    false,
+  )
 
   const {
     select,
@@ -166,11 +170,9 @@ export const TemplateMessages: React.FC<{
   }
 
   const switchMarketHandler = () => {
-    const message =
-      'By switching this setting, The default language used by this member will be changing to ' +
-      isEnDisplay
-        ? currentMarket
-        : 'English'
+    const message = `By switching this setting, The default language used by this member will be changing to ${
+      isEnDisplay ? currentMarket : 'English'
+    }`
 
     if (confirm(message)) {
       setIsEnDisplay((prev) => !prev)
