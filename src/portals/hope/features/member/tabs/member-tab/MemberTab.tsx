@@ -14,7 +14,7 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
-import React, { useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
@@ -256,7 +256,13 @@ export const MemberTab: React.FC<{
           style={{ overflowY: 'auto' }}
         >
           <FormProvider {...form}>
-            <Form onSubmit={handleSubmit}>
+            <Form
+              onSubmit={handleSubmit}
+              onChange={(e) => {
+                const event = e as unknown as ChangeEvent<HTMLInputElement>
+                handleChange(event.target.name, event.target.value)
+              }}
+            >
               <>
                 {Object.keys(memberInfoWithoutSsn).map((field) => (
                   <React.Fragment key={field}>
@@ -270,9 +276,6 @@ export const MemberTab: React.FC<{
                           field as keyof EditMemberInformationQuery['member']
                         ],
                       )}
-                      onChange={(event) => {
-                        handleChange(field, event.target.value)
-                      }}
                     />
                   </React.Fragment>
                 ))}
