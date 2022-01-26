@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
-import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
+import { Button, FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useDraft } from '@hedvig-ui/hooks/use-draft'
 import {
@@ -44,7 +44,7 @@ const ConversationTextArea = styled(TextArea)`
 
 const TextAreaFooter = styled.div`
   position: relative;
-  padding: 7px 15px;
+  padding: 4px 15px;
   border-radius: 0 0 8px 8px;
   background: ${({ theme }) => theme.backgroundLight};
   display: flex;
@@ -79,6 +79,15 @@ const TextAreaFooter = styled.div`
 const Tip = styled(Paragraph)`
   font-size: 0.7em;
   color: ${({ theme }) => theme.semiStrongForeground};
+`
+
+const TemplatesButton = styled(Button)`
+  padding: 4px;
+  border-radius: 2px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.accentBackground};
+  }
 `
 
 export const ConversationChat: React.FC<{
@@ -153,7 +162,6 @@ export const ConversationChat: React.FC<{
 
   useEffect(() => {
     if (selected) {
-      setDraft(selected)
       setMessage(selected)
     }
   }, [selected])
@@ -181,8 +189,15 @@ export const ConversationChat: React.FC<{
           />
           <TextAreaFooter onClick={show}>
             <div className="divider" />
-            <FileText style={{ width: 12, height: 12 }} />
-            <span>templates</span>
+            <TemplatesButton
+              size="small"
+              variant="tertiary"
+              icon={
+                <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
+              }
+            >
+              templates
+            </TemplatesButton>
           </TextAreaFooter>
         </ConversationFooter>
       </ConversationContent>
