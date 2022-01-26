@@ -139,6 +139,7 @@ export const MemberTab: React.FC<{
   }
 
   const handleChange = (field: string, value: string) => {
+    console.log(field, value)
     if (field === 'firstName' || field === 'lastName') {
       setFieldValue(field, value.charAt(0).toUpperCase() + value.slice(1))
     } else {
@@ -154,6 +155,7 @@ export const MemberTab: React.FC<{
   }
 
   const handleSubmit = () => {
+    console.log(editMemberInfoRequest)
     editMemberInfo({
       variables: {
         request: editMemberInfoRequest,
@@ -247,7 +249,7 @@ export const MemberTab: React.FC<{
           </div>
         </Button>
       </ButtonWrapper>
-      {modalOpen ? (
+      {modalOpen && (
         <Modal
           onClose={handleClose}
           title="Edit Member"
@@ -256,12 +258,7 @@ export const MemberTab: React.FC<{
           style={{ overflowY: 'auto' }}
         >
           <FormProvider {...form}>
-            <Form
-              onSubmit={handleSubmit}
-              onChange={(e) =>
-                handleChange(e.currentTarget.name, e.currentTarget.value)
-              }
-            >
+            <Form onSubmit={handleSubmit}>
               <>
                 {Object.keys(memberInfoWithoutSsn).map((field) => (
                   <React.Fragment key={field}>
@@ -275,6 +272,9 @@ export const MemberTab: React.FC<{
                           field as keyof EditMemberInformationQuery['member']
                         ],
                       )}
+                      onChange={(event) => {
+                        handleChange(field, event.target.value)
+                      }}
                     />
                   </React.Fragment>
                 ))}
@@ -292,7 +292,7 @@ export const MemberTab: React.FC<{
             </Form>
           </FormProvider>
         </Modal>
-      ) : null}
+      )}
     </FadeIn>
   ) : (
     <h1>No member info</h1>
