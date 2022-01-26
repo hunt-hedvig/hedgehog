@@ -7,7 +7,7 @@ import {
   TypeOfContractType,
 } from 'portals/hope/features/config/constants'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
-import { useClaimContracts } from './use-claim-contracts'
+import { useClaimContracts } from '../../../../../common/use-claim-contracts'
 
 const ContractItemTypeName = styled.div`
   font-size: 1.2em;
@@ -78,10 +78,8 @@ export const ClaimContractDropdown: React.FC<
     claimId: string
   } & Omit<DropdownProps, 'children' | 'value'>
 > = ({ memberId, claimId, ...props }) => {
-  const { contracts, trials, selected, setSelected } = useClaimContracts(
-    memberId,
-    claimId,
-  )
+  const { contracts, trials, selected, setSelected } =
+    useClaimContracts(claimId)
 
   return (
     <Dropdown placeholder="None selected" {...props}>
