@@ -12,8 +12,6 @@ import {
   Trash,
 } from 'react-bootstrap-icons'
 import { TemplateMessage, useTemplateMessages } from '../use-template-messages'
-import toast from 'react-hot-toast'
-import { Market } from '../../../config/constants'
 
 const show = keyframes`
   from {
@@ -108,6 +106,7 @@ export const TemplateMessages: React.FC<{
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
   const [isPinnedTab, setIsPinnedTab] = useState(false)
+  const [isEnDisplay, setIsEnDisplay] = useState(true)
 
   const {
     select,
@@ -117,7 +116,6 @@ export const TemplateMessages: React.FC<{
     delete: deleteTemplate,
     pin: pinTemplate,
     market: currentMarket,
-    setMarket: changeCurrentMarket,
   } = useTemplateMessages()
 
   const templatesRef = useRef<HTMLDivElement>(null)
@@ -168,36 +166,14 @@ export const TemplateMessages: React.FC<{
   }
 
   const switchMarketHandler = () => {
-    let message =
-      'By switching this setting, The default language used by this member will be changing to '
+    const message =
+      'By switching this setting, The default language used by this member will be changing to ' +
+      isEnDisplay
+        ? currentMarket
+        : 'English'
 
-    switch (currentMarket) {
-      case Market.Sweden: {
-        message += 'Denmark'
-
-        // Don't work useConfirmDialog in some reason
-        if (confirm(message)) {
-          changeCurrentMarket(Market.Denmark)
-          toast.success(`Switched to ${Market.Denmark}`)
-        }
-        break
-      }
-      case Market.Denmark: {
-        message += 'Norway'
-        if (confirm(message)) {
-          changeCurrentMarket(Market.Norway)
-          toast.success(`Switched to ${Market.Norway}`)
-        }
-        break
-      }
-      case Market.Norway: {
-        message += 'Sweden'
-        if (confirm(message)) {
-          changeCurrentMarket(Market.Sweden)
-          toast.success(`Switched to ${Market.Sweden}`)
-        }
-        break
-      }
+    if (confirm(message)) {
+      setIsEnDisplay((prev) => !prev)
     }
   }
 
@@ -318,7 +294,13 @@ export const TemplateMessages: React.FC<{
               key={template.id}
               id={template.id}
               name={template.name}
-              text={template.messageEn}
+              text={
+                isEnDisplay
+                  ? template.messageEn
+                  : template.messages.find(
+                      (msg) => msg.market === currentMarket,
+                    )?.text || ''
+              }
               pinned={template.pinned || false}
               onSelect={selectHandler}
               onDelete={deleteHandler}
