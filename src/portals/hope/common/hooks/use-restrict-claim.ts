@@ -1,7 +1,5 @@
 import gql from 'graphql-tag'
 import {
-  ClaimPageDocument,
-  ClaimPageQuery,
   ClaimRestrictionFragment,
   ClaimRestrictionInformationDocument,
   useClaimRestrictionInformationQuery,
@@ -89,17 +87,12 @@ export const useRestrictClaim = (claimId: string): UseRestrictClaimResult => {
       releaseResourceAccess({
         variables: { resourceId: claimId },
         update: (cache) => {
-          const cachedData = cache.readQuery({
-            query: ClaimPageDocument,
-            variables: { claimId },
-          }) as ClaimPageQuery
-
           cache.writeQuery({
-            query: ClaimPageDocument,
+            query: ClaimRestrictionInformationDocument,
             data: {
               claim: {
                 __typename: 'Claim',
-                ...cachedData.claim,
+                id: claimId,
                 restriction: null,
               },
             },
@@ -127,6 +120,7 @@ export const useRestrictClaim = (claimId: string): UseRestrictClaimResult => {
             data: {
               claim: {
                 __typename: 'Claim',
+                id: claimId,
                 restriction: response,
               },
             },
