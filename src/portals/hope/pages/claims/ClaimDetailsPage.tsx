@@ -197,7 +197,7 @@ const ClaimDetailsPage: Page<
               </CardsWrapper>
               <CardsWrapper contentWrap="noWrap">
                 <Card>
-                  <ClaimPayments claimId={claimId} memberId={memberId} />
+                  <ClaimPayments claimId={claimId} />
                 </Card>
               </CardsWrapper>
             </>

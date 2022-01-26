@@ -2,32 +2,62 @@ import { MockedProvider } from '@apollo/client/testing'
 import { sleep, tickAsync } from '@hedvig-ui/utils/sleep'
 import { mount } from 'enzyme'
 import { PaymentConfirmationModal } from 'portals/hope/features/claims/claim-details/ClaimPayments/components/PaymentConfirmationModal'
-import { Market } from 'portals/hope/features/config/constants'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import {
   ClaimPaymentInput,
   ClaimPaymentType,
   CreateClaimPaymentDocument,
-  SanctionStatus,
+  MemberPaymentInformationDocument,
 } from 'types/generated/graphql'
 import { ClaimPaymentForm } from './ClaimPaymentForm'
 
+const PaymentInformationMock = {
+  request: {
+    query: MemberPaymentInformationDocument,
+    variables: {
+      claimId: 'abc123',
+    },
+  },
+  result: {
+    data: {
+      claim: {
+        contract: {
+          id: 'contract-id',
+        },
+        agreement: {
+          id: 'agreement-id',
+          carrier: 'HEDVIG',
+        },
+        trial: null,
+        member: {
+          memberId: 'member-id',
+          transactions: [],
+          sanctionStatus: null,
+          contractMarketInfo: {
+            market: 'SWEDEN',
+            preferredCurrency: 'SEK',
+          },
+          directDebitStatus: null,
+          payoutMethodStatus: null,
+          adyenShopperReference: null,
+          identity: null,
+        },
+      },
+    },
+  },
+}
+
 it("doesn't submit empty form", async () => {
   const wrapper = mount(
-    <MockedProvider>
-      <ClaimPaymentForm
-        sanctionStatus={SanctionStatus.NoHit}
-        claimId="abc123"
-        identified={true}
-        market={Market.Sweden}
-        carrier="HEDVIG"
-        memberId="496557264"
-      />
+    <MockedProvider mocks={[PaymentInformationMock]}>
+      <ClaimPaymentForm claimId="abc123" />
     </MockedProvider>,
   )
 
   await act(() => tickAsync())
+
+  wrapper.update()
 
   await act(() => {
     wrapper.find('FormProvider').simulate('submit')
@@ -40,6 +70,7 @@ it("doesn't submit empty form", async () => {
 it('submits valid form with confirmation', async () => {
   const refetch = jest.fn(() => Promise.resolve())
   let paymentCreationCalled = false
+
   const payment: ClaimPaymentInput = {
     amount: {
       amount: 100,
@@ -57,6 +88,7 @@ it('submits valid form with confirmation', async () => {
   const wrapper = mount(
     <MockedProvider
       mocks={[
+        PaymentInformationMock,
         {
           request: {
             query: CreateClaimPaymentDocument,
@@ -79,18 +111,13 @@ it('submits valid form with confirmation', async () => {
         },
       ]}
     >
-      <ClaimPaymentForm
-        memberId="496557264"
-        sanctionStatus={SanctionStatus.NoHit}
-        claimId="abc123"
-        identified={true}
-        market={Market.Sweden}
-        carrier="HEDVIG"
-      />
+      <ClaimPaymentForm claimId="abc123" />
     </MockedProvider>,
   )
 
   await act(() => tickAsync())
+
+  wrapper.update()
 
   await act(async () => {
     wrapper.find('input[name="amount"]').simulate('change', {

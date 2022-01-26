@@ -31,21 +31,10 @@ gql`
     claim(id: $claimId) {
       id
       contract {
-        id
         market
       }
-      agreement {
-        id
-        carrier
-      }
-
-      trial {
-        id
-      }
-
       member {
         memberId
-        sanctionStatus
         identity {
           firstName
           lastName
@@ -61,17 +50,12 @@ gql`
 
 export const ClaimPayments: React.FC<{
   claimId: string
-  memberId: string
-}> = ({ claimId, memberId }) => {
-  const {
-    data: paymentsData,
-    error: queryError,
-    loading: loadingPayments,
-  } = useClaimPaymentsQuery({
+}> = ({ claimId }) => {
+  const { data, error: queryError } = useClaimPaymentsQuery({
     variables: { claimId },
   })
 
-  const identity = paymentsData?.claim?.member?.identity
+  const identity = data?.claim?.member?.identity
 
   return (
     <CardContent>
@@ -88,7 +72,7 @@ export const ClaimPayments: React.FC<{
         }
       />
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        {paymentsData?.claim?.contract?.market === Market.Norway && (
+        {data?.claim?.contract?.market === Market.Norway && (
           <MemberIdentityCard>
             <ThirdLevelHeadline>Member Identity</ThirdLevelHeadline>
             <InfoRow>
@@ -127,19 +111,7 @@ export const ClaimPayments: React.FC<{
       <ClaimPaymentsTable claimId={claimId} />
 
       <Spacing top="medium" />
-      {((!loadingPayments &&
-        paymentsData?.claim?.contract &&
-        paymentsData?.claim?.agreement?.carrier) ||
-        paymentsData?.claim?.trial) && (
-        <ClaimPaymentForm
-          sanctionStatus={paymentsData?.claim?.member.sanctionStatus}
-          claimId={claimId}
-          identified={Boolean(identity)}
-          memberId={memberId}
-          market={paymentsData?.claim?.contract?.market}
-          carrier={paymentsData?.claim?.agreement?.carrier ?? 'HEDVIG'}
-        />
-      )}
+      <ClaimPaymentForm claimId={claimId} />
     </CardContent>
   )
 }
