@@ -259,6 +259,7 @@ type MutationType {
     request: ManualUnRedeemCampaignInput!
   ): Member!
   unsignMember(ssn: String, email: String): Boolean!
+  terminateContracts(ssn: String, email: String): Boolean!
   editMemberInfo(request: EditMemberInfoInput!): Member!
   setFraudulentStatus(
     memberId: ID!

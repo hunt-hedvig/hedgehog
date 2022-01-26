@@ -3,7 +3,7 @@ import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useDraft } from '@hedvig-ui/hooks/use-draft'
 import {
@@ -87,8 +87,7 @@ export const ConversationChat: React.FC<{
   onBlur: () => void
   onResolve: () => void
 }> = ({ memberId, onFocus, onBlur, onResolve }) => {
-  const [draft, setDraft] = useDraft(memberId)
-  const [message, setMessage] = useState(draft)
+  const [message, setMessage] = useDraft(memberId)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()
   const { isMetaKey, metaKey } = usePlatform()
@@ -99,10 +98,6 @@ export const ConversationChat: React.FC<{
       },
     ],
   })
-
-  useEffect(() => {
-    setMessage(draft)
-  }, [memberId])
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (isMetaKey(e) && isPressing(e, Keys.Enter) && !loading && message) {
@@ -120,7 +115,6 @@ export const ConversationChat: React.FC<{
           loading: 'Sending message',
           success: () => {
             setMessage('')
-            setDraft('')
             return 'Message sent'
           },
           error: 'Could not send message',
@@ -181,7 +175,6 @@ export const ConversationChat: React.FC<{
             placeholder={'Your message goes here...'}
             value={message}
             onChange={(e) => {
-              setDraft(e.currentTarget.value)
               setMessage(e.currentTarget.value)
             }}
             onKeyDown={(e) => handleOnKeyDown(e)}

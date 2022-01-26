@@ -35,6 +35,7 @@ const FormCheckbox = styled(Checkbox)`
   .checkbox__input {
     border: none !important;
   }
+  max-width: 8rem;
 `
 
 interface CategoryOptionsType {
