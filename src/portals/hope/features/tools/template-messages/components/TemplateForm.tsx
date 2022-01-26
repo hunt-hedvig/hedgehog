@@ -80,6 +80,11 @@ export const TemplateForm: React.FC<
       }
     })
 
+    if (!messages.find((message) => message.text)) {
+      toast.error(`Template must contain at least one message`)
+      return
+    }
+
     const newTemplate: TemplateMessage = {
       id: template?.id || uuidv4(),
       name: values.name,
@@ -90,7 +95,6 @@ export const TemplateForm: React.FC<
     }
 
     onSubmit(newTemplate)
-    toast.success(`Template ${newTemplate.name} successfully created`)
   }
 
   return (
@@ -183,7 +187,8 @@ export const TemplateForm: React.FC<
                 ?.text || ''
             }
             rules={{
-              required: 'Cannot save an empty message',
+              required:
+                markets.length === 1 ? 'Cannot save an empty message' : false,
               pattern: {
                 value: /[^\s]/,
                 message: 'Cannot send a message without text',
@@ -202,7 +207,8 @@ export const TemplateForm: React.FC<
                 ?.text || ''
             }
             rules={{
-              required: 'Cannot save an empty message',
+              required:
+                markets.length === 1 ? 'Cannot save an empty message' : false,
               pattern: {
                 value: /[^\s]/,
                 message: 'Cannot send a message without text',
@@ -221,7 +227,8 @@ export const TemplateForm: React.FC<
                 ?.text || ''
             }
             rules={{
-              required: 'Cannot save an empty message',
+              required:
+                markets.length === 1 ? 'Cannot save an empty message' : false,
               pattern: {
                 value: /[^\s]/,
                 message: 'Cannot send a message without text',
