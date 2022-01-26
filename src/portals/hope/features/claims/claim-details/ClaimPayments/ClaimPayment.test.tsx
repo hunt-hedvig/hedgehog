@@ -11,12 +11,12 @@ import {
   CreateClaimPaymentDocument,
   SanctionStatus,
 } from 'types/generated/graphql'
-import { ClaimPayment } from './ClaimPayment'
+import { ClaimPaymentForm } from './ClaimPaymentForm'
 
 it("doesn't submit empty form", async () => {
   const wrapper = mount(
     <MockedProvider>
-      <ClaimPayment
+      <ClaimPaymentForm
         sanctionStatus={SanctionStatus.NoHit}
         claimId="abc123"
         identified={true}
@@ -79,7 +79,7 @@ it('submits valid form with confirmation', async () => {
         },
       ]}
     >
-      <ClaimPayment
+      <ClaimPaymentForm
         memberId="496557264"
         sanctionStatus={SanctionStatus.NoHit}
         claimId="abc123"

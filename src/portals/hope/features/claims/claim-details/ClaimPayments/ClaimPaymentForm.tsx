@@ -45,7 +45,7 @@ interface CategoryOptionsType {
   disabled?: boolean
 }
 
-export const ClaimPayment: React.FC<{
+export const ClaimPaymentForm: React.FC<{
   sanctionStatus?: SanctionStatus | null
   claimId: string
   identified: boolean
