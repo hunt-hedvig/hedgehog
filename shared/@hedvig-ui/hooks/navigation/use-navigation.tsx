@@ -48,6 +48,10 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   const handleKeydown = (e: KeyboardEvent) => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) {
+      return
+    }
+
     if (!(e.target instanceof Node)) {
       return
     }
