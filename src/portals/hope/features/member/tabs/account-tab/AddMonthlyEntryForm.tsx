@@ -16,7 +16,7 @@ import {
   MonthlyEntryInput,
   useAddMonthlyEntryMutation,
 } from 'types/generated/graphql'
-import { useContractMarketInfo } from 'portals/hope/common/use-contract-market-info'
+import { useContractMarketInfo } from 'portals/hope/common/hooks/use-contract-market-info'
 
 export const AddMonthlyEntryForm: React.FC<{
   memberId: string

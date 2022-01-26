@@ -1,9 +1,5 @@
 import styled from '@emotion/styled'
-import {
-  ClaimPageDocument,
-  useClaimPageQuery,
-  useRestrictResourceAccessMutation,
-} from 'types/generated/graphql'
+import { useClaimPageQuery } from 'types/generated/graphql'
 
 import {
   Button,
@@ -27,12 +23,11 @@ import {
 } from 'portals/hope/features/claims/claim-details/CoInsured/CoInsuredForm'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
-import { toast } from 'react-hot-toast'
 import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimDatePicker'
 import { ClaimEmployeeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimEmployeeDropdown'
 import { TermsAndConditionsLink } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/TermsAndConditionsLink'
 import { ClaimStatusDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimStatusDropdown'
-import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
+import { useRestrictClaim } from 'portals/hope/common/hooks/use-restrict-claim'
 
 const SelectWrapper = styled.div`
   margin-top: 1em;
@@ -92,15 +87,15 @@ const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
     </ClaimAudioWrapper>
   )
 }
+
 export const ClaimInformation: React.FC<{
   claimId: string
-  memberId: string
-  restricted: boolean
-}> = ({ claimId, memberId, restricted }) => {
-  const [creatingCoInsured, setCreatingCoInsured] = useState(false)
+}> = ({ claimId }) => {
   const { confirm } = useConfirmDialog()
+  const { restrict, restriction } = useRestrictClaim(claimId)
+
+  const [creatingCoInsured, setCreatingCoInsured] = useState(false)
   const deleteCoInsured = useDeleteCoInsured({ claimId })
-  const [restrictResourceAccess] = useRestrictResourceAccessMutation()
   const {
     data,
     error: queryError,
@@ -125,38 +120,6 @@ export const ClaimInformation: React.FC<{
         deleteCoInsured(),
       )
     }
-  }
-
-  const handleRestrictAccess = () => {
-    if (!data) {
-      return
-    }
-
-    toast.promise(
-      restrictResourceAccess({
-        variables: { resourceId: claimId },
-        update: (
-          cache: ApolloCache<NormalizedCacheObject>,
-          { data: response },
-        ) => {
-          cache.writeQuery({
-            query: ClaimPageDocument,
-            data: {
-              claim: {
-                __typename: 'Claim',
-                ...data.claim,
-                restriction: response,
-              },
-            },
-          })
-        },
-      }),
-      {
-        loading: 'Restricting access',
-        success: 'Access restricted',
-        error: 'Could not restrict access',
-      },
-    )
   }
 
   const coInsuredClaimOptions = [
@@ -211,7 +174,7 @@ export const ClaimInformation: React.FC<{
         </SelectWrapper>
         <SelectWrapper>
           <Label>Contract for Claim</Label>
-          <ClaimContractDropdown claimId={claimId} memberId={memberId} />
+          <ClaimContractDropdown claimId={claimId} />
         </SelectWrapper>
 
         {selectedAgreement ? (
@@ -252,7 +215,7 @@ export const ClaimInformation: React.FC<{
             </>
           )}
         </SelectWrapper>
-        {!restricted && (
+        {!restriction && (
           <SelectWrapper>
             <Button
               variant="tertiary"
@@ -261,7 +224,7 @@ export const ClaimInformation: React.FC<{
               }}
               onClick={() =>
                 confirm('Are you sure you want to restrict access?').then(() =>
-                  handleRestrictAccess(),
+                  restrict(),
                 )
               }
             >

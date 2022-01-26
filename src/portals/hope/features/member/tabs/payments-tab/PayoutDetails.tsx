@@ -10,7 +10,7 @@ import {
   PayoutMemberMutation,
   usePayoutMemberMutation,
 } from 'types/generated/graphql'
-import { useContractMarketInfo } from 'portals/hope/common/use-contract-market-info'
+import { useContractMarketInfo } from 'portals/hope/common/hooks/use-contract-market-info'
 
 const entryTypeOptions = [
   {
