@@ -269,6 +269,7 @@ export const ClaimPaymentForm: React.FC<{
           name="amount"
           defaultValue=""
           type="number"
+          step="any"
           affix={{ content: 'SEK' }}
           rules={{
             required: 'Amount is required',
@@ -282,6 +283,7 @@ export const ClaimPaymentForm: React.FC<{
           placeholder="Deductible"
           name="deductible"
           defaultValue=""
+          step="any"
           type="number"
         />
         <FormInput
