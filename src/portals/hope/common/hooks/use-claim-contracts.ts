@@ -80,6 +80,19 @@ interface UseClaimContractsResult {
   setSelected: (selected: string) => void
 }
 
+/**
+ * __useClaimContracts__
+ *
+ * - Get and set currently __selected__ contract or trial for a claim.
+ * - Also provides a list of __contracts__ and __trials__ from the corresponding member.
+ *
+ * @param claimId
+ *
+ * @example
+ *
+ * const { contracts, trials, selected, setSelected } = useClaimContracts(claimId)
+ */
+
 export const useClaimContracts = (claimId: string): UseClaimContractsResult => {
   const [setContractForClaim] = useSetContractForClaimMutation()
   const [setTrialForClaim] = useSetTrialForClaimMutation()
