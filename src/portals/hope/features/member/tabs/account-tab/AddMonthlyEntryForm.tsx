@@ -7,7 +7,6 @@ import {
   StandaloneMessage,
   SubmitButton,
 } from '@hedvig-ui'
-import { useContractMarketInfo } from 'portals/hope/features/member/tabs/account-tab/hooks/use-get-member-contract-market-info'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
@@ -17,24 +16,24 @@ import {
   MonthlyEntryInput,
   useAddMonthlyEntryMutation,
 } from 'types/generated/graphql'
+import { useContractMarketInfo } from 'portals/hope/common/use-contract-market-info'
 
 export const AddMonthlyEntryForm: React.FC<{
   memberId: string
   onCancel: () => void
   onSuccess: () => void
 }> = ({ memberId, onCancel, onSuccess }) => {
-  const [contractMarketInfo] = useContractMarketInfo(memberId)
+  const { preferredCurrency } = useContractMarketInfo(memberId)
   const [addMonthlyEntry] = useAddMonthlyEntryMutation()
   const form = useForm()
 
-  if (!contractMarketInfo?.preferredCurrency) {
+  if (!preferredCurrency) {
     return (
       <StandaloneMessage>
         The member has no preferred currency
       </StandaloneMessage>
     )
   }
-  const { preferredCurrency } = contractMarketInfo
 
   const onSubmit = (data: FieldValues) => {
     const dataCopy = {

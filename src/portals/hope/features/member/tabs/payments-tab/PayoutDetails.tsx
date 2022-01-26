@@ -8,9 +8,9 @@ import {
   GetMemberTransactionsDocument,
   GetMemberTransactionsQuery,
   PayoutMemberMutation,
-  useGetContractMarketInfoQuery,
   usePayoutMemberMutation,
 } from 'types/generated/graphql'
+import { useContractMarketInfo } from 'portals/hope/common/use-contract-market-info'
 
 const entryTypeOptions = [
   {
@@ -33,13 +33,10 @@ const entryTypeOptions = [
 export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   const form = useForm()
   const [payoutMember] = usePayoutMemberMutation()
-  const { data: contractMarketInfo } = useGetContractMarketInfoQuery({
-    variables: { memberId },
-  })
-  const { confirm } = useConfirmDialog()
 
-  const preferredCurrency =
-    contractMarketInfo?.member?.contractMarketInfo?.preferredCurrency ?? 'SEK'
+  const { preferredCurrency = 'SEK' } = useContractMarketInfo(memberId)
+
+  const { confirm } = useConfirmDialog()
 
   const updateCache = (
     cache: ApolloCache<NormalizedCacheObject>,
