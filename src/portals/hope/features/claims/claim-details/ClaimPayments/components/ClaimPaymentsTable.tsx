@@ -18,7 +18,7 @@ import {
 import copy from 'copy-to-clipboard'
 import { toast } from 'react-hot-toast'
 import { format, parseISO } from 'date-fns'
-import { useClaimPayments } from './hooks/use-claim-payments'
+import { useClaimPayments } from '../hooks/use-claim-payments'
 
 const ScrollX = styled.div`
   margin-bottom: 1em;
@@ -112,9 +112,9 @@ export const ClaimPaymentsTable: FC<{ claimId: string }> = ({ claimId }) => {
             </TableHeaderColumn>
             <TableHeaderColumn
               withSort
-              sorting={sortBy.field === 'timestamp'}
+              sorting={sortBy.field === 'paidAt'}
               desc={sortBy.desc}
-              onClick={() => setSortBy({ field: 'amount' })}
+              onClick={() => setSortBy({ field: 'paidAt' })}
             >
               Date
             </TableHeaderColumn>

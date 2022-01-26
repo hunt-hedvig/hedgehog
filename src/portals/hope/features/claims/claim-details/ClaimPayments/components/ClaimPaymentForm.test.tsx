@@ -1,7 +1,7 @@
 import { MockedProvider } from '@apollo/client/testing'
 import { sleep, tickAsync } from '@hedvig-ui/utils/sleep'
 import { mount } from 'enzyme'
-import { PaymentConfirmationModal } from 'portals/hope/features/claims/claim-details/ClaimPayments/PaymentConfirmationModal'
+import { PaymentConfirmationModal } from 'portals/hope/features/claims/claim-details/ClaimPayments/components/PaymentConfirmationModal'
 import { Market } from 'portals/hope/features/config/constants'
 import React from 'react'
 import { act } from 'react-dom/test-utils'

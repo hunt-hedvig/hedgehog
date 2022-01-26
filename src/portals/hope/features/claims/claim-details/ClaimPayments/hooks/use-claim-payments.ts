@@ -24,7 +24,6 @@ gql`
       note
       type
       paidAt
-      timestamp
     }
   }
 `
@@ -50,7 +49,7 @@ export const useClaimPayments = (claimId: string): UseClaimPaymentsResult => {
   const { data } = useSortableClaimPaymentsQuery({ variables: { claimId } })
 
   const [sortBy, setSortBy] = useState<SortBy>({
-    field: 'timestamp',
+    field: 'paidAt',
     desc: true,
   })
 
@@ -72,7 +71,7 @@ export const useClaimPayments = (claimId: string): UseClaimPaymentsResult => {
           direction
         )
 
-      case 'timestamp':
+      case 'paidAt':
         return (p1[sortBy.field] < p2[sortBy.field] ? 1 : -1) * direction
 
       default:
@@ -80,9 +79,7 @@ export const useClaimPayments = (claimId: string): UseClaimPaymentsResult => {
     }
   }
 
-  const payments = ((data?.claim?.payments ?? []) as ClaimPayment[]).sort(
-    (p1, p2) => sortHandler(p1, p2),
-  )
+  const payments = (data?.claim?.payments ?? []).slice().sort(sortHandler)
 
   const totalAmount = payments
     .map((payment) => +payment?.amount?.amount)

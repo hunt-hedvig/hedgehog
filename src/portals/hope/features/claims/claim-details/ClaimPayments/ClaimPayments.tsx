@@ -13,9 +13,9 @@ import {
 import { Market } from 'portals/hope/features/config/constants'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
-import { ClaimPaymentForm } from './ClaimPaymentForm'
+import { ClaimPaymentForm } from './components/ClaimPaymentForm'
 import gql from 'graphql-tag'
-import { ClaimPaymentsTable } from 'portals/hope/features/claims/claim-details/ClaimPayments/ClaimPaymentsTable'
+import { ClaimPaymentsTable } from 'portals/hope/features/claims/claim-details/ClaimPayments/components/ClaimPaymentsTable'
 
 const MemberIdentityCard = styled.div`
   width: 100%;
