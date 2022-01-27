@@ -1,5 +1,7 @@
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { useEffect } from 'react'
+import createPersistedState from 'use-persisted-state'
+
+const useDraftState = createPersistedState('drafts')
 
 interface Draft {
   content: string
@@ -9,10 +11,7 @@ interface Draft {
 export const useDraft = (id: string): [string, (draft: string) => void] => {
   const hour = 60 * 60 * 1000
   const ttl = 24 * hour
-  const [drafts, setDrafts] = useInsecurePersistentState<Record<string, Draft>>(
-    `drafts`,
-    {},
-  )
+  const [drafts, setDrafts] = useDraftState<Record<string, Draft>>({})
 
   useEffect(() => {
     setDrafts((prevDrafts) => {
