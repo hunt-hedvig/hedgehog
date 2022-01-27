@@ -86,13 +86,15 @@ const Bottom = styled.div`
 
   font-size: 14px;
 
+  color: ${({ theme }) => theme.foreground};
+
   & span {
     color: ${({ theme }) => theme.accent};
     cursor: pointer;
   }
 `
 
-const EmptyContainer = styled.div`
+export const EmptyContainer = styled.div`
   text-align: center;
   color: ${({ theme }) => theme.placeholderColor};
   font-size: 12px;
@@ -207,6 +209,7 @@ export const TemplateMessages: React.FC<{
       >
         <SecondLevelHeadline>Create Template</SecondLevelHeadline>
         <TemplateForm
+          defaultMarket={currentMarket}
           isModal
           isCreating={isCreating}
           onSubmit={submitHandler}
@@ -337,6 +340,7 @@ const TemplateContainer = styled.div`
 
   & * {
     font-size: 1rem;
+    color: ${({ theme }) => theme.foreground};
   }
 
   &:not(:last-child) {

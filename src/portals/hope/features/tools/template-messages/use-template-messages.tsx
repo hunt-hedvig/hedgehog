@@ -62,11 +62,10 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   }
 
   const editHandler = (newTemplate: TemplateMessage) => {
-    setTemplates((prev) =>
-      prev.map((template) =>
-        template.id !== newTemplate.id ? template : newTemplate,
-      ),
-    )
+    setTemplates((prev) => [
+      ...prev.filter((template) => template.id !== newTemplate.id),
+      newTemplate,
+    ])
 
     toast.success('Template successfully edited')
   }

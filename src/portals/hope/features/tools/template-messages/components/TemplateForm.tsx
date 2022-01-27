@@ -45,14 +45,28 @@ interface TemplateFormProps {
   isCreating?: boolean
   onClose?: () => void
   isModal?: boolean
+  defaultMarket?: Market
+}
+
+const compareMarkets = (market1: Market[], market2: Market[]) => {
+  return (
+    market1.length == market2.length &&
+    market1.every((v, i) => v === market2[i])
+  )
 }
 
 export const TemplateForm: React.FC<
   TemplateFormProps & Omit<React.HTMLAttributes<HTMLFormElement>, 'onSubmit'>
-> = ({ template, isCreating, onSubmit, onClose, isModal, ...props }) => {
-  const [markets, setMarkets] = useState<Market[]>(
-    template?.market || [Market.Sweden],
-  )
+> = ({
+  template,
+  isCreating,
+  onSubmit,
+  onClose,
+  isModal,
+  defaultMarket,
+  ...props
+}) => {
+  const [markets, setMarkets] = useState<Market[]>([])
   const [expiryDate, setExpiryDate] = useState(template?.expiryDate || null)
 
   const { templates } = useTemplateMessages()
@@ -63,11 +77,19 @@ export const TemplateForm: React.FC<
   useEffect(() => {
     form.reset()
     setExpiryDate(template?.expiryDate || null)
-    setMarkets(template?.market || [Market.Sweden])
+    setMarkets(
+      defaultMarket ? [defaultMarket] : template?.market || [Market.Sweden],
+    )
   }, [template])
 
   const submitHandler = (values: FieldValues) => {
-    if (templates.find((template) => template.name === values.name)) {
+    if (
+      templates.find(
+        (template) =>
+          template.name === values.name &&
+          compareMarkets(template.market, markets),
+      )
+    ) {
       toast.error(`Template with name '${values.name}' already exist`)
       return
     }
@@ -170,6 +192,7 @@ export const TemplateForm: React.FC<
         <MessageField
           label="Message (EN)"
           name="messageEn"
+          placeholder="Message goes here"
           style={{ marginTop: '0.5rem' }}
           defaultValue={template?.messageEn || ''}
           rules={{
@@ -184,6 +207,7 @@ export const TemplateForm: React.FC<
           <MessageField
             label={`Message (SE)`}
             name={`message-${Market.Sweden}`}
+            placeholder="Message goes here"
             style={{ marginTop: '0.5rem' }}
             defaultValue={
               template?.messages.find((msg) => msg.market === Market.Sweden)
@@ -204,6 +228,7 @@ export const TemplateForm: React.FC<
           <MessageField
             label={`Message (DK)`}
             name={`message-${Market.Denmark}`}
+            placeholder="Message goes here"
             style={{ marginTop: '0.5rem' }}
             defaultValue={
               template?.messages.find((msg) => msg.market === Market.Denmark)
@@ -224,6 +249,7 @@ export const TemplateForm: React.FC<
           <MessageField
             label={`Message (NO)`}
             name={`message-${Market.Norway}`}
+            placeholder="Message goes here"
             style={{ marginTop: '0.5rem' }}
             defaultValue={
               template?.messages.find((msg) => msg.market === Market.Norway)

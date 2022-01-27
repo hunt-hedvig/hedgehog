@@ -4,6 +4,7 @@ import { Input } from '@hedvig-ui'
 import { SearchIcon as InputIcon } from '../../../members-search/styles'
 import { FileText } from 'react-bootstrap-icons'
 import { TemplateMessage } from '../use-template-messages'
+import { EmptyContainer } from './TemplateMessages'
 
 const Container = styled.div`
   display: flex;
@@ -65,6 +66,23 @@ export const SearchTemplate: React.FC<{
     onSelect(selectedTemplate)
   }
 
+  const getFilteredTemplates = () =>
+    templates
+      ?.filter((template) =>
+        query
+          ? template.name.toLowerCase().includes(query.toLowerCase())
+          : true,
+      )
+      .sort((a, b) => {
+        if (a.name < b.name) {
+          return -1
+        }
+        if (a.name > b.name) {
+          return 1
+        }
+        return 0
+      })
+
   return (
     <Container>
       <SearchInput
@@ -80,22 +98,8 @@ export const SearchTemplate: React.FC<{
         autoFocus
       />
       <Content>
-        {templates
-          ?.filter((template) =>
-            query
-              ? template.name.toLowerCase().includes(query.toLowerCase())
-              : true,
-          )
-          .sort((a, b) => {
-            if (a.name < b.name) {
-              return -1
-            }
-            if (a.name > b.name) {
-              return 1
-            }
-            return 0
-          })
-          .map((template) => (
+        {getFilteredTemplates().length ? (
+          getFilteredTemplates().map((template) => (
             <TemplateItem
               key={template.id}
               id={template.id}
@@ -103,7 +107,12 @@ export const SearchTemplate: React.FC<{
               onSelect={selectHandler}
               selected={selected?.id === template.id}
             />
-          ))}
+          ))
+        ) : (
+          <EmptyContainer style={{ marginTop: 15 }}>
+            No records found
+          </EmptyContainer>
+        )}
       </Content>
     </Container>
   )
