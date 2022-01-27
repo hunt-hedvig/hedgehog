@@ -45,7 +45,7 @@ const Container = styled.div<{ closing: boolean }>`
   width: 20%;
   height: 100%;
 
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.accentBackground};
   box-shadow: -6px 0px 14px 0px rgba(34, 60, 80, 0.2);
 
   animation: ${({ closing }) => (closing ? hide : show)} 400ms;
@@ -56,6 +56,7 @@ const Container = styled.div<{ closing: boolean }>`
 
 const Header = styled.div`
   padding: 20px 15px 0 15px;
+  background-color: ${({ theme }) => theme.background};
 `
 
 const HeaderBottom = styled.div`
@@ -80,7 +81,7 @@ const Bottom = styled.div`
 
   width: 100%;
 
-  background-color: ${({ theme }) => theme.accentLighter};
+  background-color: ${({ theme }) => theme.background};
 
   padding: 15px;
 
@@ -330,7 +331,6 @@ const TemplateContainer = styled.div`
   padding: 10px;
 
   background-color: ${({ theme }) => theme.backgroundLight};
-  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 0.5rem;
 
   max-height: 10rem;
