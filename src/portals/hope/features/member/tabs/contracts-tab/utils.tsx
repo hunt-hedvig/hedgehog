@@ -38,6 +38,7 @@ export const getSignSource = (signSource: string): string => {
   }
 }
 
+// FIXME: Remove this bad boy, we can resolve it
 export const currentAgreementForContract = (
   contract: Pick<Contract, 'genericAgreements' | 'currentAgreementId'>,
 ): GenericAgreement | undefined => {

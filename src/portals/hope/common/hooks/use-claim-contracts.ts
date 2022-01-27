@@ -2,25 +2,12 @@ import {
   PartialMemberContractFragment,
   PartialMemberTrialFragment,
   useCurrentClaimContractQuery,
-  useMemberContractsQuery,
   useSetContractForClaimMutation,
   useSetTrialForClaimMutation,
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
 
 gql`
-  query MemberContracts($memberId: ID!) {
-    member(id: $memberId) {
-      memberId
-      trials {
-        ...PartialMemberTrial
-      }
-      contracts {
-        ...PartialMemberContract
-      }
-    }
-  }
-
   query CurrentClaimContract($claimId: ID!) {
     claim(id: $claimId) {
       contract {
@@ -28,6 +15,15 @@ gql`
       }
       trial {
         id
+      }
+      member {
+        memberId
+        trials {
+          ...PartialMemberTrial
+        }
+        contracts {
+          ...PartialMemberContract
+        }
       }
     }
   }
@@ -84,28 +80,31 @@ interface UseClaimContractsResult {
   setSelected: (selected: string) => void
 }
 
-export const useClaimContracts = (
-  memberId: string,
-  claimId: string,
-): UseClaimContractsResult => {
+/**
+ * __useClaimContracts__
+ *
+ * - Get and set currently __selected__ contract or trial for a claim.
+ * - Also provides a list of __contracts__ and __trials__ from the corresponding member.
+ *
+ * @param claimId
+ *
+ * @example
+ *
+ * const { contracts, trials, selected, setSelected } = useClaimContracts(claimId)
+ */
+
+export const useClaimContracts = (claimId: string): UseClaimContractsResult => {
   const [setContractForClaim] = useSetContractForClaimMutation()
   const [setTrialForClaim] = useSetTrialForClaimMutation()
 
-  const { data: memberContractData } = useMemberContractsQuery({
-    variables: { memberId },
-  })
-
-  const { data: claimContractData } = useCurrentClaimContractQuery({
+  const { data } = useCurrentClaimContractQuery({
     variables: { claimId },
   })
 
-  const contracts = memberContractData?.member?.contracts ?? []
-  const trials = memberContractData?.member?.trials ?? []
+  const contracts = data?.claim?.member?.contracts ?? []
+  const trials = data?.claim?.member?.trials ?? []
 
-  const selected =
-    claimContractData?.claim?.contract?.id ??
-    claimContractData?.claim?.trial?.id ??
-    null
+  const selected = data?.claim?.contract?.id ?? data?.claim?.trial?.id ?? null
 
   const handleSelectTrial = (trialId: string) => {
     setTrialForClaim({

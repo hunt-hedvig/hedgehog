@@ -12,14 +12,7 @@ import {
   PhoneFill,
 } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
-import {
-  ClaimPageDocument,
-  ClaimPageQuery,
-  CoInsured,
-  useDeleteCoInsuredMutation,
-  useUpsertCoInsuredMutation,
-} from 'types/generated/graphql'
-import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
+import { useClaimCoInsured } from 'portals/hope/features/claims/claim-details/ClaimInformation/ClaimInformation'
 
 const CoInsuredCard = styled.div`
   background-color: ${({ theme }) => theme.accent};
@@ -40,68 +33,12 @@ const ExplanatoryText = styled.span`
   font-size: 0.8em;
 `
 
-interface UseDeleteCoInsuredVariables {
-  claimId: string
-}
-export const useDeleteCoInsured = ({
-  claimId,
-}: UseDeleteCoInsuredVariables) => {
-  const [deleteCoInsured] = useDeleteCoInsuredMutation()
-
-  const updateCache = (cache: ApolloCache<NormalizedCacheObject>) => {
-    const cachedData = cache.readQuery({
-      query: ClaimPageDocument,
-      variables: { claimId },
-    })
-
-    const cachedClaimPage = (cachedData as ClaimPageQuery)?.claim
-
-    cache.writeQuery({
-      query: ClaimPageDocument,
-      data: {
-        claim: {
-          ...cachedClaimPage,
-          coInsured: null,
-        },
-      },
-    })
-  }
-
-  return (onSuccess?: () => void) =>
-    toast.promise(
-      deleteCoInsured({
-        variables: {
-          claimId,
-        },
-        optimisticResponse: {
-          deleteCoInsured: true,
-        },
-        update: (
-          cache: ApolloCache<NormalizedCacheObject>,
-          { data: response },
-        ) => {
-          if (!response) {
-            return
-          }
-          updateCache(cache)
-        },
-      }),
-      {
-        loading: 'Deleting co-insured',
-        success: () => {
-          onSuccess?.()
-          return 'Co-insured deleted'
-        },
-        error: 'Could not delete co-insured',
-      },
-    )
-}
-
 export const CoInsuredForm: React.FC<{
-  coInsured: CoInsured | null
   claimId: string
-}> = ({ coInsured, claimId }) => {
-  const deleteCoInsured = useDeleteCoInsured({ claimId })
+}> = ({ claimId }) => {
+  const { coInsured, removeCoInsured, upsertCoInsured } =
+    useClaimCoInsured(claimId)
+
   const cardRef = useRef<HTMLDivElement>(null)
   const [creating, setCreating] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -111,8 +48,6 @@ export const CoInsuredForm: React.FC<{
   )
   const [email, setEmail] = useState(coInsured?.email ?? '')
   const [phoneNumber, setPhoneNumber] = useState(coInsured?.phoneNumber ?? '')
-
-  const [upsertCoInsured] = useUpsertCoInsuredMutation()
 
   useClickOutside(cardRef, () => {
     setCreating(false)
@@ -132,37 +67,7 @@ export const CoInsuredForm: React.FC<{
       return
     }
 
-    toast.promise(
-      upsertCoInsured({
-        variables: {
-          claimId,
-          request: {
-            fullName: name,
-            personalNumber,
-            email,
-            phoneNumber,
-          },
-        },
-        optimisticResponse: {
-          upsertCoInsured: {
-            __typename: 'Claim',
-            id: claimId,
-            coInsured: {
-              id: 'temp-id',
-              fullName: name,
-              personalNumber,
-              email,
-              phoneNumber,
-            },
-          },
-        },
-      }),
-      {
-        loading: 'Updating co-insured',
-        success: 'Co-insured updated',
-        error: 'Could not update co-insured',
-      },
-    )
+    upsertCoInsured({ fullName: name, personalNumber, email, phoneNumber })
 
     setEditing(false)
     setCreating(false)
@@ -284,7 +189,8 @@ export const CoInsuredForm: React.FC<{
                 style={{ marginLeft: '1em' }}
                 onClick={(e) => {
                   e.stopPropagation()
-                  deleteCoInsured(() => reset())
+                  removeCoInsured()
+                  reset()
                 }}
               >
                 Remove

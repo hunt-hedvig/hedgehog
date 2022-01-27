@@ -100,9 +100,8 @@ const ChatTip = styled.div`
 `
 
 export const ChatPanel: React.FC<{ memberId: string }> = ({ memberId }) => {
-  const [draft, setDraft] = useDraft(memberId)
+  const [currentMessage, setCurrentMessage] = useDraft(memberId)
   const [error, setError] = useState(false)
-  const [currentMessage, setCurrentMessage] = useState(draft)
   const [forceSendMessage, setForceSendMessage] = useState(false)
   const [sendMessage, { loading }] = useSendMessageMutation()
   const [textFieldFocused, setTextFieldFocused] = useState(false)
@@ -116,7 +115,6 @@ export const ChatPanel: React.FC<{ memberId: string }> = ({ memberId }) => {
       return
     }
     setCurrentMessage(value)
-    setDraft(value)
     setError(false)
   }
 
@@ -154,7 +152,6 @@ export const ChatPanel: React.FC<{ memberId: string }> = ({ memberId }) => {
     }
 
     setCurrentMessage('')
-    setDraft('')
 
     setForceSendMessage(false)
     setError(false)

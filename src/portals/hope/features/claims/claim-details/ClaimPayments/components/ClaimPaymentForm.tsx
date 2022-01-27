@@ -18,9 +18,10 @@ import {
   SanctionStatus,
   useCreateClaimPaymentMutation,
   useCreateSwishClaimPaymentMutation,
-  useGetMemberTransactionsQuery,
+  useMemberPaymentInformationQuery,
 } from 'types/generated/graphql'
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
+import gql from 'graphql-tag'
 
 const areSwishPayoutsEnabled = () => {
   return (
@@ -35,6 +36,7 @@ const FormCheckbox = styled(Checkbox)`
   .checkbox__input {
     border: none !important;
   }
+  max-width: 8rem;
 `
 
 interface CategoryOptionsType {
@@ -44,17 +46,80 @@ interface CategoryOptionsType {
   disabled?: boolean
 }
 
-export const ClaimPayment: React.FC<{
-  sanctionStatus?: SanctionStatus | null
+gql`
+  mutation CreateClaimPayment($id: ID!, $payment: ClaimPaymentInput!) {
+    createClaimPayment(id: $id, payment: $payment) {
+      id
+      ...ClaimPayments
+    }
+  }
+
+  mutation CreateSwishClaimPayment(
+    $id: ID!
+    $payment: ClaimSwishPaymentInput!
+  ) {
+    createClaimSwishPayment(id: $id, payment: $payment) {
+      id
+      ...ClaimPayments
+    }
+  }
+
+  query MemberPaymentInformation($claimId: ID!) {
+    claim(id: $claimId) {
+      agreement {
+        id
+        carrier
+      }
+      trial {
+        id
+      }
+      contract {
+        id
+      }
+      member {
+        memberId
+        sanctionStatus
+        contractMarketInfo {
+          market
+          preferredCurrency
+        }
+        directDebitStatus {
+          activated
+        }
+        payoutMethodStatus {
+          activated
+        }
+        adyenShopperReference
+        identity {
+          nationalIdentification {
+            identification
+            nationality
+          }
+          firstName
+          lastName
+        }
+        transactions {
+          id
+          amount {
+            amount
+            currency
+          }
+          timestamp
+          type
+          status
+        }
+      }
+    }
+  }
+`
+
+export const ClaimPaymentForm: React.FC<{
   claimId: string
-  identified: boolean
-  market?: string
-  carrier: string
-  memberId: string
-}> = ({ sanctionStatus, carrier, claimId, identified, market, memberId }) => {
-  const { data: memberData } = useGetMemberTransactionsQuery({
-    variables: { id: memberId },
+}> = ({ claimId }) => {
+  const { data } = useMemberPaymentInformationQuery({
+    variables: { claimId },
   })
+
   const [createPayment, { loading }] = useCreateClaimPaymentMutation()
   const [createSwishPayment] = useCreateSwishClaimPaymentMutation()
 
@@ -63,9 +128,35 @@ export const ClaimPayment: React.FC<{
   const [isOverridden, setIsOverridden] = useState(false)
   const [date, setDate] = useState<string | null>(null)
 
+  const form = useForm()
+
+  useEffect(() => {
+    if (isExGratia && form.getValues().type === ClaimPaymentType.Automatic) {
+      form.setValue('type', undefined)
+    }
+    if (
+      !isExGratia &&
+      form.getValues().type === undefined &&
+      isPaymentActivated
+    ) {
+      form.setValue('type', ClaimPaymentType.Automatic)
+    }
+  }, [isExGratia, loading])
+
+  if (
+    !data?.claim?.contract &&
+    !data?.claim?.agreement?.carrier &&
+    !data?.claim?.trial
+  ) {
+    return null
+  }
+
+  const { claim } = data
+  const { member } = claim
+
   const isPaymentActivated =
-    !!memberData?.member?.directDebitStatus?.activated ||
-    !!memberData?.member?.payoutMethodStatus?.activated
+    !!member.directDebitStatus?.activated ||
+    !!member.payoutMethodStatus?.activated
 
   const categoryOptions: CategoryOptionsType[] = [
     ...Object.keys(ClaimPaymentType).map((paymentType, index) => ({
@@ -85,8 +176,6 @@ export const ClaimPayment: React.FC<{
     },
   ]
 
-  const form = useForm()
-
   const clearFormHandler = () => {
     form.setValue('amount', '')
     form.setValue('deductible', '')
@@ -98,21 +187,8 @@ export const ClaimPayment: React.FC<{
   }
 
   const isPotentiallySanctioned =
-    sanctionStatus === SanctionStatus.Undetermined ||
-    sanctionStatus === SanctionStatus.PartialHit
-
-  useEffect(() => {
-    if (isExGratia && form.getValues().type === ClaimPaymentType.Automatic) {
-      form.setValue('type', undefined)
-    }
-    if (
-      !isExGratia &&
-      form.getValues().type === undefined &&
-      isPaymentActivated
-    ) {
-      form.setValue('type', ClaimPaymentType.Automatic)
-    }
-  }, [isExGratia, loading])
+    member?.sanctionStatus === SanctionStatus.Undetermined ||
+    member?.sanctionStatus === SanctionStatus.PartialHit
 
   const createPaymentHandler = async () => {
     const paymentInput: Partial<ClaimPaymentInput | ClaimSwishPaymentInput> = {
@@ -127,7 +203,7 @@ export const ClaimPayment: React.FC<{
       sanctionListSkipped: Boolean(isOverridden),
       note: form.getValues().note,
       exGratia: isExGratia,
-      carrier,
+      carrier: claim?.agreement?.carrier ?? 'HEDVIG',
       paidAt:
         form.getValues().type !== ClaimPaymentType.Automatic && date
           ? `${date}T00:00:00.000Z`
@@ -193,6 +269,7 @@ export const ClaimPayment: React.FC<{
           name="amount"
           defaultValue=""
           type="number"
+          step="any"
           affix={{ content: 'SEK' }}
           rules={{
             required: 'Amount is required',
@@ -206,6 +283,7 @@ export const ClaimPayment: React.FC<{
           placeholder="Deductible"
           name="deductible"
           defaultValue=""
+          step="any"
           type="number"
         />
         <FormInput
@@ -233,7 +311,7 @@ export const ClaimPayment: React.FC<{
             if (opt.value === 'AutomaticSwish') {
               return (
                 areSwishPayoutsEnabled() &&
-                market === Market.Sweden &&
+                member?.contractMarketInfo?.market === Market.Sweden &&
                 !isExGratia
               )
             }
@@ -290,7 +368,7 @@ export const ClaimPayment: React.FC<{
           <SubmitButton>Create payment</SubmitButton>
         </div>
 
-        {isConfirming && (
+        {isConfirming && member?.contractMarketInfo && (
           <PaymentConfirmationModal
             onClose={() => {
               setIsConfirming(false)
@@ -298,8 +376,8 @@ export const ClaimPayment: React.FC<{
             }}
             onSubmit={createPaymentHandler}
             amount={form.getValues().amount}
-            identified={identified}
-            market={market}
+            identified={!!member.identity}
+            market={member.contractMarketInfo.market}
           />
         )}
       </Form>

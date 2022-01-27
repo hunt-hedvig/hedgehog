@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   CardsWrapper,
+  Copyable,
   Flex,
   InfoRow,
   InfoTag,
@@ -131,7 +132,7 @@ const MemberTransactionsTable: React.FC<{ memberId: string }> = ({
     .slice()
     .sort((a, b) =>
       a && b
-        ? new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        ? new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
         : 0,
     )
     .reverse()
@@ -284,7 +285,7 @@ export const PaymentsTab: React.FC<{
     <>
       <MainHeadline>Payments</MainHeadline>
       <CardsWrapper>
-        <Card span={2}>
+        <Card span={1.5}>
           <InfoRow>
             Direct debit
             <InfoText>
@@ -319,8 +320,23 @@ export const PaymentsTab: React.FC<{
               </InfoTag>
             </InfoText>
           </InfoRow>
+          {memberData.member?.adyenShopperReference && (
+            <InfoRow>
+              Adyen shopper reference
+              <InfoText>
+                <Copyable
+                  onClick={() =>
+                    memberData?.member?.adyenShopperReference &&
+                    copy(memberData.member.adyenShopperReference)
+                  }
+                >
+                  {memberData.member.adyenShopperReference}
+                </Copyable>
+              </InfoText>
+            </InfoRow>
+          )}
         </Card>
-        <Card span={2}>
+        <Card span={3}>
           <ThirdLevelHeadline>Payments Link</ThirdLevelHeadline>
           <Button
             onClick={(e) => {

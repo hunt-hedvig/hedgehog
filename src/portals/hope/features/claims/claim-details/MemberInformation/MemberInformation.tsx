@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { CardContent, Spacing, Tabs } from '@hedvig-ui'
+import { CardContent, Loadable, Spacing, Tabs } from '@hedvig-ui'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import chroma from 'chroma-js'
 import copy from 'copy-to-clipboard'
@@ -45,7 +45,7 @@ export const MemberInformation: React.FC<{
   memberId: string
 }> = ({ claimId, memberId }) => {
   const [tab, setTab] = useState<'general' | 'claims'>('general')
-  const { data } = useGetMemberInfoQuery({ variables: { memberId } })
+  const { data, loading } = useGetMemberInfoQuery({ variables: { memberId } })
   const { registerActions } = useCommandLine()
   const history = useHistory()
 
@@ -77,51 +77,52 @@ export const MemberInformation: React.FC<{
     },
   ])
 
-  if (!member) {
-    return null
-  }
+  const totalClaimsWithoutDuplicates =
+    member?.claims.reduce(
+      (count, claim) => (claim.outcome !== 'DUPLICATE' ? count + 1 : count),
+      0,
+    ) ?? []
 
-  const totalClaimsWithoutDuplicates = member.claims.reduce(
-    (count, claim) => (claim.outcome !== 'DUPLICATE' ? count + 1 : count),
-    0,
-  )
+  const flag = member
+    ? getMemberFlag(
+        member.contractMarketInfo,
+        member.pickedLocale as PickedLocale,
+      )
+    : ''
 
   return (
     <CardContent>
-      <MemberCard>
-        <div>
-          <h3>{member.firstName + ' ' + member.lastName}</h3>
-          <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
-        </div>
-        <div>
-          {getMemberFlag(
-            member.contractMarketInfo,
-            member.pickedLocale as PickedLocale,
-          )}
-        </div>
-      </MemberCard>
-      <Spacing top="small" />
-      <Tabs
-        list={[
-          {
-            active: tab === 'general',
-            title: 'General',
-            action: () => setTab('general'),
-          },
-          {
-            active: tab === 'claims',
-            title: `Claims (${totalClaimsWithoutDuplicates})`,
-            action: () => setTab('claims'),
-          },
-        ]}
-      />
-      <Spacing top="small" />
-      {tab === 'general' && (
-        <MemberGeneralView memberId={memberId} claimId={claimId} />
-      )}
-      {tab === 'claims' && (
-        <MemberClaimsView member={member} claimId={claimId} />
-      )}
+      <Loadable loading={loading}>
+        <MemberCard>
+          <div>
+            <h3>{member?.firstName ?? '' + ' ' + member?.lastName ?? ''}</h3>
+            <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
+          </div>
+          <div>{flag}</div>
+        </MemberCard>
+        <Spacing top="small" />
+        <Tabs
+          list={[
+            {
+              active: tab === 'general',
+              title: 'General',
+              action: () => setTab('general'),
+            },
+            {
+              active: tab === 'claims',
+              title: `Claims (${totalClaimsWithoutDuplicates})`,
+              action: () => setTab('claims'),
+            },
+          ]}
+        />
+        <Spacing top="small" />
+        {tab === 'general' && (
+          <MemberGeneralView memberId={memberId} claimId={claimId} />
+        )}
+        {tab === 'claims' && (
+          <MemberClaimsView member={member} claimId={claimId} />
+        )}
+      </Loadable>
     </CardContent>
   )
 }

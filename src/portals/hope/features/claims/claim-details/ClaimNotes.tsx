@@ -1,10 +1,10 @@
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { addSeconds, format, parseISO } from 'date-fns'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
-  ClaimNote as ClaimNoteType,
-  useClaimAddClaimNoteMutation,
-  useClaimPageQuery,
+  ClaimNotesFragment,
+  useAddClaimNoteMutation,
+  useClaimNotesQuery,
 } from 'types/generated/graphql'
 
 import styled from '@emotion/styled'
@@ -18,20 +18,14 @@ import {
   Paragraph,
   Shadowed,
   Spacing,
-  Spinner,
   TextArea,
 } from '@hedvig-ui'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
-import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import formatDate from 'date-fns/format'
 import { useDraft } from '@hedvig-ui/hooks/use-draft'
-
-const sortNotesByDate = (notes: ReadonlyArray<ClaimNoteType>) =>
-  [...notes].sort((noteA, noteB) => {
-    return new Date(noteB.date).getTime() - new Date(noteA.date).getTime()
-  })
+import gql from 'graphql-tag'
 
 const ClaimNoteWrapper = styled.div`
   display: flex;
@@ -66,47 +60,57 @@ const SubNoteWrapper = styled.div`
   flex-direction: row;
 `
 
-const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
-  const {
-    data: claimNotesData,
-    loading: loadingClaimNotes,
-    error: queryError,
-  } = useClaimPageQuery({
+gql`
+  query ClaimNotes($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      notes {
+        text
+        date
+        handlerReference
+      }
+    }
+  }
+
+  mutation AddClaimNote($claimId: ID!, $note: ClaimNoteInput!) {
+    addClaimNote(id: $claimId, note: $note) {
+      id
+      ...ClaimNotes
+    }
+  }
+
+  fragment ClaimNotes on Claim {
+    notes {
+      text
+      date
+      handlerReference
+    }
+  }
+`
+
+interface UseClaimNotesResult {
+  notes: ClaimNotesFragment['notes']
+  createNote: (note: string) => void
+  creating: boolean
+}
+
+export const useClaimNotes = (claimId: string): UseClaimNotesResult => {
+  const [addClaimNote, { loading }] = useAddClaimNoteMutation()
+  const { data } = useClaimNotesQuery({
     variables: { claimId },
   })
-  const { isMetaKey, metaKey } = usePlatform()
-  const notes = claimNotesData?.claim?.notes ?? []
-  const events = claimNotesData?.claim?.events ?? []
-
-  const [addClaimNote] = useClaimAddClaimNoteMutation()
-  const [note, setNote] = useState('')
-  const [submitting, setSubmitting] = useState(false)
-  const [textFieldFocused, setTextFieldFocused] = useState(false)
-
-  const [draft, setDraft] = useDraft(claimId)
 
   const { me } = useMe()
 
-  useEffect(() => {
-    setNote(draft)
-  }, [claimId])
-
-  useEffect(() => {
-    if (draft !== note) {
-      setNote(draft)
-    }
-  }, [draft])
-
-  const handleSubmitNote = () => {
+  const createNote = (note: string) => {
     const today = formatDate(addSeconds(new Date(), 1), 'yyyy-MM-dd HH:mm:ss')
 
-    setSubmitting(true)
     addClaimNote({
       variables: { claimId, note: { text: note } },
       optimisticResponse: {
         addClaimNote: {
-          id: claimId,
           __typename: 'Claim',
+          id: claimId,
           notes: [
             {
               text: note,
@@ -115,45 +119,33 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
             },
             ...notes,
           ],
-          events: [
-            {
-              text: `Note added: ${note}`,
-              date: today,
-            },
-            ...events,
-          ],
         },
       },
+    }).catch(() => {
+      toast.error('Could not create note')
     })
-      .then(() => {
-        setNote('')
-        setDraft('')
-        setSubmitting(false)
-      })
-      .catch(() => {
-        toast.error('Could not create note')
-        setSubmitting(false)
-      })
   }
+
+  const notes = (data?.claim?.notes ?? []).slice().sort((noteA, noteB) => {
+    return new Date(noteB.date).getTime() - new Date(noteA.date).getTime()
+  })
+
+  return { notes, createNote, creating: loading }
+}
+
+const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
+  const { notes, createNote, creating } = useClaimNotes(claimId)
+  const [note, setNote] = useDraft(claimId)
+
+  const { isMetaKey, metaKey } = usePlatform()
+
+  const [textFieldFocused, setTextFieldFocused] = useState(false)
 
   return (
     <CardContent>
-      <CardTitle
-        title="Notes"
-        badge={
-          queryError
-            ? {
-                icon: BugFill,
-                status: 'danger',
-                label: 'Internal Error',
-              }
-            : null
-        }
-      />
-      {loadingClaimNotes && <Spinner />}
-
+      <CardTitle title="Notes" />
       <List>
-        {sortNotesByDate(notes).map(({ date, handlerReference, text }) => (
+        {notes.map(({ date, handlerReference, text }) => (
           <ListItem key={date + handlerReference}>
             <ClaimNoteWrapper>
               <ClaimNote>{text}</ClaimNote>
@@ -173,27 +165,19 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
       <TextArea
         resize
         placeholder="Your note goes here..."
-        value={submitting ? '' : note}
-        onChange={(e) => {
-          setDraft(e.currentTarget.value)
-          setNote(e.currentTarget.value)
-        }}
+        value={creating ? '' : note}
+        onChange={(e) => setNote(e.currentTarget.value)}
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
         onKeyDown={(e) => {
-          if (
-            isMetaKey(e) &&
-            isPressing(e, Keys.Enter) &&
-            !submitting &&
-            note
-          ) {
-            handleSubmitNote()
+          if (isMetaKey(e) && isPressing(e, Keys.Enter) && !creating && note) {
+            createNote(note)
           }
         }}
       />
       <Spacing top="small" />
       <SubNoteWrapper>
-        <Button disabled={!note} onClick={() => handleSubmitNote()}>
+        <Button disabled={!note || creating} onClick={() => createNote(note)}>
           Add note
         </Button>
         {textFieldFocused && (

@@ -5,13 +5,7 @@ import chroma from 'chroma-js'
 import { ResourceAccessOverview } from 'portals/hope/features/resource-access/overview/ResourceAccessOverview'
 import React, { useState } from 'react'
 import { ShieldLockFill } from 'react-bootstrap-icons'
-import { toast } from 'react-hot-toast'
-import {
-  ClaimPageDocument,
-  ClaimPageQuery,
-  ResourceAccessInformation,
-  useReleaseResourceAccessMutation,
-} from 'types/generated/graphql'
+import { useRestrictClaim } from 'portals/hope/common/hooks/use-restrict-claim'
 
 const Subtext = styled.span`
   font-size: 0.85rem;
@@ -20,41 +14,14 @@ const Subtext = styled.span`
 `
 
 export const ClaimRestrictionInformation: React.FC<{
-  restriction: ResourceAccessInformation
   claimId: string
-}> = ({ restriction, claimId }) => {
+}> = ({ claimId }) => {
+  const { restriction, release } = useRestrictClaim(claimId)
   const [showModal, setShowModal] = useState(false)
   const { confirm } = useConfirmDialog()
-  const [releaseResourceAccess] = useReleaseResourceAccessMutation()
 
-  const handleReleaseAccess = () => {
-    toast.promise(
-      releaseResourceAccess({
-        variables: { resourceId: claimId },
-        update: (cache) => {
-          const cachedData = cache.readQuery({
-            query: ClaimPageDocument,
-            variables: { claimId },
-          }) as ClaimPageQuery
-
-          cache.writeQuery({
-            query: ClaimPageDocument,
-            data: {
-              claim: {
-                __typename: 'Claim',
-                ...cachedData.claim,
-                restriction: null,
-              },
-            },
-          })
-        },
-      }),
-      {
-        loading: 'Removing restriction',
-        success: 'Restriction removed',
-        error: 'Could not remove restriction',
-      },
-    )
+  if (!restriction) {
+    return null
   }
 
   return (
@@ -96,9 +63,7 @@ export const ClaimRestrictionInformation: React.FC<{
                 onClick={() => {
                   confirm(
                     'Are you sure you want to remove the restriction? Everybody will be able to see this claim',
-                  ).then(() => {
-                    handleReleaseAccess()
-                  })
+                  ).then(() => release())
                 }}
                 style={{ marginLeft: '1em' }}
               >

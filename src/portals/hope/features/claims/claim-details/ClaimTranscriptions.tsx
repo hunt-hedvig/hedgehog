@@ -2,7 +2,8 @@ import React from 'react'
 
 import styled from '@emotion/styled'
 import { CardContent, CardTitle, List, ListItem, Paragraph } from '@hedvig-ui'
-import { ClaimTranscription } from 'types/generated/graphql'
+import { useClaimTranscriptionsQuery } from 'types/generated/graphql'
+import gql from 'graphql-tag'
 
 const ClaimTranscriptionWrapper = styled.div`
   display: flex;
@@ -22,9 +23,26 @@ const ClaimTranscriptionMetaData = styled(Paragraph)`
   text-align: right;
 `
 
+gql`
+  query ClaimTranscriptions($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      transcriptions {
+        text
+        confidenceScore
+        languageCode
+      }
+    }
+  }
+`
+
 const ClaimTranscriptions: React.FC<{
-  transcriptions: ClaimTranscription[]
-}> = ({ transcriptions }) => {
+  claimId: string
+}> = ({ claimId }) => {
+  const { data } = useClaimTranscriptionsQuery({ variables: { claimId } })
+
+  const transcriptions = data?.claim?.transcriptions ?? []
+
   return (
     <CardContent>
       <CardTitle title="Transcription" />

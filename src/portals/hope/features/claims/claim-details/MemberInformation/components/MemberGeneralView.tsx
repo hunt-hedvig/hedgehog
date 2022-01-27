@@ -21,7 +21,6 @@ import copy from 'copy-to-clipboard'
 import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
 import { Market } from 'portals/hope/features/config/constants'
 import {
-  currentAgreementForContract,
   getFirstMasterInception,
   getLastTerminationDate,
 } from 'portals/hope/features/member/tabs/contracts-tab/utils'
@@ -30,9 +29,9 @@ import React from 'react'
 import {
   Flag,
   SanctionStatus,
-  useClaimMemberContractsMasterInceptionQuery,
-  useClaimPageQuery,
+  useMemberGeneralViewQuery,
 } from 'types/generated/graphql'
+import gql from 'graphql-tag'
 
 type FraudulentStatus = 'NOT_FRAUD' | 'SUSPECTED_FRAUD' | 'CONFIRMED_FRAUD'
 
@@ -78,23 +77,69 @@ export const Info = styled.div`
   }
 `
 
+gql`
+  query MemberGeneralView($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      member {
+        memberId
+        personalNumber
+        firstName
+        lastName
+        signedOn
+        contracts {
+          id
+          masterInception
+          terminationDate
+        }
+        contractMarketInfo {
+          market
+        }
+        identity {
+          firstName
+        }
+        fraudulentStatus
+        directDebitStatus {
+          activated
+        }
+        sanctionStatus
+        person {
+          debtFlag
+        }
+        account {
+          totalBalance {
+            amount
+            currency
+          }
+        }
+        numberFailedCharges {
+          numberFailedCharges
+        }
+      }
+      contract {
+        id
+        currentAgreement {
+          address {
+            street
+            postalCode
+            city
+          }
+        }
+      }
+    }
+  }
+`
+
 export const MemberGeneralView: React.FC<{
   memberId: string
   claimId: string
-}> = ({ memberId, claimId }) => {
-  const { data: contractData } = useClaimPageQuery({
+}> = ({ claimId }) => {
+  const { data, loading } = useMemberGeneralViewQuery({
     variables: { claimId },
   })
-  const { data: memberContractsData, loading: memberContractsDataLoading } =
-    useClaimMemberContractsMasterInceptionQuery({ variables: { memberId } })
 
-  const contract = contractData?.claim?.contract
-  const member = memberContractsData?.member
-
-  const address = contract && currentAgreementForContract(contract)?.address
-  const firstMasterInception =
-    member && getFirstMasterInception(member.contracts)
-  const lastTermination = member && getLastTerminationDate(member.contracts)
+  const contract = data?.claim?.contract
+  const member = data?.claim?.member
 
   const nameEndsOnS =
     member?.firstName &&
@@ -109,9 +154,13 @@ export const MemberGeneralView: React.FC<{
     [member],
   )
 
+  const address = contract?.currentAgreement?.address
+  const firstMasterInception = getFirstMasterInception(member?.contracts ?? [])
+  const lastTermination = getLastTerminationDate(member?.contracts ?? [])
+
   return (
     <InfoContainer>
-      <Loadable loading={memberContractsDataLoading}>
+      <Loadable loading={loading}>
         <InfoSection>
           <Flex direction="row">
             <Info style={{ width: '70%' }}>
