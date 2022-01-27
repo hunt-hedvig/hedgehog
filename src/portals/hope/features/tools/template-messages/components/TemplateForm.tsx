@@ -56,13 +56,6 @@ interface TemplateFormProps {
   defaultMarket?: Market
 }
 
-const compareMarkets = (market1: Market[], market2: Market[]) => {
-  return (
-    market1.length == market2.length &&
-    market1.every((v, i) => v === market2[i])
-  )
-}
-
 export const TemplateForm: React.FC<
   TemplateFormProps & Omit<React.HTMLAttributes<HTMLFormElement>, 'onSubmit'>
 > = ({
@@ -105,7 +98,7 @@ export const TemplateForm: React.FC<
       templates.find(
         (template) =>
           template.name === values.name &&
-          compareMarkets(template.market, markets),
+          !!template.market.filter((market) => markets.includes(market)).length,
       )
     ) {
       toast.error(`Template with name '${values.name}' already exist`)
