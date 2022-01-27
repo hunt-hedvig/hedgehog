@@ -146,16 +146,11 @@ export const TemplateMessages: React.FC<{
       (template) => template.id === id,
     )[0]
 
-    if (isEnDisplay) {
-      const message = selectedTemplate.messages.filter(
-        (msg) => msg.market === currentMarket,
-      )[0].text
+    const message = selectedTemplate.messages.filter(
+      (msg) => msg.market === currentMarket,
+    )[0].text
 
-      select(message)
-      return
-    }
-
-    select(selectedTemplate.messageEn)
+    select(message)
   }
 
   const deleteHandler = (id: string) => {
@@ -187,7 +182,9 @@ export const TemplateMessages: React.FC<{
 
   const switchMarketHandler = () => {
     const message = `By switching this setting, The default language used by this member will be changing to ${
-      isEnDisplay ? currentMarket : 'English'
+      isEnDisplay
+        ? currentMarket.charAt(0) + currentMarket.toLowerCase().slice(1)
+        : 'English'
     }`
 
     if (confirm(message)) {
