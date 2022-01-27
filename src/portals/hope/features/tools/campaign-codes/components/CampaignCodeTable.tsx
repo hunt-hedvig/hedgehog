@@ -28,9 +28,33 @@ import {
   useSetCampaignCodeTypeMutation,
   useSetCampaignOwnerMutation,
 } from 'types/generated/graphql'
+import { css } from '@emotion/react'
+import { PencilFill } from 'react-bootstrap-icons'
 
-const CenteredCell = styled(TableColumn)`
+const CenteredCell = styled(TableColumn)<{ editable?: boolean }>`
   text-align: center;
+  height: 6rem;
+
+  ${({ editable }) =>
+    editable &&
+    css`
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+
+      .edit-icon {
+        opacity: 0;
+        margin-left: 1rem;
+      }
+
+      :hover {
+        .edit-icon {
+          opacity: 1;
+          margin-left: 1rem;
+        }
+      }
+    `};
 `
 
 const HeaderCenteredCell = styled(TableHeaderColumn)`
@@ -84,18 +108,15 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
         </TableHeader>
         <TableBody>
           {partnerCampaigns.map((campaign) => {
-            const {
-              id,
-              campaignCode,
-              incentive,
-              partnerId,
-
-              codeType,
-            } = campaign
+            const { id, campaignCode, incentive, partnerId, codeType } =
+              campaign
 
             return (
               <TableRow key={id} border>
-                <CenteredCell>{getValidity(campaign)}</CenteredCell>
+                <CenteredCell editable={true}>
+                  {getValidity(campaign)}
+                  <PencilFill className="edit-icon" />
+                </CenteredCell>
                 <CenteredCell>{campaignCode}</CenteredCell>
                 <CenteredCell style={{ width: '270px' }}>
                   <SearchableDropdown
