@@ -445,7 +445,13 @@ const TemplateItem = ({
           </TemplateActions>
         )}
       </TemplateTop>
-      <TemplateContent>{text}</TemplateContent>
+      <TemplateContent>
+        {text || (
+          <EmptyContainer style={{ textAlign: 'start', fontSize: '1rem' }}>
+            (no one has written for this language yet..)
+          </EmptyContainer>
+        )}
+      </TemplateContent>
     </TemplateContainer>
   )
 }
