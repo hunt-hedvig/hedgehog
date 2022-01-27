@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { Badge } from '@hedvig-ui'
 import { formatMoney } from '@hedvig-ui/utils/money'
-import formatDate from 'date-fns/format'
 import React from 'react'
 import {
   CampaignFilter,
@@ -13,7 +12,6 @@ import {
   NoDiscount,
   useAvailableCampaignCodeTypesQuery,
   VisibleNoDiscount,
-  VoucherCampaign,
 } from 'types/generated/graphql'
 
 export const capitalize = (str: string) =>
@@ -192,13 +190,10 @@ export const getDiscountDetails = (incentive?: Incentive | null) => {
   }
 }
 
-export const getValidity = (campaign: VoucherCampaign) => {
-  const validFrom =
-    campaign.validFrom && formatDate(new Date(campaign.validFrom), 'yyyy-MM-dd')
-
-  const validTo =
-    campaign.validTo && formatDate(new Date(campaign.validTo), 'yyyy-MM-dd')
-
+export const formatValidity = (
+  validFrom: string | null,
+  validTo: string | null,
+) => {
   if (!validFrom && !validTo) {
     return <ValidityText>Always</ValidityText>
   }

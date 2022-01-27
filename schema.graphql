@@ -236,6 +236,7 @@ type MutationType {
   ): Quote!
   signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
   overrideQuotePrice(input: OverrideQuotePriceInput!): Quote!
+
   createCampaignPartner(partnerId: ID!, partnerName: String!): Boolean!
   assignCampaignToPartnerPercentageDiscount(
     request: AssignVoucherPercentageDiscount
@@ -245,8 +246,11 @@ type MutationType {
   assignCampaignToPartnerVisibleNoDiscount(
     request: AssignVoucherVisibleNoDiscount
   ): Boolean!
-  setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign
-  setCampaignOwner(id: ID!, partnerId: String!): VoucherCampaign
+  setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign!
+  setCampaignOwner(id: ID!, partnerId: String!): VoucherCampaign!
+  setCampaignValidFrom(id: ID!, validFrom: Instant): VoucherCampaign!
+  setCampaignValidUntil(id: ID!, validUntil: Instant): VoucherCampaign!
+
   setContractForClaim(claimId: ID!, contractId: ID!): Claim!
   setTrialForClaim(claimId: ID!, trialId: ID!): Claim!
 

@@ -1,6 +1,8 @@
 import styled from '@emotion/styled'
 import {
   Card,
+  Flex,
+  Label,
   LoadingMessage,
   SearchableDropdown,
   StandaloneMessage,
@@ -10,56 +12,205 @@ import {
   TableHeader,
   TableHeaderColumn,
   TableRow,
+  TextDatePicker,
 } from '@hedvig-ui'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { usePartnerCampaigns } from 'portals/hope/features/tools/campaign-codes/hooks/use-partner-campaigns'
 import { usePartnerCampaignOwners } from 'portals/hope/features/tools/campaign-codes/hooks/use-get-partner-campaign-owners'
 import {
+  formatValidity,
   getCodeTypeOptions,
   getDiscountDetails,
   getIncentiveText,
-  getValidity,
   mapCampaignOwners,
 } from 'portals/hope/features/tools/campaign-codes/utils'
-import React from 'react'
+import React, { FC, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   CampaignFilter,
   useSetCampaignCodeTypeMutation,
   useSetCampaignOwnerMutation,
+  useSetCampaignValidFromMutation,
+  useSetCampaignValidUntilMutation,
+  VoucherCampaign,
 } from 'types/generated/graphql'
 import { css } from '@emotion/react'
 import { PencilFill } from 'react-bootstrap-icons'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import gql from 'graphql-tag'
 
 const CenteredCell = styled(TableColumn)<{ editable?: boolean }>`
-  text-align: center;
-  height: 6rem;
+  padding: 0;
 
   ${({ editable }) =>
     editable &&
     css`
-      display: flex;
-      justify-content: center;
-      align-content: center;
-      align-items: center;
+      > div {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
 
-      .edit-icon {
-        opacity: 0;
-        margin-left: 1rem;
-      }
-
-      :hover {
         .edit-icon {
-          opacity: 1;
+          opacity: 0;
           margin-left: 1rem;
+        }
+
+        :hover {
+          .edit-icon {
+            opacity: 1;
+            margin-left: 1rem;
+          }
         }
       }
     `};
 `
 
-const HeaderCenteredCell = styled(TableHeaderColumn)`
-  text-align: center;
+gql`
+  mutation SetCampaignValidFrom($id: ID!, $validFrom: Instant) {
+    setCampaignValidFrom(id: $id, validFrom: $validFrom) {
+      id
+      validFrom
+    }
+  }
+
+  mutation SetCampaignValidUntil($id: ID!, $validUntil: Instant) {
+    setCampaignValidUntil(id: $id, validUntil: $validUntil) {
+      id
+      validTo
+    }
+  }
 `
+
+const CampaignValidityCell: FC<{
+  campaign: VoucherCampaign
+  defaultValidFrom?: string
+  defaultValidUntil?: string
+}> = ({ campaign, defaultValidFrom, defaultValidUntil }) => {
+  const [setCampaignValidFrom] = useSetCampaignValidFromMutation()
+  const [setCampaignValidUntil] = useSetCampaignValidUntilMutation()
+  const { confirm } = useConfirmDialog()
+  const [validFrom, setValidFrom] = useState<string | null>(
+    defaultValidFrom ?? null,
+  )
+  const [validUntil, setValidUntil] = useState<string | null>(
+    defaultValidUntil ?? null,
+  )
+  const [editing, setEditing] = useState(false)
+
+  if (!editing) {
+    return (
+      <div onClick={() => setEditing(true)}>
+        {formatValidity(validFrom, validUntil)}
+        <PencilFill className="edit-icon" />
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <Flex>
+        <Flex direction="row" style={{ padding: '1rem 0' }}>
+          <div>
+            <Label>Valid from</Label>
+            <TextDatePicker
+              withCurrentTime
+              value={validFrom}
+              placeholder="Beginning of time"
+              onChange={(date, event) => {
+                event?.preventDefault()
+                confirm(
+                  date
+                    ? `Are you sure you want to change the campaign's start-date to ${date}?`
+                    : `Are you sure you want to remove the start-date?`,
+                ).then(() => {
+                  toast.promise(
+                    setCampaignValidFrom({
+                      variables: {
+                        id: campaign.id,
+                        validFrom: date,
+                      },
+                      optimisticResponse: {
+                        setCampaignValidFrom: {
+                          id: campaign.id,
+                          validFrom: date,
+                        },
+                      },
+                    }),
+                    {
+                      loading: 'Updating validity',
+                      success: () => {
+                        setEditing(false)
+                        setValidFrom(date?.split('T')[0] ?? null)
+                        return 'Validity updated'
+                      },
+                      error: 'Could not update validity',
+                    },
+                  )
+                })
+              }}
+              onKeyDown={(e) => {
+                if (e.key === Keys.Escape.code) {
+                  setEditing(false)
+                  setValidFrom(defaultValidFrom ?? null)
+                  setValidUntil(defaultValidUntil ?? null)
+                }
+              }}
+            />
+          </div>
+          <div style={{ marginLeft: '1rem' }}>
+            <Label>Valid to</Label>
+            <TextDatePicker
+              withCurrentTime
+              value={validUntil}
+              placeholder="End of time"
+              onChange={(date, event) => {
+                event?.preventDefault()
+                confirm(
+                  date
+                    ? `Are you sure you want to change the campaign's end-date to ${date}?`
+                    : `Are you sure you want to remove the end-date?`,
+                ).then(() => {
+                  toast.promise(
+                    setCampaignValidUntil({
+                      variables: {
+                        id: campaign.id,
+                        validUntil: date,
+                      },
+                      optimisticResponse: {
+                        setCampaignValidUntil: {
+                          id: campaign.id,
+                          validTo: date,
+                        },
+                      },
+                    }),
+                    {
+                      loading: 'Updating validity',
+                      success: () => {
+                        setEditing(false)
+                        setValidUntil(date?.split('T')[0] ?? null)
+                        return 'Validity updated'
+                      },
+                      error: 'Could not update validity',
+                    },
+                  )
+                })
+              }}
+              onKeyDown={(e) => {
+                if (e.key === Keys.Escape.code) {
+                  setEditing(false)
+                  setValidFrom(defaultValidFrom ?? null)
+                  setValidUntil(defaultValidUntil ?? null)
+                }
+              }}
+            />
+          </div>
+        </Flex>
+      </Flex>
+    </div>
+  )
+}
 
 export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
   filter,
@@ -93,18 +244,24 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
     <Card span={1}>
       <Table style={{ fontSize: '1.0rem', overflow: 'visible' }}>
         <TableHeader>
-          <HeaderCenteredCell>Valid Period</HeaderCenteredCell>
-          <HeaderCenteredCell>Campaign Code</HeaderCenteredCell>
-          <HeaderCenteredCell>Campaign Owner</HeaderCenteredCell>
-          <HeaderCenteredCell style={{ width: '270px' }}>
+          <TableHeaderColumn style={{ minWidth: '30rem' }}>
+            Valid Period
+          </TableHeaderColumn>
+          <TableHeaderColumn style={{ minWidth: '15rem' }}>
+            Campaign Code
+          </TableHeaderColumn>
+          <TableHeaderColumn style={{ minWidth: '15rem' }}>
+            Campaign Owner
+          </TableHeaderColumn>
+          <TableHeaderColumn style={{ minWidth: '15rem' }}>
             Incentive Type
-          </HeaderCenteredCell>
-          <HeaderCenteredCell style={{ width: '270px' }}>
+          </TableHeaderColumn>
+          <TableHeaderColumn style={{ minWidth: '15rem' }}>
             Discount
-          </HeaderCenteredCell>
-          <HeaderCenteredCell style={{ width: '270px' }}>
+          </TableHeaderColumn>
+          <TableHeaderColumn style={{ minWidth: '10rem' }}>
             Code Type
-          </HeaderCenteredCell>
+          </TableHeaderColumn>
         </TableHeader>
         <TableBody>
           {partnerCampaigns.map((campaign) => {
@@ -114,8 +271,11 @@ export const CampaignCodeTable: React.FC<{ filter: CampaignFilter }> = ({
             return (
               <TableRow key={id} border>
                 <CenteredCell editable={true}>
-                  {getValidity(campaign)}
-                  <PencilFill className="edit-icon" />
+                  <CampaignValidityCell
+                    campaign={campaign}
+                    defaultValidFrom={campaign.validFrom?.split('T')[0]}
+                    defaultValidUntil={campaign.validTo?.split('T')[0]}
+                  />
                 </CenteredCell>
                 <CenteredCell>{campaignCode}</CenteredCell>
                 <CenteredCell style={{ width: '270px' }}>
