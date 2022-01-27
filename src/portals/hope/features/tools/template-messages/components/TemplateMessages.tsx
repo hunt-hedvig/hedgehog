@@ -142,11 +142,20 @@ export const TemplateMessages: React.FC<{
   useClickOutside(templatesRef, smoothHideHandler)
 
   const selectHandler = (id: string) => {
-    const message = templates
-      .filter((template) => template.id === id)[0]
-      .messages.filter((msg) => msg.market === currentMarket)[0].text
+    const selectedTemplate = templates.filter(
+      (template) => template.id === id,
+    )[0]
 
-    select(message)
+    if (isEnDisplay) {
+      const message = selectedTemplate.messages.filter(
+        (msg) => msg.market === currentMarket,
+      )[0].text
+
+      select(message)
+      return
+    }
+
+    select(selectedTemplate.messageEn)
   }
 
   const deleteHandler = (id: string) => {
@@ -353,7 +362,7 @@ const TemplateContainer = styled.div`
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ theme }) => theme.accentBackground};
+    background-color: ${({ theme }) => theme.background};
   }
 `
 
