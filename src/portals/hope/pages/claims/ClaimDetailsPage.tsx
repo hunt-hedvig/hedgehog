@@ -29,11 +29,12 @@ import { ShieldLockFill } from 'react-bootstrap-icons'
 import { Prompt, RouteComponentProps } from 'react-router'
 import {
   ClaimState,
-  ResourceAccessInformation,
-  useClaimPageQuery,
+  useClaimDetailsQuery,
   useResourceAccessInformationQuery,
 } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
+import { useRestrictClaim } from 'portals/hope/common/hooks/use-restrict-claim'
+import gql from 'graphql-tag'
 
 const ChatPaneAdjustedContainer = styled.div`
   width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
@@ -82,22 +83,49 @@ const RestrictedClaimMessage: React.FC<{ claimId: string }> = ({ claimId }) => {
   )
 }
 
+gql`
+  query ClaimDetails($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      state
+      reserves
+      member {
+        memberId
+      }
+      transcriptions {
+        __typename
+      }
+      agreement {
+        id
+        carrier
+      }
+      trial {
+        id
+      }
+    }
+  }
+`
+
 const ClaimDetailsPage: Page<
   RouteComponentProps<{
     claimId: string
   }>
-> = ({ match }) => {
-  const { claimId } = match.params
+> = ({
+  match: {
+    params: { claimId },
+  },
+}) => {
+  const { restriction } = useRestrictClaim(claimId)
   const { pushToMemberHistory } = useMemberHistory()
   const [showEvents, setShowEvents] = useState(false)
 
-  const { data: claimPageData, error } = useClaimPageQuery({
+  const { data, error } = useClaimDetailsQuery({
     variables: { claimId },
   })
 
-  const memberId = claimPageData?.claim?.member.memberId
-  const transcriptions = claimPageData?.claim?.transcriptions ?? []
-  const carrier = claimPageData?.claim?.agreement?.carrier
+  const memberId = data?.claim?.member.memberId
+  const transcriptions = data?.claim?.transcriptions ?? []
+  const carrier = data?.claim?.agreement?.carrier
 
   useEffect(() => {
     if (!memberId) {
@@ -121,28 +149,25 @@ const ClaimDetailsPage: Page<
     return <LoadingMessage paddingTop="25vh" />
   }
 
+  if (!data?.claim) {
+    return null
+  }
+
+  const { claim } = data
+
   return (
     <>
       <Prompt
-        when={
-          claimPageData?.claim?.state !== ClaimState.Closed &&
-          (claimPageData?.claim?.reserves === null ||
-            claimPageData?.claim?.reserves === undefined)
-        }
+        when={claim.state !== ClaimState.Closed && !claim.reserves}
         message="This claim has no reserves, do you want leave without it?"
       />
       <ChatPane memberId={memberId} />
       <FadeIn>
         <ChatPaneAdjustedContainer>
-          {claimPageData?.claim?.restriction && (
+          {restriction && (
             <CardsWrapper>
               <Card>
-                <ClaimRestrictionInformation
-                  restriction={
-                    claimPageData.claim.restriction as ResourceAccessInformation
-                  }
-                  claimId={claimId}
-                />
+                <ClaimRestrictionInformation claimId={claimId} />
               </Card>
             </CardsWrapper>
           )}
@@ -151,11 +176,7 @@ const ClaimDetailsPage: Page<
               <MemberInformation claimId={claimId} memberId={memberId} />
             </Card>
             <Card span={3}>
-              <ClaimInformation
-                claimId={claimId}
-                memberId={memberId}
-                restricted={!!claimPageData?.claim?.restriction}
-              />
+              <ClaimInformation claimId={claimId} />
             </Card>
             <Card span={3}>
               <ClaimType claimId={claimId} />
@@ -164,7 +185,7 @@ const ClaimDetailsPage: Page<
           {!!transcriptions.length && (
             <CardsWrapper contentWrap="noWrap">
               <Card>
-                <ClaimTranscriptions transcriptions={transcriptions} />
+                <ClaimTranscriptions claimId={claimId} />
               </Card>
             </CardsWrapper>
           )}
@@ -179,7 +200,7 @@ const ClaimDetailsPage: Page<
             </>
           )}
 
-          {!carrier && !claimPageData?.claim?.trial ? (
+          {!carrier && !claim.trial ? (
             <NoCarrierMessage opacity={0.6}>
               Cannot make a payment or set a reserve without a carrier.
               <NoCarrierSubtitle>
@@ -197,7 +218,7 @@ const ClaimDetailsPage: Page<
               </CardsWrapper>
               <CardsWrapper contentWrap="noWrap">
                 <Card>
-                  <ClaimPayments claimId={claimId} memberId={memberId} />
+                  <ClaimPayments claimId={claimId} />
                 </Card>
               </CardsWrapper>
             </>

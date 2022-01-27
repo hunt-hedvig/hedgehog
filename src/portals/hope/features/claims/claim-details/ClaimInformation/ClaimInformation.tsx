@@ -1,9 +1,4 @@
 import styled from '@emotion/styled'
-import {
-  ClaimPageDocument,
-  useClaimPageQuery,
-  useRestrictResourceAccessMutation,
-} from 'types/generated/graphql'
 
 import {
   Button,
@@ -19,20 +14,28 @@ import {
 } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format, parseISO } from 'date-fns'
-import { ClaimContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimContractDropdown/ClaimContractDropdown'
+import { ClaimContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimContractDropdown'
 import { ClaimOutcomeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
-import {
-  CoInsuredForm,
-  useDeleteCoInsured,
-} from 'portals/hope/features/claims/claim-details/CoInsured/CoInsuredForm'
+import { CoInsuredForm } from 'portals/hope/features/claims/claim-details/CoInsured/CoInsuredForm'
 import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
-import { toast } from 'react-hot-toast'
 import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimDatePicker'
 import { ClaimEmployeeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimEmployeeDropdown'
 import { TermsAndConditionsLink } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/TermsAndConditionsLink'
 import { ClaimStatusDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimStatusDropdown'
+import { useRestrictClaim } from 'portals/hope/common/hooks/use-restrict-claim'
+import gql from 'graphql-tag'
+import {
+  ClaimCoInsuredFragment,
+  ClaimCoInsuredInformationDocument,
+  UpsertCoInsuredMutationVariables,
+  useClaimCoInsuredInformationQuery,
+  useClaimInformationQuery,
+  useDeleteCoInsuredMutation,
+  useUpsertCoInsuredMutation,
+} from 'types/generated/graphql'
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
+import { toast } from 'react-hot-toast'
 
 const SelectWrapper = styled.div`
   margin-top: 1em;
@@ -92,71 +95,169 @@ const ClaimAudio: React.FC<{ recordingUrl: string }> = ({ recordingUrl }) => {
     </ClaimAudioWrapper>
   )
 }
-export const ClaimInformation: React.FC<{
-  claimId: string
-  memberId: string
-  restricted: boolean
-}> = ({ claimId, memberId, restricted }) => {
-  const [creatingCoInsured, setCreatingCoInsured] = useState(false)
-  const { confirm } = useConfirmDialog()
-  const deleteCoInsured = useDeleteCoInsured({ claimId })
-  const [restrictResourceAccess] = useRestrictResourceAccessMutation()
-  const {
-    data,
-    error: queryError,
-    loading: claimInformationLoading,
-  } = useClaimPageQuery({
-    variables: { claimId },
-  })
 
-  const {
-    registrationDate,
-    recordingUrl,
-    agreement: selectedAgreement,
-    coInsured,
-    contract: selectedContract,
-    trial,
-  } = data?.claim ?? {}
+gql`
+  query ClaimInformation($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      recordingUrl
+      registrationDate
 
-  const coInsureHandler = async (value: string) => {
-    setCreatingCoInsured(value === 'True')
-    if (coInsured && value === 'False') {
-      confirm('This will delete the co-insured, are you sure?').then(() =>
-        deleteCoInsured(),
-      )
+      trial {
+        id
+      }
+
+      contract {
+        id
+        typeOfContract
+      }
+
+      agreement {
+        id
+        typeOfContract
+        lineOfBusinessName
+        carrier
+        partner
+        createdAt
+      }
+    }
+  }
+`
+
+gql`
+  query ClaimCoInsuredInformation($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      ...ClaimCoInsured
     }
   }
 
-  const handleRestrictAccess = () => {
-    if (!data) {
-      return
+  fragment ClaimCoInsured on Claim {
+    coInsured {
+      id
+      fullName
+      personalNumber
+      email
+      phoneNumber
     }
+  }
 
+  mutation DeleteCoInsured($claimId: ID!) {
+    deleteCoInsured(claimId: $claimId)
+  }
+
+  mutation UpsertCoInsured($claimId: ID!, $request: UpsertCoInsuredInput!) {
+    upsertCoInsured(claimId: $claimId, request: $request) {
+      id
+      ...ClaimCoInsured
+    }
+  }
+`
+
+interface UseClaimCoInsuredResult {
+  coInsured?: ClaimCoInsuredFragment['coInsured']
+  upsertCoInsured: (
+    request: UpsertCoInsuredMutationVariables['request'],
+  ) => void
+  removeCoInsured: () => void
+}
+
+// FIXME: Extract this logic to separate file
+export const useClaimCoInsured = (claimId: string): UseClaimCoInsuredResult => {
+  const [upsert] = useUpsertCoInsuredMutation()
+  const [remove] = useDeleteCoInsuredMutation()
+
+  const { data } = useClaimCoInsuredInformationQuery({ variables: { claimId } })
+
+  const coInsured = data?.claim?.coInsured
+
+  const removeCoInsured = () => {
     toast.promise(
-      restrictResourceAccess({
-        variables: { resourceId: claimId },
-        update: (
-          cache: ApolloCache<NormalizedCacheObject>,
-          { data: response },
-        ) => {
+      remove({
+        variables: { claimId },
+        optimisticResponse: {
+          deleteCoInsured: true,
+        },
+        update: (cache: ApolloCache<NormalizedCacheObject>) => {
           cache.writeQuery({
-            query: ClaimPageDocument,
+            query: ClaimCoInsuredInformationDocument,
             data: {
               claim: {
                 __typename: 'Claim',
-                ...data.claim,
-                restriction: response,
+                id: claimId,
+                coInsured: null,
               },
             },
           })
         },
       }),
       {
-        loading: 'Restricting access',
-        success: 'Access restricted',
-        error: 'Could not restrict access',
+        loading: 'Deleting co-insured',
+        success: 'Co-insured deleted',
+        error: 'Could not delete co-insured',
       },
     )
+  }
+
+  const upsertCoInsured = (
+    request: UpsertCoInsuredMutationVariables['request'],
+  ) => {
+    toast.promise(
+      upsert({
+        variables: {
+          claimId,
+          request,
+        },
+        optimisticResponse: {
+          upsertCoInsured: {
+            __typename: 'Claim',
+            id: claimId,
+            coInsured: {
+              id: 'temp-id',
+              ...request,
+            },
+          },
+        },
+      }),
+      {
+        loading: 'Updating co-insured',
+        success: 'Co-insured updated',
+        error: 'Could not update co-insured',
+      },
+    )
+  }
+
+  return { coInsured, removeCoInsured, upsertCoInsured }
+}
+
+export const ClaimInformation: React.FC<{
+  claimId: string
+}> = ({ claimId }) => {
+  const { confirm } = useConfirmDialog()
+  const { restrict, restriction } = useRestrictClaim(claimId)
+
+  const [creatingCoInsured, setCreatingCoInsured] = useState(false)
+
+  const { data, error, loading } = useClaimInformationQuery({
+    variables: { claimId },
+  })
+
+  const { coInsured, removeCoInsured } = useClaimCoInsured(claimId)
+
+  if (!data?.claim) {
+    return null
+  }
+
+  const { registrationDate, recordingUrl, agreement, contract, trial } =
+    data.claim
+
+  const coInsureHandler = async (value: string) => {
+    setCreatingCoInsured(value === 'True')
+    if (coInsured && value === 'False') {
+      confirm('This will delete the co-insured, are you sure?').then(() =>
+        removeCoInsured(),
+      )
+    }
   }
 
   const coInsuredClaimOptions = [
@@ -176,11 +277,11 @@ export const ClaimInformation: React.FC<{
 
   return (
     <CardContent>
-      <Loadable loading={claimInformationLoading}>
+      <Loadable loading={loading}>
         <CardTitle
           title="Claim Info"
           badge={
-            queryError
+            error
               ? {
                   icon: BugFill,
                   status: 'danger',
@@ -211,16 +312,16 @@ export const ClaimInformation: React.FC<{
         </SelectWrapper>
         <SelectWrapper>
           <Label>Contract for Claim</Label>
-          <ClaimContractDropdown claimId={claimId} memberId={memberId} />
+          <ClaimContractDropdown claimId={claimId} />
         </SelectWrapper>
 
-        {selectedAgreement ? (
-          selectedContract && (
+        {agreement ? (
+          contract && (
             <TermsAndConditionsLink
-              carrier={selectedAgreement.carrier}
-              createdAt={selectedAgreement.createdAt}
-              partner={selectedAgreement.partner ?? null}
-              typeOfContract={selectedContract.typeOfContract}
+              carrier={agreement.carrier}
+              createdAt={agreement.createdAt}
+              partner={agreement.partner ?? null}
+              typeOfContract={contract.typeOfContract}
             />
           )
         ) : trial ? null : (
@@ -248,11 +349,11 @@ export const ClaimInformation: React.FC<{
           {(creatingCoInsured || coInsured) && (
             <>
               <div style={{ marginTop: '0.5em' }} />
-              <CoInsuredForm coInsured={coInsured ?? null} claimId={claimId} />
+              <CoInsuredForm claimId={claimId} />
             </>
           )}
         </SelectWrapper>
-        {!restricted && (
+        {!restriction && (
           <SelectWrapper>
             <Button
               variant="tertiary"
@@ -261,7 +362,7 @@ export const ClaimInformation: React.FC<{
               }}
               onClick={() =>
                 confirm('Are you sure you want to restrict access?').then(() =>
-                  handleRestrictAccess(),
+                  restrict(),
                 )
               }
             >

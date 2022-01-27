@@ -1,4 +1,4 @@
-import { ApolloClient, ApolloLink, HttpLink, ServerError } from '@apollo/client'
+import { ApolloClient, ApolloLink, ServerError } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import axios from 'axios'
@@ -8,6 +8,7 @@ import { CachePersistor, LocalStorageWrapper } from 'apollo3-cache-persist'
 import { persistenceMapper } from 'apollo/persistence/mapper'
 import { createPersistLink } from 'apollo/persistence/link'
 import gql from 'graphql-tag'
+import { BatchHttpLink } from '@apollo/client/link/batch-http'
 
 gql`
   # Declare custom directive for IDE completion; don't want this to actually be resolved server-side
@@ -109,7 +110,11 @@ export const client = new ApolloClient({
     }),
     addTimezoneOffsetHeader,
     createPersistLink(),
-    new HttpLink({ uri: '/api/graphql', credentials: 'same-origin' }),
+    new BatchHttpLink({
+      uri: '/api/graphql',
+      credentials: 'same-origin',
+      batchInterval: 20,
+    }),
   ]),
   connectToDevTools: Boolean(localStorage.getItem('__debug:apollo')),
   cache,

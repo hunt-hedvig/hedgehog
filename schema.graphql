@@ -737,6 +737,7 @@ type Member {
   signedOn: Instant
   status: String
   transactions: [Transaction]
+  adyenShopperReference: String
   directDebitStatus: DirectDebitStatus
   payoutMethodStatus: PayoutMethodStatus
   monthlySubscription(month: YearMonth!): MonthlySubscription

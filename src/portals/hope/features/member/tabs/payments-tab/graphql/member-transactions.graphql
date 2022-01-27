@@ -1,7 +1,6 @@
 query GetMemberTransactions($id: ID!) {
   member(id: $id) {
     memberId
-
     contractMarketInfo {
       market
       preferredCurrency
@@ -12,6 +11,7 @@ query GetMemberTransactions($id: ID!) {
     payoutMethodStatus {
       activated
     }
+    adyenShopperReference
     identity {
       nationalIdentification {
         identification

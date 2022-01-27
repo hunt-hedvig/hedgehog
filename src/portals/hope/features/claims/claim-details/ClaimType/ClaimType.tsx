@@ -5,33 +5,88 @@ import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import {
-  useClaimPageQuery,
+  useClaimTypeInformationQuery,
   useGetClaimTypesQuery,
   useSetClaimTypeMutation,
 } from 'types/generated/graphql'
+import gql from 'graphql-tag'
+
+gql`
+  query ClaimTypeInformation($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      claimType
+      propertySelections {
+        claimType
+        property {
+          id
+          name
+        }
+        option {
+          id
+          name
+        }
+      }
+    }
+  }
+
+  mutation SetClaimType($id: ID!, $type: String) {
+    setClaimType(id: $id, type: $type) {
+      id
+      claimType
+    }
+  }
+
+  mutation SetClaimPropertySelection(
+    $id: ID!
+    $claimType: String!
+    $propertyId: ID!
+    $optionIds: [ID!]!
+  ) {
+    setClaimPropertySelection(
+      id: $id
+      claimType: $claimType
+      propertyId: $propertyId
+      optionIds: $optionIds
+    ) {
+      id
+      propertySelections {
+        claimType
+        property {
+          id
+          name
+        }
+        option {
+          id
+          name
+        }
+      }
+    }
+  }
+`
 
 export const ClaimType: React.FC<{
   claimId: string
 }> = ({ claimId }) => {
-  const { data: claimTypeData } = useClaimPageQuery({
+  const { data: claimTypeInformation } = useClaimTypeInformationQuery({
     variables: { claimId },
   })
 
   const { data, error } = useGetClaimTypesQuery()
   const [setClaimType] = useSetClaimTypeMutation()
   const claimTypes = data?.claimTypes ?? []
-  const selectedClaimType = claimTypeData?.claim?.claimType
+  const selectedClaimType = claimTypeInformation?.claim?.claimType
+  const propertySelections =
+    claimTypeInformation?.claim?.propertySelections ?? []
 
   const handleSetClaimType = (claimType: string) => {
     setClaimType({
       variables: { id: claimId, type: claimType },
       optimisticResponse: {
         setClaimType: {
-          ...claimTypeData,
           __typename: 'Claim',
           id: claimId,
           claimType,
-          events: claimTypeData?.claim?.events ?? [],
         },
       },
     }).catch(() => toast.error('Could not set type'))
@@ -80,9 +135,7 @@ export const ClaimType: React.FC<{
               <ClaimPropertyForm
                 claimId={claimId}
                 claimType={selectedClaimType}
-                propertySelections={
-                  claimTypeData?.claim?.propertySelections ?? []
-                }
+                propertySelections={propertySelections}
               />
             )}
           </div>

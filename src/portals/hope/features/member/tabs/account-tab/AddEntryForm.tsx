@@ -10,7 +10,6 @@ import {
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { format } from 'date-fns'
 import { AddEntryInformation } from 'portals/hope/features/member/tabs/account-tab/AddEntryInformation'
-import { useContractMarketInfo } from 'portals/hope/features/member/tabs/account-tab/hooks/use-get-member-contract-market-info'
 import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
@@ -18,6 +17,7 @@ import {
   AccountEntryInput,
   useAddAccountEntryToMemberMutation,
 } from 'types/generated/graphql'
+import { useContractMarketInfo } from 'portals/hope/common/hooks/use-contract-market-info'
 
 const entryTypeOptions = [
   {
@@ -95,20 +95,18 @@ export const AddEntryForm: React.FC<{
   onCancel: () => void
   onSuccess: () => void
 }> = ({ memberId, onCancel, onSuccess }) => {
-  const [contractMarketInfo] = useContractMarketInfo(memberId)
+  const { preferredCurrency } = useContractMarketInfo(memberId)
   const [addAccountEntry] = useAddAccountEntryToMemberMutation()
   const form = useForm()
   const { confirm } = useConfirmDialog()
 
-  if (!contractMarketInfo?.preferredCurrency) {
+  if (!preferredCurrency) {
     return (
       <StandaloneMessage>
         The member has no preferred currency
       </StandaloneMessage>
     )
   }
-
-  const { preferredCurrency } = contractMarketInfo
 
   const onSubmit = (data: FieldValues) => {
     confirm('Are you sure you want to add this entry?').then(() => {

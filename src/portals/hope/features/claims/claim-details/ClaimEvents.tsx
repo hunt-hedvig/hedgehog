@@ -2,23 +2,34 @@ import { CardContent, CardTitle, List, ListItem, Spinner } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
-import { useClaimPageQuery } from 'types/generated/graphql'
+import gql from 'graphql-tag'
+import { useClaimEventsQuery } from 'types/generated/graphql'
+
+gql`
+  query ClaimEvents($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      events {
+        text
+        date
+      }
+    }
+  }
+`
 
 export const ClaimEvents: React.FC<{ claimId: string }> = ({ claimId }) => {
-  const {
-    data: claimEventsData,
-    loading: loadingClaimEvents,
-    error: queryError,
-  } = useClaimPageQuery({
+  const { data, error, loading } = useClaimEventsQuery({
     variables: { claimId },
   })
+
+  const events = data?.claim?.events ?? []
 
   return (
     <CardContent>
       <CardTitle
         title="Events"
         badge={
-          queryError
+          error
             ? {
                 icon: BugFill,
                 status: 'danger',
@@ -28,10 +39,10 @@ export const ClaimEvents: React.FC<{ claimId: string }> = ({ claimId }) => {
         }
       />
 
-      {loadingClaimEvents && <Spinner />}
+      {loading && <Spinner />}
 
       <List>
-        {claimEventsData?.claim?.events.filter(Boolean).map((event) => (
+        {events.map((event) => (
           <ListItem key={event.date}>
             {format(parseISO(event.date), 'yyyy-MM-dd HH:mm:ss')}: {event.text}
           </ListItem>

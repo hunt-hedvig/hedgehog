@@ -14,7 +14,7 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import { dateTimeFormatter } from '@hedvig-ui/utils/date'
-import React, { useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
@@ -247,7 +247,7 @@ export const MemberTab: React.FC<{
           </div>
         </Button>
       </ButtonWrapper>
-      {modalOpen ? (
+      {modalOpen && (
         <Modal
           onClose={handleClose}
           title="Edit Member"
@@ -258,9 +258,10 @@ export const MemberTab: React.FC<{
           <FormProvider {...form}>
             <Form
               onSubmit={handleSubmit}
-              onChange={(e) =>
-                handleChange(e.currentTarget.name, e.currentTarget.value)
-              }
+              onChange={(e) => {
+                const event = e as unknown as ChangeEvent<HTMLInputElement>
+                handleChange(event.target.name, event.target.value)
+              }}
             >
               <>
                 {Object.keys(memberInfoWithoutSsn).map((field) => (
@@ -292,7 +293,7 @@ export const MemberTab: React.FC<{
             </Form>
           </FormProvider>
         </Modal>
-      ) : null}
+      )}
     </FadeIn>
   ) : (
     <h1>No member info</h1>
