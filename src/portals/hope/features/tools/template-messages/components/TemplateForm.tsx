@@ -95,6 +95,7 @@ export const TemplateForm: React.FC<
     }
 
     if (
+      isCreating &&
       templates.find(
         (template) =>
           template.name === values.name &&
