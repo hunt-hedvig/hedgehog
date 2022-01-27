@@ -146,11 +146,16 @@ export const TemplateMessages: React.FC<{
       (template) => template.id === id,
     )[0]
 
-    const message = selectedTemplate.messages.filter(
-      (msg) => msg.market === currentMarket,
-    )[0].text
+    if (!isEnDisplay) {
+      const message = selectedTemplate.messages.filter(
+        (msg) => msg.market === currentMarket,
+      )[0].text
 
-    select(message)
+      select(message)
+      return
+    }
+
+    select(selectedTemplate.messageEn)
   }
 
   const deleteHandler = (id: string) => {
