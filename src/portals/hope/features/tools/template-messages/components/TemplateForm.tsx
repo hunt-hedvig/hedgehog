@@ -83,6 +83,16 @@ export const TemplateForm: React.FC<
   }, [template])
 
   const submitHandler = (values: FieldValues) => {
+    if (expiryDate) {
+      const today = new Date().setHours(0, 0, 0, 0)
+      const valueDay = new Date(expiryDate).setHours(0, 0, 0, 0)
+
+      if (valueDay < today) {
+        toast.error('Expiry date should not be earlier than today')
+        return
+      }
+    }
+
     if (
       templates.find(
         (template) =>
@@ -283,6 +293,11 @@ export const TemplateForm: React.FC<
             <TextDatePicker
               value={expiryDate}
               onChange={(value) => {
+                if (!value) {
+                  setExpiryDate(null)
+                  return
+                }
+
                 setExpiryDate(value)
               }}
               style={{ marginTop: '0.5rem' }}
