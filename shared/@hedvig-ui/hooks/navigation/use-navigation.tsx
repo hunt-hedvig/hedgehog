@@ -12,6 +12,7 @@ import React, {
 } from 'react'
 import { lightTheme } from '@hedvig-ui'
 import chroma from 'chroma-js'
+import { useLocation } from 'react-router'
 
 interface NavigationContextProps {
   cursor: string | null
@@ -268,6 +269,8 @@ export const useNavigation = () => {
   } = useContext(NavigationContext)
   const localItems = useRef<Record<string, UseNavigationRegisterOptions>>({})
 
+  const location = useLocation()
+
   const registerItem = (
     name: string,
     options: UseNavigationRegisterOptions,
@@ -275,6 +278,10 @@ export const useNavigation = () => {
     setRegistryItem(name, options)
     localItems.current[name] = options
   }
+
+  useEffect(() => {
+    setCursor(null)
+  }, [location])
 
   useEffect(() => {
     if (cursor) {
@@ -286,7 +293,7 @@ export const useNavigation = () => {
         setCursor(name)
       }
     })
-  }, [cursor, localItems.current])
+  }, [cursor, localItems.current, location])
 
   const itemExists = (name: string) => !!registry[name]
 
