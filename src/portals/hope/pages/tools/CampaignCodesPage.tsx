@@ -1,4 +1,4 @@
-import { Card, CardsWrapper, MainHeadline } from '@hedvig-ui'
+import { Card, CardsWrapper, MainHeadline, Spacing } from '@hedvig-ui'
 import { CampaignCodeFilter } from 'portals/hope/features/tools/campaign-codes/components/CampaignCodeFilter'
 import { CampaignCodeTable } from 'portals/hope/features/tools/campaign-codes/components/CampaignCodeTable'
 import { CreateCampaignCode } from 'portals/hope/features/tools/campaign-codes/components/CreateCampaignCode'
@@ -15,6 +15,7 @@ const CampaignCodesPage: Page = () => {
   return (
     <>
       <MainHeadline>Campaign Codes</MainHeadline>
+      <Spacing top />
       <CardsWrapper>
         <Card span={2}>
           <CampaignCodeFilter
