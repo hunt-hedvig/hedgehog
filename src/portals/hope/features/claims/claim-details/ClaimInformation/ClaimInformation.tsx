@@ -244,12 +244,8 @@ export const ClaimInformation: React.FC<{
 
   const { coInsured, removeCoInsured } = useClaimCoInsured(claimId)
 
-  if (!data?.claim) {
-    return null
-  }
-
   const { registrationDate, recordingUrl, agreement, contract, trial } =
-    data.claim
+    data?.claim ?? {}
 
   const coInsureHandler = async (value: string) => {
     setCreatingCoInsured(value === 'True')
