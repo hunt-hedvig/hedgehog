@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import {
   Label,
-  Checkbox,
+  Checkbox as DefaultCheckbox,
   TextDatePicker,
   Button,
   ButtonsGroup,
@@ -35,7 +35,15 @@ const MessageField = styled(FormTextArea)`
 
   & textarea {
     margin-top: 0.5rem;
+    color: ${({ theme }) => theme.foreground};
+    background-color: ${({ theme }) => theme.backgroundLight};
     flex: 1;
+  }
+`
+
+const Checkbox = styled(DefaultCheckbox)`
+  & * {
+    color: ${({ theme }) => theme.foreground} !important;
   }
 `
 
@@ -154,7 +162,7 @@ export const TemplateForm: React.FC<
           <Checkbox
             style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}
             name="market"
-            label="Sweden 🇸🇪"
+            label={<span>Sweden 🇸🇪</span>}
             checked={markets.includes(Market.Sweden)}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
@@ -170,7 +178,7 @@ export const TemplateForm: React.FC<
           <Checkbox
             style={{ marginBottom: '0.5rem' }}
             name="market"
-            label="Norway 🇳🇴"
+            label={<span>Norway 🇳🇴</span>}
             checked={markets.includes(Market.Norway)}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
@@ -185,7 +193,7 @@ export const TemplateForm: React.FC<
           />
           <Checkbox
             name="market"
-            label="Denmark 🇩🇰"
+            label={<span>Denmark 🇩🇰</span>}
             checked={markets.includes(Market.Denmark)}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
@@ -278,7 +286,7 @@ export const TemplateForm: React.FC<
 
         <Field>
           <Checkbox
-            label="Set Expiry Date"
+            label={<span>Set Expiry Date</span>}
             checked={!!expiryDate}
             onChange={({ currentTarget: { checked } }) => {
               setExpiryDate(

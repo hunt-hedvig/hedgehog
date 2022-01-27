@@ -52,6 +52,10 @@ const Container = styled.div<{ closing: boolean }>`
 
   display: flex;
   flex-direction: column;
+
+  & h2 {
+    color: ${({ theme }) => theme.foreground};
+  }
 `
 
 const Header = styled.div`
