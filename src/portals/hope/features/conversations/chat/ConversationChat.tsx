@@ -223,7 +223,7 @@ export const ConversationChat: React.FC<{
       e.preventDefault()
 
       setProposedTemplate(getSearchTemplate(''))
-      setMessage(message + '/')
+      setMessage('/')
       setHinting(true)
     }
 
