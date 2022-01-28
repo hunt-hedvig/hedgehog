@@ -64,7 +64,7 @@ const QuoteDetails: React.FC<{
     <DetailWrapper>
       <Muted>
         Created:{' '}
-        <strong>{format(parseISO(quote.createdAt), 'yyyy-MM-dd hh:mm')}</strong>
+        <strong>{format(parseISO(quote.createdAt), 'yyyy-MM-dd HH:mm')}</strong>
         <br />
         State:{' '}
         <strong>{quote.state ? convertEnumToTitle(quote.state) : '-'}</strong>

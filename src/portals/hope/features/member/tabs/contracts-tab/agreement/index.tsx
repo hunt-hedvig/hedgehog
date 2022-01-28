@@ -81,7 +81,7 @@ export const Agreement: React.FC<{
           <InfoRow>
             Contract created at{' '}
             <InfoText>
-              {format(parseISO(contract.createdAt), 'yyyy-MM-dd hh:mm:ss')}
+              {format(parseISO(contract.createdAt), 'yyyy-MM-dd HH:mm:ss')}
             </InfoText>
           </InfoRow>
           <InfoRow>
@@ -90,7 +90,7 @@ export const Agreement: React.FC<{
           <InfoRow>
             Agreement created at{' '}
             <InfoText>
-              {format(parseISO(agreement.createdAt), 'yyyy-MM-dd hh:mm:ss')}
+              {format(parseISO(agreement.createdAt), 'yyyy-MM-dd HH:mm:ss')}
             </InfoText>
           </InfoRow>
         </Card>
