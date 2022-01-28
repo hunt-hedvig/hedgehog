@@ -15,7 +15,7 @@ export const Paragraph = styled.p<{ secondary?: boolean }>`
 
 export const Label = styled.label`
   font-size: 0.95rem;
-  margin-bottom: 0.4em;
+  margin-bottom: 0.4rem;
   color: ${({ theme }) => theme.semiStrongForeground};
   font-weight: normal;
 `

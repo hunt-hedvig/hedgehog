@@ -8,7 +8,7 @@ import formatDate from 'date-fns/format'
 import React from 'react'
 import { Calendar } from 'react-bootstrap-icons'
 import DatePicker from 'react-datepicker'
-import { isPressing, Keys } from '../hooks/keyboard/use-key-is-pressed'
+import { Keys } from '../hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '../hooks/use-click-outside'
 import { toast } from 'react-hot-toast'
 
@@ -83,12 +83,18 @@ const InlineDatePicker: React.FC<{
 
 interface TextDatePickerProps extends Omit<InputProps, 'value' | 'onChange'> {
   value?: string | null
-  onChange: (date: string | null) => void
+  onChange: (date: string | null, event: TextDatePickerChangeEvent) => void
   errorMessage?: string
   maxDate?: Date
   showTimePicker?: boolean
   withCurrentTime?: boolean
 }
+
+type TextDatePickerChangeEvent =
+  | React.ChangeEvent<HTMLInputElement>
+  | React.KeyboardEvent<HTMLInputElement>
+  | React.FocusEvent<HTMLInputElement>
+  | undefined
 
 export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   value,
@@ -107,7 +113,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
     setTextValue(value?.split('T')[0])
   }, [value])
 
-  const formatAndSetDate = (date: Date) => {
+  const formatAndSetDate = (date: Date, event: TextDatePickerChangeEvent) => {
     const isoDate = parseISO(date.toISOString())
     let formattedDate: string = formatDate(isoDate, 'yyyy-MM-dd')
 
@@ -117,14 +123,24 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
     }
 
     setTextValue(value?.split('T')[0])
-    onChange(formattedDate)
+    onChange(formattedDate, event)
   }
 
-  const setDateHandler = () => {
+  const setDateHandler = (event: TextDatePickerChangeEvent) => {
+    if (textValue === '') {
+      setTextValue(value?.split('T')[0])
+      onChange(null, event)
+      return
+    }
+
     const date = getDate(textValue || '')
 
     if (!date) {
       onChange(null)
+      return
+    }
+
+    if (value?.split('T')[0] === textValue) {
       return
     }
 
@@ -144,32 +160,34 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
       return
     }
 
-    formatAndSetDate(newDate)
+    formatAndSetDate(newDate, event)
   }
 
   return (
     <Wrapper>
       <Input
+        {...props}
         error={error}
         icon={
           <CalendarIcon onClick={() => setShowOldDatepicker((prev) => !prev)} />
         }
-        onBlur={() => {
-          setDateHandler()
+        onBlur={(e) => {
+          setDateHandler(e)
         }}
         value={textValue || ''}
         onChange={(e) => setTextValue(e.target.value)}
         onKeyDown={(e) => {
-          if (isPressing(e, Keys.Enter)) {
-            setDateHandler()
+          if (e.key === Keys.Enter.code) {
+            setDateHandler(e)
           }
+
+          props.onKeyDown?.(e)
         }}
-        {...props}
       />
-      {error && <ErrorMessage>{errorMessage || 'Invalid Date'}</ErrorMessage>}
+      {error && <ErrorMessage>{errorMessage ?? 'Invalid date'}</ErrorMessage>}
       {showOldDatepicker && (
         <InlineDatePicker
-          setValue={(dateValue: Date) => formatAndSetDate(dateValue)}
+          setValue={(dateValue: Date) => formatAndSetDate(dateValue, undefined)}
           onClose={() => setShowOldDatepicker(false)}
           maxDate={maxDate}
           showTimePicker={showTimePicker}
