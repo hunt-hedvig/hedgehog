@@ -39,6 +39,10 @@ gql`
       id
       claimFiles {
         claimFileId
+        category
+        fileUploadUrl
+        uploadedAt
+        contentType
       }
     }
   }
@@ -51,6 +55,8 @@ export const ClaimFileTable: React.FC<{
   const { data, error, loading, refetch } = useClaimFilesQuery({
     variables: { claimId },
   })
+
+  console.log(data)
 
   const files = data?.claim?.claimFiles ?? []
 
