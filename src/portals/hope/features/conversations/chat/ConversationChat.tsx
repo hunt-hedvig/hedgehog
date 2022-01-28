@@ -173,7 +173,7 @@ export const ConversationChat: React.FC<{
     const text = e.currentTarget.value
 
     if (text[0] === '/') {
-      const searchText = text.slice(1).toLowerCase()
+      const searchText = text.slice(1)
       const searchTemplate = templates
         .sort((a, b) => {
           if (a.name.toLowerCase() < b.name.toLowerCase()) {
@@ -187,17 +187,25 @@ export const ConversationChat: React.FC<{
         .find(
           (template) =>
             template.market.includes(market) &&
-            template.name.toLowerCase().includes(searchText),
+            template.name.toLowerCase().includes(searchText.toLowerCase()),
         )
 
-      setProposedTemplate(
-        searchTemplate
-          ? { ...searchTemplate, name: searchTemplate.name.toLowerCase() }
-          : null,
-      )
+      const name =
+        searchTemplate?.name
+          .split('')
+          .map((letter, idx) => {
+            if (searchText[idx] === letter.toUpperCase()) {
+              return letter.toUpperCase()
+            }
+
+            return letter.toLowerCase()
+          })
+          .join('') || ''
+
+      setProposedTemplate(searchTemplate ? { ...searchTemplate, name } : null)
 
       setHinting(true)
-      setMessage(e.currentTarget.value.toLowerCase())
+      setMessage(e.currentTarget.value)
 
       return
     } else {
