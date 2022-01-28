@@ -94,7 +94,15 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   return (
     <TemplateMessagesContext.Provider
       value={{
-        templates,
+        templates: templates.sort((a, b) => {
+          if (a.name.toLowerCase() < b.name.toLowerCase()) {
+            return -1
+          }
+          if (a.name.toLowerCase() > b.name.toLowerCase()) {
+            return 1
+          }
+          return 0
+        }),
         show: () => setShowTemplateMessages(true),
         create: createHandler,
         edit: editHandler,

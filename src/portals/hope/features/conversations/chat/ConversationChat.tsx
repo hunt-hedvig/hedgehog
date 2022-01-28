@@ -169,54 +169,99 @@ export const ConversationChat: React.FC<{
     }
   }, [selected])
 
+  const getSearchTemplate = (searchText: string) => {
+    const searchTemplate = templates.find(
+      (template) =>
+        template.market.includes(market) &&
+        template.name.substring(0, searchText.length).toLowerCase() ===
+          searchText.toLowerCase(),
+    )
+
+    const name =
+      searchTemplate?.name
+        .split('')
+        .map((letter, idx) => {
+          if (searchText[idx] === letter.toUpperCase()) {
+            return letter.toUpperCase()
+          }
+
+          return letter.toLowerCase()
+        })
+        .join('') || ''
+
+    return searchTemplate ? { ...searchTemplate, name } : null
+  }
+
   const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.currentTarget.value
 
-    if (text[0] === '/') {
+    if (!e.currentTarget.value.includes('/') && hinting) {
+      setHinting(false)
+    }
+
+    if (hinting) {
       const searchText = text.slice(1)
-      const searchTemplate = templates
-        .sort((a, b) => {
-          if (a.name.toLowerCase() < b.name.toLowerCase()) {
-            return -1
-          }
-          if (a.name.toLowerCase() > b.name.toLowerCase()) {
-            return 1
-          }
-          return 0
-        })
-        .find(
-          (template) =>
-            template.market.includes(market) &&
-            template.name.toLowerCase().includes(searchText.toLowerCase()),
-        )
+      const searchTemplate = getSearchTemplate(searchText)
 
-      const name =
-        searchTemplate?.name
-          .split('')
-          .map((letter, idx) => {
-            if (searchText[idx] === letter.toUpperCase()) {
-              return letter.toUpperCase()
-            }
-
-            return letter.toLowerCase()
-          })
-          .join('') || ''
-
-      setProposedTemplate(searchTemplate ? { ...searchTemplate, name } : null)
-
-      setHinting(true)
+      setProposedTemplate(searchTemplate)
       setMessage(e.currentTarget.value)
 
       return
-    } else {
-      setHinting(false)
     }
 
     setMessage(e.currentTarget.value)
   }
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (isPressing(e, Keys.Enter) && hinting) {
+    if (isPressing(e, Keys.Slash) && !hinting) {
+      e.preventDefault()
+
+      setProposedTemplate(getSearchTemplate(''))
+      setMessage('/')
+      setHinting(true)
+    }
+
+    if (
+      (isPressing(e, Keys.Down) || isPressing(e, Keys.Up)) &&
+      hinting &&
+      !!proposedTemplate
+    ) {
+      e.preventDefault()
+
+      const templatesIds = templates
+        .filter((tmpl) => tmpl.market.includes(market))
+        .map((tmpl) => tmpl.id)
+
+      const indexOfCurrentTemplate = templatesIds.indexOf(proposedTemplate.id)
+
+      if (
+        indexOfCurrentTemplate < templatesIds.length - 1 &&
+        isPressing(e, Keys.Down)
+      ) {
+        const template = templates.find(
+          (tmpl) => tmpl.id === templatesIds[indexOfCurrentTemplate + 1],
+        )
+
+        setProposedTemplate(template || null)
+      }
+
+      if (indexOfCurrentTemplate > 0 && isPressing(e, Keys.Up)) {
+        const template = templates.find(
+          (tmpl) => tmpl.id === templatesIds[indexOfCurrentTemplate - 1],
+        )
+
+        setProposedTemplate(template || null)
+      }
+    }
+
+    if (isPressing(e, Keys.Escape) && hinting) {
+      e.preventDefault()
+
+      setProposedTemplate(null)
+      setHinting(false)
+    }
+
+    if (!isMetaKey(e) && isPressing(e, Keys.Enter) && hinting) {
       e.preventDefault()
 
       const newMessage = proposedTemplate?.messages.find(
@@ -229,7 +274,13 @@ export const ConversationChat: React.FC<{
       setHinting(false)
     }
 
-    if (isMetaKey(e) && isPressing(e, Keys.Enter) && !loading && message) {
+    if (
+      isMetaKey(e) &&
+      isPressing(e, Keys.Enter) &&
+      !loading &&
+      message &&
+      !hinting
+    ) {
       toast.promise(
         sendMessage({
           variables: {
@@ -304,7 +355,9 @@ export const ConversationChat: React.FC<{
               setInputFocused(false)
               onBlur()
             }}
-            placeholder={'Your message goes here...'}
+            placeholder={
+              !hinting ? `Message goes here or type '/' for templates` : ''
+            }
             value={message}
             onChange={onChangeHandler}
             onKeyDown={(e) => handleOnKeyDown(e)}
