@@ -177,20 +177,23 @@ export const ConversationChat: React.FC<{
           searchText.toLowerCase(),
     )
 
-    const name =
-      searchTemplate?.name
-        .split('')
-        .map((letter, idx) => {
-          if (searchText[idx] === letter.toUpperCase()) {
-            return letter.toUpperCase()
-          }
-
-          return letter.toLowerCase()
-        })
-        .join('') || ''
-
-    return searchTemplate ? { ...searchTemplate, name } : null
+    return searchTemplate || null
   }
+
+  const getTemplateName = (
+    searchTemplate: TemplateMessage | null,
+    searchText: string,
+  ) =>
+    searchTemplate?.name
+      .split('')
+      .map((letter, idx) => {
+        if (searchText[idx] === letter.toUpperCase()) {
+          return letter.toUpperCase()
+        }
+
+        return letter.toLowerCase()
+      })
+      .join('') || ''
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.currentTarget.value
@@ -202,8 +205,11 @@ export const ConversationChat: React.FC<{
     if (hinting) {
       const searchText = text.slice(1)
       const searchTemplate = getSearchTemplate(searchText)
+      const templateName = getTemplateName(searchTemplate, searchText)
 
-      setProposedTemplate(searchTemplate)
+      setProposedTemplate(
+        searchTemplate ? { ...searchTemplate, name: templateName } : null,
+      )
       setMessage(e.currentTarget.value)
 
       return
@@ -217,7 +223,7 @@ export const ConversationChat: React.FC<{
       e.preventDefault()
 
       setProposedTemplate(getSearchTemplate(''))
-      setMessage('/')
+      setMessage(message + '/')
       setHinting(true)
     }
 
@@ -228,8 +234,15 @@ export const ConversationChat: React.FC<{
     ) {
       e.preventDefault()
 
+      const searchText = message.slice(1)
+
       const templatesIds = templates
         .filter((tmpl) => tmpl.market.includes(market))
+        .filter(
+          (tmpl) =>
+            tmpl.name.substring(0, searchText.length).toLowerCase() ===
+            searchText.toLowerCase(),
+        )
         .map((tmpl) => tmpl.id)
 
       const indexOfCurrentTemplate = templatesIds.indexOf(proposedTemplate.id)
@@ -238,19 +251,29 @@ export const ConversationChat: React.FC<{
         indexOfCurrentTemplate < templatesIds.length - 1 &&
         isPressing(e, Keys.Down)
       ) {
-        const template = templates.find(
-          (tmpl) => tmpl.id === templatesIds[indexOfCurrentTemplate + 1],
-        )
+        const template =
+          templates.find(
+            (tmpl) => tmpl.id === templatesIds[indexOfCurrentTemplate + 1],
+          ) || null
 
-        setProposedTemplate(template || null)
+        const templateName = getTemplateName(template, searchText)
+
+        setProposedTemplate(
+          template ? { ...template, name: templateName } : null,
+        )
       }
 
       if (indexOfCurrentTemplate > 0 && isPressing(e, Keys.Up)) {
-        const template = templates.find(
-          (tmpl) => tmpl.id === templatesIds[indexOfCurrentTemplate - 1],
-        )
+        const template =
+          templates.find(
+            (tmpl) => tmpl.id === templatesIds[indexOfCurrentTemplate - 1],
+          ) || null
 
-        setProposedTemplate(template || null)
+        const templateName = getTemplateName(template, searchText)
+
+        setProposedTemplate(
+          template ? { ...template, name: templateName } : null,
+        )
       }
     }
 
