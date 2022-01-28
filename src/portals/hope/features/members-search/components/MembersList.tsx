@@ -22,7 +22,10 @@ import {
 import { getMemberFlag, MemberAge } from 'portals/hope/features/member/utils'
 import React from 'react'
 import { useHistory } from 'react-router'
-import { Contract, ContractStatus, Member } from 'types/generated/graphql'
+import {
+  ContractStatus,
+  ExtensiveMemberSearchQuery,
+} from 'types/generated/graphql'
 
 type CircleVariation =
   | 'success'
@@ -77,7 +80,9 @@ const MemberAgeWrapper = styled.span`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-const countContractsByStatus = (contracts: Contract[]) =>
+const countContractsByStatus = (
+  contracts: ExtensiveMemberSearchQuery['memberSearch']['members'][0]['contracts'],
+) =>
   contracts.reduce<Record<string, number>>((acc, { status }) => {
     const groupedStatus = [
       ContractStatus.Pending,
@@ -93,7 +98,7 @@ const countContractsByStatus = (contracts: Contract[]) =>
   }, {})
 
 export const MembersList: React.FC<{
-  members: Member[]
+  members: ExtensiveMemberSearchQuery['memberSearch']['members']
 }> = ({ members }) => {
   const history = useHistory()
   const isCommandPressed = useKeyIsPressed(Keys.Command)

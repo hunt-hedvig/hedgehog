@@ -1,46 +1,95 @@
+import gql from 'graphql-tag'
 import {
-  MemberSearchLazyQueryHookResult,
+  ExtensiveMemberSearchQuery,
   MemberSearchOptions,
-  MemberSearchResult,
-  useMemberSearchLazyQuery,
+  SlimMemberSearchQuery,
+  useExtensiveMemberSearchLazyQuery,
+  useSlimMemberSearchLazyQuery,
 } from 'types/generated/graphql'
+import { ApolloError } from '@apollo/client'
+import { useState } from 'react'
 
-type MemberSearchReturnTuple = [
-  MemberSearchResult,
-  (query: string, options?: MemberSearchOptions) => void,
-  MemberSearchLazyQueryHookResult[1],
-]
+gql`
+  query SlimMemberSearch($query: String!, $options: MemberSearchOptions!) {
+    memberSearch(query: $query, options: $options) {
+      members {
+        memberId
+        firstName
+        lastName
+      }
+      page
+      totalPages
+    }
+  }
 
-export const useMemberSearch = (): MemberSearchReturnTuple => {
-  const [memberSearchQuery, queryResult] = useMemberSearchLazyQuery()
+  query ExtensiveMemberSearch($query: String!, $options: MemberSearchOptions!) {
+    memberSearch(query: $query, options: $options) {
+      members {
+        memberId
+        firstName
+        lastName
+        status
+        signedOn
+        birthDate
+        contractMarketInfo {
+          market
+        }
+        contracts {
+          status
+          masterInception
+          terminationDate
+        }
+      }
+      page
+      totalPages
+    }
+  }
+`
 
-  const memberSearch = (query: string, options?: MemberSearchOptions) => {
-    memberSearchQuery({
+export type UseMemberSearchMembers =
+  | ExtensiveMemberSearchQuery['memberSearch']['members']
+  | SlimMemberSearchQuery['memberSearch']['members']
+
+interface UseMemberSearchResult {
+  members: UseMemberSearchMembers
+  page?: number
+  totalPages?: number
+  search: (query: string, options?: MemberSearchOptions) => void
+  loading: boolean
+  error?: ApolloError
+}
+
+const defaultOptions: MemberSearchOptions = {
+  includeAll: false,
+  page: 0,
+  pageSize: 25,
+  sortBy: 'SIGN_UP',
+  sortDirection: 'DESC',
+}
+
+export const useMemberSearch = (slim = true): UseMemberSearchResult => {
+  const [members, setMembers] = useState<UseMemberSearchResult['members']>([])
+  const [extensiveMemberSearch, extensiveResponse] =
+    useExtensiveMemberSearchLazyQuery()
+  const [slimMemberSearch, slimResponse] = useSlimMemberSearchLazyQuery()
+
+  const memberSearch = slim ? slimMemberSearch : extensiveMemberSearch
+  const response = slim ? slimResponse : extensiveResponse
+
+  const search = (query: string, options?: MemberSearchOptions) => {
+    memberSearch({
       variables: {
         query,
-        options: {
-          includeAll: options?.includeAll ?? false,
-          page: options?.page ?? 0,
-          pageSize: options?.pageSize ?? 25,
-          sortBy: options?.sortBy ?? 'SIGN_UP',
-          sortDirection: options?.sortDirection ?? 'DESC',
-        },
+        options: { ...defaultOptions, ...options },
       },
-    })
-  }
-  const {
-    members = [],
-    page = 0,
-    totalPages = 0,
-  } = {
-    ...queryResult?.data?.memberSearch,
+    }).then(({ data }) => setMembers(data?.memberSearch?.members ?? []))
   }
 
-  const memberSearchResult = {
-    members,
-    totalPages,
-    page,
-  }
+  const page = response?.data?.memberSearch?.page
+  const totalPages = response?.data?.memberSearch?.totalPages
 
-  return [memberSearchResult as MemberSearchResult, memberSearch, queryResult]
+  const error = response.error
+  const loading = response.loading
+
+  return { members, page, totalPages, search, error, loading }
 }
