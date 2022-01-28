@@ -56,8 +56,6 @@ export const ClaimFileTable: React.FC<{
     variables: { claimId },
   })
 
-  console.log(data)
-
   const files = data?.claim?.claimFiles ?? []
 
   return (
