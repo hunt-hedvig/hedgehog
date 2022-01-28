@@ -134,6 +134,10 @@ const HintText = styled.span`
   border-radius: 4px;
 
   background: ${({ theme }) => theme.accentBackground};
+
+  @media only screen and (max-width: 1900px) {
+    top: 7px;
+  }
 `
 
 export const ConversationChat: React.FC<{
@@ -168,17 +172,34 @@ export const ConversationChat: React.FC<{
   const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.currentTarget.value
 
-    if (text[0] === '/' && text.length >= 2) {
+    if (text[0] === '/') {
       const searchText = text.slice(1).toLowerCase()
-      const searchTemplate = templates.find(
-        (template) =>
-          template.market.includes(market) &&
-          template.name.toLowerCase().includes(searchText),
+      const searchTemplate = templates
+        .sort((a, b) => {
+          if (a.name.toLowerCase() < b.name.toLowerCase()) {
+            return -1
+          }
+          if (a.name.toLowerCase() > b.name.toLowerCase()) {
+            return 1
+          }
+          return 0
+        })
+        .find(
+          (template) =>
+            template.market.includes(market) &&
+            template.name.toLowerCase().includes(searchText),
+        )
+
+      setProposedTemplate(
+        searchTemplate
+          ? { ...searchTemplate, name: searchTemplate.name.toLowerCase() }
+          : null,
       )
 
-      setProposedTemplate(searchTemplate || null)
-
       setHinting(true)
+      setMessage(e.currentTarget.value.toLowerCase())
+
+      return
     } else {
       setHinting(false)
     }
@@ -187,13 +208,14 @@ export const ConversationChat: React.FC<{
   }
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (isPressing(e, Keys.Enter) && hinting && !!proposedTemplate) {
+    if (isPressing(e, Keys.Enter) && hinting) {
       e.preventDefault()
 
-      setMessage(
-        proposedTemplate.messages.find((msg) => msg.market === market)?.text ||
-          '',
-      )
+      const newMessage = proposedTemplate?.messages.find(
+        (msg) => msg.market === market,
+      )?.text
+
+      setMessage(newMessage || '')
 
       setProposedTemplate(null)
       setHinting(false)
@@ -254,8 +276,12 @@ export const ConversationChat: React.FC<{
         <MessagesList memberId={memberId} />
         <ConversationFooter>
           <HintContainer>
-            {hinting && !!proposedTemplate ? (
-              <HintText>{`/${proposedTemplate?.name}`}</HintText>
+            {hinting ? (
+              <HintText>
+                {proposedTemplate?.name
+                  ? `/${proposedTemplate?.name}`
+                  : message}
+              </HintText>
             ) : (
               ''
             )}
