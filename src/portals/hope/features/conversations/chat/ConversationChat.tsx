@@ -12,7 +12,10 @@ import {
   useSendMessageMutation,
 } from 'types/generated/graphql'
 import { FileText } from 'react-bootstrap-icons'
-import { useTemplateMessages } from '../../tools/template-messages/use-template-messages'
+import {
+  TemplateMessage,
+  useTemplateMessages,
+} from '../../tools/template-messages/use-template-messages'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
@@ -31,10 +34,15 @@ const ConversationFooter = styled.div`
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+
+  position: relative;
 `
 
 const ConversationTextArea = styled(TextArea)`
   &&&& {
+    position: relative;
+    z-index: 1;
+    background: transparent;
     resize: none;
     border: none;
     border-radius: 8px 8px 0 0;
@@ -90,6 +98,44 @@ const TemplatesButton = styled(Button)`
   }
 `
 
+const HintContainer = styled.div`
+  position: absolute;
+  top: calc(1.2rem - 1px);
+  left: calc(1.2rem - 0.7px);
+  border-radius: 8px 8px 0 0;
+
+  width: calc(100% - 2.4rem + 1.5px);
+  height: calc(100% - 4.5rem + 2.4px);
+
+  background: ${({ theme }) => theme.backgroundLight};
+
+  word-wrap: break-word;
+
+  padding-top: 11.2px;
+  padding-bottom: 10.8px;
+  padding-left: 13.8px;
+  padding-right: 14px;
+
+  z-index: 0;
+
+  color: ${({ theme }) => theme.placeholderColor};
+`
+
+const HintText = styled.span`
+  position: absolute;
+  top: 8px;
+  left: 9px;
+
+  font-size: 14px;
+  font-family: sans-serif;
+  line-height: 1.15;
+
+  padding: 4px 5px;
+  border-radius: 4px;
+
+  background: ${({ theme }) => theme.accentBackground};
+`
+
 export const ConversationChat: React.FC<{
   memberId: string
   onFocus: () => void
@@ -107,8 +153,52 @@ export const ConversationChat: React.FC<{
       },
     ],
   })
+  const [hinting, setHinting] = useState(false)
+  const [proposedTemplate, setProposedTemplate] =
+    useState<TemplateMessage | null>(null)
+
+  const { show, selected, templates, market } = useTemplateMessages()
+
+  useEffect(() => {
+    if (selected) {
+      setMessage(selected)
+    }
+  }, [selected])
+
+  const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.currentTarget.value
+
+    if (text[0] === '/' && text.length >= 2) {
+      const searchText = text.slice(1).toLowerCase()
+      const searchTemplate = templates.find(
+        (template) =>
+          template.market.includes(market) &&
+          template.name.toLowerCase().includes(searchText),
+      )
+
+      setProposedTemplate(searchTemplate || null)
+
+      setHinting(true)
+    } else {
+      setHinting(false)
+    }
+
+    setMessage(e.currentTarget.value)
+  }
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (isPressing(e, Keys.Enter) && hinting && !!proposedTemplate) {
+      e.preventDefault()
+
+      setMessage(
+        proposedTemplate.messages.find((msg) => msg.market === market)?.text ||
+          '',
+      )
+
+      setProposedTemplate(null)
+      setHinting(false)
+    }
+
     if (isMetaKey(e) && isPressing(e, Keys.Enter) && !loading && message) {
       toast.promise(
         sendMessage({
@@ -158,19 +248,19 @@ export const ConversationChat: React.FC<{
     }
   }
 
-  const { show, selected } = useTemplateMessages()
-
-  useEffect(() => {
-    if (selected) {
-      setMessage(selected)
-    }
-  }, [selected])
-
   return (
     <FadeIn style={{ width: '100%', height: '100%' }}>
       <ConversationContent>
         <MessagesList memberId={memberId} />
         <ConversationFooter>
+          <HintContainer>
+            {hinting && !!proposedTemplate ? (
+              <HintText>{`/${proposedTemplate?.name}`}</HintText>
+            ) : (
+              ''
+            )}
+          </HintContainer>
+
           <ConversationTextArea
             onFocus={() => {
               setInputFocused(true)
@@ -182,9 +272,7 @@ export const ConversationChat: React.FC<{
             }}
             placeholder={'Your message goes here...'}
             value={message}
-            onChange={(e) => {
-              setMessage(e.currentTarget.value)
-            }}
+            onChange={onChangeHandler}
             onKeyDown={(e) => handleOnKeyDown(e)}
           />
           <TextAreaFooter onClick={show}>
