@@ -230,7 +230,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         <Label>States</Label>
         {Object.values(ClaimState).map((state, index) => {
           const states = Object.keys(ClaimState)
-          const navigation = register(state, {
+          const stateName = state.charAt(0) + state.toLowerCase().slice(1)
+
+          const navigation = register(stateName, {
             focus: index === 0 ? Keys.F : undefined,
             resolve: () => {
               updateFilterHandler(UserSettingKey.ClaimStatesFilter, state)
@@ -245,7 +247,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           return (
             <Flex key={state} direction="row" align="center" {...navigation}>
               <Checkbox
-                label={state}
+                label={stateName}
                 checked={settingExist(UserSettingKey.ClaimStatesFilter, state)}
                 onChange={() => {
                   updateFilterHandler(UserSettingKey.ClaimStatesFilter, state)
@@ -270,7 +272,10 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         />
         {Object.values(ClaimComplexity).map((complexity, index) => {
           const complexities = Object.keys(ClaimComplexity)
-          const navigation = register(complexity, {
+          const complexityName =
+            complexity.charAt(0) + complexity.toLowerCase().slice(1)
+
+          const navigation = register(complexityName, {
             resolve: () => {
               updateFilterHandler(
                 UserSettingKey.ClaimComplexityFilter,
@@ -296,7 +301,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
               {...navigation}
             >
               <Checkbox
-                label={complexity}
+                label={complexityName}
                 checked={settingExist(
                   UserSettingKey.ClaimComplexityFilter,
                   complexity,
@@ -419,8 +424,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         <Label>Markets</Label>
         {Object.values(Market).map((market, index) => {
           const markets = Object.keys(Market)
+          const marketName = market.charAt(0) + market.toLowerCase().slice(1)
 
-          const navigation = register(market, {
+          const navigation = register(marketName, {
             resolve: () => {
               updateFilterHandler(UserSettingKey.MarketFilter, market)
             },
@@ -435,7 +441,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           return (
             <Flex key={market} direction="row" align="center" {...navigation}>
               <Checkbox
-                label={market}
+                label={marketName}
                 checked={settingExist(UserSettingKey.MarketFilter, market)}
                 onChange={() => {
                   updateFilterHandler(UserSettingKey.MarketFilter, market)
