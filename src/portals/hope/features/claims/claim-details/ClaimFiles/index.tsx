@@ -39,6 +39,10 @@ gql`
       id
       claimFiles {
         claimFileId
+        category
+        fileUploadUrl
+        uploadedAt
+        contentType
       }
     }
   }

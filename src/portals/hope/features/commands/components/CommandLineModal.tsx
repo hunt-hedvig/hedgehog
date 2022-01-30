@@ -8,6 +8,8 @@ import {
 import { useAdvancedActions } from 'portals/hope/features/commands/hooks/use-advanced-actions'
 import { CommandLineAction } from 'portals/hope/features/commands/use-command-line'
 import React, { useEffect, useState } from 'react'
+import { useMemberSearch } from 'portals/hope/features/members-search/hooks/use-member-search'
+import { useHistory } from 'react-router'
 
 const CharacterBadge = styled.div`
   background: rgba(0, 0, 0, 0.1);
@@ -94,6 +96,7 @@ export const CommandLineModal: React.FC<{
   hide: () => void
   actions: CommandLineAction[]
 }> = ({ hide, actions }) => {
+  const history = useHistory()
   const [searchValue, setSearchValue] = useState('')
   const [searchResult, setSearchResult] = useState<CommandLineAction[]>([])
 
@@ -104,6 +107,23 @@ export const CommandLineModal: React.FC<{
   const maxActions = 10
   const [selectedActionIndex, setSelectedActionIndex] = useState(0)
   const [firstActionIndex, setFirstActionIndex] = useState(0)
+
+  const { search: memberSearch, members, loading } = useMemberSearch()
+
+  const memberItems = members.map<CommandLineAction>((member) => ({
+    label: `${member.firstName} ${member.lastName}`,
+    onResolve: () => history.push(`/members/${member.memberId}`),
+    keys: [
+      { code: 'Member', hint: 'Member' },
+      { code: member.memberId, hint: member.memberId },
+    ],
+  }))
+
+  useEffect(() => {
+    if (searchValue.length > 3) {
+      memberSearch(searchValue, { pageSize: 10 })
+    }
+  }, [searchValue])
 
   useAdvancedActions(
     searchValue,
@@ -129,7 +149,7 @@ export const CommandLineModal: React.FC<{
     if (!isUpPressed) {
       return
     }
-    if (searchResult.length === 0) {
+    if (searchResult.length === 0 && memberItems.length === 0) {
       return
     }
     if (selectedActionIndex > 0) {
@@ -148,7 +168,7 @@ export const CommandLineModal: React.FC<{
     if (!isDownPressed) {
       return
     }
-    if (searchResult.length === 0) {
+    if (searchResult.length === 0 && memberItems.length === 0) {
       return
     }
     if (selectedActionIndex === searchResult.length - 1) {
@@ -167,13 +187,18 @@ export const CommandLineModal: React.FC<{
     if (!isEnterPressed) {
       return
     }
-    if (searchResult.length === 0) {
+    if (searchResult.length === 0 && memberItems.length === 0) {
       return
     }
     if (!searchValue.includes('/')) {
       hide()
     }
-    searchResult[selectedActionIndex].onResolve()
+
+    const onResolve =
+      searchResult[selectedActionIndex]?.onResolve ??
+      memberItems[selectedActionIndex]?.onResolve
+
+    onResolve()
   }, [isEnterPressed])
 
   return (
@@ -183,6 +208,7 @@ export const CommandLineModal: React.FC<{
           autoFocus
           value={searchValue}
           size="large"
+          loading={loading}
           onKeyDown={(e) => {
             if (isPressing(e, Keys.Down) || isPressing(e, Keys.Up)) {
               e.preventDefault()
@@ -202,7 +228,7 @@ export const CommandLineModal: React.FC<{
         />
       </SearchWrapper>
       <div>
-        {searchResult
+        {[...searchResult, ...memberItems]
           .slice(firstActionIndex, firstActionIndex + maxActions)
           .map((action, index) => (
             <FadeIn

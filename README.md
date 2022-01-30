@@ -6,37 +6,44 @@
 
 ### Dependencies
 
-The following dependencies are required:
-
 - NVM: Not necessary, but highly recommended for installing different Node versions
   - https://github.com/nvm-sh/nvm#installing-and-updating
 - Node:
   - `nvm install node`
 - Yarn:
-- `npm install --global yarn`
+  - `npm install --global yarn`
 
 ### Running
 
-- Install project dependencies with `yarn install`.
-- Run `hedgehog` with `yarn watch`. This, in theory, should "watch" for changes and hot-deploy new code.
-- App is accessible at `localhost:9000`.
-- Should you want to test raw queries to `back-office`, use `http://localhost:9000/graphiql`.
+- Install project dependencies with `yarn install`
+- Create a `.env` file, see `.env.example` for examples
+- Run with
+  - `yarn watch` if you have `back-office` running locally
+  - `yarn watch:staging` if you want to connect to `back-office` in staging
+
+### Misc
+
+- If you want to test raw queries, go to `http://localhost:9000/graphiql`
 
 ## Best practice
 
 To facilitate development and maintenance, it is encouraged to use the opinionated directory
-structure. Working on everyday tasks in Hope you will most likely only need to care about the three following parts:
+structure. Working on everyday tasks in Hope you will most likely only need to care about the following parts:
 
 ### `/shared/@hedvig-ui`
 
 If a component, hook or utility is generic it will most likely be found here. This package provides you with every
 component you might ever need when you create new features, and they are all styled using the centralized theme.
 
-It is crucial that everything in here is context independent. No use of graphql, no specific business logic. Think of
+It is crucial that everything in here is context independent. No use of GraphQL, no specific business logic. Think of
 it like this; if we were to create a similar service as Hope, we should be able to extract this
 package and be good-to-go without configuration.
 
-### `/src/pages`
+### `/src/portals`
+
+Here you'll find different subsets and tools of Hope. The primary system is `hope`.
+
+### `/src/portals/*/pages`
 
 Inspired by the file based routing system used in NextJS, this directory should be a 1-to-1-ish map of the routing
 structure defined in `/src/pages/routes.ts`. Naming convention is to suffix with `Page`,
@@ -46,7 +53,12 @@ navigate and search for pages.
 Pages should be lightweight and render one or more _features_. Preferably, a page should only manage eventual routing
 parameters and queries such that features can get the props they need.
 
-### `/src/features`
+### `/src/portals/*/common`
+
+If you have a reusable hook or component with business logic, this is the place. They should be decoupled and
+mountable by themselves.
+
+### `/src/portals/*/features`
 
 The point here is to isolate code into different chunks, or features, so different domains don't overlap. This makes
 it easier to maintain the codebase, create new features, remove old features, and to promote loosely coupled features.

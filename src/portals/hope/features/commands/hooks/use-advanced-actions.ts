@@ -1,6 +1,6 @@
 import { differenceInSeconds, parseISO } from 'date-fns'
 import { CommandLineAction } from 'portals/hope/features/commands/use-command-line'
-import { useMemberSearch } from 'portals/hope/features/members-search/hooks/use-member-search'
+import { useOldMemberSearch } from 'portals/hope/features/members-search/hooks/use-old-member-search'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { useEffect } from 'react'
 import { toast } from 'react-hot-toast'
@@ -64,7 +64,7 @@ export const useAdvancedActions = (
   const { data } = useUsersQuery()
   const [sharePath] = useSharePathMutation()
   const [{ members }, memberSearch, { loading: membersLoading }] =
-    useMemberSearch()
+    useOldMemberSearch()
 
   const advancedActions: CommandLineAction[] = [
     {

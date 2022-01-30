@@ -3,7 +3,6 @@ import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MembersList } from 'portals/hope/features/members-search/components/MembersList'
 import { MemberSuggestions } from 'portals/hope/features/members-search/components/MemberSuggestions'
 import { SearchForm } from 'portals/hope/features/members-search/components/SearchForm'
-import { useMemberSearch } from 'portals/hope/features/members-search/hooks/use-member-search'
 import {
   ExtraInstruction,
   Instructions,
@@ -14,6 +13,8 @@ import React, { useRef } from 'react'
 import { useHistory } from 'react-router'
 import { Page } from 'portals/hope/pages/routes'
 import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
+import { useMemberSearch } from 'portals/hope/features/members-search/hooks/use-member-search'
+import { ExtensiveMemberSearchQuery } from 'types/generated/graphql'
 
 const MemberSearchPage: Page = () => {
   const [query, setQuery] = React.useState('')
@@ -24,8 +25,7 @@ const MemberSearchPage: Page = () => {
 
   const { memberHistory } = useMemberHistory()
 
-  const [{ members, totalPages, page }, memberSearch, { loading }] =
-    useMemberSearch()
+  const { members, totalPages, page, search, loading } = useMemberSearch(false)
 
   const noMembersFound = members.length === 0 && query && !loading
 
@@ -36,7 +36,7 @@ const MemberSearchPage: Page = () => {
   }, [members])
 
   const pageSelectHandler = (nextPage: number) => {
-    memberSearch(query || '%', { page: nextPage - 1 ?? 0 })
+    search(query || '%', { page: nextPage - 1 ?? 0 })
   }
 
   useTitle('Members')
@@ -47,7 +47,7 @@ const MemberSearchPage: Page = () => {
         membersLength={members.length}
         suggestionsLength={memberHistory.length}
         onSubmit={() => {
-          memberSearch(query || '%', {
+          search(query || '%', {
             includeAll,
           })
         }}
@@ -60,10 +60,14 @@ const MemberSearchPage: Page = () => {
         ref={searchField}
         setLuckySearch={setLuckySearch}
       />
-      {members.length > 0 && (
+      {page !== undefined && totalPages !== undefined && (
         <>
           <FadeIn>
-            <MembersList members={members} />
+            <MembersList
+              members={
+                members as ExtensiveMemberSearchQuery['memberSearch']['members']
+              }
+            />
             <TablePageSelect
               rowCount={members.length}
               currentPage={page}
