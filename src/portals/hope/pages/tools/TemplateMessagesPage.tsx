@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline, Flex, Button, Tabs } from '@hedvig-ui'
-import { CreateTemplate } from '../../features/tools/template-messages/components/CreateTemplate'
-import { SearchTemplate } from '../../features/tools/template-messages/components/SearchTemplate'
-import { TemplateView } from '../../features/tools/template-messages/components/TemplateView'
+import { CreateTemplate } from '../../features/template-messages/components/CreateTemplate'
+import { SearchTemplate } from '../../features/template-messages/components/SearchTemplate'
+import { TemplateView } from '../../features/template-messages/components/TemplateView'
 import {
-  TemplateMessage,
+  TemplateMessages,
   useTemplateMessages,
-} from '../../features/tools/template-messages/use-template-messages'
+} from 'portals/hope/features/template-messages/use-template-messages'
 import { Market } from '../../features/config/constants'
 import { Page } from 'portals/sos/pages/routes'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
@@ -29,7 +29,7 @@ const Content = styled.div`
 const TemplateMessagesPage: Page = () => {
   const [isCreating, setIsCreating] = useState(false)
   const [selectedTemplate, setSelectedTemplate] =
-    useState<TemplateMessage | null>(null)
+    useState<TemplateMessages | null>(null)
 
   const {
     templates,
@@ -42,7 +42,7 @@ const TemplateMessagesPage: Page = () => {
 
   const { confirm } = useConfirmDialog()
 
-  const saveChangesHandler = (newTemplate: TemplateMessage) => {
+  const saveChangesHandler = (newTemplate: TemplateMessages) => {
     if (!selectedTemplate) {
       return
     }
@@ -50,7 +50,7 @@ const TemplateMessagesPage: Page = () => {
     editTemplate(newTemplate)
   }
 
-  const createHandler = (newTemplate: TemplateMessage) => {
+  const createHandler = (newTemplate: TemplateMessages) => {
     createTemplate(newTemplate)
 
     setIsCreating(false)

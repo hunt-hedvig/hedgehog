@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { keyframes } from '@emotion/react'
 import { TemplateForm } from './TemplateForm'
-import { SearchIcon } from '../../../members-search/styles'
+import { SearchIcon } from '../../members-search/styles'
 import { Input, Tabs, Button, SecondLevelHeadline } from '@hedvig-ui'
 import {
   Pen as EditIcon,
@@ -11,7 +11,7 @@ import {
   PinAngleFill,
   Trash,
 } from 'react-bootstrap-icons'
-import { TemplateMessage, useTemplateMessages } from '../use-template-messages'
+import { TemplateMessages, useTemplateMessages } from '../use-template-messages'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 
 const show = keyframes`
@@ -105,12 +105,12 @@ export const EmptyContainer = styled.div`
   font-size: 12px;
 `
 
-export const TemplateMessages: React.FC<{
+export const TemplateMessagesModal: React.FC<{
   hide: () => void
 }> = ({ hide }) => {
   const [query, setQuery] = useState('')
   const [editingTemplate, setEditingTemplate] =
-    useState<TemplateMessage | null>(null)
+    useState<TemplateMessages | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
   const [isPinnedTab, setIsPinnedTab] = useState(false)
@@ -173,7 +173,7 @@ export const TemplateMessages: React.FC<{
     pinTemplate(id)
   }
 
-  const submitHandler = (newTemplate: TemplateMessage) => {
+  const submitHandler = (newTemplate: TemplateMessages) => {
     if (isCreating) {
       createTemplate(newTemplate)
 

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { Input } from '@hedvig-ui'
-import { SearchIcon as InputIcon } from '../../../members-search/styles'
+import { SearchIcon as InputIcon } from '../../members-search/styles'
 import { FileText } from 'react-bootstrap-icons'
-import { TemplateMessage } from '../use-template-messages'
-import { EmptyContainer } from './TemplateMessages'
+import { TemplateMessages } from '../use-template-messages'
+import { EmptyContainer } from './TemplateMessagesModal'
 
 const Container = styled.div`
   display: flex;
@@ -53,11 +53,11 @@ const Item = styled.div<{ selected: boolean }>`
 `
 
 export const SearchTemplate: React.FC<{
-  selected: TemplateMessage | null
-  templates: TemplateMessage[]
-  onSelect: (template: TemplateMessage | null) => void
+  selected: TemplateMessages | null
+  templates: TemplateMessages[]
+  onSelect: (template: TemplateMessages | null) => void
 }> = ({ onSelect, selected, templates }) => {
-  const [query, setQuery] = useState<string>()
+  const [query, setQuery] = useState('')
 
   const selectHandler = (id: string) => {
     const selectedTemplate = templates.filter(
@@ -66,22 +66,19 @@ export const SearchTemplate: React.FC<{
     onSelect(selectedTemplate)
   }
 
-  const getFilteredTemplates = () =>
-    templates
-      ?.filter((template) =>
-        query
-          ? template.name.toLowerCase().includes(query.toLowerCase())
-          : true,
-      )
-      .sort((a, b) => {
-        if (a.name < b.name) {
-          return -1
-        }
-        if (a.name > b.name) {
-          return 1
-        }
-        return 0
-      })
+  const filteredTemplates = templates
+    ?.filter((template) =>
+      query ? template.name.toLowerCase().includes(query.toLowerCase()) : true,
+    )
+    .sort((a, b) => {
+      if (a.name < b.name) {
+        return -1
+      }
+      if (a.name > b.name) {
+        return 1
+      }
+      return 0
+    })
 
   return (
     <Container>
@@ -98,8 +95,8 @@ export const SearchTemplate: React.FC<{
         autoFocus
       />
       <Content>
-        {getFilteredTemplates().length ? (
-          getFilteredTemplates().map((template) => (
+        {filteredTemplates.length ? (
+          filteredTemplates.map((template) => (
             <TemplateItem
               key={template.id}
               id={template.id}

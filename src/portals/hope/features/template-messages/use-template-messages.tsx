@@ -1,29 +1,29 @@
 import React, { createContext, useContext, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { TemplateMessages } from './components/TemplateMessages'
-import { Market } from '../../config/constants'
+import { TemplateMessagesModal } from './components/TemplateMessagesModal'
+import { Market } from '../config/constants'
 
-export interface Message {
+export interface TemplateMessage {
   market: Market
   text: string
 }
 
-export interface TemplateMessage {
+export interface TemplateMessages {
   name: string
   id: string
   market: Market[]
-  messages: Message[]
+  messages: TemplateMessage[]
   messageEn: string
   expiryDate: string | null
   pinned?: boolean
 }
 
 interface TemplateMessagesContextProps {
-  templates: TemplateMessage[]
+  templates: TemplateMessages[]
   show: () => void
-  create: (template: TemplateMessage) => void
-  edit: (template: TemplateMessage) => void
+  create: (template: TemplateMessages) => void
+  edit: (template: TemplateMessages) => void
   delete: (id: string) => void
   pin: (id: string) => void
   select: (text: string) => void
@@ -52,22 +52,22 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
   const [templates, setTemplates] = useInsecurePersistentState<
-    TemplateMessage[]
+    TemplateMessages[]
   >('messages:templates', [])
 
-  const createHandler = (template: TemplateMessage) => {
+  const createHandler = (template: TemplateMessages) => {
     setTemplates((prev) => [...prev, template])
 
     toast.success(`Template ${template.name} successfully created`)
   }
 
-  const editHandler = (newTemplate: TemplateMessage) => {
+  const editHandler = (newTemplate: TemplateMessages) => {
     setTemplates((prev) => [
       ...prev.filter((template) => template.id !== newTemplate.id),
       newTemplate,
     ])
 
-    toast.success('Template successfully edited')
+    toast.success('Template updated')
   }
 
   const deleteHandler = (templateId: string) => {
@@ -76,10 +76,12 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     )
     setTemplates(newTemplates)
 
-    toast.success('Template successfully deleted')
+    toast.success('Template deleted')
   }
 
   const pinHandler = (templateId: string) => {
+    const template = templates.find((template) => template.id === templateId)
+
     setTemplates((prev) =>
       prev.map((template) =>
         template.id !== templateId
@@ -88,7 +90,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       ),
     )
 
-    toast.success('Template successfully pinned')
+    toast.success(`Template ${template?.pinned ? 'unpinned' : 'pinned'}`)
   }
 
   return (
@@ -116,7 +118,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     >
       {children}
       {showTemplateMessages && (
-        <TemplateMessages hide={() => setShowTemplateMessages(false)} />
+        <TemplateMessagesModal hide={() => setShowTemplateMessages(false)} />
       )}
     </TemplateMessagesContext.Provider>
   )

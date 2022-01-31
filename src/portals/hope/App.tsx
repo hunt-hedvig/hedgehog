@@ -12,6 +12,7 @@ import { useAuthenticate } from 'portals/hope/features/user/hooks/use-authentica
 import { MeProvider } from 'portals/hope/features/user/hooks/use-me'
 import { MemberHistoryProvider } from 'portals/hope/features/user/hooks/use-member-history'
 import { NumberMemberGroupsProvider } from 'portals/hope/features/user/hooks/use-number-member-groups'
+import { TemplateMessagesProvider } from 'portals/hope/features/template-messages/use-template-messages'
 import { Routes } from 'portals/hope/pages/routes'
 import React, { useEffect } from 'react'
 import TagManager from 'react-gtm-module'
@@ -19,7 +20,6 @@ import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Switch } from 'react-router'
 import { NavigationProvider } from '@hedvig-ui/hooks/navigation/use-navigation'
-import { TemplateMessagesProvider } from 'portals/hope/features/tools/template-messages/use-template-messages'
 
 const Layout = styled(BaseStyle)`
   display: flex;

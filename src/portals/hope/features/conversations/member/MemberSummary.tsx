@@ -12,7 +12,7 @@ import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-numb
 import React, { useEffect } from 'react'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
 import { Market, PickedLocale } from 'portals/hope/features/config/constants'
-import { useTemplateMessages } from '../../tools/template-messages/use-template-messages'
+import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
 
 const MemberPlaceholder = styled.div`
   border-radius: 8px;

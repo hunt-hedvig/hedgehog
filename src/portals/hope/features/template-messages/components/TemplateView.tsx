@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { Trash } from 'react-bootstrap-icons'
 import { TemplateForm } from './TemplateForm'
-import { TemplateMessage } from '../use-template-messages'
+import { TemplateMessages } from '../use-template-messages'
 
 const Content = styled.div`
   position: relative;
@@ -38,8 +38,8 @@ const DeleteWrapper = styled.div`
 `
 
 export const TemplateView: React.FC<{
-  template: TemplateMessage
-  onSave: (template: TemplateMessage) => void
+  template: TemplateMessages
+  onSave: (template: TemplateMessages) => void
   onDelete: (id: string) => void
 }> = ({ template, onSave, onDelete }) => (
   <Content>

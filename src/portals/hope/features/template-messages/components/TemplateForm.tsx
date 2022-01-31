@@ -11,14 +11,14 @@ import {
   FormInput,
 } from '@hedvig-ui'
 import {
-  Message,
   TemplateMessage,
+  TemplateMessages,
   useTemplateMessages,
 } from '../use-template-messages'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import formatDate from 'date-fns/format'
-import { Market } from '../../../config/constants'
+import { Market } from '../../config/constants'
 import toast from 'react-hot-toast'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 
@@ -48,8 +48,8 @@ const Checkbox = styled(DefaultCheckbox)`
 `
 
 interface TemplateFormProps {
-  template?: TemplateMessage
-  onSubmit: (template: TemplateMessage) => void
+  template?: TemplateMessages
+  onSubmit: (template: TemplateMessages) => void
   isCreating?: boolean
   onClose?: () => void
   isModal?: boolean
@@ -68,7 +68,9 @@ export const TemplateForm: React.FC<
   ...props
 }) => {
   const [markets, setMarkets] = useState<Market[]>([])
-  const [expiryDate, setExpiryDate] = useState(template?.expiryDate || null)
+  const [expiryDate, setExpiryDate] = useState<string | null>(
+    template?.expiryDate || null,
+  )
 
   const { templates } = useTemplateMessages()
   const { confirm } = useConfirmDialog()
@@ -96,17 +98,17 @@ export const TemplateForm: React.FC<
 
     if (
       isCreating &&
-      templates.find(
+      templates.some(
         (template) =>
           template.name === values.name &&
-          !!template.market.filter((market) => markets.includes(market)).length,
+          template.market.some((market) => markets.includes(market)),
       )
     ) {
       toast.error(`Template with name '${values.name}' already exist`)
       return
     }
 
-    const messages: Message[] = []
+    const messages: TemplateMessage[] = []
 
     Object.values(Market).forEach((market) => {
       if (values[`message-${market}`]) {
@@ -122,7 +124,7 @@ export const TemplateForm: React.FC<
       return
     }
 
-    const newTemplate: TemplateMessage = {
+    const newTemplate: TemplateMessages = {
       id: template?.id || uuidv4(),
       name: values.name,
       messages,

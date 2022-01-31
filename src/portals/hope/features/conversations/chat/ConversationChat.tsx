@@ -13,9 +13,9 @@ import {
 } from 'types/generated/graphql'
 import { FileText } from 'react-bootstrap-icons'
 import {
-  TemplateMessage,
+  TemplateMessages,
   useTemplateMessages,
-} from '../../tools/template-messages/use-template-messages'
+} from 'portals/hope/features/template-messages/use-template-messages'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
@@ -159,7 +159,7 @@ export const ConversationChat: React.FC<{
   })
   const [hinting, setHinting] = useState(false)
   const [proposedTemplate, setProposedTemplate] =
-    useState<TemplateMessage | null>(null)
+    useState<TemplateMessages | null>(null)
 
   const { show, selected, templates, market } = useTemplateMessages()
 
@@ -169,25 +169,22 @@ export const ConversationChat: React.FC<{
     }
   }, [selected])
 
-  const getSearchTemplate = (searchText: string) => {
-    const searchTemplate = templates.find(
+  const getSearchTemplate = (searchText: string) =>
+    templates.find(
       (template) =>
         template.market.includes(market) &&
         template.name.substring(0, searchText.length).toLowerCase() ===
           searchText.toLowerCase(),
-    )
-
-    return searchTemplate || null
-  }
+    ) || null
 
   const getTemplateName = (
-    searchTemplate: TemplateMessage | null,
+    searchTemplate: TemplateMessages | null,
     searchText: string,
   ) =>
     searchTemplate?.name
       .split('')
-      .map((letter, idx) => {
-        if (searchText[idx] === letter.toUpperCase()) {
+      .map((letter, index) => {
+        if (searchText[index] === letter.toUpperCase()) {
           return letter.toUpperCase()
         }
 
@@ -230,20 +227,20 @@ export const ConversationChat: React.FC<{
     if (
       (isPressing(e, Keys.Down) || isPressing(e, Keys.Up)) &&
       hinting &&
-      !!proposedTemplate
+      proposedTemplate
     ) {
       e.preventDefault()
 
       const searchText = message.slice(1)
 
       const templatesIds = templates
-        .filter((tmpl) => tmpl.market.includes(market))
+        .filter((template) => template.market.includes(market))
         .filter(
-          (tmpl) =>
-            tmpl.name.substring(0, searchText.length).toLowerCase() ===
+          (template) =>
+            template.name.substring(0, searchText.length).toLowerCase() ===
             searchText.toLowerCase(),
         )
-        .map((tmpl) => tmpl.id)
+        .map((template) => template.id)
 
       const indexOfCurrentTemplate = templatesIds.indexOf(proposedTemplate.id)
 
@@ -253,7 +250,8 @@ export const ConversationChat: React.FC<{
       ) {
         const template =
           templates.find(
-            (tmpl) => tmpl.id === templatesIds[indexOfCurrentTemplate + 1],
+            (template) =>
+              template.id === templatesIds[indexOfCurrentTemplate + 1],
           ) || null
 
         const templateName = getTemplateName(template, searchText)
@@ -266,7 +264,8 @@ export const ConversationChat: React.FC<{
       if (indexOfCurrentTemplate > 0 && isPressing(e, Keys.Up)) {
         const template =
           templates.find(
-            (tmpl) => tmpl.id === templatesIds[indexOfCurrentTemplate - 1],
+            (template) =>
+              template.id === templatesIds[indexOfCurrentTemplate - 1],
           ) || null
 
         const templateName = getTemplateName(template, searchText)

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { TemplateForm } from './TemplateForm'
-import { TemplateMessage } from '../use-template-messages'
+import { TemplateMessages } from '../use-template-messages'
 
 const Content = styled.div`
   flex: 1;
@@ -14,7 +14,7 @@ const Content = styled.div`
 
 export const CreateTemplate: React.FC<{
   onClose: () => void
-  onCreate: (template: TemplateMessage) => void
+  onCreate: (template: TemplateMessages) => void
 }> = ({ onClose, onCreate }) => {
   return (
     <Content>
