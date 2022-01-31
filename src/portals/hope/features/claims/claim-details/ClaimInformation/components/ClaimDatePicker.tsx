@@ -5,6 +5,7 @@ import {
   useClaimDateOfOccurrenceQuery,
   useSetClaimDateOfOccurrenceMutation,
 } from 'types/generated/graphql'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`
   query ClaimDateOfOccurrence($claimId: ID!) {
@@ -32,6 +33,8 @@ const useClaimDatePicker = (claimId: string): UseClaimDatePickerResult => {
   const { data } = useClaimDateOfOccurrenceQuery({ variables: { claimId } })
 
   const setDate = (date: string | null) => {
+    PushUserAction('claim', 'set', 'date_of_occurrence', null)
+
     setClaimDateOfOccurrence({
       variables: {
         claimId,

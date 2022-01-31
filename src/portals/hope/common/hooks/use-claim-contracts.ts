@@ -6,6 +6,7 @@ import {
   useSetTrialForClaimMutation,
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`
   query CurrentClaimContract($claimId: ID!) {
@@ -107,6 +108,7 @@ export const useClaimContracts = (claimId: string): UseClaimContractsResult => {
   const selected = data?.claim?.contract?.id ?? data?.claim?.trial?.id ?? null
 
   const handleSelectTrial = (trialId: string) => {
+    PushUserAction('claim', 'set', 'trial', null)
     setTrialForClaim({
       variables: {
         claimId,
@@ -126,6 +128,7 @@ export const useClaimContracts = (claimId: string): UseClaimContractsResult => {
   }
 
   const handleSelectContract = (contractId: string) => {
+    PushUserAction('claim', 'set', 'contract', null)
     setContractForClaim({
       variables: {
         claimId,

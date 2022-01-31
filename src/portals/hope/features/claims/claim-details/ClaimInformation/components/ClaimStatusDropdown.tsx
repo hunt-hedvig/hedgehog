@@ -9,6 +9,7 @@ import gql from 'graphql-tag'
 import { ClaimOutcomes } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
 import { toast } from 'react-hot-toast'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`
   query ClaimStatus($claimId: ID!) {
@@ -69,6 +70,8 @@ const useClaimStatus = (claimId: string): UseClamStatusResult => {
     if (!validate(newStatus)) {
       return
     }
+
+    PushUserAction('claim', 'set', 'status', newStatus)
 
     setClaimStatus({
       variables: { claimId, status: newStatus },

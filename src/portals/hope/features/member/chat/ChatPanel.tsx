@@ -21,6 +21,7 @@ import {
   useSendMessageMutation,
 } from 'types/generated/graphql'
 import { useDraft } from '@hedvig-ui/hooks/use-draft'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const MessagesPanelContainer = styled.div`
   display: flex;
@@ -150,6 +151,8 @@ export const ChatPanel: React.FC<{ memberId: string }> = ({ memberId }) => {
       setError(true)
       return
     }
+
+    PushUserAction('member', 'send', 'message', null)
 
     setCurrentMessage('')
 

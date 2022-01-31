@@ -36,6 +36,7 @@ import {
 } from 'types/generated/graphql'
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { toast } from 'react-hot-toast'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const SelectWrapper = styled.div`
   margin-top: 1em;
@@ -172,6 +173,7 @@ export const useClaimCoInsured = (claimId: string): UseClaimCoInsuredResult => {
   const coInsured = data?.claim?.coInsured
 
   const removeCoInsured = () => {
+    PushUserAction('claim', 'remove', 'co_insured', null)
     toast.promise(
       remove({
         variables: { claimId },
@@ -202,6 +204,7 @@ export const useClaimCoInsured = (claimId: string): UseClaimCoInsuredResult => {
   const upsertCoInsured = (
     request: UpsertCoInsuredMutationVariables['request'],
   ) => {
+    PushUserAction('claim', 'upsert', 'co_insured', null)
     toast.promise(
       upsert({
         variables: {

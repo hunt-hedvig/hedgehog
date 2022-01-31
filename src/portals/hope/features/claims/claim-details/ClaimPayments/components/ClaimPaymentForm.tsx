@@ -22,6 +22,7 @@ import {
 } from 'types/generated/graphql'
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 import gql from 'graphql-tag'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const areSwishPayoutsEnabled = () => {
   return (
@@ -247,6 +248,7 @@ export const ClaimPaymentForm: React.FC<{
         {
           loading: 'Creating payment',
           success: () => {
+            PushUserAction('claim', 'create', 'payment', null)
             form.reset()
             setIsConfirming(false)
             setIsExGratia(false)

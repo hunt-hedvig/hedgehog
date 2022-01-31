@@ -8,6 +8,7 @@ import {
   useSetClaimOutcomeMutation,
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 export enum ClaimOutcomes {
   PAID_OUT = 'PAID_OUT',
@@ -61,6 +62,8 @@ const useClaimOutcome = (claimId: string): UseClaimOutcomeResult => {
     if (!claimId) {
       return
     }
+
+    PushUserAction('claim', 'set', 'outcome', newOutcome)
 
     setClaimOutcome({
       variables: { id: claimId, outcome: newOutcome },

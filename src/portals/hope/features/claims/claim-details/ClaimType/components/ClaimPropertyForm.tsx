@@ -15,6 +15,7 @@ import {
   useGetClaimTypeTemplateQuery,
   useSetClaimPropertySelectionMutation,
 } from 'types/generated/graphql'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 export const ClaimPropertyForm: React.FC<{
   claimId: string
@@ -39,6 +40,8 @@ export const ClaimPropertyForm: React.FC<{
     ) {
       return
     }
+
+    PushUserAction('claim', 'update', 'property_selection', null)
 
     setClaimPropertySelection({
       variables: {

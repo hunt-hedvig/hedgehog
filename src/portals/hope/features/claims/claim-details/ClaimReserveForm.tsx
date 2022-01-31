@@ -5,6 +5,7 @@ import {
 } from 'types/generated/graphql'
 
 import { Button, Input, Spacing } from '@hedvig-ui'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const isStringNumber = (s: string) => /^-?\d+$/.test(s) || /^\d+\.\d+$/.test(s)
 
@@ -35,9 +36,10 @@ const ClaimReserveForm: React.FC<{ claimId: string }> = ({ claimId }) => {
             ],
           })
           setValue('')
+          PushUserAction('claim', 'update', 'reserve', null)
         }}
       >
-        Update Reserve
+        Update reserve
       </Button>
     </>
   )
