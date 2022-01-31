@@ -15,6 +15,7 @@ import React, { useEffect, useState } from 'react'
 import { BellFill, PeopleFill } from 'react-bootstrap-icons'
 import UserMenu from './UserMenu'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const Wrapper = styled.div`
   z-index: 1000;
@@ -166,12 +167,20 @@ export const TopBar = () => {
         </CircleButton>
 
         <div style={{ marginLeft: '1rem' }} />
-        <NotificationsButton onClick={() => setShowUserNotifications(true)} />
+        <NotificationsButton
+          onClick={() => {
+            PushUserAction('notifications_list', 'open', null, null)
+            setShowUserNotifications(true)
+          }}
+        />
 
         <div style={{ marginLeft: '1rem' }} />
         <CircleButton
           id="show_users_online"
-          onClick={() => setShowUsers(true)}
+          onClick={() => {
+            PushUserAction('user_panel', 'open', null, null)
+            setShowUsers(true)
+          }}
           {...register('UsersOnlineButton', {
             resolve: () => {
               setShowUsers(true)
