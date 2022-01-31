@@ -172,12 +172,19 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
         onKeyDown={(e) => {
           if (isMetaKey(e) && isPressing(e, Keys.Enter) && !creating && note) {
             createNote(note)
+            setNote('')
           }
         }}
       />
       <Spacing top="small" />
       <SubNoteWrapper>
-        <Button disabled={!note || creating} onClick={() => createNote(note)}>
+        <Button
+          disabled={!note || creating}
+          onClick={() => {
+            createNote(note)
+            setNote('')
+          }}
+        >
           Add note
         </Button>
         {textFieldFocused && (
