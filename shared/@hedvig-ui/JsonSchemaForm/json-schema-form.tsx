@@ -62,6 +62,13 @@ const FormWrapper = styled.div`
     display: flex;
     flex-direction: column;
 
+    & > label {
+      margin-bottom: 0.4rem;
+      font-size: 0.95rem;
+      color: ${({ theme }) => theme.semiStrongForeground} !important;
+      font-weight: normal;
+    }
+
     input {
       padding: 10px 15px;
       border-radius: 4px;
@@ -75,6 +82,8 @@ const FormWrapper = styled.div`
         display: flex;
         align-items: center;
 
+        font-size: 1rem;
+
         input {
           width: 17px;
           height: 17px;
@@ -83,7 +92,6 @@ const FormWrapper = styled.div`
       }
     }
   }
-
   & .panel-title,
   & .text-danger,
   & .required {
@@ -240,9 +248,17 @@ const formatInitialFormData = (
 export const JsonSchemaForm: React.FC<{
   schema: JSONSchema7
   onSubmit: (formData: Record<string, unknown>) => void
+  onCancel?: () => void
   initialFormData?: Record<string, unknown>
   submitText?: string
-}> = ({ schema, onSubmit, initialFormData, submitText, children }) => {
+}> = ({
+  schema,
+  onSubmit,
+  onCancel,
+  initialFormData,
+  submitText,
+  children,
+}) => {
   const uiSchema = {
     'ui:ObjectFieldTemplate': ObjectFieldTemplate,
   }
@@ -267,6 +283,17 @@ export const JsonSchemaForm: React.FC<{
       >
         <ButtonsGroup>
           <Button type="submit">{submitText ?? 'Submit'}</Button>
+          {onCancel && (
+            <Button
+              variant="secondary"
+              onClick={(e) => {
+                e.preventDefault()
+                onCancel()
+              }}
+            >
+              Cancel
+            </Button>
+          )}
           {children}
         </ButtonsGroup>
       </Form>

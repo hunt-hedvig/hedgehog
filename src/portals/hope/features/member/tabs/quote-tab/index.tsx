@@ -8,18 +8,30 @@ import {
   PickedLocaleMarket,
   QuoteProductType,
   QuoteProductTypeContractMap,
+  TypeOfContract,
+  TypeOfContractType,
 } from 'portals/hope/features/config/constants'
 import { useQuotes } from 'portals/hope/features/member/tabs/quote-tab/hooks/use-get-quotes'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Quote } from 'types/generated/graphql'
 import { QuotesSubSection } from './quote-sub-section'
+import { useContracts } from 'portals/hope/features/member/tabs/contracts-tab/hooks/use-contracts'
 
 export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
-  const [activeTab, setActiveTab] = React.useState(
-    InsuranceType.SwedishApartment,
-  )
+  const [activeTab, setActiveTab] = useState<null | InsuranceType>(null)
   const [{ quotes, contractMarket, pickedLocale }, { loading }] =
     useQuotes(memberId)
+
+  const [contracts] = useContracts(memberId)
+
+  useEffect(() => {
+    if (!activeTab && contracts && contracts.length > 0) {
+      const insuranceType =
+        TypeOfContractType[contracts[0].typeOfContract as TypeOfContract]
+
+      setActiveTab(insuranceType)
+    }
+  }, [contracts])
 
   if (loading) {
     return <LoadingMessage paddingTop="10vh" />
@@ -69,7 +81,7 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
             : []
         }
       />
-      {!!quotes.length && (
+      {!!quotes.length && activeTab && (
         <QuotesSubSection
           memberId={memberId}
           insuranceType={activeTab}

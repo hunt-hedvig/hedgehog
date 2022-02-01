@@ -59,6 +59,7 @@ export const QuoteActivation: React.FC<{
     contracts,
     quote.originatingProductId,
   )
+
   if (!contract) {
     return <>Cannot find the contract for the quote, please contact Tech</>
   }

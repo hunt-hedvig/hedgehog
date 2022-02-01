@@ -72,21 +72,25 @@ export const QuotesSubSection: React.FC<{
         </>
       )}
 
-      <MainHeadline>Signed/Expired quotes</MainHeadline>
-      <Muted>
-        <CardsWrapper>
-          {signedOrExpiredQuotes.map((quote) => (
-            <Card key={quote.id}>
-              <QuoteListItem
-                quote={quote}
-                memberId={memberId}
-                contracts={contracts}
-                inactionable
-              />
-            </Card>
-          ))}
-        </CardsWrapper>
-      </Muted>
+      {!!signedOrExpiredQuotes.length && (
+        <>
+          <MainHeadline>Signed/Expired quotes</MainHeadline>
+          <Muted>
+            <CardsWrapper>
+              {signedOrExpiredQuotes.map((quote) => (
+                <Card key={quote.id}>
+                  <QuoteListItem
+                    quote={quote}
+                    memberId={memberId}
+                    contracts={contracts}
+                    inactionable
+                  />
+                </Card>
+              ))}
+            </CardsWrapper>
+          </Muted>
+        </>
+      )}
     </Wrapper>
   )
 }

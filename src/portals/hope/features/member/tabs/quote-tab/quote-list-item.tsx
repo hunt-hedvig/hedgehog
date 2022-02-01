@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, ErrorText, Label } from '@hedvig-ui'
+import { Button, ErrorText, Flex, Label } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import chroma from 'chroma-js'
 import { format, parseISO } from 'date-fns'
@@ -11,18 +11,9 @@ import { ActionsWrapper, BottomSpacerWrapper } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteContractCreation } from './quote-contract-creation'
 import { QuotePrice } from './QuotePrice'
+import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 
 const OuterWrapper = styled.div`
-  width: 100%;
-`
-
-const QuoteWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 0.5rem;
-`
-
-const DetailsWrapper = styled.div`
   width: 100%;
 `
 
@@ -114,10 +105,10 @@ enum Action {
   SIGN,
 }
 
-const QuoteDetails: React.FC<{
+const QuoteGeneralInfo: React.FC<{
   quote: Quote
 }> = ({ quote }) => (
-  <DetailsWrapper>
+  <div style={{ width: '100%' }}>
     {quote.price && (
       <DataWrapper>
         <QuotePrice quote={quote} />
@@ -145,10 +136,7 @@ const QuoteDetails: React.FC<{
         <div>{quote.state ? convertEnumToTitle(quote.state) : '-'}</div>
       </div>
     </DataWrapper>
-    <DataWrapper>
-      {getSchemaDataInfo({ schemaData: quote.schemaData })}
-    </DataWrapper>
-  </DetailsWrapper>
+  </div>
 )
 
 export const QuoteListItem: React.FC<{
@@ -157,6 +145,7 @@ export const QuoteListItem: React.FC<{
   inactionable?: boolean
   memberId: string
 }> = ({ contracts, quote, inactionable, memberId }) => {
+  const { confirm } = useConfirmDialog()
   const [action, setAction] = useState<Action | null>(null)
   const [isWip, setIsWip] = useState(false)
 
@@ -196,8 +185,53 @@ export const QuoteListItem: React.FC<{
 
   return (
     <OuterWrapper>
-      <QuoteWrapper>
-        <QuoteDetails quote={quote} />
+      <Flex fullWidth>
+        <div style={{ width: '100%' }}>
+          <QuoteGeneralInfo quote={quote} />
+          {action === Action.ACTIVATE ? (
+            <ActionsWrapper>
+              <QuoteActivation
+                quote={quote}
+                memberId={memberId}
+                onWipChange={setIsWip}
+                onSubmitted={() => {
+                  setIsWip(false)
+                  setAction(null)
+                }}
+              />
+            </ActionsWrapper>
+          ) : action === Action.SIGN ? (
+            <ActionsWrapper>
+              <QuoteContractCreation
+                quote={quote}
+                memberId={memberId}
+                onWipChange={setIsWip}
+              />
+            </ActionsWrapper>
+          ) : action === Action.MODIFY ? (
+            <ActionsWrapper>
+              <UpdateQuoteForm
+                quote={quote}
+                onCancel={() => {
+                  confirm('Do you really want to cancel modifying?').then(
+                    () => {
+                      setIsWip(false)
+                      setAction(null)
+                    },
+                  )
+                }}
+                onSubmitted={() => {
+                  setIsWip(false)
+                  setAction(null)
+                }}
+              />
+            </ActionsWrapper>
+          ) : (
+            <DataWrapper>
+              {getSchemaDataInfo({ schemaData: quote.schemaData })}
+            </DataWrapper>
+          )}
+        </div>
         <ActionsButtonsWrapper>
           {!!inactionable || (
             <>
@@ -245,42 +279,7 @@ export const QuoteListItem: React.FC<{
             Debug info
           </Button>
         </ActionsButtonsWrapper>
-      </QuoteWrapper>
-      {action === Action.ACTIVATE && (
-        <ActionsWrapper>
-          <QuoteActivation
-            quote={quote}
-            memberId={memberId}
-            onWipChange={setIsWip}
-            onSubmitted={() => {
-              setIsWip(false)
-              setAction(null)
-            }}
-          />
-        </ActionsWrapper>
-      )}
-
-      {action === Action.SIGN && (
-        <ActionsWrapper>
-          <QuoteContractCreation
-            quote={quote}
-            memberId={memberId}
-            onWipChange={setIsWip}
-          />
-        </ActionsWrapper>
-      )}
-
-      {action === Action.MODIFY && (
-        <ActionsWrapper>
-          <UpdateQuoteForm
-            quote={quote}
-            onSubmitted={() => {
-              setIsWip(false)
-              setAction(null)
-            }}
-          />
-        </ActionsWrapper>
-      )}
+      </Flex>
     </OuterWrapper>
   )
 }
