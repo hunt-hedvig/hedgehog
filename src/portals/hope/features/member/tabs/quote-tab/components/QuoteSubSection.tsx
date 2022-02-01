@@ -1,26 +1,47 @@
-import styled from '@emotion/styled'
-import { Button, Card, CardsWrapper, MainHeadline } from '@hedvig-ui'
+import { Button, Card, CardsWrapper, MainHeadline, Modal } from '@hedvig-ui'
 import {
   InsuranceType,
   TypeOfContract,
   TypeOfContractType,
 } from 'portals/hope/features/config/constants'
 import { useContracts } from 'portals/hope/features/member/tabs/contracts-tab/hooks/use-contracts'
-import { CreateQuoteForm } from 'portals/hope/features/member/tabs/quote-tab/create-quote-form'
+import { CreateQuoteForm } from 'portals/hope/features/member/tabs/quote-tab/components/CreateQuoteForm'
 import { isSignedOrExpired } from 'portals/hope/features/member/tabs/quote-tab/utils'
-import React from 'react'
+import React, { useState } from 'react'
 import { Quote } from 'types/generated/graphql'
-import { ActionsWrapper, Muted } from './common'
-import { QuoteListItem } from './quote-list-item'
+import { Muted } from '../common'
+import { QuoteListItem } from './QuoteListItem'
+import styled from '@emotion/styled'
 
-const Wrapper = styled('div')({})
+const CreateQuoteWrapper = styled.div`
+  padding: 0.8rem;
+`
+
+const CreateQuoteModal: React.FC<{
+  onClose: () => void
+  memberId: string
+  insuranceType: InsuranceType
+}> = ({ onClose, memberId, insuranceType }) => {
+  return (
+    <Modal onClose={onClose} title="Create quote" width="50rem">
+      <CreateQuoteWrapper>
+        <CreateQuoteForm
+          memberId={memberId}
+          insuranceType={insuranceType}
+          onCancel={onClose}
+          onSubmitted={onClose}
+        />
+      </CreateQuoteWrapper>
+    </Modal>
+  )
+}
 
 export const QuotesSubSection: React.FC<{
   memberId: string
   insuranceType: InsuranceType
   quotes: ReadonlyArray<Quote>
 }> = ({ memberId, insuranceType, quotes }) => {
-  const [isWip, setIsWip] = React.useState(false)
+  const [isWip, setIsWip] = useState(false)
   const [contracts, { loading }] = useContracts(memberId)
 
   if (loading) {
@@ -38,22 +59,20 @@ export const QuotesSubSection: React.FC<{
     ).length > 0
 
   return (
-    <Wrapper>
+    <div>
       {!hasActiveContracts && (
         <Button style={{ marginBottom: 15 }} onClick={() => setIsWip(!isWip)}>
           Create
         </Button>
       )}
       {isWip && (
-        <ActionsWrapper>
-          <CreateQuoteForm
-            memberId={memberId}
-            insuranceType={insuranceType}
-            onSubmitted={() => {
-              setIsWip(false)
-            }}
-          />
-        </ActionsWrapper>
+        <CreateQuoteModal
+          insuranceType={insuranceType}
+          memberId={memberId}
+          onClose={() => {
+            setIsWip(false)
+          }}
+        />
       )}
       {!!activeQuotes.length && (
         <>
@@ -91,6 +110,6 @@ export const QuotesSubSection: React.FC<{
           </Muted>
         </>
       )}
-    </Wrapper>
+    </div>
   )
 }

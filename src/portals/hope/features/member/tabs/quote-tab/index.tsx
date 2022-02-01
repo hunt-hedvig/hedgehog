@@ -14,7 +14,7 @@ import {
 import { useQuotes } from 'portals/hope/features/member/tabs/quote-tab/hooks/use-get-quotes'
 import React, { useEffect, useState } from 'react'
 import { Quote } from 'types/generated/graphql'
-import { QuotesSubSection } from './quote-sub-section'
+import { QuotesSubSection } from './components/QuoteSubSection'
 import { useContracts } from 'portals/hope/features/member/tabs/contracts-tab/hooks/use-contracts'
 
 export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {

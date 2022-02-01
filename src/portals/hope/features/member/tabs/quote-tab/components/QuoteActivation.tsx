@@ -9,7 +9,7 @@ import {
   Quote,
   useAddAgreementFromQuoteMutation,
 } from 'types/generated/graphql'
-import { BottomSpacerWrapper, ErrorMessage } from './common'
+import { BottomSpacerWrapper, ErrorMessage } from '../common'
 import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 const getInitialActiveFrom = (contract: Contract): string | null =>

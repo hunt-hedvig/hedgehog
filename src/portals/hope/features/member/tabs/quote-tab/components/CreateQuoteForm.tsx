@@ -12,7 +12,8 @@ export const CreateQuoteForm: React.FC<{
   memberId: string
   insuranceType: InsuranceType
   onSubmitted: () => void
-}> = ({ memberId, insuranceType, onSubmitted }) => {
+  onCancel: () => void
+}> = ({ memberId, insuranceType, onSubmitted, onCancel }) => {
   const [bypassUwgl, setBypassUwgl] = useState(false)
 
   const [schema, { loading }] = useSchemaForInsuranceType(insuranceType)
@@ -53,9 +54,13 @@ export const CreateQuoteForm: React.FC<{
   }
 
   return (
-    <JsonSchemaForm schema={schema} onSubmit={createQuote} submitText="Create">
+    <JsonSchemaForm
+      schema={schema}
+      onSubmit={createQuote}
+      onCancel={onCancel}
+      submitText="Create"
+    >
       <Checkbox
-        style={{ marginTop: '0.75rem' }}
         checked={bypassUwgl}
         onChange={({ currentTarget: { checked } }) =>
           setBypassUwgl(Boolean(checked))
