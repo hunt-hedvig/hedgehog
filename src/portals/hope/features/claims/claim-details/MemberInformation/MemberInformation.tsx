@@ -96,7 +96,9 @@ export const MemberInformation: React.FC<{
       <Loadable loading={loading}>
         <MemberCard>
           <div>
-            <h3>{member?.firstName ?? '' + ' ' + member?.lastName ?? ''}</h3>
+            <h3>
+              {(member?.firstName ?? '') + ' ' + (member?.lastName ?? '')}
+            </h3>
             <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
           </div>
           <div>{flag}</div>
