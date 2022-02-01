@@ -1,40 +1,85 @@
 import styled from '@emotion/styled'
-import { Button, ErrorText, ThirdLevelHeadline } from '@hedvig-ui'
+import { Button, ErrorText, Label, ThirdLevelHeadline } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import chroma from 'chroma-js'
 import { format, parseISO } from 'date-fns'
 import { UpdateQuoteForm } from 'portals/hope/features/member/tabs/quote-tab/update-quote-form'
 import { getSchemaDataInfo } from 'portals/hope/features/member/tabs/quote-tab/utils'
 import React, { useState } from 'react'
 import { Contract, Quote } from 'types/generated/graphql'
-import { ActionsWrapper, BottomSpacerWrapper, Muted } from './common'
+import { ActionsWrapper, BottomSpacerWrapper } from './common'
 import { QuoteActivation } from './quote-activation'
 import { QuoteContractCreation } from './quote-contract-creation'
 import { QuotePrice } from './QuotePrice'
 
-const OuterWrapper = styled('div')(() => ({
-  width: '100%',
-}))
+const OuterWrapper = styled.div`
+  width: 100%;
+`
 
-const QuoteWrapper = styled('div')(() => ({
-  display: 'flex',
-  width: '100%',
-  padding: '1rem 0',
-}))
-const DetailsWrapper = styled('div')({
-  width: '100%',
-})
-const DetailWrapper = styled('div')(({ theme }) => ({
-  color: theme.semiStrongForeground,
-  paddingBottom: '1rem',
-}))
+const QuoteWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 0.5rem;
+`
 
-const BreachedUnderwritingGuidelines = styled('div')(({ theme }) => ({
-  color: theme.danger,
-}))
+const DetailsWrapper = styled.div`
+  width: 100%;
+`
 
-const ActionsButtonsWrapper = styled('div')({
-  flexShrink: 1,
-})
+const BreachedUnderwritingGuidelines = styled.div`
+  color: ${({ theme }) => theme.danger};
+`
+
+const ActionsButtonsWrapper = styled.div`
+  flex-shrink: 1;
+`
+
+const DataWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+
+  background-color: ${({ theme }) =>
+    chroma(theme.accent).alpha(0.1).brighten(1).hex()};
+
+  padding: 0.25rem 0.7rem;
+
+  margin: 0 1rem 1rem 0;
+
+  border-radius: 0.5rem;
+
+  > div {
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  .created-at {
+    width: 40%;
+  }
+
+  .quote-state {
+    width: 60%;
+  }
+
+  .street {
+    width: 40%;
+  }
+
+  .zipCode {
+    width: 30%;
+  }
+
+  .city {
+    width: 30%;
+  }
+
+  .numberCoInsured {
+    width: 40%;
+  }
+
+  .isStudent {
+    width: 30%;
+  }
+`
 
 enum Action {
   ACTIVATE,
@@ -46,9 +91,11 @@ const QuoteDetails: React.FC<{
   quote: Quote
 }> = ({ quote }) => (
   <DetailsWrapper>
-    <QuotePrice quote={quote} />
+    <DataWrapper>
+      <QuotePrice quote={quote} />
+    </DataWrapper>
     {(quote.breachedUnderwritingGuidelines?.length || 0) > 0 && (
-      <DetailWrapper>
+      <div>
         <BreachedUnderwritingGuidelines>
           <ThirdLevelHeadline>
             Quote breaches the following underwriting guidelines:
@@ -59,25 +106,21 @@ const QuoteDetails: React.FC<{
             )) ?? []}
           </ul>
         </BreachedUnderwritingGuidelines>
-      </DetailWrapper>
+      </div>
     )}
-    <DetailWrapper>
-      <Muted>
-        Created:{' '}
-        <strong>{format(parseISO(quote.createdAt), 'yyyy-MM-dd HH:mm')}</strong>
-        <br />
-        State:{' '}
-        <strong>{quote.state ? convertEnumToTitle(quote.state) : '-'}</strong>
-        <br />
-        Originating Product Id:{' '}
-        <strong>{quote.originatingProductId ?? '-'}</strong>
-        <br />
-        Quote id: <strong>{quote.id}</strong>
-      </Muted>
-    </DetailWrapper>
-    <DetailWrapper>
+    <DataWrapper>
+      <div className="created-at">
+        <Label>Created</Label>
+        <div>{format(parseISO(quote.createdAt), 'yyyy-MM-dd HH:mm')}</div>
+      </div>
+      <div className="quote-state">
+        <Label>State</Label>
+        <div>{quote.state ? convertEnumToTitle(quote.state) : '-'}</div>
+      </div>
+    </DataWrapper>
+    <DataWrapper>
       {getSchemaDataInfo({ schemaData: quote.schemaData })}
-    </DetailWrapper>
+    </DataWrapper>
   </DetailsWrapper>
 )
 
@@ -130,20 +173,47 @@ export const QuoteListItem: React.FC<{
         <QuoteDetails quote={quote} />
         {!!inactionable || (
           <ActionsButtonsWrapper>
-            <BottomSpacerWrapper>
-              <Button onClick={toggleState(Action.MODIFY)}>Modify</Button>
-            </BottomSpacerWrapper>
             {!quote.isReadyToSign ? (
               <BottomSpacerWrapper>
-                <Button onClick={toggleState(Action.ACTIVATE)}>Activate</Button>
+                <Button
+                  style={{ width: '100%' }}
+                  onClick={toggleState(Action.ACTIVATE)}
+                >
+                  Activate
+                </Button>
               </BottomSpacerWrapper>
             ) : contracts.length || quote.allowOverrideSignFromHope ? (
               <BottomSpacerWrapper>
-                <Button onClick={toggleState(Action.SIGN)}>Sign</Button>
+                <Button
+                  style={{ width: '100%' }}
+                  onClick={toggleState(Action.SIGN)}
+                >
+                  Sign
+                </Button>
               </BottomSpacerWrapper>
             ) : (
               <ErrorText>Member has to sign first contract</ErrorText>
             )}
+            <BottomSpacerWrapper>
+              <Button
+                style={{ width: '100%' }}
+                variant="secondary"
+                onClick={toggleState(Action.MODIFY)}
+              >
+                Modify
+              </Button>
+            </BottomSpacerWrapper>
+            <Button
+              style={{ width: '100%' }}
+              variant="tertiary"
+              onClick={() =>
+                alert(
+                  `# Quote ID #\r\n${quote.id}\r\n\r\n# Originating Product ID #\r\n${quote.originatingProductId}`,
+                )
+              }
+            >
+              Debug info
+            </Button>
           </ActionsButtonsWrapper>
         )}
       </QuoteWrapper>

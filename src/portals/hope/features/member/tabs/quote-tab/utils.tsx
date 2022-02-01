@@ -4,6 +4,7 @@ import {
 } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { Quote } from 'types/generated/graphql'
+import { Label } from '@hedvig-ui'
 
 export const isSignedOrExpired = (quote: Quote) =>
   isExpired(quote) || isSigned(quote)
@@ -31,10 +32,14 @@ export const getSchemaDataInfo: React.FC<{
         .map(([key, value]) => {
           const valueMessage = valueToMessage(value)
           return (
-            <p key={key}>
-              <strong>{convertCamelcaseToTitle(key)}:</strong>{' '}
-              {valueMessage && convertEnumOrSentenceToTitle(valueMessage)}
-            </p>
+            <React.Fragment key={key}>
+              <div className={key}>
+                <Label>{convertCamelcaseToTitle(key)}</Label>{' '}
+                <div>
+                  {valueMessage && convertEnumOrSentenceToTitle(valueMessage)}
+                </div>
+              </div>
+            </React.Fragment>
           )
         })}
     </>
