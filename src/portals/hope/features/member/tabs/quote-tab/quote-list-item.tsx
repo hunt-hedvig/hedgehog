@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, ErrorText, Label, ThirdLevelHeadline } from '@hedvig-ui'
+import { Button, ErrorText, Label } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import chroma from 'chroma-js'
 import { format, parseISO } from 'date-fns'
@@ -28,6 +28,33 @@ const DetailsWrapper = styled.div`
 
 const BreachedUnderwritingGuidelines = styled.div`
   color: ${({ theme }) => theme.danger};
+  display: flex;
+  flex-wrap: wrap;
+
+  background-color: ${({ theme }) =>
+    chroma(theme.accent).alpha(0.1).brighten(1).hex()};
+
+  padding: 0.5rem 0.7rem;
+  margin: 0 1rem 1rem 0;
+  border-radius: 0.5rem;
+
+  label:first-of-type {
+    margin: 0.5rem;
+    margin-bottom: 0;
+    width: 100%;
+  }
+
+  > div {
+    margin: 0.5rem;
+  }
+`
+
+const BreachedGuidelineTag = styled.div`
+  color: ${({ theme }) => theme.accentContrast};
+  background-color: ${({ theme }) => theme.danger};
+  padding: 0.25rem 0.45rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
 `
 
 const ActionsButtonsWrapper = styled.div`
@@ -91,20 +118,20 @@ const QuoteDetails: React.FC<{
   quote: Quote
 }> = ({ quote }) => (
   <DetailsWrapper>
-    <DataWrapper>
-      <QuotePrice quote={quote} />
-    </DataWrapper>
+    {quote.price && (
+      <DataWrapper>
+        <QuotePrice quote={quote} />
+      </DataWrapper>
+    )}
     {(quote.breachedUnderwritingGuidelines?.length || 0) > 0 && (
       <div>
         <BreachedUnderwritingGuidelines>
-          <ThirdLevelHeadline>
-            Quote breaches the following underwriting guidelines:
-          </ThirdLevelHeadline>
-          <ul>
-            {quote.breachedUnderwritingGuidelines?.map((guideline) => (
-              <li key={guideline}>{convertEnumToTitle(guideline)}</li>
-            )) ?? []}
-          </ul>
+          <Label>Breached underwriting guidelines</Label>
+          {quote.breachedUnderwritingGuidelines?.map((guideline) => (
+            <BreachedGuidelineTag key={guideline}>
+              {convertEnumToTitle(guideline)}
+            </BreachedGuidelineTag>
+          )) ?? []}
         </BreachedUnderwritingGuidelines>
       </div>
     )}
@@ -171,51 +198,53 @@ export const QuoteListItem: React.FC<{
     <OuterWrapper>
       <QuoteWrapper>
         <QuoteDetails quote={quote} />
-        {!!inactionable || (
-          <ActionsButtonsWrapper>
-            {!quote.isReadyToSign ? (
+        <ActionsButtonsWrapper>
+          {!!inactionable || (
+            <>
+              {!quote.isReadyToSign ? (
+                <BottomSpacerWrapper>
+                  <Button
+                    style={{ width: '100%' }}
+                    onClick={toggleState(Action.ACTIVATE)}
+                  >
+                    Activate
+                  </Button>
+                </BottomSpacerWrapper>
+              ) : contracts.length || quote.allowOverrideSignFromHope ? (
+                <BottomSpacerWrapper>
+                  <Button
+                    style={{ width: '100%' }}
+                    onClick={toggleState(Action.SIGN)}
+                  >
+                    Sign
+                  </Button>
+                </BottomSpacerWrapper>
+              ) : (
+                <ErrorText>Member has to sign first contract</ErrorText>
+              )}
               <BottomSpacerWrapper>
                 <Button
                   style={{ width: '100%' }}
-                  onClick={toggleState(Action.ACTIVATE)}
+                  variant="secondary"
+                  onClick={toggleState(Action.MODIFY)}
                 >
-                  Activate
+                  Modify
                 </Button>
               </BottomSpacerWrapper>
-            ) : contracts.length || quote.allowOverrideSignFromHope ? (
-              <BottomSpacerWrapper>
-                <Button
-                  style={{ width: '100%' }}
-                  onClick={toggleState(Action.SIGN)}
-                >
-                  Sign
-                </Button>
-              </BottomSpacerWrapper>
-            ) : (
-              <ErrorText>Member has to sign first contract</ErrorText>
-            )}
-            <BottomSpacerWrapper>
-              <Button
-                style={{ width: '100%' }}
-                variant="secondary"
-                onClick={toggleState(Action.MODIFY)}
-              >
-                Modify
-              </Button>
-            </BottomSpacerWrapper>
-            <Button
-              style={{ width: '100%' }}
-              variant="tertiary"
-              onClick={() =>
-                alert(
-                  `# Quote ID #\r\n${quote.id}\r\n\r\n# Originating Product ID #\r\n${quote.originatingProductId}`,
-                )
-              }
-            >
-              Debug info
-            </Button>
-          </ActionsButtonsWrapper>
-        )}
+            </>
+          )}
+          <Button
+            style={{ width: '100%' }}
+            variant="tertiary"
+            onClick={() =>
+              alert(
+                `# Quote ID #\r\n${quote.id}\r\n\r\n# Originating Product ID #\r\n${quote.originatingProductId}`,
+              )
+            }
+          >
+            Debug info
+          </Button>
+        </ActionsButtonsWrapper>
       </QuoteWrapper>
       {action === Action.ACTIVATE && (
         <ActionsWrapper>

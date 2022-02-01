@@ -21,12 +21,14 @@ export const QuotesSubSection: React.FC<{
   quotes: ReadonlyArray<Quote>
 }> = ({ memberId, insuranceType, quotes }) => {
   const [isWip, setIsWip] = React.useState(false)
-  const activeQuotes = quotes.filter((quote) => !isSignedOrExpired(quote))
   const [contracts, { loading }] = useContracts(memberId)
 
   if (loading) {
     return null
   }
+
+  const activeQuotes = quotes.filter((quote) => !isSignedOrExpired(quote))
+  const signedOrExpiredQuotes = quotes.filter(isSignedOrExpired)
 
   const hasActiveContracts =
     contracts.filter(
@@ -53,23 +55,27 @@ export const QuotesSubSection: React.FC<{
           />
         </ActionsWrapper>
       )}
-      <MainHeadline>Quotes</MainHeadline>
-      <CardsWrapper>
-        {activeQuotes.map((quote) => (
-          <Card key={quote.id}>
-            <QuoteListItem
-              quote={quote}
-              memberId={memberId}
-              contracts={contracts}
-            />
-          </Card>
-        ))}
-      </CardsWrapper>
+      {!!activeQuotes.length && (
+        <>
+          <MainHeadline>Quotes</MainHeadline>
+          <CardsWrapper>
+            {activeQuotes.map((quote) => (
+              <Card key={quote.id}>
+                <QuoteListItem
+                  quote={quote}
+                  memberId={memberId}
+                  contracts={contracts}
+                />
+              </Card>
+            ))}
+          </CardsWrapper>
+        </>
+      )}
 
       <MainHeadline>Signed/Expired quotes</MainHeadline>
       <Muted>
         <CardsWrapper>
-          {quotes.filter(isSignedOrExpired).map((quote) => (
+          {signedOrExpiredQuotes.map((quote) => (
             <Card key={quote.id}>
               <QuoteListItem
                 quote={quote}

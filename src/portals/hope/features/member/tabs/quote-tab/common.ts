@@ -9,7 +9,7 @@ export const BottomSpacerWrapper = styled('div')({
 })
 
 export const Muted = styled.div`
-  opacity: 0.8;
+  opacity: 0.7;
 `
 
 export const ActionsWrapper = styled('div')(({ theme }) => ({
