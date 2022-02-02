@@ -318,7 +318,7 @@ export const ClaimPaymentForm: React.FC<{
           }}
         />
 
-        {!isPotentiallySanctioned && (
+        {isPotentiallySanctioned && (
           <Checkbox
             style={{ width: '40rem', marginBottom: '1.5rem' }}
             label="Override sanction list result (I promise that I have manually checked the list)"
