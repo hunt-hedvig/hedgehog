@@ -24,6 +24,7 @@ query GetQuotes($memberId: ID!) {
       schema
       schemaData
       allowOverrideSignFromHope
+      signedAt
     }
   }
 }

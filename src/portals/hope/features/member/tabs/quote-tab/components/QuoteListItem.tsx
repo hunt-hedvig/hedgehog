@@ -74,7 +74,7 @@ const DataWrapper = styled.div`
     width: 40%;
   }
 
-  .quote-state {
+  .next-to-created-at {
     width: 60%;
   }
 
@@ -131,7 +131,13 @@ const QuoteGeneralInfo: React.FC<{
         <Label>Created</Label>
         <div>{format(parseISO(quote.createdAt), 'yyyy-MM-dd HH:mm')}</div>
       </div>
-      <div className="quote-state">
+      {quote.signedAt && (
+        <div className="next-to-created-at">
+          <Label>Signed at</Label>
+          <div>{format(parseISO(quote.signedAt), 'yyyy-MM-dd HH:mm')}</div>
+        </div>
+      )}
+      <div className={quote.signedAt ? '' : 'next-to-created-at'}>
         <Label>State</Label>
         <div>{quote.state ? convertEnumToTitle(quote.state) : '-'}</div>
       </div>

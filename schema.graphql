@@ -848,6 +848,7 @@ type Quote {
   originatingProductId: ID
   isReadyToSign: Boolean
   allowOverrideSignFromHope: Boolean
+  signedAt: Instant
 }
 
 input CampaignFilter {

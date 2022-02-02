@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import {
   Checkbox,
   Form,
@@ -32,13 +31,6 @@ const areSwishPayoutsEnabled = () => {
     ).HOPE_FEATURES?.swishPayoutsEnabled ?? false
   )
 }
-
-const FormCheckbox = styled(Checkbox)`
-  .checkbox__input {
-    border: none !important;
-  }
-  max-width: 8rem;
-`
 
 interface CategoryOptionsType {
   key: number
@@ -296,10 +288,10 @@ export const ClaimPaymentForm: React.FC<{
             required: 'Note is required',
           }}
         />
-        <FormCheckbox
+        <Checkbox
           label="Ex Gratia?"
           name="exGratia"
-          style={{ marginBottom: 15 }}
+          style={{ width: '8rem', marginBottom: '1.5rem' }}
           checked={isExGratia}
           onChange={() => setIsExGratia((prev) => !prev)}
         />
@@ -326,8 +318,9 @@ export const ClaimPaymentForm: React.FC<{
           }}
         />
 
-        {isPotentiallySanctioned && (
-          <FormCheckbox
+        {!isPotentiallySanctioned && (
+          <Checkbox
+            style={{ width: '40rem', marginBottom: '1.5rem' }}
             label="Override sanction list result (I promise that I have manually checked the list)"
             name="overriden"
             checked={isOverridden}
