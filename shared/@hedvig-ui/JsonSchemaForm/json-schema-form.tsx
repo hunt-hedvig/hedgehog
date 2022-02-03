@@ -250,7 +250,7 @@ export const JsonSchemaForm: React.FC<{
   onSubmit: (formData: Record<string, unknown>) => void
   onCancel?: () => void
   initialFormData?: Record<string, JSONSchema7 | boolean>
-  suggestions: boolean
+  suggestions?: Record<string, JSONSchema7 | boolean>
   submitText?: string
 }> = ({
   schema,
@@ -269,7 +269,7 @@ export const JsonSchemaForm: React.FC<{
   >(formatInitialFormData(initialFormData ?? {}, schema))
 
   useEffect(() => {
-    if (!initialFormData || !suggestions) {
+    if (!suggestions) {
       return
     }
 
@@ -278,16 +278,13 @@ export const JsonSchemaForm: React.FC<{
     >(
       (acc, field) => ({
         ...acc,
-        [field]: formData[field] || initialFormData[field],
+        [field]: formData[field] || suggestions[field],
       }),
       {},
     )
 
-    console.log(formData)
-    console.log(result)
-
-    setFormData(result)
-  }, [initialFormData])
+    setFormData(formatInitialFormData(result ?? {}, schema))
+  }, [suggestions])
 
   return (
     <FormWrapper>

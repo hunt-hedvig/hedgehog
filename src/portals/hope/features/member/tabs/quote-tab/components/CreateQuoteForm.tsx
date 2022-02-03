@@ -51,10 +51,11 @@ export const CreateQuoteForm: React.FC<{
   onSubmitted: () => void
   onCancel: () => void
 }> = ({ memberId, insuranceType, onSubmitted, onCancel }) => {
-  const { suggestions } = useQuoteFieldSuggestions(memberId)
-  const [initialFormData, setInitialFormData] = useState<
-    Record<string, JSONSchema7 | boolean>
-  >({})
+  const { suggestions: suggestedValues } = useQuoteFieldSuggestions(memberId)
+  const [suggestions, setSuggestions] = useState<null | Record<
+    string,
+    JSONSchema7 | boolean
+  >>(null)
 
   const [bypassUwgl, setBypassUwgl] = useState(false)
 
@@ -103,10 +104,10 @@ export const CreateQuoteForm: React.FC<{
         style={{ marginBottom: '0.5rem' }}
       >
         <ThirdLevelHeadline>Create quote</ThirdLevelHeadline>
-        <SuggestWrapper active={Object.keys(suggestions).length !== 0}>
+        <SuggestWrapper active={Object.keys(suggestedValues).length !== 0}>
           <Button
             variant="secondary"
-            onClick={() => setInitialFormData(suggestions)}
+            onClick={() => setSuggestions(suggestedValues)}
             icon={
               <Stars
                 width="1rem"
@@ -125,8 +126,7 @@ export const CreateQuoteForm: React.FC<{
         onSubmit={createQuote}
         onCancel={onCancel}
         submitText="Create"
-        initialFormData={initialFormData}
-        suggestions={true}
+        suggestions={suggestions ?? undefined}
       >
         <Checkbox
           checked={bypassUwgl}

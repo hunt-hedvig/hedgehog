@@ -1,4 +1,4 @@
-import { Button, TextDatePicker } from '@hedvig-ui'
+import { Button, Label, Spacing, TextDatePicker } from '@hedvig-ui'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -7,7 +7,6 @@ import {
   Quote,
   useSignQuoteForNewContractMutation,
 } from 'types/generated/graphql'
-import { BottomSpacerWrapper, ErrorMessage } from '../common'
 import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
 
 export const QuoteContractCreation: React.FC<{
@@ -65,11 +64,9 @@ export const QuoteContractCreation: React.FC<{
         }
       }}
     >
-      <BottomSpacerWrapper>
+      <div style={{ padding: '1rem' }}>
         <div>
-          <strong>Activation date</strong>
-        </div>
-        <div>
+          <Label>Activation date</Label>
           <TextDatePicker
             onChange={(date) => {
               if (!date) {
@@ -85,32 +82,22 @@ export const QuoteContractCreation: React.FC<{
             value={activeFrom}
           />
         </div>
-      </BottomSpacerWrapper>
-
-      {!setSignQuoteMutation.data?.signQuoteForNewContract ? (
-        <Button
-          status="success"
-          type="submit"
-          disabled={setSignQuoteMutation.loading}
-        >
-          Create contract
-        </Button>
-      ) : (
-        <Button
-          onClick={(e) => {
-            e.preventDefault()
-            window.location.reload()
-          }}
-        >
-          Reload
-        </Button>
-      )}
-
-      {setSignQuoteMutation.error && (
-        <ErrorMessage>
-          {JSON.stringify(setSignQuoteMutation.error, null, 2)}
-        </ErrorMessage>
-      )}
+        <Spacing bottom="small" />
+        {!setSignQuoteMutation.data?.signQuoteForNewContract ? (
+          <Button type="submit" disabled={setSignQuoteMutation.loading}>
+            Create contract
+          </Button>
+        ) : (
+          <Button
+            onClick={(e) => {
+              e.preventDefault()
+              window.location.reload()
+            }}
+          >
+            Reload
+          </Button>
+        )}
+      </div>
     </form>
   )
 }

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, ErrorText, Flex, Label } from '@hedvig-ui'
+import { Button, ErrorText, Flex, Label, Modal } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import chroma from 'chroma-js'
 import { format, parseISO } from 'date-fns'
@@ -152,6 +152,7 @@ export const QuoteListItem: React.FC<{
   memberId: string
 }> = ({ contracts, quote, inactionable, memberId }) => {
   const { confirm } = useConfirmDialog()
+  const [showDebug, setShowDebug] = useState(false)
   const [action, setAction] = useState<Action | null>(null)
   const [isWip, setIsWip] = useState(false)
 
@@ -276,14 +277,16 @@ export const QuoteListItem: React.FC<{
           <Button
             style={{ width: '100%' }}
             variant="tertiary"
-            onClick={() =>
-              alert(
-                `# Quote ID #\r\n${quote.id}\r\n\r\n# Originating Product ID #\r\n${quote.originatingProductId}`,
-              )
-            }
+            onClick={() => setShowDebug(true)}
           >
             Debug info
           </Button>
+          {showDebug && (
+            <Modal withoutHeader onClose={() => setShowDebug(false)}>
+              Quote ID: {quote.id} <br />
+              Originating Product ID: {quote.id} <br />
+            </Modal>
+          )}
         </ActionsButtonsWrapper>
       </Flex>
     </OuterWrapper>

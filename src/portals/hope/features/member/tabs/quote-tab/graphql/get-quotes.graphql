@@ -13,7 +13,6 @@ query GetQuotes($memberId: ID!) {
       currency
       productType
       state
-      startDate
       validity
       isComplete
       createdAt
