@@ -85,7 +85,7 @@ export const QuotesSubSection: React.FC<{
 
   return (
     <div style={{ paddingBottom: '7rem' }}>
-      <Flex justify="space-between">
+      <Flex justify="space-between" style={{ marginBottom: '2rem' }}>
         <MainHeadline>Quotes</MainHeadline>
         <div>
           <Button
