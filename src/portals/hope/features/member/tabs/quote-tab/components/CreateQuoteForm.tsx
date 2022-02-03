@@ -1,4 +1,10 @@
-import { Checkbox, JsonSchemaForm } from '@hedvig-ui'
+import {
+  Button,
+  Checkbox,
+  Flex,
+  JsonSchemaForm,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
 import { InsuranceType } from 'portals/hope/features/config/constants'
 import { useSchemaForInsuranceType } from 'portals/hope/features/member/tabs/quote-tab/hooks/use-get-schema-for-insurance-type'
 import React, { useState } from 'react'
@@ -7,6 +13,37 @@ import {
   GetQuotesDocument,
   useCreateQuoteForMemberBySchemaMutation,
 } from 'types/generated/graphql'
+import { Stars } from 'react-bootstrap-icons'
+import styled from '@emotion/styled'
+import chroma from 'chroma-js'
+import { JSONSchema7 } from 'json-schema'
+import { useQuoteFieldSuggestions } from 'portals/hope/features/member/tabs/quote-tab/hooks/use-quote-field-suggestions'
+
+const SuggestWrapper = styled.div<{ active?: boolean }>`
+  visibility: ${({ active }) => (active ? 'visible' : 'hidden')};
+
+  > button {
+    min-width: 10rem;
+  }
+
+  .suggest-info {
+    margin-top: 0.25rem;
+    color: ${({ theme }) =>
+      chroma(theme.semiStrongForeground).alpha(0.8).hex()};
+    font-size: 0.75rem;
+    text-align: center;
+    max-width: 10rem;
+
+    transition: opacity 200ms ease-in-out;
+    opacity: 0;
+  }
+
+  :hover {
+    .suggest-info {
+      opacity: 1;
+    }
+  }
+`
 
 export const CreateQuoteForm: React.FC<{
   memberId: string
@@ -14,10 +51,14 @@ export const CreateQuoteForm: React.FC<{
   onSubmitted: () => void
   onCancel: () => void
 }> = ({ memberId, insuranceType, onSubmitted, onCancel }) => {
+  const { suggestions } = useQuoteFieldSuggestions(memberId)
+  const [initialFormData, setInitialFormData] = useState<
+    Record<string, JSONSchema7 | boolean>
+  >({})
+
   const [bypassUwgl, setBypassUwgl] = useState(false)
 
   const [schema, { loading }] = useSchemaForInsuranceType(insuranceType)
-
   const [createQuoteForMember] = useCreateQuoteForMemberBySchemaMutation()
 
   const createQuote = (formData: Record<string, unknown>) => {
@@ -54,19 +95,46 @@ export const CreateQuoteForm: React.FC<{
   }
 
   return (
-    <JsonSchemaForm
-      schema={schema}
-      onSubmit={createQuote}
-      onCancel={onCancel}
-      submitText="Create"
-    >
-      <Checkbox
-        checked={bypassUwgl}
-        onChange={({ currentTarget: { checked } }) =>
-          setBypassUwgl(Boolean(checked))
-        }
-        label="Bypass underwriting guidelines"
-      />
-    </JsonSchemaForm>
+    <>
+      <Flex
+        fullWidth
+        justify="space-between"
+        align="center"
+        style={{ marginBottom: '0.5rem' }}
+      >
+        <ThirdLevelHeadline>Create quote</ThirdLevelHeadline>
+        <SuggestWrapper active={Object.keys(suggestions).length !== 0}>
+          <Button
+            variant="secondary"
+            onClick={() => setInitialFormData(suggestions)}
+            icon={
+              <Stars
+                width="1rem"
+                height="1rem"
+                style={{ marginRight: '0.5rem' }}
+              />
+            }
+          >
+            Suggest values
+          </Button>
+          <div className="suggest-info">Based on signed quotes</div>
+        </SuggestWrapper>
+      </Flex>
+      <JsonSchemaForm
+        schema={schema}
+        onSubmit={createQuote}
+        onCancel={onCancel}
+        submitText="Create"
+        initialFormData={initialFormData}
+      >
+        <Checkbox
+          checked={bypassUwgl}
+          onChange={({ currentTarget: { checked } }) =>
+            setBypassUwgl(Boolean(checked))
+          }
+          label="Bypass underwriting guidelines"
+        />
+      </JsonSchemaForm>
+    </>
   )
 }

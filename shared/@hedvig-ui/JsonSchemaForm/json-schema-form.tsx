@@ -14,7 +14,7 @@ import Form, {
   WidgetProps,
 } from '@rjsf/core'
 import { JSONSchema7 } from 'json-schema'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'
 import { convertCamelcaseToTitle, convertEnumToTitle } from '../utils/text'
 
@@ -227,9 +227,9 @@ const getPropertyTitle = (property: string) => {
 }
 
 const formatInitialFormData = (
-  initialFormData: Record<string, unknown>,
+  initialFormData: Record<string, JSONSchema7 | boolean>,
   schema: JSONSchema7,
-): Record<string, unknown> => {
+): Record<string, JSONSchema7 | boolean> => {
   const properties = schema.properties
   const formData = { ...initialFormData }
 
@@ -249,7 +249,7 @@ export const JsonSchemaForm: React.FC<{
   schema: JSONSchema7
   onSubmit: (formData: Record<string, unknown>) => void
   onCancel?: () => void
-  initialFormData?: Record<string, unknown>
+  initialFormData?: Record<string, JSONSchema7 | boolean>
   submitText?: string
 }> = ({
   schema,
@@ -262,9 +262,27 @@ export const JsonSchemaForm: React.FC<{
   const uiSchema = {
     'ui:ObjectFieldTemplate': ObjectFieldTemplate,
   }
-  const [formData, setFormData] = useState(
-    formatInitialFormData(initialFormData ?? {}, schema),
-  )
+  const [formData, setFormData] = useState<
+    Record<string, JSONSchema7 | boolean>
+  >(formatInitialFormData(initialFormData ?? {}, schema))
+
+  useEffect(() => {
+    if (!initialFormData) {
+      return
+    }
+
+    const result = Object.keys(formData).reduce<
+      Record<string, JSONSchema7 | boolean>
+    >(
+      (acc, field) => ({
+        ...acc,
+        [field]: formData[field] || initialFormData[field],
+      }),
+      {},
+    )
+
+    setFormData(result)
+  }, [initialFormData])
 
   return (
     <FormWrapper>
