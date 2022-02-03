@@ -5,6 +5,7 @@ import {
 import React from 'react'
 import { Quote } from 'types/generated/graphql'
 import { Label } from '@hedvig-ui'
+import { JSONSchema7 } from 'json-schema'
 
 export const isSignedOrExpired = (quote: Quote) =>
   isExpired(quote) || isSigned(quote)
@@ -22,8 +23,8 @@ export const isExpired = (quote: Quote) => {
 
 export const isSigned = (quote: Quote) => quote.state === 'SIGNED'
 
-export const getSchemaDataInfo: React.FC<{
-  schemaData: Record<string, unknown>
+export const SchemaDataSummary: React.FC<{
+  schemaData: Record<string, JSONSchema7 | boolean>
 }> = ({ schemaData }) => {
   return (
     <>
@@ -31,6 +32,7 @@ export const getSchemaDataInfo: React.FC<{
         .filter(([key, value]) => key !== 'id' && value !== null)
         .map(([key, value]) => {
           const valueMessage = valueToMessage(value)
+
           return (
             <React.Fragment key={key}>
               <div className={key}>
@@ -46,7 +48,9 @@ export const getSchemaDataInfo: React.FC<{
   )
 }
 
-const valueToMessage = (value: unknown): string | null => {
+const valueToMessage = (
+  value: JSONSchema7 | boolean | string,
+): string | null => {
   switch (typeof value) {
     case 'boolean':
       return value ? 'Yes' : 'No'

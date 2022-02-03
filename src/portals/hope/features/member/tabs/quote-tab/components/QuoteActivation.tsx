@@ -9,11 +9,31 @@ import {
   Quote,
   useAddAgreementFromQuoteMutation,
 } from 'types/generated/graphql'
-import { BottomSpacerWrapper, ErrorMessage } from '../common'
 import { getTodayFormatDate } from 'portals/hope/features/member/tabs/contracts-tab/agreement/helpers'
+import gql from 'graphql-tag'
 
 const getInitialActiveFrom = (contract: Contract): string | null =>
   contract.hasPendingAgreement ? null : getTodayFormatDate()
+
+gql`
+  mutation AddAgreementFromQuote(
+    $id: ID!
+    $contractId: ID!
+    $activeFrom: LocalDate
+    $activeTo: LocalDate
+    $previousAgreementActiveTo: LocalDate
+  ) {
+    addAgreementFromQuote(
+      id: $id
+      contractId: $contractId
+      activeFrom: $activeFrom
+      activeTo: $activeTo
+      previousAgreementActiveTo: $previousAgreementActiveTo
+    ) {
+      id
+    }
+  }
+`
 
 export const QuoteActivation: React.FC<{
   quote: Quote
@@ -109,7 +129,7 @@ export const QuoteActivation: React.FC<{
     >
       {!contract.hasPendingAgreement && (
         <>
-          <BottomSpacerWrapper>
+          <div style={{ paddingBottom: '1rem' }}>
             <div>
               <strong>Activation date</strong>
             </div>
@@ -136,7 +156,7 @@ export const QuoteActivation: React.FC<{
                 />
               </div>
             )}
-          </BottomSpacerWrapper>
+          </div>
         </>
       )}
       {contract.hasPendingAgreement && (
@@ -163,12 +183,6 @@ export const QuoteActivation: React.FC<{
         >
           Reload
         </Button>
-      )}
-
-      {addAgreementMutation.error && (
-        <ErrorMessage>
-          {JSON.stringify(addAgreementMutation.error, null, 2)}
-        </ErrorMessage>
       )}
     </form>
   )

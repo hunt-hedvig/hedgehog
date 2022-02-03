@@ -4,14 +4,35 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import chroma from 'chroma-js'
 import { format, parseISO } from 'date-fns'
 import { UpdateQuoteForm } from 'portals/hope/features/member/tabs/quote-tab/components/UpdateQuoteForm'
-import { getSchemaDataInfo } from 'portals/hope/features/member/tabs/quote-tab/utils'
+import { SchemaDataSummary } from 'portals/hope/features/member/tabs/quote-tab/utils'
 import React, { useState } from 'react'
 import { Contract, Quote } from 'types/generated/graphql'
-import { ActionsWrapper, BottomSpacerWrapper } from '../common'
 import { QuoteActivation } from './QuoteActivation'
 import { QuoteContractCreation } from './QuoteContractCreation'
 import { QuotePrice } from './QuotePrice'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+
+const ActionsWrapper = styled.div`
+  background-color: ${({ theme }) =>
+    chroma(theme.accent).alpha(0.1).brighten(1).hex()};
+
+  border-radius: 0.5rem;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  background-color: ${({ theme }) =>
+    chroma(theme.accent).alpha(0.1).brighten(1).hex()};
+
+  padding: 0.25rem 0.7rem;
+
+  margin: 0 1rem 1rem 0;
+
+  > div {
+    width: 100%;
+    padding: 0.5rem;
+  }
+`
 
 const OuterWrapper = styled.div`
   width: 100%;
@@ -235,7 +256,7 @@ export const QuoteListItem: React.FC<{
             </ActionsWrapper>
           ) : (
             <DataWrapper>
-              {getSchemaDataInfo({ schemaData: quote.schemaData })}
+              {SchemaDataSummary({ schemaData: quote.schemaData })}
             </DataWrapper>
           )}
         </div>
@@ -243,27 +264,27 @@ export const QuoteListItem: React.FC<{
           {!!inactionable || (
             <>
               {!quote.isReadyToSign ? (
-                <BottomSpacerWrapper>
+                <div style={{ paddingBottom: '1rem' }}>
                   <Button
                     style={{ width: '100%' }}
                     onClick={toggleState(Action.ACTIVATE)}
                   >
                     Activate
                   </Button>
-                </BottomSpacerWrapper>
+                </div>
               ) : contracts.length || quote.allowOverrideSignFromHope ? (
-                <BottomSpacerWrapper>
+                <div style={{ paddingBottom: '1rem' }}>
                   <Button
                     style={{ width: '100%' }}
                     onClick={toggleState(Action.SIGN)}
                   >
                     Sign
                   </Button>
-                </BottomSpacerWrapper>
+                </div>
               ) : (
                 <ErrorText>Member has to sign first contract</ErrorText>
               )}
-              <BottomSpacerWrapper>
+              <div style={{ paddingBottom: '1rem' }}>
                 <Button
                   style={{ width: '100%' }}
                   variant="secondary"
@@ -271,7 +292,7 @@ export const QuoteListItem: React.FC<{
                 >
                   Modify
                 </Button>
-              </BottomSpacerWrapper>
+              </div>
             </>
           )}
           <Button

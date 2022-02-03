@@ -22,13 +22,16 @@ import {
 } from 'portals/hope/features/member/tabs/quote-tab/utils'
 import React, { useState } from 'react'
 import { Quote } from 'types/generated/graphql'
-import { Muted } from '../common'
 import { QuoteListItem } from './QuoteListItem'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
 
 const CreateQuoteWrapper = styled.div`
   padding: 0.8rem;
+`
+
+export const Muted = styled.div`
+  opacity: 0.7;
 `
 
 const CreateQuoteModal: React.FC<{
