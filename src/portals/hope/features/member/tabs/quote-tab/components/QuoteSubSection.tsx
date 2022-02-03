@@ -112,12 +112,10 @@ export const QuotesSubSection: React.FC<{
         />
       )}
       {!activeQuotes.length ? (
-        <StandaloneMessage
-          paddingTop="7rem"
-          paddingBottom="5rem"
-          style={{ textAlign: 'center', fontSize: '1.4rem' }}
-        >
-          <div>No pending quotes</div>
+        <StandaloneMessage paddingTop="7rem" paddingBottom="5rem">
+          <div style={{ textAlign: 'center', fontSize: '1.4rem' }}>
+            No pending quotes
+          </div>
         </StandaloneMessage>
       ) : (
         <>
@@ -139,12 +137,10 @@ export const QuotesSubSection: React.FC<{
         Signed
       </ThirdLevelHeadline>
       {!signedQuotes.length ? (
-        <StandaloneMessage
-          paddingTop="7rem"
-          paddingBottom="5rem"
-          style={{ textAlign: 'center', fontSize: '1.4rem' }}
-        >
-          <div>No signed quotes</div>
+        <StandaloneMessage paddingTop="7rem" paddingBottom="5rem">
+          <div style={{ textAlign: 'center', fontSize: '1.4rem' }}>
+            No signed quotes
+          </div>
         </StandaloneMessage>
       ) : (
         <>
@@ -169,12 +165,10 @@ export const QuotesSubSection: React.FC<{
         Expired
       </ThirdLevelHeadline>
       {!expiredQuotes.length ? (
-        <StandaloneMessage
-          paddingTop="7rem"
-          paddingBottom="5rem"
-          style={{ textAlign: 'center', fontSize: '1.4rem' }}
-        >
-          <div>No expired quotes</div>
+        <StandaloneMessage paddingTop="7rem" paddingBottom="5rem">
+          <div style={{ textAlign: 'center', fontSize: '1.4rem' }}>
+            No expired quotes
+          </div>
         </StandaloneMessage>
       ) : (
         <>
