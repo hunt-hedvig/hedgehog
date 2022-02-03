@@ -126,6 +126,7 @@ export const CreateQuoteForm: React.FC<{
         onCancel={onCancel}
         submitText="Create"
         initialFormData={initialFormData}
+        suggestions={true}
       >
         <Checkbox
           checked={bypassUwgl}
