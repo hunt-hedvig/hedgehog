@@ -288,6 +288,7 @@ type User {
   latestLocation: String
   notifications(filters: UserNotificationsFilter): [UserNotification!]!
   checkedIn: Boolean!
+  markets: [String!]!
 }
 
 input UserNotificationsFilter {
