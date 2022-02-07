@@ -305,7 +305,7 @@ export const QuoteListItem: React.FC<{
           {showDebug && (
             <Modal withoutHeader onClose={() => setShowDebug(false)}>
               Quote ID: {quote.id} <br />
-              Originating Product ID: {quote.id} <br />
+              Originating Product ID: {quote.originatingProductId} <br />
             </Modal>
           )}
         </ActionsButtonsWrapper>
