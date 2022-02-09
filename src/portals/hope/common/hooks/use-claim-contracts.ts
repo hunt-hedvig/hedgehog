@@ -52,6 +52,7 @@ gql`
       lineOfBusinessName
       typeOfContract
       carrier
+      numberCoInsured
     }
   }
 
