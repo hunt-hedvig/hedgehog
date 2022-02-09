@@ -11,10 +11,11 @@ import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useLocation } from 'react-router'
 import {
-  User,
+  UsersQuery,
   useSharePathMutation,
   useUsersQuery,
 } from 'types/generated/graphql'
+import { ArrayElement } from '@hedvig-ui/utils/array-element'
 
 // noinspection CssInvalidPropertyValue
 const UserList = styled.div`
@@ -82,7 +83,7 @@ export const ShareModal: React.FC<{
       return user.fullName.toLowerCase().includes(filter.toLowerCase())
     }) ?? []
 
-  const handleShare = (user: Omit<User, 'notifications' | 'signature'>) => {
+  const handleShare = (user: ArrayElement<UsersQuery['users']>) => {
     setSharedWith((prev) => [...prev, user.id])
     toast.promise(
       sharePath({ variables: { path: location.pathname, userId: user.id } }),

@@ -6,7 +6,6 @@ import { useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { useHistory, useLocation } from 'react-router'
 import {
-  User,
   UsersQuery,
   useSharePathMutation,
   useUsersQuery,
@@ -107,7 +106,7 @@ export const useAdvancedActions = (
     )
   }
 
-  const handleToUser = (user: Omit<User, 'notifications' | 'signature'>) => {
+  const handleToUser = (user: ArrayElement<UsersQuery['users']>) => {
     const hasCurrentLocation = !!user.latestLocation && user.email !== myEmail
 
     if (hasCurrentLocation && user.latestLocation) {
