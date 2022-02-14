@@ -10,7 +10,8 @@ import {
 export const UpdateQuoteForm: React.FC<{
   quote: Quote
   onSubmitted: () => void
-}> = ({ quote, onSubmitted }) => {
+  onCancel: () => void
+}> = ({ quote, onSubmitted, onCancel }) => {
   const [bypassUwgl, setBypassUwgl] = useState(false)
   const [updateQuote] = useUpdateQuoteBySchemaMutation()
 
@@ -46,10 +47,10 @@ export const UpdateQuoteForm: React.FC<{
       schema={quote.schema}
       initialFormData={quote.schemaData}
       onSubmit={performQuoteUpdate}
+      onCancel={onCancel}
       submitText="Save"
     >
       <Checkbox
-        style={{ marginTop: '0.75rem' }}
         checked={bypassUwgl}
         onChange={({ currentTarget: { checked } }) =>
           setBypassUwgl(Boolean(checked))

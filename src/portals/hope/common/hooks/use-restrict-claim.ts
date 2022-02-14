@@ -8,6 +8,7 @@ import {
 } from 'types/generated/graphql'
 import { toast } from 'react-hot-toast'
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`
   mutation RestrictResourceAccess($claimId: ID!) {
@@ -84,6 +85,7 @@ export const useRestrictClaim = (claimId: string): UseRestrictClaimResult => {
   })
 
   const release = () => {
+    PushUserAction('claim', 'delete', 'restriction', null)
     toast.promise(
       releaseResourceAccess({
         variables: { resourceId: claimId },
@@ -109,6 +111,7 @@ export const useRestrictClaim = (claimId: string): UseRestrictClaimResult => {
   }
 
   const restrict = () => {
+    PushUserAction('claim', 'create', 'restriction', null)
     toast.promise(
       restrictResourceAccess({
         variables: { claimId },

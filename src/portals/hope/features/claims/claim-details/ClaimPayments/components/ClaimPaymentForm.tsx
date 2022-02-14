@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import {
   Checkbox,
   Form,
@@ -22,6 +21,7 @@ import {
 } from 'types/generated/graphql'
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 import gql from 'graphql-tag'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const areSwishPayoutsEnabled = () => {
   return (
@@ -31,13 +31,6 @@ const areSwishPayoutsEnabled = () => {
     ).HOPE_FEATURES?.swishPayoutsEnabled ?? false
   )
 }
-
-const FormCheckbox = styled(Checkbox)`
-  .checkbox__input {
-    border: none !important;
-  }
-  max-width: 8rem;
-`
 
 interface CategoryOptionsType {
   key: number
@@ -247,6 +240,7 @@ export const ClaimPaymentForm: React.FC<{
         {
           loading: 'Creating payment',
           success: () => {
+            PushUserAction('claim', 'create', 'payment', null)
             form.reset()
             setIsConfirming(false)
             setIsExGratia(false)
@@ -294,10 +288,10 @@ export const ClaimPaymentForm: React.FC<{
             required: 'Note is required',
           }}
         />
-        <FormCheckbox
+        <Checkbox
           label="Ex Gratia?"
           name="exGratia"
-          style={{ marginBottom: 15 }}
+          style={{ width: '8rem', marginBottom: '1.5rem' }}
           checked={isExGratia}
           onChange={() => setIsExGratia((prev) => !prev)}
         />
@@ -325,7 +319,8 @@ export const ClaimPaymentForm: React.FC<{
         />
 
         {isPotentiallySanctioned && (
-          <FormCheckbox
+          <Checkbox
+            style={{ width: '40rem', marginBottom: '1.5rem' }}
             label="Override sanction list result (I promise that I have manually checked the list)"
             name="overriden"
             checked={isOverridden}

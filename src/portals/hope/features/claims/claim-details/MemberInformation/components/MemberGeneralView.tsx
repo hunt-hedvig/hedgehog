@@ -18,7 +18,16 @@ import {
   formatPostalCode,
 } from '@hedvig-ui/utils/text'
 import copy from 'copy-to-clipboard'
-import { format, formatDistanceToNowStrict, parse, parseISO } from 'date-fns'
+import {
+  addMonths,
+  addYears,
+  differenceInDays,
+  differenceInMonths,
+  differenceInYears,
+  format,
+  parse,
+  parseISO,
+} from 'date-fns'
 import { Market } from 'portals/hope/features/config/constants'
 import {
   getFirstMasterInception,
@@ -76,6 +85,34 @@ export const Info = styled.div`
     border-radius: 0.5rem;
   }
 `
+
+const formatDistanceWithAccuracy = (date: Date): string => {
+  const result = []
+  const now = new Date()
+
+  const years = differenceInYears(now, date)
+
+  if (years > 0) {
+    result.push(`${years} years`)
+    date = addYears(date, years)
+  }
+
+  const months = differenceInMonths(now, date)
+  if (months > 0) {
+    result.push(`${months} months`)
+    date = addMonths(date, months)
+  }
+
+  const days = differenceInDays(now, date)
+
+  if (days > 0) {
+    result.push(`${days} days`)
+  }
+
+  result.push('ago')
+
+  return result.join(' ')
+}
 
 gql`
   query MemberGeneralView($claimId: ID!) {
@@ -321,11 +358,8 @@ export const MemberGeneralView: React.FC<{
             <div>
               {member?.signedOn ? (
                 <Popover
-                  contents={formatDistanceToNowStrict(
+                  contents={formatDistanceWithAccuracy(
                     parseISO(member.signedOn),
-                    {
-                      addSuffix: true,
-                    },
                   )}
                 >
                   {member.signedOn &&
@@ -344,11 +378,8 @@ export const MemberGeneralView: React.FC<{
                 <Popover
                   contents={
                     firstMasterInception
-                      ? formatDistanceToNowStrict(
+                      ? formatDistanceWithAccuracy(
                           parse(firstMasterInception, 'yyyy-MM-dd', new Date()),
-                          {
-                            addSuffix: true,
-                          },
                         )
                       : 'Never active'
                   }

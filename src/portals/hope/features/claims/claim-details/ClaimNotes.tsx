@@ -26,6 +26,7 @@ import { toast } from 'react-hot-toast'
 import formatDate from 'date-fns/format'
 import { useDraft } from '@hedvig-ui/hooks/use-draft'
 import gql from 'graphql-tag'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const ClaimNoteWrapper = styled.div`
   display: flex;
@@ -104,6 +105,8 @@ export const useClaimNotes = (claimId: string): UseClaimNotesResult => {
 
   const createNote = (note: string) => {
     const today = formatDate(addSeconds(new Date(), 1), 'yyyy-MM-dd HH:mm:ss')
+
+    PushUserAction('claim', 'add', 'note', null)
 
     addClaimNote({
       variables: { claimId, note: { text: note } },

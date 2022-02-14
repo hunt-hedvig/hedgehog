@@ -14,7 +14,7 @@ import Form, {
   WidgetProps,
 } from '@rjsf/core'
 import { JSONSchema7 } from 'json-schema'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Trash } from 'react-bootstrap-icons'
 import { convertCamelcaseToTitle, convertEnumToTitle } from '../utils/text'
 
@@ -62,6 +62,13 @@ const FormWrapper = styled.div`
     display: flex;
     flex-direction: column;
 
+    & > label {
+      margin-bottom: 0.4rem;
+      font-size: 0.95rem;
+      color: ${({ theme }) => theme.semiStrongForeground} !important;
+      font-weight: normal;
+    }
+
     input {
       padding: 10px 15px;
       border-radius: 4px;
@@ -75,6 +82,8 @@ const FormWrapper = styled.div`
         display: flex;
         align-items: center;
 
+        font-size: 1rem;
+
         input {
           width: 17px;
           height: 17px;
@@ -83,7 +92,6 @@ const FormWrapper = styled.div`
       }
     }
   }
-
   & .panel-title,
   & .text-danger,
   & .required {
@@ -219,9 +227,9 @@ const getPropertyTitle = (property: string) => {
 }
 
 const formatInitialFormData = (
-  initialFormData: Record<string, unknown>,
+  initialFormData: Record<string, JSONSchema7 | boolean>,
   schema: JSONSchema7,
-): Record<string, unknown> => {
+): Record<string, JSONSchema7 | boolean> => {
   const properties = schema.properties
   const formData = { ...initialFormData }
 
@@ -240,15 +248,43 @@ const formatInitialFormData = (
 export const JsonSchemaForm: React.FC<{
   schema: JSONSchema7
   onSubmit: (formData: Record<string, unknown>) => void
-  initialFormData?: Record<string, unknown>
+  onCancel?: () => void
+  initialFormData?: Record<string, JSONSchema7 | boolean>
+  suggestions?: Record<string, JSONSchema7 | boolean>
   submitText?: string
-}> = ({ schema, onSubmit, initialFormData, submitText, children }) => {
+}> = ({
+  schema,
+  onSubmit,
+  onCancel,
+  initialFormData,
+  suggestions,
+  submitText,
+  children,
+}) => {
   const uiSchema = {
     'ui:ObjectFieldTemplate': ObjectFieldTemplate,
   }
-  const [formData, setFormData] = useState(
-    formatInitialFormData(initialFormData ?? {}, schema),
-  )
+  const [formData, setFormData] = useState<
+    Record<string, JSONSchema7 | boolean>
+  >(formatInitialFormData(initialFormData ?? {}, schema))
+
+  useEffect(() => {
+    if (!suggestions) {
+      return
+    }
+
+    const result = Object.keys(formData).reduce<
+      Record<string, JSONSchema7 | boolean>
+    >(
+      (acc, field) => ({
+        ...acc,
+        [field]: formData[field] || suggestions[field],
+      }),
+      {},
+    )
+
+    setFormData(formatInitialFormData(result ?? {}, schema))
+  }, [suggestions])
 
   return (
     <FormWrapper>
@@ -267,6 +303,17 @@ export const JsonSchemaForm: React.FC<{
       >
         <ButtonsGroup>
           <Button type="submit">{submitText ?? 'Submit'}</Button>
+          {onCancel && (
+            <Button
+              variant="secondary"
+              onClick={(e) => {
+                e.preventDefault()
+                onCancel()
+              }}
+            >
+              Cancel
+            </Button>
+          )}
           {children}
         </ButtonsGroup>
       </Form>

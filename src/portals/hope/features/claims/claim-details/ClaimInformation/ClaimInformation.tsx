@@ -21,7 +21,6 @@ import React, { useState } from 'react'
 import { BugFill, CloudArrowDownFill } from 'react-bootstrap-icons'
 import { ClaimDatePicker } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimDatePicker'
 import { ClaimEmployeeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimEmployeeDropdown'
-import { TermsAndConditionsLink } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/TermsAndConditionsLink'
 import { ClaimStatusDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimStatusDropdown'
 import { useRestrictClaim } from 'portals/hope/common/hooks/use-restrict-claim'
 import gql from 'graphql-tag'
@@ -36,6 +35,7 @@ import {
 } from 'types/generated/graphql'
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { toast } from 'react-hot-toast'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const SelectWrapper = styled.div`
   margin-top: 1em;
@@ -119,6 +119,10 @@ gql`
         carrier
         partner
         createdAt
+        termsAndConditions {
+          displayName
+          url
+        }
       }
     }
   }
@@ -172,6 +176,7 @@ export const useClaimCoInsured = (claimId: string): UseClaimCoInsuredResult => {
   const coInsured = data?.claim?.coInsured
 
   const removeCoInsured = () => {
+    PushUserAction('claim', 'remove', 'co_insured', null)
     toast.promise(
       remove({
         variables: { claimId },
@@ -202,6 +207,7 @@ export const useClaimCoInsured = (claimId: string): UseClaimCoInsuredResult => {
   const upsertCoInsured = (
     request: UpsertCoInsuredMutationVariables['request'],
   ) => {
+    PushUserAction('claim', 'upsert', 'co_insured', null)
     toast.promise(
       upsert({
         variables: {
@@ -244,8 +250,7 @@ export const ClaimInformation: React.FC<{
 
   const { coInsured, removeCoInsured } = useClaimCoInsured(claimId)
 
-  const { registrationDate, recordingUrl, agreement, contract, trial } =
-    data?.claim ?? {}
+  const { registrationDate, recordingUrl, agreement, trial } = data?.claim ?? {}
 
   const coInsureHandler = async (value: string) => {
     setCreatingCoInsured(value === 'True')
@@ -312,13 +317,17 @@ export const ClaimInformation: React.FC<{
         </SelectWrapper>
 
         {agreement ? (
-          contract && (
-            <TermsAndConditionsLink
-              carrier={agreement.carrier}
-              createdAt={agreement.createdAt}
-              partner={agreement.partner ?? null}
-              typeOfContract={contract.typeOfContract}
-            />
+          agreement.termsAndConditions?.url && (
+            <a
+              href={agreement.termsAndConditions?.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: '0.9rem',
+              }}
+            >
+              Terms and Conditions
+            </a>
           )
         ) : trial ? null : (
           <NoAgreementWarning>

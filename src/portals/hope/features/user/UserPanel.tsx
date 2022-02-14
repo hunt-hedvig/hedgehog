@@ -13,6 +13,7 @@ import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router'
 import { useUsersQuery } from 'types/generated/graphql'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const show = keyframes`
   from {
@@ -206,11 +207,17 @@ export const UserPanel: React.FC<{
 
           return (
             <UserItem
-              onClick={() =>
-                hasCurrentLocation &&
-                user.latestLocation &&
-                history.push(user.latestLocation)
-              }
+              onClick={() => {
+                if (hasCurrentLocation && user.latestLocation) {
+                  PushUserAction(
+                    'user_panel',
+                    'navigate',
+                    'user_location',
+                    null,
+                  )
+                  history.push(user.latestLocation)
+                }
+              }}
               active={hasCurrentLocation}
               key={user.id}
             >

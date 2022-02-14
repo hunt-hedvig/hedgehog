@@ -10,6 +10,7 @@ import {
   useSetClaimTypeMutation,
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`
   query ClaimTypeInformation($claimId: ID!) {
@@ -80,6 +81,7 @@ export const ClaimType: React.FC<{
     claimTypeInformation?.claim?.propertySelections ?? []
 
   const handleSetClaimType = (claimType: string) => {
+    PushUserAction('claim', 'update', 'type', claimType)
     setClaimType({
       variables: { id: claimId, type: claimType },
       optimisticResponse: {

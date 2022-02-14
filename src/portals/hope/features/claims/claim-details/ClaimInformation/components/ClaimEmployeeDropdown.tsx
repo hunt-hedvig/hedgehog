@@ -5,6 +5,7 @@ import {
   useSetCoveringEmployeeMutation,
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`
   query ClaimEmployeeCoverage($claimId: ID!) {
@@ -41,6 +42,8 @@ export const ClaimEmployeeDropdown: React.FC<{ claimId: string }> = ({
   ]
 
   const coverEmployeeHandler = (value: string) => {
+    PushUserAction('claim', 'update', 'employee', null)
+
     setCoveringEmployee({
       variables: {
         id: claimId,

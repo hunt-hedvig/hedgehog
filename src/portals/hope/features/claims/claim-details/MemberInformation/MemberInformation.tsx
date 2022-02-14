@@ -13,6 +13,7 @@ import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { useGetMemberInfoQuery } from 'types/generated/graphql'
 import { PickedLocale } from 'portals/hope/features/config/constants'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const MemberCard = styled.div`
   display: flex;
@@ -95,7 +96,9 @@ export const MemberInformation: React.FC<{
       <Loadable loading={loading}>
         <MemberCard>
           <div>
-            <h3>{member?.firstName ?? '' + ' ' + member?.lastName ?? ''}</h3>
+            <h3>
+              {(member?.firstName ?? '') + ' ' + (member?.lastName ?? '')}
+            </h3>
             <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
           </div>
           <div>{flag}</div>
@@ -106,12 +109,18 @@ export const MemberInformation: React.FC<{
             {
               active: tab === 'general',
               title: 'General',
-              action: () => setTab('general'),
+              action: () => {
+                PushUserAction('claim', 'view', 'member_overview_tab', null)
+                setTab('general')
+              },
             },
             {
               active: tab === 'claims',
               title: `Claims (${totalClaimsWithoutDuplicates})`,
-              action: () => setTab('claims'),
+              action: () => {
+                PushUserAction('claim', 'view', 'member_claims_tab', null)
+                setTab('claims')
+              },
             },
           ]}
         />

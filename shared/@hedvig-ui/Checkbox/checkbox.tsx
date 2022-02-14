@@ -16,7 +16,7 @@ const Check = styled.label`
 `
 
 const CheckInput = styled.input`
-  position: absolute;
+  width: auto;
   appearance: none;
 `
 

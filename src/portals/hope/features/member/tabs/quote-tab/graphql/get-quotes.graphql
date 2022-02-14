@@ -13,7 +13,6 @@ query GetQuotes($memberId: ID!) {
       currency
       productType
       state
-      startDate
       validity
       isComplete
       createdAt
@@ -24,6 +23,7 @@ query GetQuotes($memberId: ID!) {
       schema
       schemaData
       allowOverrideSignFromHope
+      signedAt
     }
   }
 }

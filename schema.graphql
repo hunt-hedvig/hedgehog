@@ -50,97 +50,6 @@ type QueryType {
   simpleMemberLookup(ssn: String!): SimpleMemberLookupResult!
 }
 
-type SimpleMemberLookupResult {
-  memberId: ID!
-  firstName: String!
-  lastName: String!
-  email: String!
-  phoneNumber: String!
-  market: String!
-  contracts: [SimpleMemberLookupContract!]!
-}
-
-type SimpleMemberLookupContract {
-  contractId: ID!
-  typeOfContract: String!
-  masterInception: LocalDate
-  terminationDate: LocalDate
-  numberCoInsured: Int!
-  address: Address
-}
-
-type ResourceAccessInformation {
-  resourceId: ID!
-  restrictedBy: User!
-  restrictedByMe: Boolean!
-
-  usersGranted: [User!]!
-  usersRestricted: [User!]!
-
-  rolesGranted: [String!]!
-  rolesRestricted: [String!]!
-}
-
-type Me {
-  scopes: [String!]!
-  role: String!
-  user: User!
-  settings(filters: UserSettingsFilter): [UserSetting!]!
-  portal: String!
-  availablePortals: [String!]!
-}
-
-input UserSettingsFilter {
-  keys: [UserSettingKey!]!
-}
-
-enum UserSettingKey {
-  DARK_MODE
-  FEATURE_FLAGS
-  NUMBER_OF_MEMBER_GROUPS
-  CLAIM_COMPLEXITY_FILTER
-  CLAIM_STATES_FILTER
-  MEMBER_GROUPS_FILTER
-  MARKET_FILTER
-  NUMBER_OF_CLAIMS_FILTER
-  OUTCOME_FILTER
-  FOCUS_MARKETS
-  LANGUAGES
-}
-
-type User {
-  id: ID!
-  email: String!
-  role: String
-  fullName: String!
-  signature: String!
-  phoneNumber: String
-  latestPresence: Instant
-  latestLocation: String
-  notifications(filters: UserNotificationsFilter): [UserNotification!]!
-}
-
-input UserNotificationsFilter {
-  before: Instant
-  after: Instant
-}
-
-type UserNotification {
-  id: ID!
-  message: String!
-  createdAt: Instant!
-  url: String!
-  read: Boolean!
-  user: User!
-  from: User
-  verbose: Boolean!
-}
-
-type UserSetting {
-  key: UserSettingKey!
-  value: JSON!
-}
-
 type MutationType {
   chargeMember(
     id: ID!
@@ -305,6 +214,102 @@ type MutationType {
   sharePath(path: String!, userId: ID!): Boolean!
 
   setPortal(portal: String!): User!
+
+  userCheckIn: User!
+  userCheckOut: User!
+}
+
+type SimpleMemberLookupResult {
+  memberId: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String!
+  market: String!
+  contracts: [SimpleMemberLookupContract!]!
+}
+
+type SimpleMemberLookupContract {
+  contractId: ID!
+  typeOfContract: String!
+  masterInception: LocalDate
+  terminationDate: LocalDate
+  numberCoInsured: Int!
+  address: Address
+}
+
+type ResourceAccessInformation {
+  resourceId: ID!
+  restrictedBy: User!
+  restrictedByMe: Boolean!
+
+  usersGranted: [User!]!
+  usersRestricted: [User!]!
+
+  rolesGranted: [String!]!
+  rolesRestricted: [String!]!
+}
+
+type Me {
+  scopes: [String!]!
+  role: String!
+  user: User!
+  settings(filters: UserSettingsFilter): [UserSetting!]!
+  portal: String!
+  availablePortals: [String!]!
+}
+
+input UserSettingsFilter {
+  keys: [UserSettingKey!]!
+}
+
+enum UserSettingKey {
+  DARK_MODE
+  FEATURE_FLAGS
+  NUMBER_OF_MEMBER_GROUPS
+  CLAIM_COMPLEXITY_FILTER
+  CLAIM_STATES_FILTER
+  MEMBER_GROUPS_FILTER
+  MARKET_FILTER
+  NUMBER_OF_CLAIMS_FILTER
+  OUTCOME_FILTER
+  FOCUS_MARKETS
+  LANGUAGES
+}
+
+type User {
+  id: ID!
+  email: String!
+  role: String
+  fullName: String!
+  signature: String!
+  phoneNumber: String
+  latestPresence: Instant
+  latestLocation: String
+  notifications(filters: UserNotificationsFilter): [UserNotification!]!
+  checkedIn: Boolean!
+  markets: [String!]!
+}
+
+input UserNotificationsFilter {
+  before: Instant
+  after: Instant
+}
+
+type UserNotification {
+  id: ID!
+  message: String!
+  createdAt: Instant!
+  url: String!
+  read: Boolean!
+  user: User!
+  from: User
+  verbose: Boolean!
+}
+
+type UserSetting {
+  key: UserSettingKey!
+  value: JSON!
 }
 
 enum GrantHolderType {
@@ -848,6 +853,7 @@ type Quote {
   originatingProductId: ID
   isReadyToSign: Boolean
   allowOverrideSignFromHope: Boolean
+  signedAt: Instant
 }
 
 input CampaignFilter {

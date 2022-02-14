@@ -37,6 +37,12 @@ const ContractItemDateRange = styled.div`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
+const ContractItemCoInsured = styled.div`
+  padding-top: 0.15em;
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
+`
+
 const ContractItemTopTitle = styled.div`
   display: flex;
   flex-direction: row;
@@ -55,8 +61,16 @@ const ContractItem: React.FC<{
   address?: string
   activeFrom: string
   activeTo?: string
+  numberCoInsured?: number | null
   tags: React.ReactNode
-}> = ({ title, address, activeFrom, activeTo, tags }) => {
+}> = ({
+  title,
+  address,
+  activeFrom,
+  activeTo,
+  numberCoInsured = null,
+  tags,
+}) => {
   return (
     <ContractItemStyled>
       {tags && <ContractItemTopTitle>{tags}</ContractItemTopTitle>}
@@ -68,6 +82,12 @@ const ContractItem: React.FC<{
         {' - '}
         {activeTo ?? 'Ongoing'}
       </ContractItemDateRange>
+      {numberCoInsured && (
+        <ContractItemCoInsured>
+          Covers holder{' '}
+          {numberCoInsured > 0 ? '+ ' + numberCoInsured + ' co-insured' : ''}
+        </ContractItemCoInsured>
+      )}
     </ContractItemStyled>
   )
 }
@@ -98,6 +118,7 @@ export const ClaimContractDropdown: React.FC<
               address={contract?.currentAgreement?.address?.street}
               activeFrom={contract.masterInception}
               activeTo={contract.terminationDate}
+              numberCoInsured={contract.currentAgreement.numberCoInsured}
               tags={
                 <>
                   <Tag>

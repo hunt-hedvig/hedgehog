@@ -2,17 +2,19 @@ import { addDays, addMinutes } from 'date-fns'
 import { ExtendableContext, Middleware } from 'koa'
 import { config } from './config'
 import { LoggingMiddleware } from './request-enhancers'
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const fetch = require('node-fetch')
 
 interface Tokens {
   accessToken: string
   refreshToken: string
+  tokenSource?: 'auth' | 'gatekeeper'
 }
 
 function setTokenCookies(
   ctx: ExtendableContext,
-  { accessToken, refreshToken }: Tokens,
+  { accessToken, refreshToken, tokenSource }: Tokens,
 ) {
   ctx.cookies.set('_hvg_at', accessToken, {
     path: '/',
@@ -21,6 +23,12 @@ function setTokenCookies(
     expires: addMinutes(new Date(), 3 * 60),
   })
   ctx.cookies.set('_hvg_rt', refreshToken, {
+    path: '/',
+    httpOnly: true,
+    secure: config.useSecureCookies,
+    expires: addDays(new Date(), 30),
+  })
+  ctx.cookies.set('_hvg_src', tokenSource, {
     path: '/',
     httpOnly: true,
     secure: config.useSecureCookies,
@@ -39,7 +47,10 @@ function getTokenFromQuery(token: undefined | string | string[]) {
 export const loginCallback: Middleware<object> = async (ctx) => {
   const accessToken = getTokenFromQuery(ctx.request.query['access-token'])
   const refreshToken = getTokenFromQuery(ctx.request.query['refresh-token'])
-  setTokenCookies(ctx, { accessToken, refreshToken })
+  const tokenSource =
+    ctx.request.query['source'] === 'auth-service' ? 'auth' : 'gatekeeper'
+
+  setTokenCookies(ctx, { accessToken, refreshToken, tokenSource })
 
   ctx.redirect('/')
 }
