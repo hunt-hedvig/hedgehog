@@ -203,20 +203,6 @@ export const TemplateForm: React.FC<
             }}
           />
         </Field>
-        <MessageField
-          label="Message (EN)"
-          name="messageEn"
-          placeholder="Message goes here"
-          style={{ marginTop: '0.5rem' }}
-          defaultValue={template?.messageEn || ''}
-          rules={{
-            required: 'Cannot save an empty message',
-            pattern: {
-              value: /[^\s]/,
-              message: 'Cannot send a message without text',
-            },
-          }}
-        />
         {markets.includes(Market.Sweden) && (
           <MessageField
             label={`Message (SE)`}
@@ -279,6 +265,21 @@ export const TemplateForm: React.FC<
             }}
           />
         )}
+
+        <MessageField
+          label="Message (EN)"
+          name="messageEn"
+          placeholder="Message goes here"
+          style={{ marginTop: '0.5rem' }}
+          defaultValue={template?.messageEn || ''}
+          rules={{
+            required: 'Cannot save an empty message',
+            pattern: {
+              value: /[^\s]/,
+              message: 'Cannot send a message without text',
+            },
+          }}
+        />
 
         <Field>
           <Checkbox
