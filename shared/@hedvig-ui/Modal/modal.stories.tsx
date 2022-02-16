@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Modal, ModalProps } from '@hedvig-ui'
-import { boolean, number, select, text } from '@storybook/addon-knobs'
+import { boolean, select, text } from '@storybook/addon-knobs'
 import React from 'react'
 
 const ConfirmButtons = styled.div`
@@ -14,12 +14,10 @@ export default {
   component: Modal,
 }
 
-const positions: ReadonlyArray<NonNullable<ModalProps['position']>> = [
-  'top',
-  'center',
-  'bottom',
-]
-const sides: ReadonlyArray<NonNullable<ModalProps['side']>> = [
+const positions: ReadonlyArray<NonNullable<ModalProps['options']['position']>> =
+  ['top', 'center', 'bottom']
+
+const sides: ReadonlyArray<NonNullable<ModalProps['options']['side']>> = [
   'left',
   'center',
   'right',
@@ -33,13 +31,11 @@ export const StandardModal = () => {
       <Button onClick={() => setIsModal(true)}>Open Modal</Button>
       {isModal && (
         <Modal
-          withoutHeader={!boolean('With header', true)}
-          disableClickOutside={!boolean('With click outside', true)}
-          height={`${number('Height of modal', 250)}px`}
-          width={`${number('Width of modal', 350)}px`}
-          position={select('Position', positions, 'center')}
-          side={select('Side', sides, 'center')}
-          title={text('Title content', 'Modal title')}
+          options={{
+            disableClickOutside: !boolean('With click outside', true),
+            position: select('Position', positions, 'center'),
+            side: select('Side', sides, 'center'),
+          }}
           onClose={() => setIsModal(false)}
         >
           {text('Body content', 'Modal body')}
@@ -59,12 +55,11 @@ export const ConfirmModal = () => {
       </Button>
       {isModal && (
         <Modal
-          withoutHeader={!boolean('With header', false)}
-          disableClickOutside={!boolean('With click outside', false)}
-          height={`${number('Height of modal', 110)}px`}
-          width={`${number('Width of modal', 400)}px`}
-          position={select('Position', positions, 'top')}
-          side={select('Side', sides, 'center')}
+          options={{
+            disableClickOutside: !boolean('With click outside', false),
+            position: select('Position', positions, 'top'),
+            side: select('Side', sides, 'center'),
+          }}
           onClose={() => setIsModal(false)}
         >
           <div>

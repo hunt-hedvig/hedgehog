@@ -1,10 +1,16 @@
 import styled from '@emotion/styled'
-import { Button, Input, Modal } from '@hedvig-ui'
+import { Button, Input, Modal, ThirdLevelHeadline } from '@hedvig-ui'
 import { ClaimFilterTemplate } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
 import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage'
 import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { ClaimTemplateFilters } from 'portals/hope/features/claims/claim-templates/components/ClaimTemplateFilters'
+
+const StyledModal = styled(Modal)`
+  padding: 1.5rem;
+
+  width: 700px;
+`
 
 const ClaimFilters = styled(ClaimTemplateFilters)`
   display: grid;
@@ -15,7 +21,6 @@ const ClaimFilters = styled(ClaimTemplateFilters)`
 
 const Body = styled.div`
   height: 100%;
-  padding: 1em;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -58,12 +63,8 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
   }
 
   return (
-    <Modal
-      onClose={onClose}
-      width="700px"
-      height="500px"
-      title={name ? name : 'Create claim filter'}
-    >
+    <StyledModal onClose={onClose} options={{}}>
+      <ThirdLevelHeadline>Create claim filter</ThirdLevelHeadline>
       <Body>
         <Input
           placeholder="Template name"
@@ -79,6 +80,6 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
           {!editableTemplate ? 'Create' : 'Save'}
         </Button>
       </Body>
-    </Modal>
+    </StyledModal>
   )
 }

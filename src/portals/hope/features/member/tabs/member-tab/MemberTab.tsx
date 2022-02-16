@@ -29,6 +29,15 @@ import {
 import { FraudulentStatusEdit } from 'portals/hope/features/member/tabs/member-tab/FraudulentStatus'
 import gql from 'graphql-tag'
 
+const StyledModal = styled(Modal)`
+  padding: 1rem;
+
+  width: 800px;
+  height: 950px;
+
+  overflow: auto;
+`
+
 const ButtonWrapper = styled.div`
   width: 100%;
   margin-top: 1em;
@@ -248,13 +257,7 @@ export const MemberTab: React.FC<{
         </Button>
       </ButtonWrapper>
       {modalOpen && (
-        <Modal
-          onClose={handleClose}
-          title="Edit Member"
-          width="800px"
-          height="950px"
-          style={{ overflowY: 'auto' }}
-        >
+        <StyledModal onClose={handleClose} options={{}}>
           <FormProvider {...form}>
             <Form
               onSubmit={handleSubmit}
@@ -292,7 +295,7 @@ export const MemberTab: React.FC<{
               </ButtonsGroup>
             </Form>
           </FormProvider>
-        </Modal>
+        </StyledModal>
       )}
     </FadeIn>
   ) : (

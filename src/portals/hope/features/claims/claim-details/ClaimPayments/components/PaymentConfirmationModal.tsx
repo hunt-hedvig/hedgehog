@@ -4,6 +4,11 @@ import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { Market } from 'portals/hope/features/config/constants'
 import React, { useState } from 'react'
 
+const StyledModal = styled(Modal)`
+  padding: 1rem;
+  width: 500px;
+`
+
 const Explanation = styled(Paragraph)`
   margin-top: 2em;
   font-size: 0.9em;
@@ -30,7 +35,7 @@ export const PaymentConfirmationModal: React.FC<
   }
 
   return (
-    <Modal onClose={onClose} title="Confirm payout" width="500px">
+    <StyledModal options={{}} onClose={onClose}>
       {!identified && market === Market.Norway && (
         <Explanation>
           ⚠️ Please note that this member is not identified
@@ -70,6 +75,6 @@ export const PaymentConfirmationModal: React.FC<
           Cancel
         </Button>
       </ButtonsGroup>
-    </Modal>
+    </StyledModal>
   )
 }

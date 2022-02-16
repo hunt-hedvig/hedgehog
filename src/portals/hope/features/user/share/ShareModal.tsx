@@ -97,10 +97,9 @@ export const ShareModal: React.FC<{
 
   return (
     <Modal
-      width="500px"
-      withoutHeader
       onClose={onClose}
-      style={{ padding: '1rem' }}
+      options={{}}
+      style={{ padding: '1.5rem', width: 500 }}
     >
       <div>
         <ThirdLevelHeadline>Share page</ThirdLevelHeadline>

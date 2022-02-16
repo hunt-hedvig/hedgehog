@@ -3,6 +3,7 @@ import {
   Checkbox,
   Flex,
   JsonSchemaForm,
+  Spinner,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { InsuranceType } from 'portals/hope/features/config/constants'
@@ -92,7 +93,11 @@ export const CreateQuoteForm: React.FC<{
   }
 
   if (loading) {
-    return null
+    return (
+      <Flex justify="center" align="center">
+        <Spinner />
+      </Flex>
+    )
   }
 
   return (
