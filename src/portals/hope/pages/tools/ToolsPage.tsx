@@ -51,6 +51,17 @@ const StagingTools: React.FC = () => {
           <Icon>✍️</Icon>
           Unsign member
         </Card>
+        <Card
+          to="/tools/impersonate-member"
+          {...register('ImpersonateMember', {
+            resolve: () => {
+              history.push('/tools/impersonate-member')
+            },
+          })}
+        >
+          <Icon>🕵️</Icon>
+          Impersonate member
+        </Card>
       </CardsWrapper>
     </>
   )
