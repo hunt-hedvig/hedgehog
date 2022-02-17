@@ -2,6 +2,7 @@ import { StandaloneMessage } from '@hedvig-ui'
 import React, { lazy, Suspense, useEffect, useState } from 'react'
 import TagManager from 'react-gtm-module'
 import { Redirect, Route, Switch, useLocation } from 'react-router'
+import ImpersonateMemberPage from './tools/ImpersonateMemberPage'
 
 export type Page<T = void> = React.FC<T>
 
@@ -110,6 +111,10 @@ export const Routes: React.FC = () => {
         <Route
           path="/tools/template-messages"
           component={TemplateMessagesPage}
+        />
+        <Route
+          path="/tools/impersonate-member"
+          component={ImpersonateMemberPage}
         />
         <Route
           component={() => (
