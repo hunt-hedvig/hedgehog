@@ -50,7 +50,7 @@ interface TemplateFormProps {
   isCreating?: boolean
   onClose?: () => void
   isModal?: boolean
-  defaultMarket?: Market
+  defaultMarket?: Language
 }
 
 export const TemplateForm: React.FC<
@@ -64,7 +64,7 @@ export const TemplateForm: React.FC<
   defaultMarket,
   ...props
 }) => {
-  const [markets, setMarkets] = useState<Market[]>([])
+  const [markets, setMarkets] = useState<Language[]>([])
   const [expiryDate, setExpiryDate] = useState<string | null>(
     template?.expirationDate || null,
   )
@@ -80,8 +80,8 @@ export const TemplateForm: React.FC<
     setMarkets(
       defaultMarket
         ? [defaultMarket]
-        : template?.messages.map((msg) => msg.language as Market) || [
-            Market.Sweden,
+        : template?.messages.map((msg) => msg.language as Language) || [
+            Language[Market.Sweden],
           ],
     )
   }, [template])
@@ -102,7 +102,7 @@ export const TemplateForm: React.FC<
       templates.some(
         (template) => template.title === values.title,
         template?.messages.some((msg) =>
-          markets.includes(msg.language as Market),
+          markets.includes(msg.language as Language),
         ),
       )
     ) {
@@ -161,13 +161,13 @@ export const TemplateForm: React.FC<
             style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}
             name="market"
             label={<span>Sweden 🇸🇪</span>}
-            checked={markets.includes(Market.Sweden)}
+            checked={markets.includes(Language[Market.Sweden])}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setMarkets((prev) => [...prev, Market.Sweden])
+                setMarkets((prev) => [...prev, Language[Market.Sweden]])
               } else {
                 setMarkets((prev) =>
-                  prev.filter((market) => market !== Market.Sweden),
+                  prev.filter((market) => market !== Language[Market.Sweden]),
                 )
                 form.unregister(`message-${Market.Sweden}`)
               }
@@ -177,13 +177,13 @@ export const TemplateForm: React.FC<
             style={{ marginBottom: '0.5rem' }}
             name="market"
             label={<span>Norway 🇳🇴</span>}
-            checked={markets.includes(Market.Norway)}
+            checked={markets.includes(Language[Market.Norway])}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setMarkets((prev) => [...prev, Market.Norway])
+                setMarkets((prev) => [...prev, Language[Market.Norway]])
               } else {
                 setMarkets((prev) =>
-                  prev.filter((market) => market !== Market.Norway),
+                  prev.filter((market) => market !== Language[Market.Norway]),
                 )
                 form.unregister(`message-${Market.Norway}`)
               }
@@ -192,20 +192,20 @@ export const TemplateForm: React.FC<
           <Checkbox
             name="market"
             label={<span>Denmark 🇩🇰</span>}
-            checked={markets.includes(Market.Denmark)}
+            checked={markets.includes(Language[Market.Denmark])}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setMarkets((prev) => [...prev, Market.Denmark])
+                setMarkets((prev) => [...prev, Language[Market.Denmark]])
               } else {
                 setMarkets((prev) =>
-                  prev.filter((market) => market !== Market.Denmark),
+                  prev.filter((market) => market !== Language[Market.Denmark]),
                 )
                 form.unregister(`message-${Market.Denmark}`)
               }
             }}
           />
         </Field>
-        {markets.includes(Market.Sweden) && (
+        {markets.includes(Language[Market.Sweden]) && (
           <MessageField
             label={`Message (SE)`}
             name={`message-${Market.Sweden}`}
@@ -226,7 +226,7 @@ export const TemplateForm: React.FC<
           />
         )}
 
-        {markets.includes(Market.Denmark) && (
+        {markets.includes(Language[Market.Denmark]) && (
           <MessageField
             label={`Message (DK)`}
             name={`message-${Market.Denmark}`}
@@ -247,7 +247,7 @@ export const TemplateForm: React.FC<
           />
         )}
 
-        {markets.includes(Market.Norway) && (
+        {markets.includes(Language[Market.Norway]) && (
           <MessageField
             label={`Message (NO)`}
             name={`message-${Market.Norway}`}

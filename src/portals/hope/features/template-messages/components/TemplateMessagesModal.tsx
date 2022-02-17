@@ -237,7 +237,7 @@ export const TemplateMessagesModal: React.FC<{
       >
         <SecondLevelHeadline>Create Template</SecondLevelHeadline>
         <TemplateForm
-          defaultMarket={currentMarket}
+          defaultMarket={Language[currentMarket]}
           isModal
           isCreating={isCreating}
           onSubmit={submitHandler}
