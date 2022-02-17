@@ -316,7 +316,7 @@ type MutationType {
 
   upsertTemplate(input: UpsertTemplateInput!): Template!
   removeTemplate(id: ID!): Boolean!
-  pinTemplate(id: ID!): [Template!]!
+  togglePinStatus(id: ID!): [Template!]!
 }
 
 enum GrantHolderType {

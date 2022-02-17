@@ -7,8 +7,8 @@ import {
   useGetTemplateMessagesQuery,
   Template,
   useUpsertTemplateMessageMutation,
-  usePinTemplateMessageMutation,
   useRemoveTemplateMessageMutation,
+  useTogglePinStatusMutation,
 } from 'types/generated/graphql'
 
 export enum Language {
@@ -56,7 +56,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const templatesQuery = useGetTemplateMessagesQuery()
   const [upsertTemplateMessage, { loading }] =
     useUpsertTemplateMessageMutation()
-  const [pinTemplateMessage] = usePinTemplateMessageMutation()
+  const [pinTemplateMessage] = useTogglePinStatusMutation()
 
   const [removeTemplateMessage] = useRemoveTemplateMessageMutation()
 

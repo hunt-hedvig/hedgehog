@@ -1,5 +1,5 @@
-mutation PinTemplateMessage($templateId: ID!) {
-  pinTemplate(id: $templateId) {
+mutation TogglePinStatus($templateId: ID!) {
+  togglePinStatus(id: $templateId) {
     id
     pinned
   }
