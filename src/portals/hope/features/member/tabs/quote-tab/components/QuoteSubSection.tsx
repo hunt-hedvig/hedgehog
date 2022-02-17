@@ -40,11 +40,7 @@ const CreateQuoteModal: React.FC<{
   insuranceType: InsuranceType
 }> = ({ onClose, memberId, insuranceType }) => {
   return (
-    <Modal
-      onClose={onClose}
-      style={{ width: '50rem', padding: '1rem' }}
-      options={{}}
-    >
+    <Modal onClose={onClose} style={{ width: '50rem', padding: '1rem' }}>
       <CreateQuoteWrapper>
         <CreateQuoteForm
           memberId={memberId}

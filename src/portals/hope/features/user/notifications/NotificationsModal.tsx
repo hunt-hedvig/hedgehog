@@ -1,12 +1,17 @@
 import styled from '@emotion/styled'
-import { Button, Flex, Modal, ThirdLevelHeadline } from '@hedvig-ui'
+import {
+  Button,
+  Flex,
+  Modal as DefaultModal,
+  ThirdLevelHeadline,
+} from '@hedvig-ui'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { useMarkAllNotificationsAsReadMutation } from 'types/generated/graphql'
 import { useMe } from '../hooks/use-me'
 import { NotificationItem } from './components/NotificationItem'
 
-const StyledModal = styled(Modal)`
+const Modal = styled(DefaultModal)`
   max-height: calc(80vh - 6.5rem);
 
   overflow: hidden;
@@ -44,20 +49,13 @@ export const NotificationsModal: React.FC<{
   }, [])
 
   return (
-    <StyledModal
+    <Modal
       onClose={onClose}
       options={{
         side: 'right',
         position: 'top',
         noDimBackground: true,
       }}
-      // withoutHeader={true}
-      // width="400px"
-      // height="80vh"
-      // side="right"
-      // position="top"
-      // padding="7rem 3rem 0rem"
-      // dimBackground={false}
     >
       <Flex
         justify="space-between"
@@ -81,6 +79,6 @@ export const NotificationsModal: React.FC<{
           <NotificationItem key={notification.id} notification={notification} />
         ))}
       </NotificationContainer>
-    </StyledModal>
+    </Modal>
   )
 }

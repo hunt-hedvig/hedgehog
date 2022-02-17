@@ -53,7 +53,7 @@ const Container = styled.div`
   background: ${({ theme }) => theme.background};
 `
 
-interface ModalAdditionalOptions {
+export interface ModalAdditionalOptions {
   disableClickOutside?: boolean
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
@@ -62,25 +62,26 @@ interface ModalAdditionalOptions {
 
 export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   onClose: () => void
-  options: ModalAdditionalOptions
+  options?: ModalAdditionalOptions
 }
 
 export const Modal: React.FC<ModalProps> = ({
   onClose,
   children,
-  options: { disableClickOutside, ...modalOptions },
+  options,
   ...props
 }) => {
   const modalRef = useRef<HTMLDivElement>(null)
 
-  const clickOutsideCloseHandler = () => !disableClickOutside && onClose()
+  const clickOutsideCloseHandler = () =>
+    !options?.disableClickOutside && onClose()
 
   useClickOutside(modalRef, clickOutsideCloseHandler)
   useKeyIsPressed(Keys.Escape, () => onClose())
 
   return (
     <Portal>
-      <Wrapper {...modalOptions}>
+      <Wrapper {...options}>
         <Container ref={modalRef} {...props}>
           {children}
         </Container>

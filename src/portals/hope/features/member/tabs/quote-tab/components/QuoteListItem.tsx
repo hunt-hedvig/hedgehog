@@ -304,7 +304,6 @@ export const QuoteListItem: React.FC<{
           </Button>
           {showDebug && (
             <Modal
-              options={{}}
               onClose={() => setShowDebug(false)}
               style={{ padding: '1rem' }}
             >

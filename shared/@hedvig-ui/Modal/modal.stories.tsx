@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, Modal, ModalProps } from '@hedvig-ui'
+import { Button, Modal, ModalAdditionalOptions } from '@hedvig-ui'
 import { boolean, select, text } from '@storybook/addon-knobs'
 import React from 'react'
 
@@ -14,10 +14,11 @@ export default {
   component: Modal,
 }
 
-const positions: ReadonlyArray<NonNullable<ModalProps['options']['position']>> =
-  ['top', 'center', 'bottom']
+const positions: ReadonlyArray<
+  NonNullable<ModalAdditionalOptions['position']>
+> = ['top', 'center', 'bottom']
 
-const sides: ReadonlyArray<NonNullable<ModalProps['options']['side']>> = [
+const sides: ReadonlyArray<NonNullable<ModalAdditionalOptions['side']>> = [
   'left',
   'center',
   'right',

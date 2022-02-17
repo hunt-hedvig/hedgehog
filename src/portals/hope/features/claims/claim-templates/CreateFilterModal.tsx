@@ -6,12 +6,6 @@ import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { ClaimTemplateFilters } from 'portals/hope/features/claims/claim-templates/components/ClaimTemplateFilters'
 
-const StyledModal = styled(Modal)`
-  padding: 1.5rem;
-
-  width: 700px;
-`
-
 const ClaimFilters = styled(ClaimTemplateFilters)`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -63,7 +57,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
   }
 
   return (
-    <StyledModal onClose={onClose} options={{}}>
+    <Modal onClose={onClose} style={{ padding: '1.5rem', width: 700 }}>
       <ThirdLevelHeadline>Create claim filter</ThirdLevelHeadline>
       <Body>
         <Input
@@ -80,6 +74,6 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
           {!editableTemplate ? 'Create' : 'Save'}
         </Button>
       </Body>
-    </StyledModal>
+    </Modal>
   )
 }

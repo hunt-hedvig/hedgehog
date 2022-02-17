@@ -13,11 +13,6 @@ import React, {
   useState,
 } from 'react'
 
-const StyledModal = styled(Modal)`
-  width: 400px;
-  padding: 1rem;
-`
-
 const ConfirmButtons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -49,7 +44,11 @@ export const ConfirmDialogComponent: React.FC<{
   }, [isEscapePressed])
 
   return (
-    <StyledModal
+    <Modal
+      style={{
+        width: 400,
+        padding: '1rem',
+      }}
       options={{
         disableClickOutside: true,
         position: 'top',
@@ -77,7 +76,7 @@ export const ConfirmDialogComponent: React.FC<{
           </Button>
         </ConfirmButtons>
       </div>
-    </StyledModal>
+    </Modal>
   )
 }
 
