@@ -61,16 +61,20 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [removeTemplateMessage] = useRemoveTemplateMessageMutation()
 
   const createHandler = (template: Template) => {
+    const newTemplate = {
+      id: template.id,
+      title: template.title,
+      expirationDate: template.expirationDate,
+      messages: template.messages.map((msg) => ({
+        ...msg,
+        language: Language[msg.language as Market],
+      })),
+    }
+
     toast.promise(
       upsertTemplateMessage({
         variables: {
-          input: {
-            ...template,
-            messages: template.messages.map((msg) => ({
-              ...msg,
-              language: Language[msg.language as Market],
-            })),
-          },
+          input: newTemplate,
         },
         refetchQueries: () => ['GetTemplateMessages'],
       }),
@@ -83,16 +87,20 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   }
 
   const editHandler = (newTemplate: Template) => {
+    const template = {
+      id: newTemplate.id,
+      title: newTemplate.title,
+      expirationDate: newTemplate.expirationDate,
+      messages: newTemplate.messages.map((msg) => ({
+        ...msg,
+        language: Language[msg.language as Market],
+      })),
+    }
+
     toast.promise(
       upsertTemplateMessage({
         variables: {
-          input: {
-            ...newTemplate,
-            messages: newTemplate.messages.map((msg) => ({
-              ...msg,
-              language: Language[msg.language as Market],
-            })),
-          },
+          input: template,
         },
         refetchQueries: () => ['GetTemplateMessages'],
       }),
