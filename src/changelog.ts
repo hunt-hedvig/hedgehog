@@ -12,6 +12,11 @@ export interface Change {
 
 export const changelog: ReadonlyArray<Change> = [
   {
+    date: '2022-02-16',
+    change: 'Added Impersonation as a staging-specific tool',
+    authorGithubHandle: 'hedvigoscar',
+  },
+  {
     date: '2022-01-25',
     change:
       'Added drafts to claims notes. Also added sync of notes between two tabs!',
