@@ -4,13 +4,11 @@ import { FadeIn, MainHeadline, Flex, Button, Tabs } from '@hedvig-ui'
 import { CreateTemplate } from '../../features/template-messages/components/CreateTemplate'
 import { SearchTemplate } from '../../features/template-messages/components/SearchTemplate'
 import { TemplateView } from '../../features/template-messages/components/TemplateView'
-import {
-  TemplateMessages,
-  useTemplateMessages,
-} from 'portals/hope/features/template-messages/use-template-messages'
+import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
 import { Market } from '../../features/config/constants'
 import { Page } from 'portals/sos/pages/routes'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { Template as TemplateMessages } from 'types/generated/graphql'
 
 const Container = styled(FadeIn)`
   flex: 1;
@@ -120,9 +118,10 @@ const TemplateMessagesPage: Page = () => {
         <SearchTemplate
           selected={selectedTemplate}
           onSelect={setSelectedTemplate}
-          templates={templates?.filter((template) =>
-            template.market.includes(currentMarket),
-          )}
+          // templates={templates?.filter((template) =>
+          //   template.market.includes(currentMarket),
+          // )}
+          templates={templates}
         />
         {selectedTemplate && (
           <TemplateView

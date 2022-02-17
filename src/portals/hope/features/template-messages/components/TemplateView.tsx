@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { Trash } from 'react-bootstrap-icons'
 import { TemplateForm } from './TemplateForm'
-import { TemplateMessages } from '../use-template-messages'
+import { Template as TemplateMessages } from 'types/generated/graphql'
 
 const Content = styled.div`
   position: relative;

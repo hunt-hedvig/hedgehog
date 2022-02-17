@@ -3,8 +3,8 @@ import styled from '@emotion/styled'
 import { Input } from '@hedvig-ui'
 import { SearchIcon as InputIcon } from '../../members-search/styles'
 import { FileText } from 'react-bootstrap-icons'
-import { TemplateMessages } from '../use-template-messages'
 import { EmptyContainer } from './TemplateMessagesModal'
+import { Template } from 'types/generated/graphql'
 
 const Container = styled.div`
   display: flex;
@@ -53,9 +53,9 @@ const Item = styled.div<{ selected: boolean }>`
 `
 
 export const SearchTemplate: React.FC<{
-  selected: TemplateMessages | null
-  templates: TemplateMessages[]
-  onSelect: (template: TemplateMessages | null) => void
+  selected: Template | null
+  templates: Template[]
+  onSelect: (template: Template | null) => void
 }> = ({ onSelect, selected, templates }) => {
   const [query, setQuery] = useState('')
 
@@ -68,13 +68,13 @@ export const SearchTemplate: React.FC<{
 
   const filteredTemplates = templates
     ?.filter((template) =>
-      query ? template.name.toLowerCase().includes(query.toLowerCase()) : true,
+      query ? template.title.toLowerCase().includes(query.toLowerCase()) : true,
     )
     .sort((a, b) => {
-      if (a.name < b.name) {
+      if (a.title < b.title) {
         return -1
       }
-      if (a.name > b.name) {
+      if (a.title > b.title) {
         return 1
       }
       return 0
@@ -100,7 +100,7 @@ export const SearchTemplate: React.FC<{
             <TemplateItem
               key={template.id}
               id={template.id}
-              name={template.name}
+              name={template.title}
               onSelect={selectHandler}
               selected={selected?.id === template.id}
             />

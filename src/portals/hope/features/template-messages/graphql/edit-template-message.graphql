@@ -1,0 +1,23 @@
+mutation PinTemplateMessage($templateId: ID!) {
+  pinTemplate(id: $templateId) {
+    id
+    pinned
+  }
+}
+
+mutation UpsertTemplateMessage($input: UpsertTemplateInput!) {
+  upsertTemplate(input: $input) {
+    id
+    title
+    messages {
+      language
+      message
+    }
+    expirationDate
+    pinned
+  }
+}
+
+mutation RemoveTemplateMessage($templateId: ID!) {
+  removeTemplate(id: $templateId)
+}

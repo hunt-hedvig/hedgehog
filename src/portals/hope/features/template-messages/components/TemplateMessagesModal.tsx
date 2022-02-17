@@ -11,8 +11,9 @@ import {
   PinAngleFill,
   Trash,
 } from 'react-bootstrap-icons'
-import { TemplateMessages, useTemplateMessages } from '../use-template-messages'
+import { useTemplateMessages } from '../use-template-messages'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+import { Template as TemplateMessages } from 'types/generated/graphql'
 
 const show = keyframes`
   from {
@@ -148,14 +149,14 @@ export const TemplateMessagesModal: React.FC<{
 
     if (!isEnDisplay) {
       const message = selectedTemplate.messages.filter(
-        (msg) => msg.market === currentMarket,
-      )[0].text
+        (msg) => msg.language === currentMarket,
+      )[0].message
 
       select(message)
       return
     }
 
-    select(selectedTemplate.messageEn)
+    // select(selectedTemplate.messageEn)
   }
 
   const deleteHandler = (id: string) => {
@@ -201,10 +202,10 @@ export const TemplateMessagesModal: React.FC<{
     templates
       .filter((template) =>
         query
-          ? template.name.toLowerCase().includes(query.toLowerCase())
+          ? template.title.toLowerCase().includes(query.toLowerCase())
           : true,
       )
-      .filter((template) => template.market.includes(currentMarket))
+      // .filter((template) => template.market.includes(currentMarket))
       .filter((template) => (isPinnedTab ? template.pinned : true))
 
   if (isCreating) {
@@ -305,13 +306,14 @@ export const TemplateMessagesModal: React.FC<{
             <TemplateItem
               key={template.id}
               id={template.id}
-              name={template.name}
+              name={template.title}
               text={
-                isEnDisplay
-                  ? template.messageEn
-                  : template.messages.find(
-                      (msg) => msg.market === currentMarket,
-                    )?.text || ''
+                ''
+                // isEnDisplay
+                //   ? template.messageEn
+                //   : template.messages.find(
+                //       (msg) => msg.market === currentMarket,
+                //     )?.text || ''
               }
               pinned={template.pinned || false}
               onSelect={selectHandler}

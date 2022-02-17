@@ -10,12 +10,10 @@ import {
   GetQuestionsGroupsDocument,
   useMarkQuestionAsResolvedMutation,
   useSendMessageMutation,
+  Template as TemplateMessages,
 } from 'types/generated/graphql'
 import { FileText } from 'react-bootstrap-icons'
-import {
-  TemplateMessages,
-  useTemplateMessages,
-} from 'portals/hope/features/template-messages/use-template-messages'
+import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
@@ -161,7 +159,7 @@ export const ConversationChat: React.FC<{
   const [proposedTemplate, setProposedTemplate] =
     useState<TemplateMessages | null>(null)
 
-  const { show, selected, templates, market } = useTemplateMessages()
+  const { show, selected, templates } = useTemplateMessages()
 
   useEffect(() => {
     if (selected) {
@@ -172,18 +170,17 @@ export const ConversationChat: React.FC<{
   const getSearchTemplate = (searchText: string) =>
     templates.find(
       (template) =>
-        template.market.includes(market) &&
-        template.name.substring(0, searchText.length).toLowerCase() ===
-          searchText.toLowerCase(),
+        template.title.substring(0, searchText.length).toLowerCase() ===
+        searchText.toLowerCase(),
     ) || null
 
   const getTemplateName = (
     searchTemplate: TemplateMessages | null,
     searchText: string,
   ) =>
-    searchTemplate?.name
+    searchTemplate?.title
       .split('')
-      .map((letter, index) => {
+      .map((letter: string, index: number) => {
         if (searchText[index] === letter.toUpperCase()) {
           return letter.toUpperCase()
         }
@@ -205,7 +202,7 @@ export const ConversationChat: React.FC<{
       const templateName = getTemplateName(searchTemplate, searchText)
 
       setProposedTemplate(
-        searchTemplate ? { ...searchTemplate, name: templateName } : null,
+        searchTemplate ? { ...searchTemplate, title: templateName } : null,
       )
       setMessage(e.currentTarget.value)
 
@@ -234,10 +231,10 @@ export const ConversationChat: React.FC<{
       const searchText = message.slice(1)
 
       const templatesIds = templates
-        .filter((template) => template.market.includes(market))
+        // .filter((template) => template.market.includes(market))
         .filter(
           (template) =>
-            template.name.substring(0, searchText.length).toLowerCase() ===
+            template.title.substring(0, searchText.length).toLowerCase() ===
             searchText.toLowerCase(),
         )
         .map((template) => template.id)
@@ -257,7 +254,7 @@ export const ConversationChat: React.FC<{
         const templateName = getTemplateName(template, searchText)
 
         setProposedTemplate(
-          template ? { ...template, name: templateName } : null,
+          template ? { ...template, title: templateName } : null,
         )
       }
 
@@ -271,7 +268,7 @@ export const ConversationChat: React.FC<{
         const templateName = getTemplateName(template, searchText)
 
         setProposedTemplate(
-          template ? { ...template, name: templateName } : null,
+          template ? { ...template, title: templateName } : null,
         )
       }
     }
@@ -283,18 +280,18 @@ export const ConversationChat: React.FC<{
       setHinting(false)
     }
 
-    if (!isMetaKey(e) && isPressing(e, Keys.Enter) && hinting) {
-      e.preventDefault()
+    // if (!isMetaKey(e) && isPressing(e, Keys.Enter) && hinting) {
+    //   e.preventDefault()
 
-      const newMessage = proposedTemplate?.messages.find(
-        (msg) => msg.market === market,
-      )?.text
+    //   const newMessage = proposedTemplate?.messages.find(
+    //     (msg) => msg.market === market,
+    //   )?.text
 
-      setMessage(newMessage || '')
+    //   setMessage(newMessage || '')
 
-      setProposedTemplate(null)
-      setHinting(false)
-    }
+    //   setProposedTemplate(null)
+    //   setHinting(false)
+    // }
 
     if (
       isMetaKey(e) &&
@@ -359,8 +356,8 @@ export const ConversationChat: React.FC<{
           <HintContainer>
             {hinting ? (
               <HintText>
-                {proposedTemplate?.name
-                  ? `/${proposedTemplate?.name}`
+                {proposedTemplate?.title
+                  ? `/${proposedTemplate?.title}`
                   : message}
               </HintText>
             ) : (

@@ -1,29 +1,28 @@
 import React, { createContext, useContext, useState } from 'react'
-import toast from 'react-hot-toast'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+// import toast from 'react-hot-toast'
+// import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { TemplateMessagesModal } from './components/TemplateMessagesModal'
 import { Market } from '../config/constants'
+import { useGetTemplateMessagesQuery, Template } from 'types/generated/graphql'
 
-export interface TemplateMessage {
-  market: Market
-  text: string
-}
+// export interface TemplateMessage {
+//   language: string
+//   message: string
+// }
 
-export interface TemplateMessages {
-  name: string
-  id: string
-  market: Market[]
-  messages: TemplateMessage[]
-  messageEn: string
-  expiryDate: string | null
-  pinned?: boolean
-}
+// export interface TemplateMessages {
+//   id: string
+//   title: string
+//   messages: TemplateMessage[]
+//   expirationDate: string
+//   pinned: boolean
+// }
 
 interface TemplateMessagesContextProps {
-  templates: TemplateMessages[]
+  templates: Template[]
   show: () => void
-  create: (template: TemplateMessages) => void
-  edit: (template: TemplateMessages) => void
+  create: (template: Template) => void
+  edit: (template: Template) => void
   delete: (id: string) => void
   pin: (id: string) => void
   select: (text: string) => void
@@ -51,60 +50,54 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [market, setMarket] = useState<Market>(Market.Sweden)
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
-  const [templates, setTemplates] = useInsecurePersistentState<
-    TemplateMessages[]
-  >('messages:templates', [])
 
-  const createHandler = (template: TemplateMessages) => {
-    setTemplates((prev) => [...prev, template])
+  // const [templates, setTemplates] = useInsecurePersistentState<
+  //   TemplateMessages[]
+  // >('messages:templates', [])
 
-    toast.success(`Template ${template.name} successfully created`)
+  const templatesQuery = useGetTemplateMessagesQuery()
+
+  const createHandler = (template: Template) => {
+    console.log(template)
+    // setTemplates((prev) => [...prev, template])
+    // toast.success(`Template ${template.name} successfully created`)
   }
 
-  const editHandler = (newTemplate: TemplateMessages) => {
-    setTemplates((prev) => [
-      ...prev.filter((template) => template.id !== newTemplate.id),
-      newTemplate,
-    ])
-
-    toast.success('Template updated')
+  const editHandler = (newTemplate: Template) => {
+    console.log(newTemplate)
+    // setTemplates((prev) => [
+    //   ...prev.filter((template) => template.id !== newTemplate.id),
+    //   newTemplate,
+    // ])
+    // toast.success('Template updated')
   }
 
   const deleteHandler = (templateId: string) => {
-    const newTemplates = templates.filter(
-      (template) => template.id !== templateId,
-    )
-    setTemplates(newTemplates)
-
-    toast.success('Template deleted')
+    console.log(templateId)
+    // const newTemplates = templates.filter(
+    //   (template) => template.id !== templateId,
+    // )
+    // setTemplates(newTemplates)
+    // toast.success('Template deleted')
   }
 
   const pinHandler = (templateId: string) => {
-    const template = templates.find((template) => template.id === templateId)
-
-    setTemplates((prev) =>
-      prev.map((template) =>
-        template.id !== templateId
-          ? template
-          : { ...template, pinned: !template.pinned },
-      ),
-    )
-
-    toast.success(`Template ${template?.pinned ? 'unpinned' : 'pinned'}`)
+    console.log(templateId)
+    // const template = templates.find((template) => template.id === templateId)
+    // setTemplates((prev) =>
+    //   prev.map((template) =>
+    //     template.id !== templateId
+    //       ? template
+    //       : { ...template, pinned: !template.pinned },
+    //   ),
+    // )
+    // toast.success(`Template ${template?.pinned ? 'unpinned' : 'pinned'}`)
   }
 
   return (
     <TemplateMessagesContext.Provider
       value={{
-        templates: templates.sort((a, b) => {
-          if (a.name.toLowerCase() < b.name.toLowerCase()) {
-            return -1
-          }
-          if (a.name.toLowerCase() > b.name.toLowerCase()) {
-            return 1
-          }
-          return 0
-        }),
+        templates: templatesQuery.data?.templates || [],
         show: () => setShowTemplateMessages(true),
         create: createHandler,
         edit: editHandler,

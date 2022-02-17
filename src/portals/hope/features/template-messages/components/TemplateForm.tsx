@@ -10,17 +10,14 @@ import {
   FormTextArea,
   FormInput,
 } from '@hedvig-ui'
-import {
-  TemplateMessage,
-  TemplateMessages,
-  useTemplateMessages,
-} from '../use-template-messages'
+import { useTemplateMessages } from '../use-template-messages'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import formatDate from 'date-fns/format'
 import { Market } from '../../config/constants'
 import toast from 'react-hot-toast'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { Template, TemplateMessage } from 'types/generated/graphql'
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
@@ -48,8 +45,8 @@ const Checkbox = styled(DefaultCheckbox)`
 `
 
 interface TemplateFormProps {
-  template?: TemplateMessages
-  onSubmit: (template: TemplateMessages) => void
+  template?: Template
+  onSubmit: (template: Template) => void
   isCreating?: boolean
   onClose?: () => void
   isModal?: boolean
@@ -69,7 +66,7 @@ export const TemplateForm: React.FC<
 }) => {
   const [markets, setMarkets] = useState<Market[]>([])
   const [expiryDate, setExpiryDate] = useState<string | null>(
-    template?.expiryDate || null,
+    template?.expirationDate || null,
   )
 
   const { templates } = useTemplateMessages()
@@ -79,10 +76,10 @@ export const TemplateForm: React.FC<
 
   useEffect(() => {
     form.reset()
-    setExpiryDate(template?.expiryDate || null)
-    setMarkets(
-      defaultMarket ? [defaultMarket] : template?.market || [Market.Sweden],
-    )
+    setExpiryDate(template?.expirationDate || null)
+    // setMarkets(
+    //   defaultMarket ? [defaultMarket] : template?.market || [Market.Sweden],
+    // )
   }, [template])
 
   const submitHandler = (values: FieldValues) => {
@@ -99,9 +96,8 @@ export const TemplateForm: React.FC<
     if (
       isCreating &&
       templates.some(
-        (template) =>
-          template.name === values.name &&
-          template.market.some((market) => markets.includes(market)),
+        (template) => template.title === values.name,
+        // template.market.some((market) => markets.includes(market)),
       )
     ) {
       toast.error(`Template with name '${values.name}' already exist`)
@@ -113,19 +109,20 @@ export const TemplateForm: React.FC<
     Object.values(Market).forEach((market) => {
       if (values[`message-${market}`]) {
         messages.push({
-          text: values[`message-${market}`],
-          market,
+          message: values[`message-${market}`],
+          language: market,
         })
       }
     })
 
-    const newTemplate: TemplateMessages = {
+    const newTemplate: Template = {
       id: template?.id || uuidv4(),
-      name: values.name,
+      title: values.name,
       messages,
-      messageEn: values.messageEn,
-      market: markets,
-      expiryDate,
+      pinned: false,
+      // messageEn: values.messageEn,
+      // market: markets,
+      expirationDate: expiryDate,
     }
 
     onSubmit(newTemplate)
@@ -138,7 +135,7 @@ export const TemplateForm: React.FC<
           label="Template Name"
           placeholder="Write template name here..."
           name="name"
-          defaultValue={template?.name || ''}
+          defaultValue={template?.title || ''}
           style={{ marginTop: '0.5rem' }}
           rules={{
             required: 'Name is required',
@@ -205,8 +202,8 @@ export const TemplateForm: React.FC<
             placeholder="Message goes here"
             style={{ marginTop: '0.5rem' }}
             defaultValue={
-              template?.messages.find((msg) => msg.market === Market.Sweden)
-                ?.text || ''
+              template?.messages.find((msg) => msg.language === Market.Sweden)
+                ?.message || ''
             }
             rules={{
               required: false,
@@ -225,8 +222,8 @@ export const TemplateForm: React.FC<
             placeholder="Message goes here"
             style={{ marginTop: '0.5rem' }}
             defaultValue={
-              template?.messages.find((msg) => msg.market === Market.Denmark)
-                ?.text || ''
+              template?.messages.find((msg) => msg.language === Market.Denmark)
+                ?.message || ''
             }
             rules={{
               required: false,
@@ -245,8 +242,8 @@ export const TemplateForm: React.FC<
             placeholder="Message goes here"
             style={{ marginTop: '0.5rem' }}
             defaultValue={
-              template?.messages.find((msg) => msg.market === Market.Norway)
-                ?.text || ''
+              template?.messages.find((msg) => msg.language === Market.Norway)
+                ?.message || ''
             }
             rules={{
               required: false,
@@ -263,7 +260,8 @@ export const TemplateForm: React.FC<
           name="messageEn"
           placeholder="Message goes here"
           style={{ marginTop: '0.5rem' }}
-          defaultValue={template?.messageEn || ''}
+          // defaultValue={template?.messageEn || ''}
+          defaultValue={''}
           rules={{
             required: false,
             pattern: {

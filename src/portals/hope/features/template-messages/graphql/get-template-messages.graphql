@@ -1,0 +1,25 @@
+query GetTemplateMessages {
+  templates {
+    id
+    title
+    messages {
+      language
+      message
+    }
+    expirationDate
+    pinned
+  }
+}
+
+query GetTemplateById($templateId: ID!) {
+  template(id: $templateId) {
+    id
+    title
+    messages {
+      language
+      message
+    }
+    expirationDate
+    pinned
+  }
+}
