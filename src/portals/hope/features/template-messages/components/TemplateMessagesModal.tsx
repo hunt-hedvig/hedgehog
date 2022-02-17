@@ -4,7 +4,7 @@ import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { keyframes } from '@emotion/react'
 import { TemplateForm } from './TemplateForm'
 import { SearchIcon } from '../../members-search/styles'
-import { Input, Tabs, Button, SecondLevelHeadline } from '@hedvig-ui'
+import { Input, Tabs, Button, SecondLevelHeadline, Spinner } from '@hedvig-ui'
 import {
   Pen as EditIcon,
   PinAngle,
@@ -128,6 +128,7 @@ export const TemplateMessagesModal: React.FC<{
     delete: deleteTemplate,
     pin: pinTemplate,
     market: currentMarket,
+    loading,
   } = useTemplateMessages()
 
   const templatesRef = useRef<HTMLDivElement>(null)
@@ -156,7 +157,10 @@ export const TemplateMessagesModal: React.FC<{
       return
     }
 
-    // select(selectedTemplate.messageEn)
+    select(
+      selectedTemplate.messages.find((message) => message.language === 'EN')
+        ?.message || '',
+    )
   }
 
   const deleteHandler = (id: string) => {
@@ -205,8 +209,22 @@ export const TemplateMessagesModal: React.FC<{
           ? template.title.toLowerCase().includes(query.toLowerCase())
           : true,
       )
-      // .filter((template) => template.market.includes(currentMarket))
+      .filter(
+        (template) =>
+          !!template.messages.find((msg) => msg.language === currentMarket),
+      )
       .filter((template) => (isPinnedTab ? template.pinned : true))
+
+  if (loading) {
+    return (
+      <Container
+        closing={closing}
+        style={{ alignItems: 'center', justifyContent: 'center' }}
+      >
+        <Spinner />
+      </Container>
+    )
+  }
 
   if (isCreating) {
     return (
@@ -308,12 +326,12 @@ export const TemplateMessagesModal: React.FC<{
               id={template.id}
               name={template.title}
               text={
-                ''
-                // isEnDisplay
-                //   ? template.messageEn
-                //   : template.messages.find(
-                //       (msg) => msg.market === currentMarket,
-                //     )?.text || ''
+                isEnDisplay
+                  ? template.messages.find((msg) => msg.language === 'EN')
+                      ?.message || ''
+                  : template.messages.find(
+                      (msg) => msg.language === currentMarket,
+                    )?.message || ''
               }
               pinned={template.pinned || false}
               onSelect={selectHandler}

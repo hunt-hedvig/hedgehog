@@ -159,7 +159,13 @@ export const ConversationChat: React.FC<{
   const [proposedTemplate, setProposedTemplate] =
     useState<TemplateMessages | null>(null)
 
-  const { show, selected, templates } = useTemplateMessages()
+  const {
+    show,
+    selected,
+    templates,
+    market,
+    loading: templatesLoading,
+  } = useTemplateMessages()
 
   useEffect(() => {
     if (selected) {
@@ -213,7 +219,7 @@ export const ConversationChat: React.FC<{
   }
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (isPressing(e, Keys.Slash) && !hinting) {
+    if (isPressing(e, Keys.Slash) && !hinting && !templatesLoading) {
       e.preventDefault()
 
       setProposedTemplate(getSearchTemplate(''))
@@ -224,14 +230,18 @@ export const ConversationChat: React.FC<{
     if (
       (isPressing(e, Keys.Down) || isPressing(e, Keys.Up)) &&
       hinting &&
-      proposedTemplate
+      proposedTemplate &&
+      !templatesLoading
     ) {
       e.preventDefault()
 
       const searchText = message.slice(1)
 
       const templatesIds = templates
-        // .filter((template) => template.market.includes(market))
+        .filter(
+          (template) =>
+            !!template.messages.find((msg) => msg.language === market),
+        )
         .filter(
           (template) =>
             template.title.substring(0, searchText.length).toLowerCase() ===
@@ -280,18 +290,18 @@ export const ConversationChat: React.FC<{
       setHinting(false)
     }
 
-    // if (!isMetaKey(e) && isPressing(e, Keys.Enter) && hinting) {
-    //   e.preventDefault()
+    if (!isMetaKey(e) && isPressing(e, Keys.Enter) && hinting) {
+      e.preventDefault()
 
-    //   const newMessage = proposedTemplate?.messages.find(
-    //     (msg) => msg.market === market,
-    //   )?.text
+      const newMessage = proposedTemplate?.messages.find(
+        (msg) => msg.language === market,
+      )?.message
 
-    //   setMessage(newMessage || '')
+      setMessage(newMessage || '')
 
-    //   setProposedTemplate(null)
-    //   setHinting(false)
-    // }
+      setProposedTemplate(null)
+      setHinting(false)
+    }
 
     if (
       isMetaKey(e) &&

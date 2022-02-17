@@ -77,9 +77,13 @@ export const TemplateForm: React.FC<
   useEffect(() => {
     form.reset()
     setExpiryDate(template?.expirationDate || null)
-    // setMarkets(
-    //   defaultMarket ? [defaultMarket] : template?.market || [Market.Sweden],
-    // )
+    setMarkets(
+      defaultMarket
+        ? [defaultMarket]
+        : template?.messages.map((msg) => msg.language as Market) || [
+            Market.Sweden,
+          ],
+    )
   }, [template])
 
   const submitHandler = (values: FieldValues) => {
@@ -96,8 +100,10 @@ export const TemplateForm: React.FC<
     if (
       isCreating &&
       templates.some(
-        (template) => template.title === values.name,
-        // template.market.some((market) => markets.includes(market)),
+        (template) => template.title === values.title,
+        template?.messages.some((msg) =>
+          markets.includes(msg.language as Market),
+        ),
       )
     ) {
       toast.error(`Template with name '${values.name}' already exist`)
@@ -117,11 +123,15 @@ export const TemplateForm: React.FC<
 
     const newTemplate: Template = {
       id: template?.id || uuidv4(),
-      title: values.name,
-      messages,
+      title: values.title,
+      messages: [
+        ...messages,
+        {
+          message: values.messageEn,
+          language: 'ENGLISH',
+        },
+      ],
       pinned: false,
-      // messageEn: values.messageEn,
-      // market: markets,
       expirationDate: expiryDate,
     }
 
@@ -134,7 +144,7 @@ export const TemplateForm: React.FC<
         <FormInput
           label="Template Name"
           placeholder="Write template name here..."
-          name="name"
+          name="title"
           defaultValue={template?.title || ''}
           style={{ marginTop: '0.5rem' }}
           rules={{
@@ -260,8 +270,10 @@ export const TemplateForm: React.FC<
           name="messageEn"
           placeholder="Message goes here"
           style={{ marginTop: '0.5rem' }}
-          // defaultValue={template?.messageEn || ''}
-          defaultValue={''}
+          defaultValue={
+            template?.messages.find((msg) => msg.language === 'EN')?.message ||
+            ''
+          }
           rules={{
             required: false,
             pattern: {

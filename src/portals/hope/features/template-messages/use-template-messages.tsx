@@ -1,22 +1,22 @@
 import React, { createContext, useContext, useState } from 'react'
-// import toast from 'react-hot-toast'
+import toast from 'react-hot-toast'
 // import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { TemplateMessagesModal } from './components/TemplateMessagesModal'
 import { Market } from '../config/constants'
-import { useGetTemplateMessagesQuery, Template } from 'types/generated/graphql'
+import {
+  useGetTemplateMessagesQuery,
+  Template,
+  useUpsertTemplateMessageMutation,
+  usePinTemplateMessageMutation,
+  useRemoveTemplateMessageMutation,
+} from 'types/generated/graphql'
 
-// export interface TemplateMessage {
-//   language: string
-//   message: string
-// }
-
-// export interface TemplateMessages {
-//   id: string
-//   title: string
-//   messages: TemplateMessage[]
-//   expirationDate: string
-//   pinned: boolean
-// }
+export enum Language {
+  SWEDEN = 'SE',
+  NORWAY = 'NO',
+  DENMARK = 'DK',
+  ENGLISH = 'EN',
+}
 
 interface TemplateMessagesContextProps {
   templates: Template[]
@@ -29,6 +29,7 @@ interface TemplateMessagesContextProps {
   selected: string | null
   market: Market
   setMarket: (market: Market) => void
+  loading: boolean
 }
 
 const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
@@ -42,6 +43,7 @@ const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
   selected: null,
   market: Market.Sweden,
   setMarket: () => void 0,
+  loading: false,
 })
 
 export const useTemplateMessages = () => useContext(TemplateMessagesContext)
@@ -51,47 +53,87 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
 
-  // const [templates, setTemplates] = useInsecurePersistentState<
-  //   TemplateMessages[]
-  // >('messages:templates', [])
-
   const templatesQuery = useGetTemplateMessagesQuery()
+  const [upsertTemplateMessage, { loading }] =
+    useUpsertTemplateMessageMutation()
+  const [pinTemplateMessage] = usePinTemplateMessageMutation()
+
+  const [removeTemplateMessage] = useRemoveTemplateMessageMutation()
 
   const createHandler = (template: Template) => {
-    console.log(template)
-    // setTemplates((prev) => [...prev, template])
-    // toast.success(`Template ${template.name} successfully created`)
+    toast.promise(
+      upsertTemplateMessage({
+        variables: {
+          input: {
+            ...template,
+            messages: template.messages.map((msg) => ({
+              ...msg,
+              language: Language[msg.language as Market],
+            })),
+          },
+        },
+        refetchQueries: () => ['GetTemplateMessages'],
+      }),
+      {
+        loading: 'Creating template',
+        success: 'Template created',
+        error: 'Could not create template',
+      },
+    )
   }
 
   const editHandler = (newTemplate: Template) => {
-    console.log(newTemplate)
-    // setTemplates((prev) => [
-    //   ...prev.filter((template) => template.id !== newTemplate.id),
-    //   newTemplate,
-    // ])
-    // toast.success('Template updated')
+    toast.promise(
+      upsertTemplateMessage({
+        variables: {
+          input: {
+            ...newTemplate,
+            messages: newTemplate.messages.map((msg) => ({
+              ...msg,
+              language: Language[msg.language as Market],
+            })),
+          },
+        },
+        refetchQueries: () => ['GetTemplateMessages'],
+      }),
+      {
+        loading: 'Updating template',
+        success: 'Template updated',
+        error: 'Could not update template',
+      },
+    )
   }
 
   const deleteHandler = (templateId: string) => {
-    console.log(templateId)
-    // const newTemplates = templates.filter(
-    //   (template) => template.id !== templateId,
-    // )
-    // setTemplates(newTemplates)
-    // toast.success('Template deleted')
+    toast.promise(
+      removeTemplateMessage({
+        variables: {
+          templateId,
+        },
+        refetchQueries: () => ['GetTemplateMessages'],
+      }),
+      {
+        loading: 'Deleting template',
+        success: 'Template deleted',
+        error: 'Could not delete template',
+      },
+    )
   }
 
   const pinHandler = (templateId: string) => {
-    console.log(templateId)
-    // const template = templates.find((template) => template.id === templateId)
-    // setTemplates((prev) =>
-    //   prev.map((template) =>
-    //     template.id !== templateId
-    //       ? template
-    //       : { ...template, pinned: !template.pinned },
-    //   ),
-    // )
-    // toast.success(`Template ${template?.pinned ? 'unpinned' : 'pinned'}`)
+    toast.promise(
+      pinTemplateMessage({
+        variables: {
+          templateId,
+        },
+        refetchQueries: () => ['GetTemplateMessages'],
+      }),
+      {
+        loading: 'Pinning template',
+        success: 'Template pinned',
+        error: 'Could not pin template',
+      },
+    )
   }
 
   return (
@@ -107,6 +149,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         selected: selectedText,
         market,
         setMarket: (market: Market) => setMarket(market),
+        loading,
       }}
     >
       {children}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
-import { FadeIn, MainHeadline, Flex, Button, Tabs } from '@hedvig-ui'
+import { FadeIn, MainHeadline, Flex, Button, Tabs, Spinner } from '@hedvig-ui'
 import { CreateTemplate } from '../../features/template-messages/components/CreateTemplate'
 import { SearchTemplate } from '../../features/template-messages/components/SearchTemplate'
 import { TemplateView } from '../../features/template-messages/components/TemplateView'
@@ -36,6 +36,7 @@ const TemplateMessagesPage: Page = () => {
     delete: deleteTemplate,
     market: currentMarket,
     setMarket: changeCurrentMarket,
+    loading,
   } = useTemplateMessages()
 
   const { confirm } = useConfirmDialog()
@@ -60,6 +61,14 @@ const TemplateMessagesPage: Page = () => {
         deleteTemplate(id)
         setSelectedTemplate(null)
       },
+    )
+  }
+
+  if (loading) {
+    return (
+      <Container style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Spinner />
+      </Container>
     )
   }
 
@@ -118,10 +127,10 @@ const TemplateMessagesPage: Page = () => {
         <SearchTemplate
           selected={selectedTemplate}
           onSelect={setSelectedTemplate}
-          // templates={templates?.filter((template) =>
-          //   template.market.includes(currentMarket),
-          // )}
-          templates={templates}
+          templates={templates?.filter(
+            (template) =>
+              !!template.messages.find((msg) => msg.language === currentMarket),
+          )}
         />
         {selectedTemplate && (
           <TemplateView
