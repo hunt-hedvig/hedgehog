@@ -11,7 +11,7 @@ import {
   PinAngleFill,
   Trash,
 } from 'react-bootstrap-icons'
-import { useTemplateMessages } from '../use-template-messages'
+import { Language, useTemplateMessages } from '../use-template-messages'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { Template as TemplateMessages } from 'types/generated/graphql'
 
@@ -150,7 +150,7 @@ export const TemplateMessagesModal: React.FC<{
 
     if (!isEnDisplay) {
       const message = selectedTemplate.messages.filter(
-        (msg) => msg.language === currentMarket,
+        (msg) => msg.language === Language[currentMarket],
       )[0].message
 
       select(message)
@@ -211,7 +211,9 @@ export const TemplateMessagesModal: React.FC<{
       )
       .filter(
         (template) =>
-          !!template.messages.find((msg) => msg.language === currentMarket),
+          !!template.messages.find(
+            (msg) => msg.language === Language[currentMarket],
+          ),
       )
       .filter((template) => (isPinnedTab ? template.pinned : true))
 
@@ -330,7 +332,7 @@ export const TemplateMessagesModal: React.FC<{
                   ? template.messages.find((msg) => msg.language === 'EN')
                       ?.message || ''
                   : template.messages.find(
-                      (msg) => msg.language === currentMarket,
+                      (msg) => msg.language === Language[currentMarket],
                     )?.message || ''
               }
               pinned={template.pinned || false}

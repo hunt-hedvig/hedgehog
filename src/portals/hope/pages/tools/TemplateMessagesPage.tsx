@@ -4,7 +4,10 @@ import { FadeIn, MainHeadline, Flex, Button, Tabs, Spinner } from '@hedvig-ui'
 import { CreateTemplate } from '../../features/template-messages/components/CreateTemplate'
 import { SearchTemplate } from '../../features/template-messages/components/SearchTemplate'
 import { TemplateView } from '../../features/template-messages/components/TemplateView'
-import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
+import {
+  Language,
+  useTemplateMessages,
+} from 'portals/hope/features/template-messages/use-template-messages'
 import { Market } from '../../features/config/constants'
 import { Page } from 'portals/sos/pages/routes'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
@@ -129,7 +132,9 @@ const TemplateMessagesPage: Page = () => {
           onSelect={setSelectedTemplate}
           templates={templates?.filter(
             (template) =>
-              !!template.messages.find((msg) => msg.language === currentMarket),
+              !!template.messages.find(
+                (msg) => msg.language === Language[currentMarket],
+              ),
           )}
         />
         {selectedTemplate && (

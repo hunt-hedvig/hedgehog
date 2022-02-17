@@ -9,6 +9,7 @@ import {
   useUpsertTemplateMessageMutation,
   useRemoveTemplateMessageMutation,
   useTogglePinStatusMutation,
+  UpsertTemplateInput,
 } from 'types/generated/graphql'
 
 export enum Language {
@@ -60,9 +61,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
 
   const [removeTemplateMessage] = useRemoveTemplateMessageMutation()
 
-  const createHandler = (template: Template) => {
+  const createHandler = (template: UpsertTemplateInput) => {
     const newTemplate = {
-      id: template.id,
       title: template.title,
       expirationDate: template.expirationDate,
       messages: template.messages.map((msg) => ({
@@ -86,7 +86,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     )
   }
 
-  const editHandler = (newTemplate: Template) => {
+  const editHandler = (newTemplate: UpsertTemplateInput) => {
     const template = {
       id: newTemplate.id,
       title: newTemplate.title,

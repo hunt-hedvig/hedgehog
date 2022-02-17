@@ -10,7 +10,7 @@ import {
   FormTextArea,
   FormInput,
 } from '@hedvig-ui'
-import { useTemplateMessages } from '../use-template-messages'
+import { Language, useTemplateMessages } from '../use-template-messages'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import formatDate from 'date-fns/format'
@@ -212,8 +212,9 @@ export const TemplateForm: React.FC<
             placeholder="Message goes here"
             style={{ marginTop: '0.5rem' }}
             defaultValue={
-              template?.messages.find((msg) => msg.language === Market.Sweden)
-                ?.message || ''
+              template?.messages.find(
+                (msg) => msg.language === Language[Market.Sweden],
+              )?.message || ''
             }
             rules={{
               required: false,
@@ -232,8 +233,9 @@ export const TemplateForm: React.FC<
             placeholder="Message goes here"
             style={{ marginTop: '0.5rem' }}
             defaultValue={
-              template?.messages.find((msg) => msg.language === Market.Denmark)
-                ?.message || ''
+              template?.messages.find(
+                (msg) => msg.language === Language[Market.Denmark],
+              )?.message || ''
             }
             rules={{
               required: false,
@@ -252,8 +254,9 @@ export const TemplateForm: React.FC<
             placeholder="Message goes here"
             style={{ marginTop: '0.5rem' }}
             defaultValue={
-              template?.messages.find((msg) => msg.language === Market.Norway)
-                ?.message || ''
+              template?.messages.find(
+                (msg) => msg.language === Language[Market.Norway],
+              )?.message || ''
             }
             rules={{
               required: false,
