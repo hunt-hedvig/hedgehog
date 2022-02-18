@@ -5,16 +5,16 @@ import toast from 'react-hot-toast'
 import { TemplateMessagesModal } from './components/TemplateMessagesModal'
 import { Market } from '../config/constants'
 import {
-  useGetTemplateMessagesQuery,
+  useGetTemplatesQuery,
   Template,
-  useUpsertTemplateMessageMutation,
-  useRemoveTemplateMessageMutation,
+  useUpsertTemplateMutation,
+  useRemoveTemplateMutation,
   useTogglePinStatusMutation,
   UpsertTemplateInput,
 } from 'types/generated/graphql'
 
 gql`
-  query GetTemplateMessages {
+  query GetTemplates {
     templates {
       id
       title
@@ -47,7 +47,7 @@ gql`
     }
   }
 
-  mutation UpsertTemplateMessage($input: UpsertTemplateInput!) {
+  mutation UpsertTemplate($input: UpsertTemplateInput!) {
     upsertTemplate(input: $input) {
       id
       title
@@ -60,7 +60,7 @@ gql`
     }
   }
 
-  mutation RemoveTemplateMessage($templateId: ID!) {
+  mutation RemoveTemplate($templateId: ID!) {
     removeTemplate(id: $templateId)
   }
 `
@@ -76,7 +76,7 @@ interface TemplateMessagesContextProps {
   templates: Template[]
   show: () => void
   create: (template: UpsertTemplateInput) => void
-  edit: (template: UpsertTemplateInput) => void
+  edit: (template: Template) => void
   delete: (id: string) => void
   pin: (id: string) => void
   select: (text: string) => void
@@ -107,15 +107,14 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
 
-  const templatesQuery = useGetTemplateMessagesQuery()
-  const [upsertTemplateMessage, { loading }] =
-    useUpsertTemplateMessageMutation()
-  const [pinTemplateMessage] = useTogglePinStatusMutation()
+  const templatesQuery = useGetTemplatesQuery()
+  const [upsertTemplate, { loading }] = useUpsertTemplateMutation()
+  const [togglePinStatus] = useTogglePinStatusMutation()
 
-  const [removeTemplateMessage] = useRemoveTemplateMessageMutation()
+  const [removeTemplate] = useRemoveTemplateMutation()
 
   const createHandler = (template: UpsertTemplateInput) => {
-    const newTemplate = {
+    const newTemplate: UpsertTemplateInput = {
       title: template.title,
       expirationDate: template.expirationDate,
       messages: template.messages.map((msg) => ({
@@ -125,7 +124,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     }
 
     toast.promise(
-      upsertTemplateMessage({
+      upsertTemplate({
         variables: {
           input: newTemplate,
         },
@@ -139,8 +138,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     )
   }
 
-  const editHandler = (newTemplate: UpsertTemplateInput) => {
-    const template = {
+  const editHandler = (newTemplate: Template) => {
+    const template: Template = {
       id: newTemplate.id,
       title: newTemplate.title,
       expirationDate: newTemplate.expirationDate,
@@ -148,14 +147,20 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         ...msg,
         language: Language[msg.language as Market],
       })),
+      pinned: newTemplate.pinned,
     }
 
     toast.promise(
-      upsertTemplateMessage({
+      upsertTemplate({
         variables: {
           input: template,
         },
-        refetchQueries: () => ['GetTemplateMessages'],
+        optimisticResponse: {
+          upsertTemplate: {
+            __typename: 'Template',
+            ...template,
+          },
+        },
       }),
       {
         loading: 'Updating template',
@@ -167,11 +172,13 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
 
   const deleteHandler = (templateId: string) => {
     toast.promise(
-      removeTemplateMessage({
+      removeTemplate({
         variables: {
           templateId,
         },
-        refetchQueries: () => ['GetTemplateMessages'],
+        optimisticResponse: {
+          removeTemplate: true,
+        },
       }),
       {
         loading: 'Deleting template',
@@ -182,19 +189,32 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   }
 
   const pinHandler = (templateId: string) => {
-    toast.promise(
-      pinTemplateMessage({
-        variables: {
-          templateId,
+    const changedTemplate: Template | undefined =
+      templatesQuery.data?.templates.find(
+        (template) => template.id === templateId,
+      )
+
+    if (changedTemplate) {
+      toast.promise(
+        togglePinStatus({
+          variables: {
+            templateId,
+          },
+          optimisticResponse: {
+            togglePinStatus: {
+              __typename: 'Template',
+              ...changedTemplate,
+              pinned: !changedTemplate.pinned,
+            },
+          },
+        }),
+        {
+          loading: 'Pinning template',
+          success: 'Template pinned',
+          error: 'Could not pin template',
         },
-        refetchQueries: () => ['GetTemplateMessages'],
-      }),
-      {
-        loading: 'Pinning template',
-        success: 'Template pinned',
-        error: 'Could not pin template',
-      },
-    )
+      )
+    }
   }
 
   return (

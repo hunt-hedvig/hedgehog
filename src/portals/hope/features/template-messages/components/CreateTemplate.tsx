@@ -18,7 +18,7 @@ export const CreateTemplate: React.FC<{
 }> = ({ onClose, onCreate }) => {
   return (
     <Content>
-      <TemplateForm onSubmit={onCreate} isCreating onClose={onClose} />
+      <TemplateForm onCreate={onCreate} isCreating onClose={onClose} />
     </Content>
   )
 }

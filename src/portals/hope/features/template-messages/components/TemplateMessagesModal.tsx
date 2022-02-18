@@ -13,7 +13,7 @@ import {
 } from 'react-bootstrap-icons'
 import { Language, useTemplateMessages } from '../use-template-messages'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { UpsertTemplateInput } from 'types/generated/graphql'
+import { Template, UpsertTemplateInput } from 'types/generated/graphql'
 
 const show = keyframes`
   from {
@@ -110,8 +110,7 @@ export const TemplateMessagesModal: React.FC<{
   hide: () => void
 }> = ({ hide }) => {
   const [query, setQuery] = useState('')
-  const [editingTemplate, setEditingTemplate] =
-    useState<UpsertTemplateInput | null>(null)
+  const [editingTemplate, setEditingTemplate] = useState<Template | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
   const [isPinnedTab, setIsPinnedTab] = useState(false)
@@ -178,18 +177,6 @@ export const TemplateMessagesModal: React.FC<{
     pinTemplate(id)
   }
 
-  const submitHandler = (newTemplate: UpsertTemplateInput) => {
-    if (isCreating) {
-      createTemplate(newTemplate)
-
-      setIsCreating(false)
-    } else if (editingTemplate) {
-      editTemplate(newTemplate)
-
-      setEditingTemplate(null)
-    }
-  }
-
   const switchMarketHandler = () => {
     const message = `By switching this setting, The default language used by this member will be changing to ${
       isEnDisplay
@@ -239,8 +226,12 @@ export const TemplateMessagesModal: React.FC<{
         <TemplateForm
           defaultMarket={Language[currentMarket]}
           isModal
-          isCreating={isCreating}
-          onSubmit={submitHandler}
+          isCreating
+          onCreate={(newTemplate: UpsertTemplateInput) => {
+            createTemplate(newTemplate)
+
+            setIsCreating(false)
+          }}
           onClose={() => {
             setIsCreating(false)
           }}
@@ -259,8 +250,12 @@ export const TemplateMessagesModal: React.FC<{
         <SecondLevelHeadline>Edit Template</SecondLevelHeadline>
         <TemplateForm
           isModal
+          isCreating={false}
           template={editingTemplate}
-          onSubmit={submitHandler}
+          onEdit={(newTemplate: Template) => {
+            editTemplate(newTemplate)
+            setEditingTemplate(null)
+          }}
           onClose={() => {
             setEditingTemplate(null)
           }}

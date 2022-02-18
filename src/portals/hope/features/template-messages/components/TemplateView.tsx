@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { Trash } from 'react-bootstrap-icons'
 import { TemplateForm } from './TemplateForm'
-import { UpsertTemplateInput } from 'types/generated/graphql'
+import { Template } from 'types/generated/graphql'
 
 const Content = styled.div`
   position: relative;
@@ -38,12 +38,14 @@ const DeleteWrapper = styled.div`
 `
 
 export const TemplateView: React.FC<{
-  template: UpsertTemplateInput
-  onSave: (template: UpsertTemplateInput) => void
+  template: Template
+  onEdit: (template: Template) => void
   onDelete: (id: string) => void
-}> = ({ template, onSave, onDelete }) => (
+}> = ({ template, onEdit, onDelete }) => (
   <Content>
-    {template && <TemplateForm template={template} onSubmit={onSave} />}
+    {template && (
+      <TemplateForm template={template} onEdit={onEdit} isCreating={false} />
+    )}
     <DeleteWrapper onClick={() => template.id && onDelete(template.id)}>
       <Trash style={{ width: '1rem', height: '1rem' }} />
       <span>Delete</span>

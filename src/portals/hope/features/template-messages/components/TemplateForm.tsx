@@ -16,7 +16,11 @@ import formatDate from 'date-fns/format'
 import { Market } from '../../config/constants'
 import toast from 'react-hot-toast'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { TemplateMessage, UpsertTemplateInput } from 'types/generated/graphql'
+import {
+  Template,
+  TemplateMessage,
+  UpsertTemplateInput,
+} from 'types/generated/graphql'
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
@@ -44,8 +48,9 @@ const Checkbox = styled(DefaultCheckbox)`
 `
 
 interface TemplateFormProps {
-  template?: UpsertTemplateInput
-  onSubmit: (template: UpsertTemplateInput) => void
+  template?: Template
+  onCreate?: (template: UpsertTemplateInput) => void
+  onEdit?: (template: Template) => void
   isCreating?: boolean
   onClose?: () => void
   isModal?: boolean
@@ -57,7 +62,8 @@ export const TemplateForm: React.FC<
 > = ({
   template,
   isCreating,
-  onSubmit,
+  onCreate,
+  onEdit,
   onClose,
   isModal,
   defaultMarket,
@@ -85,20 +91,7 @@ export const TemplateForm: React.FC<
     )
   }, [template])
 
-  const submitHandler = (values: FieldValues) => {
-    if (
-      isCreating &&
-      templates.some(
-        (template) => template.title === values.title,
-        template?.messages.some((msg) =>
-          languages.includes(msg.language as Language),
-        ),
-      )
-    ) {
-      toast.error(`Template with name '${values.name}' already exist`)
-      return
-    }
-
+  const getMessages = (values: FieldValues): TemplateMessage[] => {
     const messages: TemplateMessage[] = []
 
     Object.values(Market).forEach((market) => {
@@ -110,25 +103,65 @@ export const TemplateForm: React.FC<
       }
     })
 
+    return [
+      ...messages,
+      {
+        message: values.messageEn,
+        language: 'ENGLISH',
+      },
+    ]
+  }
+
+  const createHandler = (values: FieldValues) => {
+    if (!onCreate) {
+      return
+    }
+
+    if (
+      templates.some(
+        (template) => template.title === values.title,
+        template?.messages.some((msg) =>
+          languages.includes(msg.language as Language),
+        ),
+      )
+    ) {
+      toast.error(`Template with name '${values.name}' already exist`)
+      return
+    }
+
     const newTemplate: UpsertTemplateInput = {
       id: template?.id,
       title: values.title,
-      messages: [
-        ...messages,
-        {
-          message: values.messageEn,
-          language: 'ENGLISH',
-        },
-      ],
+      messages: getMessages(values),
       expirationDate: expiryDate,
     }
 
-    onSubmit(newTemplate)
+    onCreate(newTemplate)
+  }
+
+  const editHandler = (values: FieldValues) => {
+    if (isCreating || !template || !onEdit) {
+      return
+    }
+
+    const newTemplate: Template = {
+      id: template.id,
+      title: values.title,
+      messages: getMessages(values),
+      expirationDate: expiryDate,
+      pinned: template.pinned,
+    }
+
+    onEdit(newTemplate)
   }
 
   return (
     <FormProvider {...form}>
-      <Form onSubmit={submitHandler} style={{ height: '100%' }} {...props}>
+      <Form
+        onSubmit={isCreating ? createHandler : editHandler}
+        style={{ height: '100%' }}
+        {...props}
+      >
         <FormInput
           label="Template Name"
           placeholder="Write template name here..."
