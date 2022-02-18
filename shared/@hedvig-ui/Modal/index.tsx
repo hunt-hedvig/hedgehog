@@ -1,29 +1,33 @@
-import { css } from '@emotion/react'
+import React, { useRef } from 'react'
 import styled from '@emotion/styled'
-import { FadeIn } from '@hedvig-ui'
+import { Portal } from 'react-portal'
 import {
   Keys,
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
-import React, { useRef } from 'react'
-import { X as CloseIcon } from 'react-bootstrap-icons'
-import { Portal } from 'react-portal'
 
-const ModalWrapperStyled = styled.div<{
+const getPosition = (
+  firstCondition: 'top' | 'bottom' | 'left' | 'right',
+  secondCondition: 'top' | 'bottom' | 'left' | 'right',
+  position?: string,
+) =>
+  position === firstCondition
+    ? 'flex-start'
+    : position === secondCondition
+    ? 'flex-end'
+    : 'center'
+
+const Wrapper = styled.div<{
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
-  padding?: string
-  dim: boolean
+  noDimBg?: boolean
 }>`
+  background-color: ${({ theme, noDimBg }) =>
+    noDimBg ? 'none' : theme.backgroundTransparent};
+
   width: 100vw;
   height: 100vh;
-
-  ${({ dim, theme }) =>
-    dim &&
-    css`
-      background-color: ${theme.backgroundTransparent};
-    `};
 
   position: fixed;
   top: 0;
@@ -31,135 +35,57 @@ const ModalWrapperStyled = styled.div<{
   z-index: 1002;
 
   display: flex;
-  align-items: ${({ position }) =>
-    position === 'top'
-      ? 'flex-start'
-      : position === 'bottom'
-      ? 'flex-end'
-      : 'center'};
-  justify-content: ${({ side }) =>
-    side === 'left' ? 'flex-start' : side === 'right' ? 'flex-end' : 'center'};
-  padding: ${({ padding }) => padding ?? ' 50px'};
+  align-items: ${({ position }) => getPosition('top', 'bottom', position)};
+  justify-content: ${({ side }) => getPosition('left', 'right', side)};
+
+  padding: 3rem;
 `
 
-const ModalContent = styled.div<{
-  width?: string
-  height?: string
-}>`
-  width: ${({ width }) => width || 'auto'};
-  max-width: 900px;
-  height: ${({ height }) => height || 'auto'};
-  max-height: 950px;
+const Container = styled.div`
+  max-width: 90%;
+  max-height: 90%;
 
-  border-radius: 0.5rem;
-  background-color: ${({ theme }) => theme.background};
   box-shadow: 0 5px 40px ${({ theme }) => theme.backgroundTransparent};
+  border-radius: 0.5rem;
 
-  display: flex;
-  flex-direction: column;
+  overflow: auto;
+
+  background: ${({ theme }) => theme.background};
 `
 
-const ModalHeader = styled.div`
-  box-sizing: content-box;
-
-  display: grid;
-  grid-template-columns: 1fr 20px;
-  column-gap: 10px;
-  align-items: center;
-
-  padding: 10px 15px;
-  border-bottom: 1px solid ${({ theme }) => theme.border};
-
-  .modal-title {
-    flex: 1;
-    color: ${({ theme }) => theme.foreground};
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .modal-close {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    color: ${({ theme }) => theme.foreground};
-  }
-`
-
-const ModalBody = styled.div`
-  flex: 1;
-  padding: 15px;
-  color: ${({ theme }) => theme.foreground};
-`
-
-export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ModalAdditionalOptions {
+  disableClickOutside?: boolean
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
-  height?: string
-  width?: string
-  title?: string
-  withoutHeader?: boolean
-  disableClickOutside?: boolean
+  noDimBg?: boolean
+}
+
+export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   onClose: () => void
-  dimBackground?: boolean
-  padding?: string
+  options?: ModalAdditionalOptions
 }
 
 export const Modal: React.FC<ModalProps> = ({
-  disableClickOutside,
   onClose,
-  position,
-  side,
-  dimBackground,
-  padding,
-  height,
-  width,
-  style,
-  title,
-  withoutHeader,
   children,
+  options,
+  ...props
 }) => {
   const modalRef = useRef<HTMLDivElement>(null)
 
-  const clickOutsideCloseHandler = () => {
-    if (!disableClickOutside) {
-      return onClose()
-    } else {
-      return
-    }
-  }
+  const clickOutsideCloseHandler = () =>
+    !options?.disableClickOutside && onClose()
 
   useClickOutside(modalRef, clickOutsideCloseHandler)
   useKeyIsPressed(Keys.Escape, () => onClose())
 
   return (
     <Portal>
-      <ModalWrapperStyled
-        position={position}
-        side={side}
-        dim={dimBackground ?? true}
-        padding={padding}
-      >
-        <FadeIn duration={250}>
-          <ModalContent
-            className="modal"
-            ref={modalRef}
-            height={height}
-            width={width}
-            style={style}
-          >
-            {!withoutHeader && (
-              <ModalHeader className="modal__header">
-                <span className="modal-title" title={title}>
-                  {title}
-                </span>
-                <CloseIcon className="modal-close" onClick={onClose} />
-              </ModalHeader>
-            )}
-            <ModalBody className="modal__body">{children}</ModalBody>
-          </ModalContent>
-        </FadeIn>
-      </ModalWrapperStyled>
+      <Wrapper {...options}>
+        <Container ref={modalRef} {...props}>
+          {children}
+        </Container>
+      </Wrapper>
     </Portal>
   )
 }

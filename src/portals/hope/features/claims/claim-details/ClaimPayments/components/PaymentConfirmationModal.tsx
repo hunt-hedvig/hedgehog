@@ -30,7 +30,7 @@ export const PaymentConfirmationModal: React.FC<
   }
 
   return (
-    <Modal onClose={onClose} title="Confirm payout" width="500px">
+    <Modal style={{ padding: '1rem', width: 500 }} onClose={onClose}>
       {!identified && market === Market.Norway && (
         <Explanation>
           ⚠️ Please note that this member is not identified

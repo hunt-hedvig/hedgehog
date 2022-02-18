@@ -37,7 +37,7 @@ export const ResourceAccessOverview: React.FC<{
   }
 
   return (
-    <Modal withoutHeader onClose={onClose}>
+    <Modal onClose={onClose} style={{ padding: '1rem' }}>
       <Tabs
         style={{ margin: '1rem 0', padding: '0rem 1rem' }}
         list={[
