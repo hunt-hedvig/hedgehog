@@ -54,7 +54,7 @@ export const NotificationsModal: React.FC<{
       options={{
         side: 'right',
         position: 'top',
-        noDimBackground: true,
+        noDimBg: true,
       }}
     >
       <Flex

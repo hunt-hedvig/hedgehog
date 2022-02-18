@@ -21,10 +21,10 @@ const getPosition = (
 const Wrapper = styled.div<{
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
-  noDimBackground?: boolean
+  noDimBg?: boolean
 }>`
-  background-color: ${({ theme, noDimBackground }) =>
-    noDimBackground ? 'none' : theme.backgroundTransparent};
+  background-color: ${({ theme, noDimBg }) =>
+    noDimBg ? 'none' : theme.backgroundTransparent};
 
   width: 100vw;
   height: 100vh;
@@ -57,7 +57,7 @@ export interface ModalAdditionalOptions {
   disableClickOutside?: boolean
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
-  noDimBackground?: boolean
+  noDimBg?: boolean
 }
 
 export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
