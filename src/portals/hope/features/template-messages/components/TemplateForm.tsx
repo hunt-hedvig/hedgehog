@@ -21,6 +21,7 @@ import {
   TemplateMessage,
   UpsertTemplateInput,
 } from 'types/generated/graphql'
+import { parseISO } from 'date-fns'
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
@@ -70,7 +71,7 @@ export const TemplateForm: React.FC<
   ...props
 }) => {
   const [languages, setLanguages] = useState<Language[]>([])
-  const [expiryDate, setExpiryDate] = useState<string | null>(
+  const [expirationDate, setExpirationDate] = useState<string | null>(
     template?.expirationDate || null,
   )
 
@@ -81,7 +82,7 @@ export const TemplateForm: React.FC<
 
   useEffect(() => {
     form.reset()
-    setExpiryDate(template?.expirationDate || null)
+    setExpirationDate(template?.expirationDate || null)
     setLanguages(
       defaultMarket
         ? [defaultMarket]
@@ -133,7 +134,7 @@ export const TemplateForm: React.FC<
       id: template?.id,
       title: values.title,
       messages: getMessages(values),
-      expirationDate: expiryDate,
+      expirationDate,
     }
 
     onCreate(newTemplate)
@@ -148,7 +149,7 @@ export const TemplateForm: React.FC<
       id: template.id,
       title: values.title,
       messages: getMessages(values),
-      expirationDate: expiryDate,
+      expirationDate,
       pinned: template.pinned,
     }
 
@@ -272,27 +273,33 @@ export const TemplateForm: React.FC<
         <Field>
           <Checkbox
             label={<span>Set Expiry Date</span>}
-            checked={!!expiryDate}
+            checked={!!expirationDate}
             onChange={({ currentTarget: { checked } }) => {
-              setExpiryDate(
+              setExpirationDate(
                 checked ? formatDate(new Date(), 'yyyy-MM-dd') : null,
               )
             }}
           />
         </Field>
-        {!!expiryDate && (
+
+        {!!expirationDate && (
           <Field>
             <Label>This template will be deleted after</Label>
             <TextDatePicker
               minDate={new Date()}
-              value={expiryDate}
+              value={
+                formatDate(
+                  parseISO(new Date(expirationDate).toISOString()),
+                  'yyyy-MM-dd',
+                ).split('T')[0]
+              }
               onChange={(value) => {
                 if (!value) {
-                  setExpiryDate(null)
+                  setExpirationDate(null)
                   return
                 }
 
-                setExpiryDate(value)
+                setExpirationDate(value)
               }}
               style={{ marginTop: '0.5rem' }}
             />
