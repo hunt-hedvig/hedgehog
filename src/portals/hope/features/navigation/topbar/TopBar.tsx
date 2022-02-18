@@ -170,7 +170,7 @@ export const TopBar = () => {
         <NotificationsButton
           onClick={() => {
             PushUserAction('notifications_list', 'open', null, null)
-            setShowUserNotifications(true)
+            setShowUserNotifications((prev) => !prev)
           }}
         />
 

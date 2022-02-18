@@ -45,12 +45,14 @@ export const ConfirmDialogComponent: React.FC<{
 
   return (
     <Modal
-      withoutHeader={true}
-      disableClickOutside={true}
-      height="auto"
-      width="400px"
-      position="top"
-      side="center"
+      style={{
+        width: 400,
+        padding: '1rem',
+      }}
+      options={{
+        disableClickOutside: true,
+        position: 'top',
+      }}
       onClose={close}
     >
       <div>

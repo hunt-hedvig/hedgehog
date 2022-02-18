@@ -303,7 +303,10 @@ export const QuoteListItem: React.FC<{
             Debug info
           </Button>
           {showDebug && (
-            <Modal withoutHeader onClose={() => setShowDebug(false)}>
+            <Modal
+              onClose={() => setShowDebug(false)}
+              style={{ padding: '1rem' }}
+            >
               Quote ID: {quote.id} <br />
               Originating Product ID: {quote.originatingProductId} <br />
             </Modal>
