@@ -7,6 +7,7 @@ import { Market } from '../config/constants'
 import {
   useGetTemplatesQuery,
   Template,
+  TemplateMessage,
   useUpsertTemplateMutation,
   useRemoveTemplateMutation,
   useTogglePinStatusMutation,
@@ -113,14 +114,19 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
 
   const [removeTemplate] = useRemoveTemplateMutation()
 
+  const getTemplateMessages = (
+    messages: TemplateMessage[],
+  ): TemplateMessage[] =>
+    messages.map((msg) => ({
+      ...msg,
+      language: Language[msg.language as Market],
+    }))
+
   const createHandler = (template: UpsertTemplateInput) => {
     const newTemplate: UpsertTemplateInput = {
       title: template.title,
       expirationDate: template.expirationDate,
-      messages: template.messages.map((msg) => ({
-        ...msg,
-        language: Language[msg.language as Market],
-      })),
+      messages: getTemplateMessages(template.messages),
     }
 
     toast.promise(
@@ -143,17 +149,19 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       id: newTemplate.id,
       title: newTemplate.title,
       expirationDate: newTemplate.expirationDate,
-      messages: newTemplate.messages.map((msg) => ({
-        ...msg,
-        language: Language[msg.language as Market],
-      })),
-      pinned: newTemplate.pinned,
+      messages: getTemplateMessages(newTemplate.messages),
+      pinned: !newTemplate.pinned,
     }
 
     toast.promise(
       upsertTemplate({
         variables: {
-          input: template,
+          input: {
+            id: template.id,
+            title: template.title,
+            expirationDate: template.expirationDate,
+            messages: template.messages,
+          },
         },
         optimisticResponse: {
           upsertTemplate: {
