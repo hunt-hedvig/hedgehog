@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import { TemplateForm } from './TemplateForm'
-import { Template } from 'types/generated/graphql'
+import { UpsertTemplateInput } from 'types/generated/graphql'
 
 const Content = styled.div`
   flex: 1;
@@ -14,7 +14,7 @@ const Content = styled.div`
 
 export const CreateTemplate: React.FC<{
   onClose: () => void
-  onCreate: (template: Template) => void
+  onCreate: (template: UpsertTemplateInput) => void
 }> = ({ onClose, onCreate }) => {
   return (
     <Content>

@@ -4,7 +4,7 @@ import { Input } from '@hedvig-ui'
 import { SearchIcon as InputIcon } from '../../members-search/styles'
 import { FileText } from 'react-bootstrap-icons'
 import { EmptyContainer } from './TemplateMessagesModal'
-import { Template } from 'types/generated/graphql'
+import { Template, UpsertTemplateInput } from 'types/generated/graphql'
 
 const Container = styled.div`
   display: flex;
@@ -53,17 +53,18 @@ const Item = styled.div<{ selected: boolean }>`
 `
 
 export const SearchTemplate: React.FC<{
-  selected: Template | null
+  selected: UpsertTemplateInput | null
   templates: Template[]
   onSelect: (template: Template | null) => void
 }> = ({ onSelect, selected, templates }) => {
   const [query, setQuery] = useState('')
 
   const selectHandler = (id: string) => {
-    const selectedTemplate = templates.filter(
-      (template) => template.id === id,
-    )[0]
-    onSelect(selectedTemplate)
+    const selectedTemplate = templates.find((template) => template.id === id)
+
+    if (selectedTemplate) {
+      onSelect(selectedTemplate)
+    }
   }
 
   const filteredTemplates = templates

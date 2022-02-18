@@ -13,7 +13,7 @@ import {
 } from 'react-bootstrap-icons'
 import { Language, useTemplateMessages } from '../use-template-messages'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { Template as TemplateMessages } from 'types/generated/graphql'
+import { UpsertTemplateInput } from 'types/generated/graphql'
 
 const show = keyframes`
   from {
@@ -111,7 +111,7 @@ export const TemplateMessagesModal: React.FC<{
 }> = ({ hide }) => {
   const [query, setQuery] = useState('')
   const [editingTemplate, setEditingTemplate] =
-    useState<TemplateMessages | null>(null)
+    useState<UpsertTemplateInput | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
   const [isPinnedTab, setIsPinnedTab] = useState(false)
@@ -178,7 +178,7 @@ export const TemplateMessagesModal: React.FC<{
     pinTemplate(id)
   }
 
-  const submitHandler = (newTemplate: TemplateMessages) => {
+  const submitHandler = (newTemplate: UpsertTemplateInput) => {
     if (isCreating) {
       createTemplate(newTemplate)
 

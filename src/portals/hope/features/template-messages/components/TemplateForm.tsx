@@ -12,12 +12,11 @@ import {
 } from '@hedvig-ui'
 import { Language, useTemplateMessages } from '../use-template-messages'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
-import { v4 as uuidv4 } from 'uuid'
 import formatDate from 'date-fns/format'
 import { Market } from '../../config/constants'
 import toast from 'react-hot-toast'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { Template, TemplateMessage } from 'types/generated/graphql'
+import { TemplateMessage, UpsertTemplateInput } from 'types/generated/graphql'
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
@@ -45,8 +44,8 @@ const Checkbox = styled(DefaultCheckbox)`
 `
 
 interface TemplateFormProps {
-  template?: Template
-  onSubmit: (template: Template) => void
+  template?: UpsertTemplateInput
+  onSubmit: (template: UpsertTemplateInput) => void
   isCreating?: boolean
   onClose?: () => void
   isModal?: boolean
@@ -64,7 +63,7 @@ export const TemplateForm: React.FC<
   defaultMarket,
   ...props
 }) => {
-  const [markets, setMarkets] = useState<Language[]>([])
+  const [languages, setLanguages] = useState<Language[]>([])
   const [expiryDate, setExpiryDate] = useState<string | null>(
     template?.expirationDate || null,
   )
@@ -77,7 +76,7 @@ export const TemplateForm: React.FC<
   useEffect(() => {
     form.reset()
     setExpiryDate(template?.expirationDate || null)
-    setMarkets(
+    setLanguages(
       defaultMarket
         ? [defaultMarket]
         : template?.messages.map((msg) => msg.language as Language) || [
@@ -87,22 +86,12 @@ export const TemplateForm: React.FC<
   }, [template])
 
   const submitHandler = (values: FieldValues) => {
-    if (expiryDate) {
-      const today = new Date().setHours(0, 0, 0, 0)
-      const valueDay = new Date(expiryDate).setHours(0, 0, 0, 0)
-
-      if (valueDay < today) {
-        toast.error('Expiry date should not be earlier than today')
-        return
-      }
-    }
-
     if (
       isCreating &&
       templates.some(
         (template) => template.title === values.title,
         template?.messages.some((msg) =>
-          markets.includes(msg.language as Language),
+          languages.includes(msg.language as Language),
         ),
       )
     ) {
@@ -121,8 +110,8 @@ export const TemplateForm: React.FC<
       }
     })
 
-    const newTemplate: Template = {
-      id: template?.id || uuidv4(),
+    const newTemplate: UpsertTemplateInput = {
+      id: template?.id,
       title: values.title,
       messages: [
         ...messages,
@@ -131,7 +120,6 @@ export const TemplateForm: React.FC<
           language: 'ENGLISH',
         },
       ],
-      pinned: false,
       expirationDate: expiryDate,
     }
 
@@ -151,7 +139,7 @@ export const TemplateForm: React.FC<
             required: 'Name is required',
             pattern: {
               value: /[^\s]/,
-              message: 'Name cannot be zero',
+              message: 'Name cannot be an empty string',
             },
           }}
         />
@@ -161,12 +149,12 @@ export const TemplateForm: React.FC<
             style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}
             name="market"
             label={<span>Sweden 🇸🇪</span>}
-            checked={markets.includes(Language[Market.Sweden])}
+            checked={languages.includes(Language[Market.Sweden])}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setMarkets((prev) => [...prev, Language[Market.Sweden]])
+                setLanguages((prev) => [...prev, Language[Market.Sweden]])
               } else {
-                setMarkets((prev) =>
+                setLanguages((prev) =>
                   prev.filter((market) => market !== Language[Market.Sweden]),
                 )
                 form.unregister(`message-${Market.Sweden}`)
@@ -177,12 +165,12 @@ export const TemplateForm: React.FC<
             style={{ marginBottom: '0.5rem' }}
             name="market"
             label={<span>Norway 🇳🇴</span>}
-            checked={markets.includes(Language[Market.Norway])}
+            checked={languages.includes(Language[Market.Norway])}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setMarkets((prev) => [...prev, Language[Market.Norway]])
+                setLanguages((prev) => [...prev, Language[Market.Norway]])
               } else {
-                setMarkets((prev) =>
+                setLanguages((prev) =>
                   prev.filter((market) => market !== Language[Market.Norway]),
                 )
                 form.unregister(`message-${Market.Norway}`)
@@ -192,12 +180,12 @@ export const TemplateForm: React.FC<
           <Checkbox
             name="market"
             label={<span>Denmark 🇩🇰</span>}
-            checked={markets.includes(Language[Market.Denmark])}
+            checked={languages.includes(Language[Market.Denmark])}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setMarkets((prev) => [...prev, Language[Market.Denmark]])
+                setLanguages((prev) => [...prev, Language[Market.Denmark]])
               } else {
-                setMarkets((prev) =>
+                setLanguages((prev) =>
                   prev.filter((market) => market !== Language[Market.Denmark]),
                 )
                 form.unregister(`message-${Market.Denmark}`)
@@ -205,67 +193,29 @@ export const TemplateForm: React.FC<
             }}
           />
         </Field>
-        {markets.includes(Language[Market.Sweden]) && (
-          <MessageField
-            label={`Message (SE)`}
-            name={`message-${Market.Sweden}`}
-            placeholder="Message goes here"
-            style={{ marginTop: '0.5rem' }}
-            defaultValue={
-              template?.messages.find(
-                (msg) => msg.language === Language[Market.Sweden],
-              )?.message || ''
-            }
-            rules={{
-              required: false,
-              pattern: {
-                value: /[^\s]/,
-                message: 'Cannot send a message without text',
-              },
-            }}
-          />
-        )}
 
-        {markets.includes(Language[Market.Denmark]) && (
-          <MessageField
-            label={`Message (DK)`}
-            name={`message-${Market.Denmark}`}
-            placeholder="Message goes here"
-            style={{ marginTop: '0.5rem' }}
-            defaultValue={
-              template?.messages.find(
-                (msg) => msg.language === Language[Market.Denmark],
-              )?.message || ''
-            }
-            rules={{
-              required: false,
-              pattern: {
-                value: /[^\s]/,
-                message: 'Cannot send a message without text',
-              },
-            }}
-          />
-        )}
-
-        {markets.includes(Language[Market.Norway]) && (
-          <MessageField
-            label={`Message (NO)`}
-            name={`message-${Market.Norway}`}
-            placeholder="Message goes here"
-            style={{ marginTop: '0.5rem' }}
-            defaultValue={
-              template?.messages.find(
-                (msg) => msg.language === Language[Market.Norway],
-              )?.message || ''
-            }
-            rules={{
-              required: false,
-              pattern: {
-                value: /[^\s]/,
-                message: 'Cannot send a message without text',
-              },
-            }}
-          />
+        {Object.values(Market).map(
+          (market) =>
+            languages.includes(Language[market]) && (
+              <MessageField
+                label={`Message (${Language[market]})`}
+                name={`message-${market}`}
+                placeholder="Message goes here"
+                style={{ marginTop: '0.5rem' }}
+                defaultValue={
+                  template?.messages.find(
+                    (msg) => msg.language === Language[market],
+                  )?.message || ''
+                }
+                rules={{
+                  required: false,
+                  pattern: {
+                    value: /[^\s]/,
+                    message: 'Cannot send a message without text',
+                  },
+                }}
+              />
+            ),
         )}
 
         <MessageField
@@ -301,6 +251,7 @@ export const TemplateForm: React.FC<
           <Field>
             <Label>This template will be deleted after</Label>
             <TextDatePicker
+              minDate={new Date()}
               value={expiryDate}
               onChange={(value) => {
                 if (!value) {

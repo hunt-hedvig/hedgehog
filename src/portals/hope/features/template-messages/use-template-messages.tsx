@@ -22,8 +22,8 @@ export enum Language {
 interface TemplateMessagesContextProps {
   templates: Template[]
   show: () => void
-  create: (template: Template) => void
-  edit: (template: Template) => void
+  create: (template: UpsertTemplateInput) => void
+  edit: (template: UpsertTemplateInput) => void
   delete: (id: string) => void
   pin: (id: string) => void
   select: (text: string) => void

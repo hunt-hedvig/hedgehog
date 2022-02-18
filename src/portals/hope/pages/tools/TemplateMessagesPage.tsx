@@ -11,7 +11,7 @@ import {
 import { Market } from '../../features/config/constants'
 import { Page } from 'portals/sos/pages/routes'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { Template as TemplateMessages } from 'types/generated/graphql'
+import { UpsertTemplateInput } from 'types/generated/graphql'
 
 const Container = styled(FadeIn)`
   flex: 1;
@@ -30,7 +30,7 @@ const Content = styled.div`
 const TemplateMessagesPage: Page = () => {
   const [isCreating, setIsCreating] = useState(false)
   const [selectedTemplate, setSelectedTemplate] =
-    useState<TemplateMessages | null>(null)
+    useState<UpsertTemplateInput | null>(null)
 
   const {
     templates,
@@ -44,7 +44,7 @@ const TemplateMessagesPage: Page = () => {
 
   const { confirm } = useConfirmDialog()
 
-  const saveChangesHandler = (newTemplate: TemplateMessages) => {
+  const saveChangesHandler = (newTemplate: UpsertTemplateInput) => {
     if (!selectedTemplate) {
       return
     }
@@ -52,7 +52,7 @@ const TemplateMessagesPage: Page = () => {
     editTemplate(newTemplate)
   }
 
-  const createHandler = (newTemplate: TemplateMessages) => {
+  const createHandler = (newTemplate: UpsertTemplateInput) => {
     createTemplate(newTemplate)
 
     setIsCreating(false)
