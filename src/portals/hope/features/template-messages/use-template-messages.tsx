@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react'
+import gql from 'graphql-tag'
 import toast from 'react-hot-toast'
 // import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { TemplateMessagesModal } from './components/TemplateMessagesModal'
@@ -11,6 +12,58 @@ import {
   useTogglePinStatusMutation,
   UpsertTemplateInput,
 } from 'types/generated/graphql'
+
+gql`
+  query GetTemplateMessages {
+    templates {
+      id
+      title
+      messages {
+        language
+        message
+      }
+      expirationDate
+      pinned
+    }
+  }
+
+  query GetTemplateById($templateId: ID!) {
+    template(id: $templateId) {
+      id
+      title
+      messages {
+        language
+        message
+      }
+      expirationDate
+      pinned
+    }
+  }
+
+  mutation TogglePinStatus($templateId: ID!) {
+    togglePinStatus(id: $templateId) {
+      id
+      pinned
+    }
+  }
+
+  mutation UpsertTemplateMessage($input: UpsertTemplateInput!) {
+    upsertTemplate(input: $input) {
+      id
+      title
+      messages {
+        language
+        message
+      }
+      expirationDate
+      pinned
+    }
+  }
+
+  mutation RemoveTemplateMessage($templateId: ID!) {
+    removeTemplate(id: $templateId)
+  }
+`
 
 export enum Language {
   SWEDEN = 'SE',
