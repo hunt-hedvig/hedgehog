@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState } from 'react'
 import gql from 'graphql-tag'
 import toast from 'react-hot-toast'
-// import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { TemplateMessagesModal } from './components/TemplateMessagesModal'
 import { Market } from '../config/constants'
 import {
@@ -134,7 +133,14 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         variables: {
           input: newTemplate,
         },
-        refetchQueries: () => ['GetTemplateMessages'],
+        optimisticResponse: {
+          upsertTemplate: {
+            __typename: 'Template',
+            ...newTemplate,
+            id: 'temp-id',
+            pinned: false,
+          },
+        },
       }),
       {
         loading: 'Creating template',
