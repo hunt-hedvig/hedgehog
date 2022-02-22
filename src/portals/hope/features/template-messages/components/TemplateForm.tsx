@@ -21,7 +21,6 @@ import {
   TemplateMessage,
   UpsertTemplateInput,
 } from 'types/generated/graphql'
-import { parseISO } from 'date-fns'
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
@@ -272,8 +271,9 @@ export const TemplateForm: React.FC<
           placeholder="Message goes here"
           style={{ marginTop: '0.5rem' }}
           defaultValue={
-            template?.messages.find((msg) => msg.language === PickedLocale.EnSe)
-              ?.message || ''
+            template?.messages.find(
+              (msg) => msg.language === formatLocale(PickedLocale.EnSe),
+            )?.message || ''
           }
           rules={{
             required: false,
@@ -301,17 +301,14 @@ export const TemplateForm: React.FC<
             <Label>This template will be deleted after</Label>
             <TextDatePicker
               minDate={new Date()}
-              value={
-                formatDate(
-                  parseISO(new Date(expirationDate).toISOString()),
-                  'yyyy-MM-dd',
-                ).split('T')[0]
-              }
+              value={formatDate(new Date(expirationDate), 'yyyy-MM-dd')}
               onChange={(value) => {
                 if (!value) {
                   setExpirationDate(null)
                   return
                 }
+
+                console.log(value)
 
                 setExpirationDate(value)
               }}
