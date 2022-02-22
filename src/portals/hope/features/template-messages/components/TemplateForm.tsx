@@ -308,8 +308,6 @@ export const TemplateForm: React.FC<
                   return
                 }
 
-                console.log(value)
-
                 setExpirationDate(value)
               }}
               style={{ marginTop: '0.5rem' }}
