@@ -10,6 +10,7 @@ import {
   useRemoveTemplateMutation,
   useTogglePinStatusMutation,
   UpsertTemplateInput,
+  TemplateMessage,
 } from 'types/generated/graphql'
 
 gql`
@@ -101,7 +102,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
 
   const { data } = useGetTemplatesQuery({
     variables: {
-      locales: [locale],
+      locales: [locale.split('_')[0].toUpperCase()],
     },
   })
   const [upsertTemplate, { loading }] = useUpsertTemplateMutation()
@@ -111,22 +112,30 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
 
   const templates = data?.templates ?? []
 
-  const createHandler = (template: UpsertTemplateInput) => {
-    const newTemplate: UpsertTemplateInput = {
-      title: template.title,
-      expirationDate: template.expirationDate,
-      messages: template.messages,
+  const getFormattedMessages = (
+    messages: TemplateMessage[],
+  ): TemplateMessage[] =>
+    messages.map((message) => ({
+      ...message,
+      language: message.language.split('_')[0].toUpperCase(),
+    }))
+
+  const createHandler = (newTemplate: UpsertTemplateInput) => {
+    const template: UpsertTemplateInput = {
+      title: newTemplate.title,
+      expirationDate: newTemplate.expirationDate,
+      messages: getFormattedMessages(newTemplate.messages),
     }
 
     toast.promise(
       upsertTemplate({
         variables: {
-          input: newTemplate,
+          input: template,
         },
         optimisticResponse: {
           upsertTemplate: {
             __typename: 'Template',
-            ...newTemplate,
+            ...template,
             id: 'temp-id',
             pinned: false,
           },
@@ -145,7 +154,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       id: newTemplate.id,
       title: newTemplate.title,
       expirationDate: newTemplate.expirationDate,
-      messages: newTemplate.messages,
+      messages: getFormattedMessages(newTemplate.messages),
       pinned: !newTemplate.pinned,
     }
 

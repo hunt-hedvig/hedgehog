@@ -232,7 +232,8 @@ export const TemplateForm: React.FC<
           (locale) =>
             locales.includes(locale) && (
               <MessageField
-                label={`Message (${locale})`}
+                key={locale}
+                label={`Message (${locale.split('_')[0].toUpperCase()})`}
                 name={`message-${locale}`}
                 placeholder="Message goes here"
                 style={{ marginTop: '0.5rem' }}

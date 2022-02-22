@@ -12,9 +12,9 @@ import {
   Trash,
 } from 'react-bootstrap-icons'
 import { useTemplateMessages } from '../use-template-messages'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+// import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { Template, UpsertTemplateInput } from 'types/generated/graphql'
-import { PickedLocale } from '../../config/constants'
+// import { PickedLocale } from '../../config/constants'
 
 const show = keyframes`
   from {
@@ -80,26 +80,26 @@ const Content = styled.div`
   flex: 1;
 `
 
-const Bottom = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
+// const Bottom = styled.div`
+//   position: absolute;
+//   bottom: 0;
+//   right: 0;
 
-  width: 100%;
+//   width: 100%;
 
-  background-color: ${({ theme }) => theme.background};
+//   background-color: ${({ theme }) => theme.background};
 
-  padding: 15px;
+//   padding: 15px;
 
-  font-size: 14px;
+//   font-size: 14px;
 
-  color: ${({ theme }) => theme.foreground};
+//   color: ${({ theme }) => theme.foreground};
 
-  & span {
-    color: ${({ theme }) => theme.accent};
-    cursor: pointer;
-  }
-`
+//   & span {
+//     color: ${({ theme }) => theme.accent};
+//     cursor: pointer;
+//   }
+// `
 
 export const EmptyContainer = styled.div`
   text-align: center;
@@ -115,10 +115,10 @@ export const TemplateMessagesModal: React.FC<{
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
   const [isPinnedTab, setIsPinnedTab] = useState(false)
-  const [isEnDisplay, setIsEnDisplay] = useInsecurePersistentState<boolean>(
-    'templates:language',
-    false,
-  )
+  // const [isEnDisplay, setIsEnDisplay] = useInsecurePersistentState<boolean>(
+  //   'templates:language',
+  //   false,
+  // )
 
   const {
     select,
@@ -150,18 +150,18 @@ export const TemplateMessagesModal: React.FC<{
       return
     }
 
-    if (!isEnDisplay) {
-      const message = selectedTemplate.messages.find(
-        (msg) => msg.language === currentLocale,
-      )?.message
-
-      select(message || '')
-      return
-    }
+    // select(
+    //   selectedTemplate.messages.find((message) =>
+    //     isEnDisplay
+    //       ? message.language === PickedLocale.EnSe.split('_')[0].toUpperCase()
+    //       : message.language === currentLocale.split('_')[0].toUpperCase(),
+    //   )?.message || '',
+    // )
 
     select(
       selectedTemplate.messages.find(
-        (message) => message.language === PickedLocale.EnSe,
+        (message) =>
+          message.language === currentLocale.split('_')[0].toUpperCase(),
       )?.message || '',
     )
   }
@@ -181,17 +181,17 @@ export const TemplateMessagesModal: React.FC<{
     pinTemplate(id)
   }
 
-  const switchMarketHandler = () => {
-    const message = `By switching this setting, The default language used by this member will be changing to ${
-      isEnDisplay
-        ? currentLocale.charAt(0) + currentLocale.toLowerCase().slice(1)
-        : 'English'
-    }`
+  // const switchMarketHandler = () => {
+  //   const message = `By switching this setting, The default language used by this member will be changing to ${
+  //     isEnDisplay
+  //       ? currentLocale.charAt(0) + currentLocale.toLowerCase().slice(1)
+  //       : 'English'
+  //   }`
 
-    if (confirm(message)) {
-      setIsEnDisplay((prev) => !prev)
-    }
-  }
+  //   if (confirm(message)) {
+  //     setIsEnDisplay((prev) => !prev)
+  //   }
+  // }
 
   const getFilteredTemplates = () =>
     templates
@@ -199,10 +199,6 @@ export const TemplateMessagesModal: React.FC<{
         query
           ? template.title.toLowerCase().includes(query.toLowerCase())
           : true,
-      )
-      .filter(
-        (template) =>
-          !!template.messages.find((msg) => msg.language === currentLocale),
       )
       .filter((template) => (isPinnedTab ? template.pinned : true))
 
@@ -325,13 +321,21 @@ export const TemplateMessagesModal: React.FC<{
               id={template.id}
               name={template.title}
               text={
-                isEnDisplay
-                  ? template.messages.find(
-                      (msg) => msg.language === PickedLocale.EnSe,
-                    )?.message || ''
-                  : template.messages.find(
-                      (msg) => msg.language === currentLocale,
-                    )?.message || ''
+                // isEnDisplay
+                //   ? template.messages.find(
+                //       (msg) =>
+                //         msg.language ===
+                //         PickedLocale.EnSe.split('_')[0].toUpperCase(),
+                //     )?.message || ''
+                //   : template.messages.find(
+                //       (msg) =>
+                //         msg.language ===
+                //         currentLocale.split('_')[0].toUpperCase(),
+                //     )?.message || ''
+                template.messages.find(
+                  (msg) =>
+                    msg.language === currentLocale.split('_')[0].toUpperCase(),
+                )?.message || ''
               }
               pinned={template.pinned || false}
               onSelect={selectHandler}
@@ -344,11 +348,11 @@ export const TemplateMessagesModal: React.FC<{
           <EmptyContainer>No records found</EmptyContainer>
         )}
       </Content>
-      <Bottom onClick={switchMarketHandler}>
+      {/* <Bottom onClick={switchMarketHandler}>
         This user speaks in another language instead?
         <br />
         <span>Switch Language</span>
-      </Bottom>
+      </Bottom> */}
     </Container>
   )
 }

@@ -97,9 +97,8 @@ const TemplateMessagesPage: Page = () => {
           style={{ width: '30%' }}
           list={Object.values(PickedLocale).map((locale) => ({
             active: currentLocale === locale,
-            title:
-              locale.toLowerCase().charAt(0).toUpperCase() +
-              locale.toLowerCase().slice(1),
+            // title: locale.charAt(0) + locale.toLowerCase().slice(1),
+            title: locale.toUpperCase(),
             action: () => {
               setSelectedTemplate(null)
               changeCurrentLocale(locale)
