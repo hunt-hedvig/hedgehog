@@ -103,8 +103,6 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
     setLocale((data?.member?.pickedLocale as PickedLocale) || PickedLocale.SvSe)
   }, [data])
 
-  console.log(data?.member?.pickedLocale)
-
   if (!data?.member) {
     return (
       <Loadable loading>
