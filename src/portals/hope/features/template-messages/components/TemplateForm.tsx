@@ -234,30 +234,37 @@ export const TemplateForm: React.FC<
           />
         </Field>
 
-        {Object.values(PickedLocale).map(
-          (locale) =>
-            locales.includes(formatLocale(locale)) && (
-              <MessageField
-                key={locale}
-                label={`Message (${formatLocale(locale)})`}
-                name={`message-${locale}`}
-                placeholder="Message goes here"
-                style={{ marginTop: '0.5rem' }}
-                defaultValue={
-                  template?.messages.find(
-                    (msg) => msg.language === formatLocale(locale),
-                  )?.message || ''
-                }
-                rules={{
-                  required: false,
-                  pattern: {
-                    value: /[^\s]/,
-                    message: 'Cannot send a message without text',
-                  },
-                }}
-              />
-            ),
-        )}
+        {Object.values(PickedLocale)
+          .filter(
+            (locale) =>
+              locale !== PickedLocale.EnDk &&
+              locale !== PickedLocale.EnNo &&
+              locale !== PickedLocale.EnSe,
+          )
+          .map(
+            (locale) =>
+              locales.includes(formatLocale(locale)) && (
+                <MessageField
+                  key={locale}
+                  label={`Message (${formatLocale(locale)})`}
+                  name={`message-${locale}`}
+                  placeholder="Message goes here"
+                  style={{ marginTop: '0.5rem' }}
+                  defaultValue={
+                    template?.messages.find(
+                      (msg) => msg.language === formatLocale(locale),
+                    )?.message || ''
+                  }
+                  rules={{
+                    required: false,
+                    pattern: {
+                      value: /[^\s]/,
+                      message: 'Cannot send a message without text',
+                    },
+                  }}
+                />
+              ),
+          )}
 
         <MessageField
           label="Message (EN)"
