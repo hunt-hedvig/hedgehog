@@ -65,6 +65,9 @@ gql`
   }
 `
 
+export const formatLocale = (locale: PickedLocale) =>
+  locale.split('_')[0].toUpperCase()
+
 interface TemplateMessagesContextProps {
   templates: Template[]
   show: () => void
@@ -102,7 +105,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
 
   const { data } = useGetTemplatesQuery({
     variables: {
-      locales: [locale.split('_')[0].toUpperCase()],
+      locales: [formatLocale(locale)],
     },
   })
   const [upsertTemplate, { loading }] = useUpsertTemplateMutation()
@@ -117,7 +120,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   ): TemplateMessage[] =>
     messages.map((message) => ({
       ...message,
-      language: message.language.split('_')[0].toUpperCase(),
+      language: formatLocale(message.language as PickedLocale),
     }))
 
   const createHandler = (newTemplate: UpsertTemplateInput) => {

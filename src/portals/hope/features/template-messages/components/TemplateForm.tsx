@@ -10,7 +10,7 @@ import {
   FormTextArea,
   FormInput,
 } from '@hedvig-ui'
-import { useTemplateMessages } from '../use-template-messages'
+import { formatLocale, useTemplateMessages } from '../use-template-messages'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import formatDate from 'date-fns/format'
 import { PickedLocale } from '../../config/constants'
@@ -233,7 +233,7 @@ export const TemplateForm: React.FC<
             locales.includes(locale) && (
               <MessageField
                 key={locale}
-                label={`Message (${locale.split('_')[0].toUpperCase()})`}
+                label={`Message (${formatLocale(locale)})`}
                 name={`message-${locale}`}
                 placeholder="Message goes here"
                 style={{ marginTop: '0.5rem' }}

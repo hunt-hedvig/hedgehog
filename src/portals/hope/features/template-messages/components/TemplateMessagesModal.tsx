@@ -11,7 +11,7 @@ import {
   PinAngleFill,
   Trash,
 } from 'react-bootstrap-icons'
-import { useTemplateMessages } from '../use-template-messages'
+import { formatLocale, useTemplateMessages } from '../use-template-messages'
 // import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { Template, UpsertTemplateInput } from 'types/generated/graphql'
 // import { PickedLocale } from '../../config/constants'
@@ -160,8 +160,7 @@ export const TemplateMessagesModal: React.FC<{
 
     select(
       selectedTemplate.messages.find(
-        (message) =>
-          message.language === currentLocale.split('_')[0].toUpperCase(),
+        (message) => message.language === formatLocale(currentLocale),
       )?.message || '',
     )
   }
@@ -333,8 +332,7 @@ export const TemplateMessagesModal: React.FC<{
                 //         currentLocale.split('_')[0].toUpperCase(),
                 //     )?.message || ''
                 template.messages.find(
-                  (msg) =>
-                    msg.language === currentLocale.split('_')[0].toUpperCase(),
+                  (msg) => msg.language === formatLocale(currentLocale),
                 )?.message || ''
               }
               pinned={template.pinned || false}
