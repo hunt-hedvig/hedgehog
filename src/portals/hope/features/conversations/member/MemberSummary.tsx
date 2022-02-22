@@ -11,8 +11,8 @@ import {
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React, { useEffect } from 'react'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
-import { Market, PickedLocale } from 'portals/hope/features/config/constants'
-import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
+import { PickedLocale } from 'portals/hope/features/config/constants'
+import { useTemplateMessages } from '../../template-messages/use-template-messages'
 
 const MemberPlaceholder = styled.div`
   border-radius: 8px;
@@ -97,13 +97,13 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
     variables: { memberId },
   })
 
-  const { setMarket } = useTemplateMessages()
+  const { setLocale } = useTemplateMessages()
 
   useEffect(() => {
-    setMarket(
-      (data?.member?.contractMarketInfo?.market as Market) || Market.Sweden,
-    )
+    setLocale((data?.member?.pickedLocale as PickedLocale) || PickedLocale.SvSe)
   }, [data])
+
+  console.log(data?.member?.pickedLocale)
 
   if (!data?.member) {
     return (

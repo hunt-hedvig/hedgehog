@@ -11,9 +11,10 @@ import {
   PinAngleFill,
   Trash,
 } from 'react-bootstrap-icons'
-import { Language, useTemplateMessages } from '../use-template-messages'
+import { useTemplateMessages } from '../use-template-messages'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { Template, UpsertTemplateInput } from 'types/generated/graphql'
+import { PickedLocale } from '../../config/constants'
 
 const show = keyframes`
   from {
@@ -126,7 +127,7 @@ export const TemplateMessagesModal: React.FC<{
     edit: editTemplate,
     delete: deleteTemplate,
     pin: pinTemplate,
-    market: currentMarket,
+    locale: currentLocale,
     loading,
   } = useTemplateMessages()
 
@@ -143,22 +144,25 @@ export const TemplateMessagesModal: React.FC<{
   useClickOutside(templatesRef, smoothHideHandler)
 
   const selectHandler = (id: string) => {
-    const selectedTemplate = templates.filter(
-      (template) => template.id === id,
-    )[0]
+    const selectedTemplate = templates.find((template) => template.id === id)
+
+    if (!selectedTemplate) {
+      return
+    }
 
     if (!isEnDisplay) {
-      const message = selectedTemplate.messages.filter(
-        (msg) => msg.language === Language[currentMarket],
-      )[0].message
+      const message = selectedTemplate.messages.find(
+        (msg) => msg.language === currentLocale,
+      )?.message
 
-      select(message)
+      select(message || '')
       return
     }
 
     select(
-      selectedTemplate.messages.find((message) => message.language === 'EN')
-        ?.message || '',
+      selectedTemplate.messages.find(
+        (message) => message.language === PickedLocale.EnSe,
+      )?.message || '',
     )
   }
 
@@ -180,7 +184,7 @@ export const TemplateMessagesModal: React.FC<{
   const switchMarketHandler = () => {
     const message = `By switching this setting, The default language used by this member will be changing to ${
       isEnDisplay
-        ? currentMarket.charAt(0) + currentMarket.toLowerCase().slice(1)
+        ? currentLocale.charAt(0) + currentLocale.toLowerCase().slice(1)
         : 'English'
     }`
 
@@ -198,9 +202,7 @@ export const TemplateMessagesModal: React.FC<{
       )
       .filter(
         (template) =>
-          !!template.messages.find(
-            (msg) => msg.language === Language[currentMarket],
-          ),
+          !!template.messages.find((msg) => msg.language === currentLocale),
       )
       .filter((template) => (isPinnedTab ? template.pinned : true))
 
@@ -224,7 +226,7 @@ export const TemplateMessagesModal: React.FC<{
       >
         <SecondLevelHeadline>Create Template</SecondLevelHeadline>
         <TemplateForm
-          defaultMarket={Language[currentMarket]}
+          defaultLocale={currentLocale}
           isModal
           isCreating
           onCreate={(newTemplate: UpsertTemplateInput) => {
@@ -324,10 +326,11 @@ export const TemplateMessagesModal: React.FC<{
               name={template.title}
               text={
                 isEnDisplay
-                  ? template.messages.find((msg) => msg.language === 'EN')
-                      ?.message || ''
+                  ? template.messages.find(
+                      (msg) => msg.language === PickedLocale.EnSe,
+                    )?.message || ''
                   : template.messages.find(
-                      (msg) => msg.language === Language[currentMarket],
+                      (msg) => msg.language === currentLocale,
                     )?.message || ''
               }
               pinned={template.pinned || false}

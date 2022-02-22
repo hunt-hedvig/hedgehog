@@ -2,11 +2,10 @@ import React, { createContext, useContext, useState } from 'react'
 import gql from 'graphql-tag'
 import toast from 'react-hot-toast'
 import { TemplateMessagesModal } from './components/TemplateMessagesModal'
-import { Market } from '../config/constants'
+import { PickedLocale } from '../config/constants'
 import {
   useGetTemplatesQuery,
   Template,
-  TemplateMessage,
   useUpsertTemplateMutation,
   useRemoveTemplateMutation,
   useTogglePinStatusMutation,
@@ -14,8 +13,8 @@ import {
 } from 'types/generated/graphql'
 
 gql`
-  query GetTemplates {
-    templates {
+  query GetTemplates($locales: [String!]!) {
+    templates(locales: $locales) {
       id
       title
       messages {
@@ -65,13 +64,6 @@ gql`
   }
 `
 
-export enum Language {
-  SWEDEN = 'SE',
-  NORWAY = 'NO',
-  DENMARK = 'DK',
-  ENGLISH = 'EN',
-}
-
 interface TemplateMessagesContextProps {
   templates: Template[]
   show: () => void
@@ -81,8 +73,8 @@ interface TemplateMessagesContextProps {
   pin: (id: string) => void
   select: (text: string) => void
   selected: string | null
-  market: Market
-  setMarket: (market: Market) => void
+  locale: PickedLocale
+  setLocale: (locale: PickedLocale) => void
   loading: boolean
 }
 
@@ -95,37 +87,35 @@ const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
   pin: () => void 0,
   select: () => void 0,
   selected: null,
-  market: Market.Sweden,
-  setMarket: () => void 0,
+  locale: PickedLocale.SvSe,
+  setLocale: () => void 0,
   loading: false,
 })
 
 export const useTemplateMessages = () => useContext(TemplateMessagesContext)
 
 export const TemplateMessagesProvider: React.FC = ({ children }) => {
-  const [market, setMarket] = useState<Market>(Market.Sweden)
+  const [locale, setLocale] = useState<PickedLocale>(PickedLocale.SvSe)
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
 
-  const templatesQuery = useGetTemplatesQuery()
+  const { data } = useGetTemplatesQuery({
+    variables: {
+      locales: [locale],
+    },
+  })
   const [upsertTemplate, { loading }] = useUpsertTemplateMutation()
   const [togglePinStatus] = useTogglePinStatusMutation()
 
   const [removeTemplate] = useRemoveTemplateMutation()
 
-  const getTemplateMessages = (
-    messages: TemplateMessage[],
-  ): TemplateMessage[] =>
-    messages.map((msg) => ({
-      ...msg,
-      language: Language[msg.language as Market],
-    }))
+  const templates = data?.templates ?? []
 
   const createHandler = (template: UpsertTemplateInput) => {
     const newTemplate: UpsertTemplateInput = {
       title: template.title,
       expirationDate: template.expirationDate,
-      messages: getTemplateMessages(template.messages),
+      messages: template.messages,
     }
 
     toast.promise(
@@ -155,7 +145,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       id: newTemplate.id,
       title: newTemplate.title,
       expirationDate: newTemplate.expirationDate,
-      messages: getTemplateMessages(newTemplate.messages),
+      messages: newTemplate.messages,
       pinned: !newTemplate.pinned,
     }
 
@@ -203,10 +193,9 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   }
 
   const pinHandler = (templateId: string) => {
-    const changedTemplate: Template | undefined =
-      templatesQuery.data?.templates.find(
-        (template) => template.id === templateId,
-      )
+    const changedTemplate: Template | undefined = templates.find(
+      (template) => template.id === templateId,
+    )
 
     if (changedTemplate) {
       toast.promise(
@@ -234,7 +223,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   return (
     <TemplateMessagesContext.Provider
       value={{
-        templates: templatesQuery.data?.templates || [],
+        templates,
         show: () => setShowTemplateMessages(true),
         create: createHandler,
         edit: editHandler,
@@ -242,8 +231,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         pin: pinHandler,
         select: (text: string) => setSelectedText(text),
         selected: selectedText,
-        market,
-        setMarket: (market: Market) => setMarket(market),
+        locale,
+        setLocale: (newLocale: PickedLocale) => setLocale(newLocale),
         loading,
       }}
     >

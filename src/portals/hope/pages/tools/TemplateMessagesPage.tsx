@@ -4,11 +4,8 @@ import { FadeIn, MainHeadline, Flex, Button, Tabs, Spinner } from '@hedvig-ui'
 import { CreateTemplate } from '../../features/template-messages/components/CreateTemplate'
 import { SearchTemplate } from '../../features/template-messages/components/SearchTemplate'
 import { TemplateView } from '../../features/template-messages/components/TemplateView'
-import {
-  Language,
-  useTemplateMessages,
-} from 'portals/hope/features/template-messages/use-template-messages'
-import { Market } from '../../features/config/constants'
+import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
+import { PickedLocale } from '../../features/config/constants'
 import { Page } from 'portals/sos/pages/routes'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { Template, UpsertTemplateInput } from 'types/generated/graphql'
@@ -38,8 +35,8 @@ const TemplateMessagesPage: Page = () => {
     create: createTemplate,
     edit: editTemplate,
     delete: deleteTemplate,
-    market: currentMarket,
-    setMarket: changeCurrentMarket,
+    locale: currentLocale,
+    setLocale: changeCurrentLocale,
     loading,
   } = useTemplateMessages()
 
@@ -98,14 +95,14 @@ const TemplateMessagesPage: Page = () => {
       <Flex flex="0" align="center" justify="space-between">
         <Tabs
           style={{ width: '30%' }}
-          list={Object.values(Market).map((market) => ({
-            active: currentMarket === market,
+          list={Object.values(PickedLocale).map((locale) => ({
+            active: currentLocale === locale,
             title:
-              market.toLowerCase().charAt(0).toUpperCase() +
-              market.toLowerCase().slice(1),
+              locale.toLowerCase().charAt(0).toUpperCase() +
+              locale.toLowerCase().slice(1),
             action: () => {
               setSelectedTemplate(null)
-              changeCurrentMarket(market)
+              changeCurrentLocale(locale)
             },
           }))}
         />
@@ -117,9 +114,7 @@ const TemplateMessagesPage: Page = () => {
           onSelect={setSelectedTemplate}
           templates={templates?.filter(
             (template) =>
-              !!template.messages.find(
-                (msg) => msg.language === Language[currentMarket],
-              ),
+              !!template.messages.find((msg) => msg.language === currentLocale),
           )}
         />
         {selectedTemplate && (

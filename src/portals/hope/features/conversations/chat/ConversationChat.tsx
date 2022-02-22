@@ -163,7 +163,7 @@ export const ConversationChat: React.FC<{
     show,
     selected,
     templates,
-    market,
+    locale,
     loading: templatesLoading,
   } = useTemplateMessages()
 
@@ -240,7 +240,7 @@ export const ConversationChat: React.FC<{
       const templatesIds = templates
         .filter(
           (template) =>
-            !!template.messages.find((msg) => msg.language === market),
+            !!template.messages.find((msg) => msg.language === locale),
         )
         .filter(
           (template) =>
@@ -294,7 +294,7 @@ export const ConversationChat: React.FC<{
       e.preventDefault()
 
       const newMessage = proposedTemplate?.messages.find(
-        (msg) => msg.language === market,
+        (msg) => msg.language === locale,
       )?.message
 
       setMessage(newMessage || '')

@@ -10,10 +10,10 @@ import {
   FormTextArea,
   FormInput,
 } from '@hedvig-ui'
-import { Language, useTemplateMessages } from '../use-template-messages'
+import { useTemplateMessages } from '../use-template-messages'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import formatDate from 'date-fns/format'
-import { Market } from '../../config/constants'
+import { PickedLocale } from '../../config/constants'
 import toast from 'react-hot-toast'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import {
@@ -55,7 +55,7 @@ interface TemplateFormProps {
   isCreating?: boolean
   onClose?: () => void
   isModal?: boolean
-  defaultMarket?: Language
+  defaultLocale?: PickedLocale
 }
 
 export const TemplateForm: React.FC<
@@ -67,10 +67,10 @@ export const TemplateForm: React.FC<
   onEdit,
   onClose,
   isModal,
-  defaultMarket,
+  defaultLocale,
   ...props
 }) => {
-  const [languages, setLanguages] = useState<Language[]>([])
+  const [locales, setLocales] = useState<PickedLocale[]>([])
   const [expirationDate, setExpirationDate] = useState<string | null>(
     template?.expirationDate || null,
   )
@@ -83,11 +83,11 @@ export const TemplateForm: React.FC<
   useEffect(() => {
     form.reset()
     setExpirationDate(template?.expirationDate || null)
-    setLanguages(
-      defaultMarket
-        ? [defaultMarket]
-        : template?.messages.map((msg) => msg.language as Language) || [
-            Language[Market.Sweden],
+    setLocales(
+      defaultLocale
+        ? [defaultLocale]
+        : template?.messages.map((msg) => msg.language as PickedLocale) || [
+            PickedLocale.SvSe,
           ],
     )
   }, [template])
@@ -95,11 +95,11 @@ export const TemplateForm: React.FC<
   const getMessages = (values: FieldValues): TemplateMessage[] => {
     const messages: TemplateMessage[] = []
 
-    Object.values(Market).forEach((market) => {
-      if (values[`message-${market}`]) {
+    Object.values(PickedLocale).forEach((locale) => {
+      if (values[`message-${locale}`]) {
         messages.push({
-          message: values[`message-${market}`],
-          language: market,
+          message: values[`message-${locale}`],
+          language: locale,
         })
       }
     })
@@ -108,7 +108,7 @@ export const TemplateForm: React.FC<
       ...messages,
       {
         message: values.messageEn,
-        language: 'ENGLISH',
+        language: PickedLocale.EnSe,
       },
     ]
   }
@@ -122,7 +122,7 @@ export const TemplateForm: React.FC<
       templates.some(
         (template) => template.title === values.title,
         template?.messages.some((msg) =>
-          languages.includes(msg.language as Language),
+          locales.includes(msg.language as PickedLocale),
         ),
       )
     ) {
@@ -183,15 +183,15 @@ export const TemplateForm: React.FC<
             style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}
             name="market"
             label={<span>Sweden 🇸🇪</span>}
-            checked={languages.includes(Language[Market.Sweden])}
+            checked={locales.includes(PickedLocale.SvSe)}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setLanguages((prev) => [...prev, Language[Market.Sweden]])
+                setLocales((prev) => [...prev, PickedLocale.SvSe])
               } else {
-                setLanguages((prev) =>
-                  prev.filter((market) => market !== Language[Market.Sweden]),
+                setLocales((prev) =>
+                  prev.filter((market) => market !== PickedLocale.SvSe),
                 )
-                form.unregister(`message-${Market.Sweden}`)
+                form.unregister(`message-${PickedLocale.SvSe}`)
               }
             }}
           />
@@ -199,47 +199,46 @@ export const TemplateForm: React.FC<
             style={{ marginBottom: '0.5rem' }}
             name="market"
             label={<span>Norway 🇳🇴</span>}
-            checked={languages.includes(Language[Market.Norway])}
+            checked={locales.includes(PickedLocale.NbNo)}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setLanguages((prev) => [...prev, Language[Market.Norway]])
+                setLocales((prev) => [...prev, PickedLocale.NbNo])
               } else {
-                setLanguages((prev) =>
-                  prev.filter((market) => market !== Language[Market.Norway]),
+                setLocales((prev) =>
+                  prev.filter((market) => market !== PickedLocale.NbNo),
                 )
-                form.unregister(`message-${Market.Norway}`)
+                form.unregister(`message-${PickedLocale.NbNo}`)
               }
             }}
           />
           <Checkbox
             name="market"
             label={<span>Denmark 🇩🇰</span>}
-            checked={languages.includes(Language[Market.Denmark])}
+            checked={locales.includes(PickedLocale.DaDk)}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setLanguages((prev) => [...prev, Language[Market.Denmark]])
+                setLocales((prev) => [...prev, PickedLocale.DaDk])
               } else {
-                setLanguages((prev) =>
-                  prev.filter((market) => market !== Language[Market.Denmark]),
+                setLocales((prev) =>
+                  prev.filter((market) => market !== PickedLocale.DaDk),
                 )
-                form.unregister(`message-${Market.Denmark}`)
+                form.unregister(`message-${PickedLocale.DaDk}`)
               }
             }}
           />
         </Field>
 
-        {Object.values(Market).map(
-          (market) =>
-            languages.includes(Language[market]) && (
+        {Object.values(PickedLocale).map(
+          (locale) =>
+            locales.includes(locale) && (
               <MessageField
-                label={`Message (${Language[market]})`}
-                name={`message-${market}`}
+                label={`Message (${locale})`}
+                name={`message-${locale}`}
                 placeholder="Message goes here"
                 style={{ marginTop: '0.5rem' }}
                 defaultValue={
-                  template?.messages.find(
-                    (msg) => msg.language === Language[market],
-                  )?.message || ''
+                  template?.messages.find((msg) => msg.language === locale)
+                    ?.message || ''
                 }
                 rules={{
                   required: false,
@@ -258,8 +257,8 @@ export const TemplateForm: React.FC<
           placeholder="Message goes here"
           style={{ marginTop: '0.5rem' }}
           defaultValue={
-            template?.messages.find((msg) => msg.language === 'EN')?.message ||
-            ''
+            template?.messages.find((msg) => msg.language === PickedLocale.EnSe)
+              ?.message || ''
           }
           rules={{
             required: false,
