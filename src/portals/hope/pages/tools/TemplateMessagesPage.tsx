@@ -122,10 +122,7 @@ const TemplateMessagesPage: Page = () => {
         <SearchTemplate
           selected={selectedTemplate}
           onSelect={setSelectedTemplate}
-          templates={templates?.filter(
-            (template) =>
-              !!template.messages.find((msg) => msg.language === currentLocale),
-          )}
+          templates={templates}
         />
         {selectedTemplate && (
           <TemplateView

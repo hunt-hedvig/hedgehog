@@ -70,7 +70,7 @@ export const TemplateForm: React.FC<
   defaultLocale,
   ...props
 }) => {
-  const [locales, setLocales] = useState<PickedLocale[]>([])
+  const [locales, setLocales] = useState<string[]>([])
   const [expirationDate, setExpirationDate] = useState<string | null>(
     template?.expirationDate || null,
   )
@@ -86,8 +86,8 @@ export const TemplateForm: React.FC<
     setLocales(
       defaultLocale
         ? [defaultLocale]
-        : template?.messages.map((msg) => msg.language as PickedLocale) || [
-            PickedLocale.SvSe,
+        : template?.messages.map((msg) => msg.language as string) || [
+            formatLocale(PickedLocale.SvSe),
           ],
     )
   }, [template])
@@ -183,13 +183,15 @@ export const TemplateForm: React.FC<
             style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}
             name="market"
             label={<span>Sweden 🇸🇪</span>}
-            checked={locales.includes(PickedLocale.SvSe)}
+            checked={locales.includes(formatLocale(PickedLocale.SvSe))}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setLocales((prev) => [...prev, PickedLocale.SvSe])
+                setLocales((prev) => [...prev, formatLocale(PickedLocale.SvSe)])
               } else {
                 setLocales((prev) =>
-                  prev.filter((market) => market !== PickedLocale.SvSe),
+                  prev.filter(
+                    (market) => market !== formatLocale(PickedLocale.SvSe),
+                  ),
                 )
                 form.unregister(`message-${PickedLocale.SvSe}`)
               }
@@ -199,13 +201,15 @@ export const TemplateForm: React.FC<
             style={{ marginBottom: '0.5rem' }}
             name="market"
             label={<span>Norway 🇳🇴</span>}
-            checked={locales.includes(PickedLocale.NbNo)}
+            checked={locales.includes(formatLocale(PickedLocale.NbNo))}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setLocales((prev) => [...prev, PickedLocale.NbNo])
+                setLocales((prev) => [...prev, formatLocale(PickedLocale.NbNo)])
               } else {
                 setLocales((prev) =>
-                  prev.filter((market) => market !== PickedLocale.NbNo),
+                  prev.filter(
+                    (market) => market !== formatLocale(PickedLocale.NbNo),
+                  ),
                 )
                 form.unregister(`message-${PickedLocale.NbNo}`)
               }
@@ -214,13 +218,15 @@ export const TemplateForm: React.FC<
           <Checkbox
             name="market"
             label={<span>Denmark 🇩🇰</span>}
-            checked={locales.includes(PickedLocale.DaDk)}
+            checked={locales.includes(formatLocale(PickedLocale.DaDk))}
             onChange={({ currentTarget: { checked } }) => {
               if (checked) {
-                setLocales((prev) => [...prev, PickedLocale.DaDk])
+                setLocales((prev) => [...prev, formatLocale(PickedLocale.DaDk)])
               } else {
                 setLocales((prev) =>
-                  prev.filter((market) => market !== PickedLocale.DaDk),
+                  prev.filter(
+                    (market) => market !== formatLocale(PickedLocale.DaDk),
+                  ),
                 )
                 form.unregister(`message-${PickedLocale.DaDk}`)
               }
@@ -230,7 +236,7 @@ export const TemplateForm: React.FC<
 
         {Object.values(PickedLocale).map(
           (locale) =>
-            locales.includes(locale) && (
+            locales.includes(formatLocale(locale)) && (
               <MessageField
                 key={locale}
                 label={`Message (${formatLocale(locale)})`}
@@ -238,8 +244,9 @@ export const TemplateForm: React.FC<
                 placeholder="Message goes here"
                 style={{ marginTop: '0.5rem' }}
                 defaultValue={
-                  template?.messages.find((msg) => msg.language === locale)
-                    ?.message || ''
+                  template?.messages.find(
+                    (msg) => msg.language === formatLocale(locale),
+                  )?.message || ''
                 }
                 rules={{
                   required: false,
