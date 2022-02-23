@@ -6,7 +6,10 @@ import { CardTitleBadgeProps as _CardTitleBadgeProps } from './Card/card'
 import { DropdownProps as _DropdownProps } from './Dropdown/dropdown'
 import { InfoTagStatus as _InfoTagStatus } from './InfoRow/info-row'
 import { InputProps as _InputProps } from './Input/input'
-import { ModalProps as _ModalProps } from './Modal'
+import {
+  ModalProps as _ModalProps,
+  ModalAdditionalOptions as _ModalAdditionalOptions,
+} from './Modal'
 import { FlagProp as _FlagProp } from './OrbIndicator/orb-indicator'
 import { SpacingSize as _SpacingSize } from './Spacing/spacing'
 import { TabsProps as _TabsProps } from './Tabs'
@@ -110,6 +113,7 @@ export {
 
 export { Modal } from './Modal'
 export type ModalProps = _ModalProps
+export type ModalAdditionalOptions = _ModalAdditionalOptions
 
 export { Tabs, Tab } from './Tabs'
 export type TabsProps = _TabsProps
