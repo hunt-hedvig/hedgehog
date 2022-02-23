@@ -94,7 +94,7 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
                 setQuery(value)
               }}
               icon={<SearchIcon muted={!query} />}
-              placeholder="Looking for someone or something...?"
+              placeholder="Looking for someone...?"
               id="query"
               value={query}
               loading={loading}
