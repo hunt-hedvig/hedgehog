@@ -7,6 +7,7 @@ import ImpersonateMemberPage from './tools/ImpersonateMemberPage'
 export type Page<T = void> = React.FC<T>
 
 const DashboardPage = lazy(() => import('./DashboardPage'))
+const SearchPage = lazy(() => import('./search/SearchPage'))
 const ProfilePage = lazy(() => import('./settings/ProfilePage'))
 const QuestionsPage = lazy(() => import('./QuestionsPage'))
 const ConversationsOnboardingPage = lazy(
@@ -82,6 +83,7 @@ export const Routes: React.FC = () => {
         <Route path="/dashborad" component={DashboardPage} />
         <Route path="/questions" component={QuestionsPage} />
         <Route path="/notifications" component={NotificationsPage} />
+        <Route path="/search" component={SearchPage} />
         <Route
           path="/conversations/onboarding"
           component={ConversationsOnboardingPage}

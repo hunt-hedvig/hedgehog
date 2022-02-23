@@ -185,7 +185,7 @@ export const VerticalMenu: React.FC = () => {
       route: routes.search,
       icon: Search,
       hotkey: 'S',
-      title: 'Member Search',
+      title: 'Search',
       single: true,
       external: false,
       hotkeyHandler: () => history.push(routes.search),
