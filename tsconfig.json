@@ -3,7 +3,7 @@
     "target": "es2017",
     "module": "esnext",
     "esModuleInterop": true,
-    "lib": ["dom", "es6", "es7", "es2017.object"],
+    "lib": ["dom", "es6", "es7", "es2017.object", "es2021"],
     "jsx": "react",
     "strict": true,
     "noUnusedLocals": true,

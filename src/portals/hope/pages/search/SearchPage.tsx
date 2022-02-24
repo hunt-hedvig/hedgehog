@@ -5,6 +5,7 @@ import {
   Input,
   Loadable,
   Placeholder,
+  Popover,
   Spacing,
   Table,
   TableBody,
@@ -14,12 +15,12 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { SearchIcon } from 'portals/hope/features/members-search/styles'
-import gql from 'graphql-tag'
-import { SearchQuery, useSearchLazyQuery } from 'types/generated/graphql'
-import { useDebounce } from 'portals/hope/common/hooks/use-debounce'
 import { useHistory } from 'react-router'
+import { useSearch } from '../../common/hooks/use-search'
+import parse from 'html-react-parser'
+import chroma from 'chroma-js'
 
 type CircleVariation =
   | 'success'
@@ -67,48 +68,39 @@ const SearchInput = styled(Input)`
   width: 100%;
 `
 
-gql`
-  query Search($query: String!, $from: Int, $size: Int) {
-    search(query: $query, from: $from, size: $size) {
-      memberId
-      firstName
-      lastName
-      highlights {
-        field
-        values
-      }
-    }
-  }
+const SearchHitTag = styled.div`
+  background-color: ${({ theme }) =>
+    chroma(theme.semiStrongForeground).brighten(2.25).alpha(0.5).hex()};
+  color: ${({ theme }) => theme.semiStrongForeground};
+
+  padding: 0.15rem 0.3rem;
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+  border-radius: 0.25rem;
 `
+
+const SearchHitExplanation = styled.div`
+  color: ${({ theme }) => theme.semiStrongForeground};
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+`
+
+const convertTagText = (text: string) => {
+  const result = text.replaceAll(/([A-Z])/g, ' $1')
+  return result.charAt(0).toUpperCase() + result.slice(1)
+}
 
 const SearchPage: Page = () => {
   const history = useHistory()
-  const [result, setResult] = useState<SearchQuery['search']>([])
   const [query, setQuery] = useState('')
-  const [search, { loading }] = useSearchLazyQuery({
-    variables: { query },
-  })
-
-  const debouncedQuery = useDebounce(query, 200)
-
-  useEffect(() => {
-    if (debouncedQuery.length >= 3 && !loading) {
-      search({ variables: { query: debouncedQuery } }).then(({ data }) => {
-        if (!data) {
-          return
-        }
-
-        setResult(data.search)
-      })
-    }
-  }, [debouncedQuery])
+  const { hits, loading, search, fetchMore } = useSearch(query)
 
   return (
     <>
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          search({ variables: { query } })
+          search()
         }}
       >
         <SearchInput
@@ -122,7 +114,7 @@ const SearchPage: Page = () => {
           autoFocus
         />
         <Spacing top />
-        {result.length !== 0 && (
+        {hits.length !== 0 && (
           <Table>
             <TableHeader>
               <TableHeaderColumn>Member</TableHeaderColumn>
@@ -132,12 +124,11 @@ const SearchPage: Page = () => {
               <TableHeaderColumn>Contracts</TableHeaderColumn>
             </TableHeader>
             <TableBody>
-              {result.map((member, index) => (
-                <>
+              {hits.map((member, index) => (
+                <React.Fragment key={member.memberId}>
                   <TableRow
                     index={index}
-                    length={result.length}
-                    key={member.memberId}
+                    length={hits.length}
                     tabIndex={0}
                     onClick={() =>
                       history.push(`/members/${member.memberId}/contracts`)
@@ -159,6 +150,41 @@ const SearchPage: Page = () => {
                               <span>99 years</span>
                             </Loadable>
                           </MemberAgeWrapper>
+                        </Flex>
+                        <Flex align="center" style={{ marginTop: '1rem' }}>
+                          <SearchHitExplanation>
+                            Search hit in{' '}
+                          </SearchHitExplanation>
+                          {member.highlights
+                            .filter(
+                              (highlight) =>
+                                !highlight.field.includes('keyword'),
+                            )
+                            .map((highlight) => (
+                              <SearchHitTag key={highlight.field}>
+                                <Popover
+                                  style={{
+                                    maxWidth: '60rem',
+                                    minWidth: '15rem',
+                                    overflowWrap: 'break-word',
+                                  }}
+                                  contents={parse(
+                                    [...new Set(highlight.values)]
+                                      .reduce<string>(
+                                        (acc, value) => acc + value + '<br/>',
+                                        '',
+                                      )
+                                      .replaceAll('<em>', '<b>')
+                                      .replaceAll('</em>', '</b>'),
+                                  )}
+                                >
+                                  {convertTagText(highlight.field).replaceAll(
+                                    '.',
+                                    ', ',
+                                  )}
+                                </Popover>
+                              </SearchHitTag>
+                            ))}
                         </Flex>
                       </Flex>
                     </TableColumn>
@@ -228,7 +254,7 @@ const SearchPage: Page = () => {
                       </div>
                     </TableColumn>
                   </TableRow>
-                </>
+                </React.Fragment>
               ))}
             </TableBody>
           </Table>
@@ -236,19 +262,11 @@ const SearchPage: Page = () => {
       </form>
       <Spacing top="medium" />
       <Flex justify="center">
-        {result.length !== 0 && (
+        {hits.length !== 0 && (
           <Button
             variant="tertiary"
             onClick={() => {
-              search({
-                variables: { query: debouncedQuery, from: result.length },
-              }).then(({ data }) => {
-                if (!data) {
-                  return
-                }
-
-                setResult([...result, ...data.search])
-              })
+              fetchMore()
             }}
           >
             Show more
