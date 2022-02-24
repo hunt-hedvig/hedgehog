@@ -314,7 +314,7 @@ type MutationType {
   userCheckIn: User!
   userCheckOut: User!
 
-  upsertTemplate(input: UpsertTemplateInput!): Template!
+  upsertTemplate(input: UpsertTemplateInput!, locale: String!): [Template!]!
   removeTemplate(id: ID!): Boolean!
   togglePinStatus(id: ID!): Template!
 }

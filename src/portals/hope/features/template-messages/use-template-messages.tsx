@@ -47,8 +47,8 @@ gql`
     }
   }
 
-  mutation UpsertTemplate($input: UpsertTemplateInput!) {
-    upsertTemplate(input: $input) {
+  mutation UpsertTemplate($input: UpsertTemplateInput!, $locale: String!) {
+    upsertTemplate(input: $input, locale: $locale) {
       id
       title
       messages {
@@ -124,24 +124,29 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     }))
 
   const createHandler = (newTemplate: UpsertTemplateInput) => {
-    const template: UpsertTemplateInput = {
+    const template: Template = {
+      id: 'temp-id',
       title: newTemplate.title,
       expirationDate: newTemplate.expirationDate,
       messages: getFormattedMessages(newTemplate.messages),
+      pinned: false,
     }
 
     toast.promise(
       upsertTemplate({
         variables: {
-          input: template,
+          input: {
+            title: template.title,
+            expirationDate: template.expirationDate,
+            messages: template.messages,
+          },
+          locale,
         },
         optimisticResponse: {
-          upsertTemplate: {
-            __typename: 'Template',
-            ...template,
-            id: 'temp-id',
-            pinned: false,
-          },
+          upsertTemplate: [
+            ...templates,
+            { __typename: 'Template', ...template },
+          ],
         },
       }),
       {
@@ -158,7 +163,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       title: newTemplate.title,
       expirationDate: newTemplate.expirationDate,
       messages: getFormattedMessages(newTemplate.messages),
-      pinned: !newTemplate.pinned,
+      pinned: newTemplate.pinned,
     }
 
     toast.promise(
@@ -170,12 +175,13 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             expirationDate: template.expirationDate,
             messages: template.messages,
           },
+          locale,
         },
         optimisticResponse: {
-          upsertTemplate: {
-            __typename: 'Template',
-            ...template,
-          },
+          upsertTemplate: [
+            ...templates.filter((temp) => temp.id !== template.id),
+            { __typename: 'Template', ...template },
+          ],
         },
       }),
       {
@@ -218,7 +224,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
           optimisticResponse: {
             togglePinStatus: {
               __typename: 'Template',
-              ...changedTemplate,
+              id: templateId,
               pinned: !changedTemplate.pinned,
             },
           },
