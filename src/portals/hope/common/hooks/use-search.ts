@@ -4,8 +4,8 @@ import { useDebounce } from 'portals/hope/common/hooks/use-debounce'
 import { useEffect, useState } from 'react'
 
 gql`
-  query Search($query: String!, $from: Int, $size: Int) {
-    search(query: $query, from: $from, size: $size) {
+  query Search($query: String!, $from: Int, $size: Int, $type: String) {
+    search(query: $query, from: $from, size: $size, type: $type) {
       memberId
       firstName
       lastName
@@ -21,6 +21,9 @@ interface UseSearchOptions {
   from?: number
   size?: number
   debounce?: number
+  minChars?: number
+  type?: string
+  manual?: boolean
 }
 
 interface UseSearchResult {
@@ -37,7 +40,11 @@ export const useSearch = (
   const debouncedQuery = useDebounce(query, baseOptions?.debounce ?? 200)
   const [result, setResult] = useState<SearchQuery['search']>([])
   const [search, { loading }] = useSearchLazyQuery({
-    variables: { query: debouncedQuery },
+    variables: {
+      query: baseOptions?.manual ? query : debouncedQuery,
+      type: baseOptions?.type ?? 'ALL',
+    },
+    fetchPolicy: 'no-cache',
   })
 
   const searchHandler = (options?: Omit<UseSearchOptions, 'debounce'>) => {
@@ -46,6 +53,7 @@ export const useSearch = (
         query: debouncedQuery,
         from: options?.from ?? baseOptions?.from,
         size: options?.size ?? baseOptions?.size,
+        type: options?.type ?? baseOptions?.type ?? 'ALL',
       },
     }).then(({ data }) => {
       if (!data) {
@@ -69,8 +77,18 @@ export const useSearch = (
   }
 
   useEffect(() => {
-    if (debouncedQuery.length >= 3 && !loading) {
-      search({ variables: { query: debouncedQuery } }).then(({ data }) => {
+    if (
+      debouncedQuery.length >= (baseOptions?.minChars ?? 3) &&
+      !baseOptions?.manual
+    ) {
+      search({
+        variables: {
+          query: debouncedQuery,
+          from: baseOptions?.from,
+          size: baseOptions?.size,
+          type: baseOptions?.type ?? 'ALL',
+        },
+      }).then(({ data }) => {
         if (!data) {
           return
         }

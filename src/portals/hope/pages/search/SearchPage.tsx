@@ -21,6 +21,15 @@ import { useHistory } from 'react-router'
 import { useSearch } from '../../common/hooks/use-search'
 import parse from 'html-react-parser'
 import chroma from 'chroma-js'
+import {
+  SearchQuery,
+  useMemberSearchResultQuery,
+} from 'types/generated/graphql'
+import { ArrayElement } from '@hedvig-ui/utils/array-element'
+import { MemberAge } from 'portals/hope/features/member/utils'
+import formatDate from 'date-fns/format'
+import { parseISO } from 'date-fns'
+import gql from 'graphql-tag'
 
 type CircleVariation =
   | 'success'
@@ -90,10 +99,177 @@ const convertTagText = (text: string) => {
   return result.charAt(0).toUpperCase() + result.slice(1)
 }
 
-const SearchPage: Page = () => {
+gql`
+  query MemberSearchResult($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      birthDate
+      signedOn
+    }
+  }
+`
+
+const SearchResult: React.FC<{
+  result: ArrayElement<SearchQuery['search']>
+}> = ({ result }) => {
   const history = useHistory()
+  const { data } = useMemberSearchResultQuery({
+    variables: { memberId: result.memberId ?? '' },
+  })
+
+  return (
+    <TableRow
+      tabIndex={0}
+      onClick={() => history.push(`/members/${result.memberId}/contracts`)}
+    >
+      <TableColumn style={{ verticalAlign: 'top' }}>
+        <Flex direction="column">
+          {result.firstName && result.lastName ? (
+            `${result.firstName} ${result.lastName}`
+          ) : (
+            <Placeholder>Not available</Placeholder>
+          )}
+          <Flex>
+            <TableColumnSubtext>{result.memberId}</TableColumnSubtext>
+            <MemberAgeWrapper>
+              <MemberAge birthDateString={data?.member?.birthDate} />
+            </MemberAgeWrapper>
+          </Flex>
+          {result.highlights.filter(
+            (highlight) => !highlight.field.includes('keyword'),
+          ).length !== 0 && (
+            <Flex align="center" style={{ marginTop: '1rem' }}>
+              <SearchHitExplanation>Search hit in </SearchHitExplanation>
+              {result.highlights
+                .filter((highlight) => !highlight.field.includes('keyword'))
+                .map((highlight) => (
+                  <SearchHitTag key={highlight.field}>
+                    <Popover
+                      style={{
+                        maxWidth: '60rem',
+                        minWidth: '15rem',
+                        overflowWrap: 'break-word',
+                      }}
+                      contents={parse(
+                        [...new Set(highlight.values)]
+                          .reduce<string>(
+                            (acc, value) => acc + value + '<br/>',
+                            '',
+                          )
+                          .replaceAll('<em>', '<b>')
+                          .replaceAll('</em>', '</b>'),
+                      )}
+                    >
+                      {convertTagText(highlight.field).replaceAll('.', ', ')}
+                    </Popover>
+                  </SearchHitTag>
+                ))}
+            </Flex>
+          )}
+        </Flex>
+      </TableColumn>
+
+      <TableColumn style={{ verticalAlign: 'top' }}>
+        {data?.member?.signedOn ? (
+          <Flex direction="column">
+            {formatDate(parseISO(data?.member?.signedOn), 'dd MMMM, yyyy')}
+            <TableColumnSubtext>
+              {formatDate(parseISO(data?.member?.signedOn), 'HH:mm')}
+            </TableColumnSubtext>
+          </Flex>
+        ) : (
+          <Placeholder>Not available</Placeholder>
+        )}
+      </TableColumn>
+
+      <TableColumn style={{ verticalAlign: 'top' }}>
+        <Loadable loading={true}>
+          <span>Not specified</span>
+        </Loadable>
+      </TableColumn>
+      <TableColumn style={{ verticalAlign: 'top' }}>
+        <Loadable loading={true}>
+          <Placeholder>Not specified</Placeholder>
+        </Loadable>
+      </TableColumn>
+      <TableColumn style={{ verticalAlign: 'top' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Loadable loading={true}>
+            <ContractCountWrapper>
+              <ContractCountNumber variation="placeholderColor">
+                0
+              </ContractCountNumber>
+              <ContractCountLabel>Pending</ContractCountLabel>
+            </ContractCountWrapper>
+          </Loadable>
+          <Loadable loading={true}>
+            <ContractCountWrapper>
+              <ContractCountNumber variation="placeholderColor">
+                0
+              </ContractCountNumber>
+              <ContractCountLabel>Active in future</ContractCountLabel>
+            </ContractCountWrapper>
+          </Loadable>
+          <Loadable loading={true}>
+            <ContractCountWrapper>
+              <ContractCountNumber variation="placeholderColor">
+                0
+              </ContractCountNumber>
+              <ContractCountLabel>Active</ContractCountLabel>
+            </ContractCountWrapper>
+          </Loadable>
+          <Loadable loading={true}>
+            <ContractCountWrapper>
+              <ContractCountNumber variation="placeholderColor">
+                0
+              </ContractCountNumber>
+              <ContractCountLabel>Terminated</ContractCountLabel>
+            </ContractCountWrapper>
+          </Loadable>
+        </div>
+      </TableColumn>
+    </TableRow>
+  )
+}
+
+const useAutoComplete = (query: string) => {
+  const { hits } = useSearch(query, {
+    minChars: 1,
+    debounce: 100,
+    type: 'FULL_NAME',
+  })
+
+  const suggestion = hits.find((hit) =>
+    `${hit.firstName} ${hit.lastName}`
+      .toLowerCase()
+      .startsWith(query.toLowerCase()),
+  )
+
+  return suggestion
+}
+
+const SuggestionText = styled.div`
+  position: relative;
+  top: -2.86rem;
+  left: 2.91rem;
+  font-size: 18px;
+  opacity: 0.25;
+  pointer-events: none;
+`
+
+const SearchPage: Page = () => {
   const [query, setQuery] = useState('')
-  const { hits, loading, search, fetchMore } = useSearch(query)
+  const { hits, loading, search, fetchMore } = useSearch(query, {
+    debounce: 500,
+    manual: true,
+  })
+  const suggestion = useAutoComplete(query)
 
   return (
     <>
@@ -103,16 +279,23 @@ const SearchPage: Page = () => {
           search()
         }}
       >
-        <SearchInput
-          onChange={(e) => setQuery(e.currentTarget.value)}
-          value={query}
-          size="large"
-          muted={!query}
-          placeholder="What are you looking for?"
-          icon={<SearchIcon muted={!query} />}
-          loading={loading}
-          autoFocus
-        />
+        <div>
+          <SearchInput
+            onChange={(e) => setQuery(e.currentTarget.value)}
+            value={query}
+            size="large"
+            muted={!query}
+            placeholder="What are you looking for?"
+            icon={<SearchIcon muted={!query} />}
+            loading={loading}
+            autoFocus
+          />
+          {query && suggestion && (
+            <SuggestionText>
+              {suggestion.firstName + ' ' + suggestion.lastName}
+            </SuggestionText>
+          )}
+        </div>
         <Spacing top />
         {hits.length !== 0 && (
           <Table>
@@ -124,136 +307,9 @@ const SearchPage: Page = () => {
               <TableHeaderColumn>Contracts</TableHeaderColumn>
             </TableHeader>
             <TableBody>
-              {hits.map((member, index) => (
+              {hits.map((member) => (
                 <React.Fragment key={member.memberId}>
-                  <TableRow
-                    index={index}
-                    length={hits.length}
-                    tabIndex={0}
-                    onClick={() =>
-                      history.push(`/members/${member.memberId}/contracts`)
-                    }
-                  >
-                    <TableColumn style={{ verticalAlign: 'top' }}>
-                      <Flex direction="column">
-                        {member.firstName && member.lastName ? (
-                          `${member.firstName} ${member.lastName}`
-                        ) : (
-                          <Placeholder>Not available</Placeholder>
-                        )}
-                        <Flex>
-                          <TableColumnSubtext>
-                            {member.memberId}
-                          </TableColumnSubtext>
-                          <MemberAgeWrapper>
-                            <Loadable loading={true}>
-                              <span>99 years</span>
-                            </Loadable>
-                          </MemberAgeWrapper>
-                        </Flex>
-                        <Flex align="center" style={{ marginTop: '1rem' }}>
-                          <SearchHitExplanation>
-                            Search hit in{' '}
-                          </SearchHitExplanation>
-                          {member.highlights
-                            .filter(
-                              (highlight) =>
-                                !highlight.field.includes('keyword'),
-                            )
-                            .map((highlight) => (
-                              <SearchHitTag key={highlight.field}>
-                                <Popover
-                                  style={{
-                                    maxWidth: '60rem',
-                                    minWidth: '15rem',
-                                    overflowWrap: 'break-word',
-                                  }}
-                                  contents={parse(
-                                    [...new Set(highlight.values)]
-                                      .reduce<string>(
-                                        (acc, value) => acc + value + '<br/>',
-                                        '',
-                                      )
-                                      .replaceAll('<em>', '<b>')
-                                      .replaceAll('</em>', '</b>'),
-                                  )}
-                                >
-                                  {convertTagText(highlight.field).replaceAll(
-                                    '.',
-                                    ', ',
-                                  )}
-                                </Popover>
-                              </SearchHitTag>
-                            ))}
-                        </Flex>
-                      </Flex>
-                    </TableColumn>
-
-                    <TableColumn style={{ verticalAlign: 'top' }}>
-                      <Flex direction="column">
-                        <Loadable loading={true}>
-                          <span>Not specified</span>
-                        </Loadable>
-                        <Loadable loading={true}>
-                          <TableColumnSubtext>Not specified</TableColumnSubtext>
-                        </Loadable>
-                      </Flex>
-                    </TableColumn>
-                    <TableColumn style={{ verticalAlign: 'top' }}>
-                      <Loadable loading={true}>
-                        <span>Not specified</span>
-                      </Loadable>
-                    </TableColumn>
-                    <TableColumn style={{ verticalAlign: 'top' }}>
-                      <Loadable loading={true}>
-                        <Placeholder>Not specified</Placeholder>
-                      </Loadable>
-                    </TableColumn>
-                    <TableColumn style={{ verticalAlign: 'top' }}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        <Loadable loading={true}>
-                          <ContractCountWrapper>
-                            <ContractCountNumber variation="placeholderColor">
-                              0
-                            </ContractCountNumber>
-                            <ContractCountLabel>Pending</ContractCountLabel>
-                          </ContractCountWrapper>
-                        </Loadable>
-                        <Loadable loading={true}>
-                          <ContractCountWrapper>
-                            <ContractCountNumber variation="placeholderColor">
-                              0
-                            </ContractCountNumber>
-                            <ContractCountLabel>
-                              Active in future
-                            </ContractCountLabel>
-                          </ContractCountWrapper>
-                        </Loadable>
-                        <Loadable loading={true}>
-                          <ContractCountWrapper>
-                            <ContractCountNumber variation="placeholderColor">
-                              0
-                            </ContractCountNumber>
-                            <ContractCountLabel>Active</ContractCountLabel>
-                          </ContractCountWrapper>
-                        </Loadable>
-                        <Loadable loading={true}>
-                          <ContractCountWrapper>
-                            <ContractCountNumber variation="placeholderColor">
-                              0
-                            </ContractCountNumber>
-                            <ContractCountLabel>Terminated</ContractCountLabel>
-                          </ContractCountWrapper>
-                        </Loadable>
-                      </div>
-                    </TableColumn>
-                  </TableRow>
+                  <SearchResult result={member} />
                 </React.Fragment>
               ))}
             </TableBody>

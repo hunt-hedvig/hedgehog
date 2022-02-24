@@ -16,7 +16,7 @@ type SearchResult {
 }
 
 type QueryType {
-  search(query: String!, from: Int, size: Int): [SearchResult!]!
+  search(query: String!, from: Int, size: Int, type: String): [SearchResult!]!
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
