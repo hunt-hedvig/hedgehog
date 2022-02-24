@@ -44,10 +44,12 @@ const TemplateMessagesPage: Page = () => {
   } = useTemplateMessages()
 
   useEffect(() => {
-    setSelectedTemplate(
-      templates.find((template) => template.id === selectedTemplate?.id) ||
-        null,
-    )
+    if (selectedTemplate) {
+      setSelectedTemplate(
+        templates.find((template) => template.id === selectedTemplate.id) ||
+          null,
+      )
+    }
   }, [templates])
 
   const { confirm } = useConfirmDialog()
