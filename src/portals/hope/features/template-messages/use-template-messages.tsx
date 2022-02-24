@@ -110,7 +110,6 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   })
   const [upsertTemplate, { loading }] = useUpsertTemplateMutation()
   const [togglePinStatus] = useTogglePinStatusMutation()
-
   const [removeTemplate] = useRemoveTemplateMutation()
 
   const templates = data?.templates ?? []
@@ -140,7 +139,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             expirationDate: template.expirationDate,
             messages: template.messages,
           },
-          locale,
+          locale: formatLocale(locale),
         },
         optimisticResponse: {
           upsertTemplate: [
@@ -175,7 +174,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             expirationDate: template.expirationDate,
             messages: template.messages,
           },
-          locale,
+          locale: formatLocale(locale),
         },
         optimisticResponse: {
           upsertTemplate: [

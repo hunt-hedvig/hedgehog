@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { FadeIn, MainHeadline, Flex, Button, Tabs, Spinner } from '@hedvig-ui'
 import { CreateTemplate } from '../../features/template-messages/components/CreateTemplate'
@@ -42,6 +42,13 @@ const TemplateMessagesPage: Page = () => {
     setLocale: changeCurrentLocale,
     loading,
   } = useTemplateMessages()
+
+  useEffect(() => {
+    setSelectedTemplate(
+      templates.find((template) => template.id === selectedTemplate?.id) ||
+        null,
+    )
+  }, [templates])
 
   const { confirm } = useConfirmDialog()
 
