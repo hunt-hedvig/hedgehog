@@ -166,7 +166,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             },
           }) as GetTemplatesQuery
 
-          const cachedTemplates = (cachedData as GetTemplatesQuery).templates // this one is null in some reason 😥
+          const cachedTemplates = (cachedData as GetTemplatesQuery).templates
 
           cache.writeQuery({
             query: GetTemplatesDocument,
@@ -242,7 +242,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             },
           })
 
-          const cachedTemplates = (cachedData as GetTemplatesQuery).templates // this one is null in some reason 😥
+          const cachedTemplates = (cachedData as GetTemplatesQuery).templates
 
           cache.writeQuery({
             query: GetTemplatesDocument,
