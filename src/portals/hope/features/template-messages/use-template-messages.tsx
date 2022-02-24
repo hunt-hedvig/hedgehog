@@ -11,7 +11,10 @@ import {
   useTogglePinStatusMutation,
   UpsertTemplateInput,
   TemplateMessage,
+  GetTemplatesDocument,
+  GetTemplatesQuery,
 } from 'types/generated/graphql'
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 
 gql`
   query GetTemplates($locales: [String!]!) {
@@ -108,6 +111,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       locales: [formatLocale(locale)],
     },
   })
+
   const [upsertTemplate, { loading }] = useUpsertTemplateMutation()
   const [togglePinStatus] = useTogglePinStatusMutation()
   const [removeTemplate] = useRemoveTemplateMutation()
@@ -146,6 +150,30 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             ...templates,
             { __typename: 'Template', ...template },
           ],
+        },
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
+          if (!response?.upsertTemplate) {
+            return
+          }
+
+          const cachedData = cache.readQuery({
+            query: GetTemplatesDocument,
+            variables: {
+              locale: [formatLocale(locale)],
+            },
+          }) as GetTemplatesQuery
+
+          const cachedTemplates = (cachedData as GetTemplatesQuery).templates // this one is null in some reason 😥
+
+          cache.writeQuery({
+            query: GetTemplatesDocument,
+            data: {
+              templates: cachedTemplates,
+            },
+          })
         },
       }),
       {
@@ -199,6 +227,31 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         },
         optimisticResponse: {
           removeTemplate: true,
+        },
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
+          if (!response) {
+            return
+          }
+          const cachedData = cache.readQuery({
+            query: GetTemplatesDocument,
+            variables: {
+              locale: [formatLocale(locale)],
+            },
+          })
+
+          const cachedTemplates = (cachedData as GetTemplatesQuery).templates // this one is null in some reason 😥
+
+          cache.writeQuery({
+            query: GetTemplatesDocument,
+            data: {
+              templates: cachedTemplates.filter(
+                (template) => template.id !== templateId,
+              ),
+            },
+          })
         },
       }),
       {
