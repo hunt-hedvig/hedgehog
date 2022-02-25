@@ -320,9 +320,31 @@ const SuggestionText = styled.div`
   font-size: 18px;
   opacity: 0.25;
   pointer-events: none;
+  margin-bottom: -2.86rem;
 `
 
+const SearchCategoryButton = styled.div<{ selected?: boolean }>`
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+  background-color: ${({ theme, selected = false }) =>
+    selected ? theme.accentLight : 'transparent'};
+  color: ${({ theme }) => theme.accent};
+  margin-right: 1rem;
+  cursor: pointer;
+
+  transition: background-color 200ms;
+
+  :hover {
+    background-color: ${({ theme }) => theme.accentLight};
+  }
+`
+
+type SearchCategory = 'members' | 'messages' | 'notes'
+
 const SearchPage: Page = () => {
+  const [category, setCategory] = useState<SearchCategory>('members')
   const [query, setQuery] = useState('')
   const { hits, loading, search, fetchMore } = useSearch(query, {
     debounce: 500,
@@ -371,6 +393,27 @@ const SearchPage: Page = () => {
           <SuggestionText>{suggestionString() || '\u00a0'}</SuggestionText>
         </div>
         <Spacing top />
+        <Flex>
+          <SearchCategoryButton
+            selected={category === 'members'}
+            onClick={() => setCategory('members')}
+          >
+            Members
+          </SearchCategoryButton>
+          <SearchCategoryButton
+            selected={category === 'messages'}
+            onClick={() => setCategory('messages')}
+          >
+            Messages
+          </SearchCategoryButton>
+          <SearchCategoryButton
+            selected={category === 'notes'}
+            onClick={() => setCategory('notes')}
+          >
+            Notes
+          </SearchCategoryButton>
+        </Flex>
+        <Spacing top="large" />
         {hits.length !== 0 && (
           <Table>
             <TableHeader>
