@@ -69,7 +69,7 @@ export const useSearch = (
   }
 
   const fetchMoreHandler = () => {
-    refetch({ query, from: result.length }).then(({ data }) => {
+    refetch({ query, size: result.length + 10 }).then(({ data }) => {
       console.log(data)
       if (!data) {
         return
