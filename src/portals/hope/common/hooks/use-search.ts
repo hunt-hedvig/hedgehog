@@ -13,6 +13,21 @@ gql`
         field
         values
       }
+      hit {
+        ... on MemberSearchHit {
+          memberId
+          firstName
+          lastName
+        }
+        ... on NoteSearchHit {
+          memberId
+          firstName
+          lastName
+          claimId
+          text
+          author
+        }
+      }
     }
   }
 `

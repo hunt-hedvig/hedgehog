@@ -23,6 +23,7 @@ import parse from 'html-react-parser'
 import chroma from 'chroma-js'
 import {
   ContractStatus,
+  NoteSearchHit,
   SearchQuery,
   useMemberSearchResultQuery,
 } from 'types/generated/graphql'
@@ -343,16 +344,55 @@ const SearchCategoryButton = styled.div<{ selected?: boolean }>`
 
 type SearchCategory = 'members' | 'messages' | 'notes'
 
+const NoteWrapper = styled.div`
+  border-bottom: 1px solid
+    ${({ theme }) => chroma(theme.semiStrongForeground).alpha(0.1).hex()};
+
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  span {
+    font-size: 1rem;
+    color: ${({ theme }) => theme.semiStrongForeground};
+  }
+
+  width: 100%;
+`
+
+const NoteEntry: React.FC<{ hit: NoteSearchHit }> = ({ hit }) => {
+  return (
+    <NoteWrapper>
+      <h1>
+        {hit.firstName} {hit.lastName}'s claim
+      </h1>
+      <span>{hit.text}</span>
+    </NoteWrapper>
+  )
+}
+
 const SearchPage: Page = () => {
+  const getSearchType = () => {
+    if (category === 'notes') return 'NOTES'
+
+    return 'ALL'
+  }
+
   const [category, setCategory] = useState<SearchCategory>('members')
   const [query, setQuery] = useState('')
   const { hits, loading, search, fetchMore } = useSearch(query, {
     debounce: 500,
     manual: true,
+    type: getSearchType(),
   })
+
   const suggestion = useAutoComplete(query)
 
   const suggestionString = () => {
+    if (category !== 'members') return ''
     if (!query) return ''
     if (!suggestion?.firstName || !suggestion?.lastName) return ''
 
@@ -401,12 +441,6 @@ const SearchPage: Page = () => {
             Members
           </SearchCategoryButton>
           <SearchCategoryButton
-            selected={category === 'messages'}
-            onClick={() => setCategory('messages')}
-          >
-            Messages
-          </SearchCategoryButton>
-          <SearchCategoryButton
             selected={category === 'notes'}
             onClick={() => setCategory('notes')}
           >
@@ -414,7 +448,20 @@ const SearchPage: Page = () => {
           </SearchCategoryButton>
         </Flex>
         <Spacing top="large" />
-        {hits.length !== 0 && (
+        {hits.length !== 0 && getSearchType() === 'NOTES' && (
+          <Flex direction="column">
+            {hits.map(({ hit }) => {
+              if (!hit.__typename?.includes('NoteSearchHit')) return null
+
+              const noteHit = hit as NoteSearchHit
+
+              return (
+                <NoteEntry key={noteHit.id} hit={noteHit as NoteSearchHit} />
+              )
+            })}
+          </Flex>
+        )}
+        {hits.length !== 0 && getSearchType() === 'ALL' && (
           <Table>
             <TableHeader>
               <TableHeaderColumn>Member</TableHeaderColumn>

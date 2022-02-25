@@ -3,15 +3,35 @@ schema {
   mutation: MutationType
 }
 
+
 type SearchResultHighlight {
   field: String!
   values: [String!]!
 }
 
+type MemberSearchHit {
+  memberId: String
+  firstName: String
+  lastName: String
+}
+
+type NoteSearchHit {
+  id: String
+  memberId: String
+  firstName: String
+  lastName: String
+  claimId: String
+  text: String
+  author: String
+}
+
+union SearchHit = MemberSearchHit | NoteSearchHit
+
 type SearchResult {
   memberId: ID
   firstName: String
   lastName: String
+  hit: SearchHit!
   highlights: [SearchResultHighlight!]!
 }
 
@@ -167,8 +187,8 @@ type UserSetting {
 
 type MutationType {
   chargeMember(
-    id: ID!
-    amount: MonetaryAmount!
+    id: ID!,
+    amount: MonetaryAmount!,
     allowManualCharge: Boolean
   ): Member
   addAccountEntryToMember(
@@ -512,7 +532,7 @@ enum ContractStatus {
 
 type TermsAndConditions {
   commencementDate: LocalDate!
-  displayName: String!
+  displayName: String!,
   url: String!
 }
 
@@ -679,7 +699,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
