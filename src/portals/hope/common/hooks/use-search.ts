@@ -39,35 +39,38 @@ export const useSearch = (
 ): UseSearchResult => {
   const debouncedQuery = useDebounce(query, baseOptions?.debounce ?? 200)
   const [result, setResult] = useState<SearchQuery['search']>([])
-  const [search, { loading }] = useSearchLazyQuery({
-    variables: {
-      query: baseOptions?.manual ? query : debouncedQuery,
-      type: baseOptions?.type ?? 'ALL',
-    },
-    fetchPolicy: 'no-cache',
-  })
+  const [search, { loading, refetch, data }] = useSearchLazyQuery()
+
+  useEffect(() => {
+    if (data?.search) {
+      setResult(data.search)
+    }
+  }, [data])
 
   const searchHandler = (options?: Omit<UseSearchOptions, 'debounce'>) => {
-    search({
-      variables: {
-        query: debouncedQuery,
-        from: options?.from ?? baseOptions?.from,
-        size: options?.size ?? baseOptions?.size,
-        type: options?.type ?? baseOptions?.type ?? 'ALL',
-      },
-    }).then(({ data }) => {
-      if (!data) {
-        return
-      }
-
-      setResult(data.search)
+    if (result.length === 0) {
+      // Lovely bug with cache, need to refetch after first search
+      search({
+        variables: {
+          query,
+          from: options?.from ?? baseOptions?.from,
+          size: options?.size ?? baseOptions?.size,
+          type: options?.type ?? baseOptions?.type ?? 'ALL',
+        },
+      })
+      return
+    }
+    refetch({
+      query,
+      from: options?.from ?? baseOptions?.from,
+      size: options?.size ?? baseOptions?.size,
+      type: options?.type ?? baseOptions?.type ?? 'ALL',
     })
   }
 
   const fetchMoreHandler = () => {
-    search({
-      variables: { query: debouncedQuery, from: result.length },
-    }).then(({ data }) => {
+    refetch({ query, from: result.length }).then(({ data }) => {
+      console.log(data)
       if (!data) {
         return
       }

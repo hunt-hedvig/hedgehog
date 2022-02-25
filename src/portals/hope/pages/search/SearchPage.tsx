@@ -22,6 +22,7 @@ import { useSearch } from '../../common/hooks/use-search'
 import parse from 'html-react-parser'
 import chroma from 'chroma-js'
 import {
+  ContractStatus,
   SearchQuery,
   useMemberSearchResultQuery,
 } from 'types/generated/graphql'
@@ -30,6 +31,11 @@ import { MemberAge } from 'portals/hope/features/member/utils'
 import formatDate from 'date-fns/format'
 import { parseISO } from 'date-fns'
 import gql from 'graphql-tag'
+import {
+  getFirstMasterInception,
+  getLastTerminationDate,
+} from 'portals/hope/features/member/tabs/contracts-tab/utils'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 
 type CircleVariation =
   | 'success'
@@ -105,17 +111,47 @@ gql`
       memberId
       birthDate
       signedOn
+      contracts {
+        id
+        masterInception
+        terminationDate
+        status
+      }
     }
   }
 `
+
+const countContractsByStatus = (contractStatuses: ContractStatus[]) =>
+  contractStatuses.reduce<Record<string, number>>((acc, status) => {
+    const groupedStatus = [
+      ContractStatus.Pending,
+      ContractStatus.Terminated,
+      ContractStatus.ActiveInFuture,
+    ].includes(status)
+      ? status
+      : ContractStatus.Active
+    return {
+      ...acc,
+      [groupedStatus]: (acc[groupedStatus] || 0) + 1,
+    }
+  }, {})
 
 const SearchResult: React.FC<{
   result: ArrayElement<SearchQuery['search']>
 }> = ({ result }) => {
   const history = useHistory()
-  const { data } = useMemberSearchResultQuery({
+  const { data, loading } = useMemberSearchResultQuery({
     variables: { memberId: result.memberId ?? '' },
   })
+
+  const {
+    [ContractStatus.ActiveInFuture]: activeInFutureContracts = 0,
+    [ContractStatus.Active]: activeContracts = 0,
+    [ContractStatus.Pending]: pendingContracts = 0,
+    [ContractStatus.Terminated]: terminatedContracts = 0,
+  } = countContractsByStatus(
+    (data?.member?.contracts ?? []).map((contract) => contract.status),
+  )
 
   return (
     <TableRow
@@ -183,15 +219,28 @@ const SearchResult: React.FC<{
       </TableColumn>
 
       <TableColumn style={{ verticalAlign: 'top' }}>
-        <Loadable loading={true}>
-          <span>Not specified</span>
-        </Loadable>
+        {data?.member?.contracts ? (
+          getFirstMasterInception(data?.member?.contracts) ?? (
+            <Placeholder>Not specified</Placeholder>
+          )
+        ) : (
+          <Loadable loading={loading}>
+            <Placeholder>Not specified</Placeholder>
+          </Loadable>
+        )}
       </TableColumn>
       <TableColumn style={{ verticalAlign: 'top' }}>
-        <Loadable loading={true}>
-          <Placeholder>Not specified</Placeholder>
-        </Loadable>
+        {data?.member?.contracts ? (
+          getLastTerminationDate(data?.member?.contracts) ?? (
+            <Placeholder>Not specified</Placeholder>
+          )
+        ) : (
+          <Loadable loading={loading}>
+            <Placeholder>Not specified</Placeholder>
+          </Loadable>
+        )}
       </TableColumn>
+
       <TableColumn style={{ verticalAlign: 'top' }}>
         <div
           style={{
@@ -200,34 +249,44 @@ const SearchResult: React.FC<{
             justifyContent: 'space-between',
           }}
         >
-          <Loadable loading={true}>
+          <Loadable loading={loading}>
             <ContractCountWrapper>
-              <ContractCountNumber variation="placeholderColor">
-                0
+              <ContractCountNumber
+                variation={pendingContracts ? 'warning' : 'placeholderColor'}
+              >
+                {pendingContracts}
               </ContractCountNumber>
               <ContractCountLabel>Pending</ContractCountLabel>
             </ContractCountWrapper>
           </Loadable>
-          <Loadable loading={true}>
+          <Loadable loading={loading}>
             <ContractCountWrapper>
-              <ContractCountNumber variation="placeholderColor">
-                0
+              <ContractCountNumber
+                variation={
+                  activeInFutureContracts ? 'accent' : 'placeholderColor'
+                }
+              >
+                {activeInFutureContracts}
               </ContractCountNumber>
               <ContractCountLabel>Active in future</ContractCountLabel>
             </ContractCountWrapper>
           </Loadable>
-          <Loadable loading={true}>
+          <Loadable loading={loading}>
             <ContractCountWrapper>
-              <ContractCountNumber variation="placeholderColor">
-                0
+              <ContractCountNumber
+                variation={activeContracts ? 'success' : 'placeholderColor'}
+              >
+                {activeContracts}
               </ContractCountNumber>
               <ContractCountLabel>Active</ContractCountLabel>
             </ContractCountWrapper>
           </Loadable>
-          <Loadable loading={true}>
+          <Loadable loading={loading}>
             <ContractCountWrapper>
-              <ContractCountNumber variation="placeholderColor">
-                0
+              <ContractCountNumber
+                variation={terminatedContracts ? 'danger' : 'placeholderColor'}
+              >
+                {terminatedContracts}
               </ContractCountNumber>
               <ContractCountLabel>Terminated</ContractCountLabel>
             </ContractCountWrapper>
@@ -241,7 +300,7 @@ const SearchResult: React.FC<{
 const useAutoComplete = (query: string) => {
   const { hits } = useSearch(query, {
     minChars: 1,
-    debounce: 100,
+    debounce: 0,
     type: 'FULL_NAME',
   })
 
@@ -271,6 +330,15 @@ const SearchPage: Page = () => {
   })
   const suggestion = useAutoComplete(query)
 
+  const suggestionString = () => {
+    if (!query) return ''
+    if (!suggestion?.firstName || !suggestion?.lastName) return ''
+
+    const completeString = `${suggestion.firstName} ${suggestion.lastName}`
+
+    return query + completeString.substring(query.length)
+  }
+
   return (
     <>
       <form
@@ -289,12 +357,18 @@ const SearchPage: Page = () => {
             icon={<SearchIcon muted={!query} />}
             loading={loading}
             autoFocus
+            onKeyDown={(e) => {
+              if (
+                isPressing(e, Keys.Right) &&
+                suggestionString() &&
+                suggestionString() !== query
+              ) {
+                setQuery(suggestionString)
+              }
+            }}
           />
-          {query && suggestion && (
-            <SuggestionText>
-              {suggestion.firstName + ' ' + suggestion.lastName}
-            </SuggestionText>
-          )}
+
+          <SuggestionText>{suggestionString() || '\u00a0'}</SuggestionText>
         </div>
         <Spacing top />
         {hits.length !== 0 && (
