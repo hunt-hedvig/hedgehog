@@ -345,6 +345,16 @@ const SearchCategoryButton = styled.div<{ selected?: boolean }>`
 type SearchCategory = 'members' | 'messages' | 'notes'
 
 const NoteWrapper = styled.div`
+  background-color: transparent;
+
+  transition: background-color 200ms;
+  padding-left: 1rem;
+
+  :hover {
+    background-color: ${({ theme }) =>
+      chroma(theme.accentLight).alpha(0.2).hex()};
+  }
+  cursor: pointer;
   border-bottom: 1px solid
     ${({ theme }) => chroma(theme.semiStrongForeground).alpha(0.1).hex()};
 
@@ -364,8 +374,10 @@ const NoteWrapper = styled.div`
 `
 
 const NoteEntry: React.FC<{ hit: NoteSearchHit }> = ({ hit }) => {
+  const history = useHistory()
+
   return (
-    <NoteWrapper>
+    <NoteWrapper onClick={() => history.push(`/claims/${hit.claimId}`)}>
       <h1>
         {hit.firstName} {hit.lastName}'s claim
       </h1>
