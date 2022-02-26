@@ -10,22 +10,22 @@ const fadeIn = (max: number) =>
     to: { opacity: max, transform: 'translateY(0)' },
   })
 
-export const Instructions = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  textAlign: 'left',
-  paddingLeft: '1rem',
-  paddingTop: '2rem',
-  code: {
-    background: theme.backgroundTransparent,
-    padding: '1px 2px',
-    borderRadius: 1,
-  },
-  opacity: 0,
-  animation: `${fadeIn(0.3)} 1000ms forwards`,
-  animationDelay: '500ms',
-}))
+export const Instructions = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 1rem;
+  padding-top: 2rem;
+
+  code {
+    background: ${({ theme }) => theme.backgroundTransparent};
+    padding: 1px 2px;
+    border-radius: 0.25rem;
+  }
+  opacity: 0;
+  animation: ${fadeIn(0.3)} 1000ms forwards;
+  animation-delay: 500ms;
+`
 
 export const MemberSuggestionsWrapper = styled(Instructions)({
   paddingTop: '25vh',
