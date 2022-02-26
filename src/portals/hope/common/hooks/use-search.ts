@@ -1,6 +1,9 @@
 import gql from 'graphql-tag'
-import { SearchQuery, useSearchLazyQuery } from 'types/generated/graphql'
-import { useDebounce } from 'portals/hope/common/hooks/use-debounce'
+import {
+  SearchQuery,
+  SearchQueryVariables,
+  useSearchLazyQuery,
+} from 'types/generated/graphql'
 import { useEffect, useState } from 'react'
 
 gql`
@@ -32,29 +35,27 @@ gql`
   }
 `
 
-interface UseSearchOptions {
-  from?: number
-  size?: number
-  debounce?: number
-  minChars?: number
-  type?: string
-  manual?: boolean
-}
-
-interface UseSearchResult {
+export interface UseSearchResult {
   hits: SearchQuery['search']
   loading: boolean
-  search: (options?: Omit<UseSearchOptions, 'debounce'>) => void
+  search: (options?: SearchQueryOptions) => void
   fetchMore: () => void
 }
 
+type SearchQueryOptions = Omit<SearchQueryVariables, 'query'>
+
 export const useSearch = (
   query: string,
-  baseOptions?: UseSearchOptions,
+  baseOptions?: SearchQueryOptions,
 ): UseSearchResult => {
-  const debouncedQuery = useDebounce(query, baseOptions?.debounce ?? 200)
   const [result, setResult] = useState<SearchQuery['search']>([])
   const [search, { loading, refetch, data }] = useSearchLazyQuery()
+
+  const getOptions = (options?: SearchQueryOptions): SearchQueryOptions => ({
+    from: options?.from ?? baseOptions?.from,
+    size: options?.size ?? baseOptions?.size,
+    type: options?.type ?? baseOptions?.type,
+  })
 
   useEffect(() => {
     if (data?.search) {
@@ -62,58 +63,27 @@ export const useSearch = (
     }
   }, [data])
 
-  const searchHandler = (options?: Omit<UseSearchOptions, 'debounce'>) => {
+  const searchHandler = (options?: SearchQueryOptions) => {
     if (result.length === 0) {
       // Lovely bug with cache, need to refetch after first search
       search({
         variables: {
           query,
-          from: options?.from ?? baseOptions?.from,
-          size: options?.size ?? baseOptions?.size,
-          type: options?.type ?? baseOptions?.type ?? 'ALL',
+          ...getOptions(options),
         },
       })
       return
     }
+
     refetch({
       query,
-      from: options?.from ?? baseOptions?.from,
-      size: options?.size ?? baseOptions?.size,
-      type: options?.type ?? baseOptions?.type ?? 'ALL',
+      ...getOptions(options),
     })
   }
 
   const fetchMoreHandler = () => {
-    refetch({ query, size: result.length + 10 }).then(({ data }) => {
-      if (!data) {
-        return
-      }
-
-      setResult([...result, ...data.search])
-    })
+    refetch({ query, size: result.length + 10 })
   }
-
-  useEffect(() => {
-    if (
-      debouncedQuery.length >= (baseOptions?.minChars ?? 3) &&
-      !baseOptions?.manual
-    ) {
-      search({
-        variables: {
-          query: debouncedQuery,
-          from: baseOptions?.from,
-          size: baseOptions?.size,
-          type: baseOptions?.type ?? 'ALL',
-        },
-      }).then(({ data }) => {
-        if (!data) {
-          return
-        }
-
-        setResult(data.search)
-      })
-    }
-  }, [debouncedQuery])
 
   return {
     hits: result,

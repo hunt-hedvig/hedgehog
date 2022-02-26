@@ -2,7 +2,6 @@ import { Page } from 'portals/hope/pages/routes'
 import {
   Button,
   Flex,
-  Input,
   Loadable,
   Placeholder,
   Popover,
@@ -15,15 +14,14 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
-import { SearchIcon } from 'portals/hope/features/members-search/styles'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { useSearch } from '../../common/hooks/use-search'
 import parse from 'html-react-parser'
 import chroma from 'chroma-js'
 import {
+  Contract,
   ContractStatus,
-  NoteSearchHit,
   SearchQuery,
   useMemberSearchResultQuery,
 } from 'types/generated/graphql'
@@ -36,7 +34,7 @@ import {
   getFirstMasterInception,
   getLastTerminationDate,
 } from 'portals/hope/features/member/tabs/contracts-tab/utils'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { SearchInput } from 'portals/hope/features/search/SearchInput'
 
 type CircleVariation =
   | 'success'
@@ -77,11 +75,6 @@ const MemberAgeWrapper = styled.span`
   margin-left: 0.7em;
   margin-right: -0.7em;
   color: ${({ theme }) => theme.semiStrongForeground};
-`
-
-const SearchInput = styled(Input)`
-  max-width: 50rem;
-  width: 100%;
 `
 
 const SearchHitTag = styled.div`
@@ -145,14 +138,14 @@ const SearchResult: React.FC<{
     variables: { memberId: result.memberId ?? '' },
   })
 
+  const contracts = (data?.member?.contracts ?? []) as Array<Contract>
+
   const {
     [ContractStatus.ActiveInFuture]: activeInFutureContracts = 0,
     [ContractStatus.Active]: activeContracts = 0,
     [ContractStatus.Pending]: pendingContracts = 0,
     [ContractStatus.Terminated]: terminatedContracts = 0,
-  } = countContractsByStatus(
-    (data?.member?.contracts ?? []).map((contract) => contract.status),
-  )
+  } = countContractsByStatus(contracts.map((contract) => contract.status))
 
   return (
     <TableRow
@@ -220,36 +213,22 @@ const SearchResult: React.FC<{
       </TableColumn>
 
       <TableColumn style={{ verticalAlign: 'top' }}>
-        {data?.member?.contracts ? (
-          getFirstMasterInception(data?.member?.contracts) ?? (
+        <Loadable loading={loading}>
+          {getFirstMasterInception(contracts) ?? (
             <Placeholder>Not specified</Placeholder>
-          )
-        ) : (
-          <Loadable loading={loading}>
-            <Placeholder>Not specified</Placeholder>
-          </Loadable>
-        )}
+          )}
+        </Loadable>
       </TableColumn>
       <TableColumn style={{ verticalAlign: 'top' }}>
-        {data?.member?.contracts ? (
-          getLastTerminationDate(data?.member?.contracts) ?? (
+        <Loadable loading={loading}>
+          {getLastTerminationDate(contracts) ?? (
             <Placeholder>Not specified</Placeholder>
-          )
-        ) : (
-          <Loadable loading={loading}>
-            <Placeholder>Not specified</Placeholder>
-          </Loadable>
-        )}
+          )}
+        </Loadable>
       </TableColumn>
 
       <TableColumn style={{ verticalAlign: 'top' }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
+        <Flex justify="space-between">
           <Loadable loading={loading}>
             <ContractCountWrapper>
               <ContractCountNumber
@@ -292,209 +271,54 @@ const SearchResult: React.FC<{
               <ContractCountLabel>Terminated</ContractCountLabel>
             </ContractCountWrapper>
           </Loadable>
-        </div>
+        </Flex>
       </TableColumn>
     </TableRow>
   )
 }
 
-const useAutoComplete = (query: string) => {
-  const { hits } = useSearch(query, {
-    minChars: 1,
-    debounce: 0,
-    type: 'FULL_NAME',
-  })
-
-  const suggestion = hits.find((hit) =>
-    `${hit.firstName} ${hit.lastName}`
-      .toLowerCase()
-      .startsWith(query.toLowerCase()),
-  )
-
-  return suggestion
-}
-
-const SuggestionText = styled.div`
-  position: relative;
-  top: -2.86rem;
-  left: 2.91rem;
-  font-size: 18px;
-  opacity: 0.25;
-  pointer-events: none;
-  margin-bottom: -2.86rem;
-`
-
-const SearchCategoryButton = styled.div<{ selected?: boolean }>`
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.85rem;
-  background-color: ${({ theme, selected = false }) =>
-    selected ? theme.accentLight : 'transparent'};
-  color: ${({ theme }) => theme.accent};
-  margin-right: 1rem;
-  cursor: pointer;
-
-  transition: background-color 200ms;
-
-  :hover {
-    background-color: ${({ theme }) => theme.accentLight};
-  }
-`
-
-type SearchCategory = 'members' | 'messages' | 'notes'
-
-const NoteWrapper = styled.div`
-  background-color: transparent;
-
-  transition: background-color 200ms;
-  padding-left: 1rem;
-
-  :hover {
-    background-color: ${({ theme }) =>
-      chroma(theme.accentLight).alpha(0.2).hex()};
-  }
-  cursor: pointer;
-  border-bottom: 1px solid
-    ${({ theme }) => chroma(theme.semiStrongForeground).alpha(0.1).hex()};
-
-  padding-top: 1rem;
-  padding-bottom: 2rem;
-
-  h1 {
-    font-size: 1.4rem;
-  }
-
-  span {
-    font-size: 1rem;
-    color: ${({ theme }) => theme.semiStrongForeground};
-  }
-
-  width: 100%;
-`
-
-const NoteEntry: React.FC<{ hit: NoteSearchHit }> = ({ hit }) => {
-  const history = useHistory()
-
-  return (
-    <NoteWrapper onClick={() => history.push(`/claims/${hit.claimId}`)}>
-      <h1>
-        {hit.firstName} {hit.lastName}'s claim
-      </h1>
-      <span>{hit.text}</span>
-    </NoteWrapper>
-  )
-}
-
 const SearchPage: Page = () => {
-  const getSearchType = () => {
-    if (category === 'notes') return 'NOTES'
-
-    return 'ALL'
-  }
-
-  const [category, setCategory] = useState<SearchCategory>('members')
   const [query, setQuery] = useState('')
-  const { hits, loading, search, fetchMore } = useSearch(query, {
-    debounce: 500,
-    manual: true,
-    type: getSearchType(),
-  })
+  const { hits, loading, search, fetchMore } = useSearch(query)
 
-  const suggestion = useAutoComplete(query)
-
-  const suggestionString = () => {
-    if (category !== 'members') return ''
-    if (!query) return ''
-    if (!suggestion?.firstName || !suggestion?.lastName) return ''
-
-    const completeString = `${suggestion.firstName} ${suggestion.lastName}`
-
-    return query + completeString.substring(query.length)
-  }
+  useEffect(() => {
+    if (query) {
+      search()
+    }
+  }, [query])
 
   return (
     <>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          search()
+      <SearchInput
+        onSearch={(value) => {
+          setQuery(value)
         }}
-      >
-        <div>
-          <SearchInput
-            onChange={(e) => setQuery(e.currentTarget.value)}
-            value={query}
-            size="large"
-            muted={!query}
-            placeholder="What are you looking for?"
-            icon={<SearchIcon muted={!query} />}
-            loading={loading}
-            autoFocus
-            onKeyDown={(e) => {
-              if (
-                isPressing(e, Keys.Right) &&
-                suggestionString() &&
-                suggestionString() !== query
-              ) {
-                setQuery(suggestionString)
-              }
-            }}
-          />
+        loading={loading}
+      />
 
-          <SuggestionText>{suggestionString() || '\u00a0'}</SuggestionText>
-        </div>
-        <Spacing top />
-        <Flex>
-          <SearchCategoryButton
-            selected={category === 'members'}
-            onClick={() => setCategory('members')}
-          >
-            Members
-          </SearchCategoryButton>
-          <SearchCategoryButton
-            selected={category === 'notes'}
-            onClick={() => setCategory('notes')}
-          >
-            Notes
-          </SearchCategoryButton>
-        </Flex>
-        <Spacing top="large" />
-        {hits.length !== 0 && getSearchType() === 'NOTES' && (
-          <Flex direction="column">
-            {hits.map(({ hit }) => {
-              if (!hit.__typename?.includes('NoteSearchHit')) return null
+      <Spacing top="large" />
 
-              const noteHit = hit as NoteSearchHit
-
-              return (
-                <NoteEntry key={noteHit.id} hit={noteHit as NoteSearchHit} />
-              )
-            })}
-          </Flex>
-        )}
-        {hits.length !== 0 && getSearchType() === 'ALL' && (
-          <Table>
-            <TableHeader>
-              <TableHeaderColumn>Member</TableHeaderColumn>
-              <TableHeaderColumn>Signed Up</TableHeaderColumn>
-              <TableHeaderColumn>First Master Inception</TableHeaderColumn>
-              <TableHeaderColumn>Last Termination Date</TableHeaderColumn>
-              <TableHeaderColumn>Contracts</TableHeaderColumn>
-            </TableHeader>
-            <TableBody>
-              {hits.map((member) => (
-                <React.Fragment key={member.memberId}>
-                  <SearchResult result={member} />
-                </React.Fragment>
-              ))}
-            </TableBody>
-          </Table>
-        )}
-      </form>
+      {hits.length !== 0 && (
+        <Table>
+          <TableHeader>
+            <TableHeaderColumn>Member</TableHeaderColumn>
+            <TableHeaderColumn>Signed Up</TableHeaderColumn>
+            <TableHeaderColumn>First Master Inception</TableHeaderColumn>
+            <TableHeaderColumn>Last Termination Date</TableHeaderColumn>
+            <TableHeaderColumn>Contracts</TableHeaderColumn>
+          </TableHeader>
+          <TableBody>
+            {hits.map((member) => (
+              <React.Fragment key={member.memberId}>
+                <SearchResult result={member} />
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      )}
       <Spacing top="medium" />
       <Flex justify="center">
-        {hits.length !== 0 && (
+        {hits.length !== 0 && hits.length >= 20 && (
           <Button
             variant="tertiary"
             onClick={() => {
