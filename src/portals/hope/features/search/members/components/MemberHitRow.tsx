@@ -88,6 +88,13 @@ const convertTagText = (text: string) => {
 const SearchHitTag: React.FC<{
   highlight: ArrayElement<SearchQuery['search'][0]['highlights']>
 }> = ({ highlight }) => {
+  const contents = parse(
+    [...new Set(highlight.values)]
+      .reduce<string>((acc, value) => acc + value + '<br/>', '')
+      .replaceAll('<em>', '<b>')
+      .replaceAll('</em>', '</b>'),
+  )
+
   return (
     <Tag>
       <Popover
@@ -96,12 +103,7 @@ const SearchHitTag: React.FC<{
           minWidth: '15rem',
           overflowWrap: 'break-word',
         }}
-        contents={parse(
-          [...new Set(highlight.values)]
-            .reduce<string>((acc, value) => acc + value + '<br/>', '')
-            .replaceAll('<em>', '<b>')
-            .replaceAll('</em>', '</b>'),
-        )}
+        contents={contents}
       >
         {convertTagText(highlight.field).replaceAll('.', ', ')}
       </Popover>
@@ -134,7 +136,7 @@ export const MemberHitRow: React.FC<{
             `${result.firstName} ${result.lastName}`
           ) : (
             <Placeholder>Not available</Placeholder>
-          )}
+          )}{' '}
           {member?.contractMarketInfo &&
             getMemberFlag(member.contractMarketInfo)}
           <Flex>
