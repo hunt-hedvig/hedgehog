@@ -4,6 +4,7 @@ import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import copy from 'copy-to-clipboard'
 import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
 import {
+  Market,
   PickedLocale,
   PickedLocaleFlag,
 } from 'portals/hope/features/config/constants'
@@ -24,6 +25,23 @@ const Wrapper = styled.div`
 const MemberDetail = styled.span`
   position: relative;
   padding-right: 1rem;
+`
+
+const CustomerIOButton = styled.button`
+  background-color: #5721cc;
+  color: white;
+  border-radius: 0.25rem;
+  cursor: pointer;
+
+  transition: background-color 200ms;
+  :hover {
+    background-color: #8f72ce;
+  }
+
+  outline: none;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  margin-right: 1rem;
 `
 
 const MemberDetailLink = MemberDetail.withComponent('a')
@@ -90,6 +108,37 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
     <Wrapper>
       {member?.signedOn && member?.personalNumber && (
         <MemberDetail>{formatSsn(member.personalNumber)}</MemberDetail>
+      )}
+
+      {member?.contractMarketInfo?.market && (
+        <CustomerIOButton
+          onClick={() => {
+            const env = window.location.host.includes('hope.hedvig.com')
+              ? 'prod'
+              : 'staging'
+
+            const market = member?.contractMarketInfo?.market as Market
+
+            const idMap: Record<'prod' | 'staging', Record<Market, string>> = {
+              staging: {
+                NORWAY: '90964',
+                SWEDEN: '78110',
+                DENMARK: '97571',
+              },
+              prod: {
+                NORWAY: '92282',
+                SWEDEN: '78930',
+                DENMARK: '97570',
+              },
+            }
+
+            window.open(
+              `https://fly.customer.io/env/${idMap[env][market]}/people/${memberId}/sent`,
+            )
+          }}
+        >
+          customer.io
+        </CustomerIOButton>
       )}
       {member?.email && (
         <MemberDetailLink href={`mailto:${member.email}`}>
