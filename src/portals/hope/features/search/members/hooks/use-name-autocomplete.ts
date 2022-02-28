@@ -20,7 +20,7 @@ export const useNameAutoComplete = (
   useEffect(() => search(), [query])
 
   const suggestion =
-    hits.find((hit) =>
+    hits.find(({ hit }) =>
       `${hit.firstName} ${hit.lastName}`
         .toLowerCase()
         .startsWith(query.toLowerCase()),
@@ -28,9 +28,9 @@ export const useNameAutoComplete = (
 
   const suggestionString = () => {
     if (!query) return ''
-    if (!suggestion?.firstName || !suggestion?.lastName) return ''
+    if (!suggestion?.hit?.firstName || !suggestion?.hit?.lastName) return ''
 
-    const completeString = `${suggestion.firstName} ${suggestion.lastName}`
+    const completeString = `${suggestion.hit.firstName} ${suggestion.hit.lastName}`
 
     return query + completeString.substring(query.length)
   }

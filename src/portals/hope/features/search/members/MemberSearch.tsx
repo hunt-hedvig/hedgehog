@@ -73,7 +73,7 @@ export const MemberSearch: React.FC = () => {
           </TableHeader>
           <TableBody>
             {hits.map((member) => (
-              <MemberHitRow key={member.memberId} result={member} />
+              <MemberHitRow key={member.hit.memberId} result={member} />
             ))}
           </TableBody>
         </Table>

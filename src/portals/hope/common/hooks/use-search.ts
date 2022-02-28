@@ -7,11 +7,8 @@ import {
 import { useEffect, useState } from 'react'
 
 gql`
-  query Search($query: String!, $from: Int, $size: Int, $type: String) {
-    search(query: $query, from: $from, size: $size, type: $type) {
-      memberId
-      firstName
-      lastName
+  query Search($query: String!, $type: String!, $from: Int, $size: Int) {
+    search(query: $query, type: $type, from: $from, size: $size) {
       highlights {
         field
         values
@@ -39,7 +36,7 @@ export interface UseSearchResult {
   hits: SearchQuery['search']
   loading: boolean
   search: (options?: SearchQueryOptions) => void
-  fetchMore: () => void
+  fetchMore: (amount?: number, options?: SearchQueryOptions) => void
 }
 
 type SearchQueryOptions = Omit<SearchQueryVariables, 'query'>
@@ -54,7 +51,7 @@ export const useSearch = (
   const getOptions = (options?: SearchQueryOptions): SearchQueryOptions => ({
     from: options?.from ?? baseOptions?.from,
     size: options?.size ?? baseOptions?.size,
-    type: options?.type ?? baseOptions?.type,
+    type: options?.type ?? baseOptions?.type ?? 'ALL',
   })
 
   useEffect(() => {
@@ -65,7 +62,7 @@ export const useSearch = (
 
   const searchHandler = (options?: SearchQueryOptions) => {
     if (result.length === 0) {
-      // Lovely bug with cache, need to refetch after first search
+      // Lovely bug, need to refetch after first search
       search({
         variables: {
           query,
@@ -81,8 +78,12 @@ export const useSearch = (
     })
   }
 
-  const fetchMoreHandler = () => {
-    refetch({ query, size: result.length + 10 })
+  const fetchMoreHandler = (amount?: number, options?: SearchQueryOptions) => {
+    refetch({
+      query,
+      ...getOptions(options),
+      size: result.length + (amount ?? 10),
+    })
   }
 
   return {

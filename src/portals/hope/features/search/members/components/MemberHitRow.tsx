@@ -116,7 +116,7 @@ export const MemberHitRow: React.FC<{
 }> = ({ result }) => {
   const history = useHistory()
   const { member, loading, groupBy, contracts } = useMemberSearchContracts(
-    result.memberId ?? '',
+    result.hit.memberId ?? '',
   )
 
   const contractsByStatus = groupBy('status')
@@ -128,19 +128,19 @@ export const MemberHitRow: React.FC<{
   return (
     <TableRow
       tabIndex={0}
-      onClick={() => history.push(`/members/${result.memberId}/contracts`)}
+      onClick={() => history.push(`/members/${result.hit.memberId}/contracts`)}
     >
       <TableColumn style={{ verticalAlign: 'top' }}>
         <Flex direction="column">
-          {result.firstName && result.lastName ? (
-            `${result.firstName} ${result.lastName}`
+          {result.hit.firstName && result.hit.lastName ? (
+            `${result.hit.firstName} ${result.hit.lastName}`
           ) : (
             <Placeholder>Not available</Placeholder>
           )}{' '}
           {member?.contractMarketInfo &&
             getMemberFlag(member.contractMarketInfo)}
           <Flex>
-            <TableColumnSubtext>{result.memberId}</TableColumnSubtext>
+            <TableColumnSubtext>{result.hit.memberId}</TableColumnSubtext>
             <MemberAgeWrapper>
               <MemberAge birthDateString={member?.birthDate} />
             </MemberAgeWrapper>
