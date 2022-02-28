@@ -5,6 +5,7 @@ import {
   useSearchLazyQuery,
 } from 'types/generated/graphql'
 import { useEffect, useState } from 'react'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`
   query Search($query: String!, $type: String!, $from: Int, $size: Int) {
@@ -56,6 +57,7 @@ export const useSearch = (
 
   useEffect(() => {
     if (data?.search) {
+      PushUserAction(null, 'search', 'members', 'new')
       setResult(data.search)
     }
   }, [data])

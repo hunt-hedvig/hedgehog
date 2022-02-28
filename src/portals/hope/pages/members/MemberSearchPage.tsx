@@ -15,6 +15,7 @@ import { Page } from 'portals/hope/pages/routes'
 import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
 import { useMemberSearch } from 'portals/hope/features/members-search/hooks/use-member-search'
 import { ExtensiveMemberSearchQuery } from 'types/generated/graphql'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const MemberSearchPage: Page = () => {
   const [query, setQuery] = React.useState('')
@@ -47,6 +48,7 @@ const MemberSearchPage: Page = () => {
         membersLength={members.length}
         suggestionsLength={memberHistory.length}
         onSubmit={() => {
+          PushUserAction(null, 'search', 'members', 'legacy')
           search(query || '%', {
             includeAll,
           })
