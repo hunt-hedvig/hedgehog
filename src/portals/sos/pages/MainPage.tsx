@@ -28,21 +28,26 @@ const Footer = styled.div`
 
   a {
     text-decoration: underline;
-    color: ${({ theme }) => chroma(theme.foreground).brighten(1).hex()};
+    color: ${({ theme }) =>
+      chroma(theme.foreground)
+        .brighten(1)
+        .hex()};
     margin-top: 4vh;
     transition: color 200ms;
 
     :hover {
-      color: ${({ theme }) => chroma(theme.foreground).brighten(2).hex()};
+      color: ${({ theme }) =>
+        chroma(theme.foreground)
+          .brighten(2)
+          .hex()};
     }
   }
 `
 
 const redirectToLogin = () => {
   window.location.href = `${
-    (window as Window & typeof global & { GATEKEEPER_HOST: string })
-      .GATEKEEPER_HOST
-  }/sso?redirect=${window.location.protocol}//${
+    (window as Window & typeof global & { LOGIN_URL: string }).LOGIN_URL
+  }?redirect=${window.location.protocol}//${
     window.location.host
   }/login/callback`
 }

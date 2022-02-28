@@ -43,7 +43,7 @@ const template = () => `
   <div id="react-root"></div>
 
   <script>
-    window.GATEKEEPER_HOST = ${JSON.stringify(config.gatekeeperHost)};
+    window.LOGIN_URL = ${JSON.stringify(config.loginUrl)};
     window.HOPE_FEATURES = {
       "stagingSpecificTools": ${JSON.stringify(config.stagingSpecificTools)},
       "swishPayoutsEnabled": ${JSON.stringify(config.swishPayoutsEnabled)},
@@ -106,6 +106,7 @@ router.get('/login/callback', loginCallback)
 router.get('/login/logout', logout)
 router.post('/login/refresh', refreshTokenCallback)
 logger.info(`Using gatekeeper "${config.gatekeeperHost}"`)
+logger.info(`Using auth "${config.authServiceHost}"`)
 
 router.get(/^\/(?!api|chat|graphiql|vendor).*/, getPage)
 app.use(

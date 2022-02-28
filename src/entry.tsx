@@ -47,14 +47,12 @@ ReactDOM.render(
             <Route exact path="/portals" component={PortalsPage} />
             <Route
               exact
-              path="/gatekeeper"
+              path="/login-provider"
               component={() => {
                 window.location.href = `${
-                  (
-                    window as Window &
-                      typeof global & { GATEKEEPER_HOST: string }
-                  ).GATEKEEPER_HOST
-                }/sso?redirect=${window.location.protocol}//${
+                  (window as Window & typeof global & { LOGIN_URL: string })
+                    .LOGIN_URL
+                }?redirect=${window.location.protocol}//${
                   window.location.host
                 }/login/callback`
 
