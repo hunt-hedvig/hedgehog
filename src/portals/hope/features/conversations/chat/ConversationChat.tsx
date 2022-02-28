@@ -173,7 +173,7 @@ export const ConversationChat: React.FC<{
     }
   }, [selected])
 
-  const getSearchTemplate = (searchText: string) =>
+  const searchTemplate = (searchText: string) =>
     templates.find(
       (template) =>
         template.title.substring(0, searchText.length).toLowerCase() ===
@@ -204,11 +204,13 @@ export const ConversationChat: React.FC<{
 
     if (hinting) {
       const searchText = text.slice(1)
-      const searchTemplate = getSearchTemplate(searchText)
-      const templateName = getTemplateName(searchTemplate, searchText)
+      const filteredTemplates = searchTemplate(searchText)
+      const templateName = getTemplateName(filteredTemplates, searchText)
 
       setProposedTemplate(
-        searchTemplate ? { ...searchTemplate, title: templateName } : null,
+        filteredTemplates
+          ? { ...filteredTemplates, title: templateName }
+          : null,
       )
       setMessage(e.currentTarget.value)
 
@@ -222,7 +224,7 @@ export const ConversationChat: React.FC<{
     if (isPressing(e, Keys.Slash) && !hinting && !templatesLoading) {
       e.preventDefault()
 
-      setProposedTemplate(getSearchTemplate(''))
+      setProposedTemplate(searchTemplate(''))
       setMessage('/')
       setHinting(true)
     }
