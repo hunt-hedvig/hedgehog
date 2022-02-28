@@ -4,6 +4,7 @@ schema {
 }
 
 type QueryType {
+  search(query: String!, type: String!, from: Int, size: Int): [SearchResult!]!
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
@@ -219,6 +220,34 @@ type MutationType {
   userCheckOut: User!
 }
 
+type MemberSearchHit {
+  memberId: String
+  firstName: String
+  lastName: String
+}
+
+type NoteSearchHit {
+  id: String
+  memberId: String
+  firstName: String
+  lastName: String
+  claimId: String
+  text: String
+  author: String
+}
+
+type SearchResultHighlight {
+  field: String!
+  values: [String!]!
+}
+
+union SearchHit = MemberSearchHit | NoteSearchHit
+
+type SearchResult {
+  hit: SearchHit!
+  highlights: [SearchResultHighlight!]!
+}
+
 type SimpleMemberLookupResult {
   memberId: ID!
   firstName: String!
@@ -289,6 +318,15 @@ type User {
   notifications(filters: UserNotificationsFilter): [UserNotification!]!
   checkedIn: Boolean!
   markets: [String!]!
+  tasks(type: String): [Task!]!
+}
+
+union TaskResource = QuestionGroup | Claim
+
+type Task {
+  id: ID!
+  resource: TaskResource
+  createdAt: Instant!
 }
 
 input UserNotificationsFilter {
@@ -1273,7 +1311,7 @@ scalar LocalDateTime
 scalar Instant
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL
-# A Json Object represtation of `JsonNode`
+# A Json Object representation of `JsonNode`
 scalar JSON
 
 scalar BigDecimal

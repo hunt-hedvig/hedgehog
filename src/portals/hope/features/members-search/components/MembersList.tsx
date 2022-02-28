@@ -80,10 +80,8 @@ const MemberAgeWrapper = styled.span`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-const countContractsByStatus = (
-  contracts: ExtensiveMemberSearchQuery['memberSearch']['members'][0]['contracts'],
-) =>
-  contracts.reduce<Record<string, number>>((acc, { status }) => {
+const countContractsByStatus = (contractStatuses: ContractStatus[]) =>
+  contractStatuses.reduce<Record<string, number>>((acc, status) => {
     const groupedStatus = [
       ContractStatus.Pending,
       ContractStatus.Terminated,
@@ -128,11 +126,13 @@ export const MembersList: React.FC<{
         <TableBody>
           {members.map((member, index) => {
             const {
-              ACTIVE_IN_FUTURE: activeInFutureContracts = 0,
-              ACTIVE: activeContracts = 0,
-              PENDING: pendingContracts = 0,
-              TERMINATED: terminatedContracts = 0,
-            } = countContractsByStatus(member.contracts)
+              [ContractStatus.ActiveInFuture]: activeInFutureContracts = 0,
+              [ContractStatus.Active]: activeContracts = 0,
+              [ContractStatus.Pending]: pendingContracts = 0,
+              [ContractStatus.Terminated]: terminatedContracts = 0,
+            } = countContractsByStatus(
+              member.contracts.map((contract) => contract.status),
+            )
 
             return (
               <TableRow
