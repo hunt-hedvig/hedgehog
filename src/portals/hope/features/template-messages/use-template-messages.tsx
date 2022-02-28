@@ -162,7 +162,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
           const cachedData = cache.readQuery({
             query: GetTemplatesDocument,
             variables: {
-              locale: [formatLocale(locale)],
+              locales: [formatLocale(locale)],
             },
           }) as GetTemplatesQuery
 
@@ -172,6 +172,9 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             query: GetTemplatesDocument,
             data: {
               templates: cachedTemplates,
+            },
+            variables: {
+              locales: [formatLocale(locale)],
             },
           })
         },
@@ -220,6 +223,14 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   }
 
   const deleteHandler = (templateId: string) => {
+    const deletingTemplate = templates.find(
+      (template) => template.id === templateId,
+    )
+
+    if (!deletingTemplate) {
+      return
+    }
+
     toast.promise(
       removeTemplate({
         variables: {
@@ -238,7 +249,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
           const cachedData = cache.readQuery({
             query: GetTemplatesDocument,
             variables: {
-              locale: [formatLocale(locale)],
+              locales: [formatLocale(locale)],
             },
           })
 
@@ -250,6 +261,9 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
               templates: cachedTemplates.filter(
                 (template) => template.id !== templateId,
               ),
+            },
+            variables: {
+              locales: [formatLocale(locale)],
             },
           })
         },
