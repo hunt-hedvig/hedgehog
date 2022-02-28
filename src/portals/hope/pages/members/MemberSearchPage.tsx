@@ -48,7 +48,7 @@ const MemberSearchPage: Page = () => {
         membersLength={members.length}
         suggestionsLength={memberHistory.length}
         onSubmit={() => {
-          PushUserAction(null, 'search', 'members', 'legacy')
+          PushUserAction('members', 'search', null, 'legacy')
           search(query || '%', {
             includeAll,
           })

@@ -57,7 +57,7 @@ export const useSearch = (
 
   useEffect(() => {
     if (data?.search) {
-      PushUserAction(null, 'search', 'members', 'new')
+      PushUserAction('members', 'search', null, 'new')
       setResult(data.search)
     }
   }, [data])
