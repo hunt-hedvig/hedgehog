@@ -101,7 +101,7 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
 
   useEffect(() => {
     setLocale((data?.member?.pickedLocale || PickedLocale.SvSe) as PickedLocale)
-  }, [data])
+  }, [data?.member?.pickedLocale])
 
   if (!data?.member) {
     return (

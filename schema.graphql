@@ -314,7 +314,7 @@ type MutationType {
   userCheckIn: User!
   userCheckOut: User!
 
-  upsertTemplate(input: UpsertTemplateInput!, locale: String!): [Template!]!
+  upsertTemplate(input: UpsertTemplateInput!): Template!
   removeTemplate(id: ID!): Boolean!
   togglePinStatus(id: ID!): Template!
 }
@@ -1263,7 +1263,7 @@ type Template {
   id: ID!
   title: String!
   messages: [TemplateMessage!]!
-  expirationDate: Instant
+  expirationDate: LocalDate
   pinned: Boolean!
 }
 

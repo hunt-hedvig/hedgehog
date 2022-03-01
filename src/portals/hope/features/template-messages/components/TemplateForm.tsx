@@ -10,11 +10,10 @@ import {
   FormTextArea,
   FormInput,
 } from '@hedvig-ui'
-import { formatLocale, useTemplateMessages } from '../use-template-messages'
+import { formatLocale, uniquePickedLocales } from '../use-template-messages'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import formatDate from 'date-fns/format'
 import { PickedLocale } from '../../config/constants'
-import toast from 'react-hot-toast'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import {
   Template,
@@ -74,18 +73,37 @@ export const TemplateForm: React.FC<
     template?.expirationDate || null,
   )
 
-  const { templates } = useTemplateMessages()
   const { confirm } = useConfirmDialog()
 
   const form = useForm()
 
   useEffect(() => {
-    form.reset()
+    const resetObject: { [key: string]: string } = {}
+
+    uniquePickedLocales.forEach((locale) => {
+      resetObject[`message-${formatLocale(locale)}`] =
+        template?.messages.find(
+          (message) => message.language === formatLocale(locale),
+        )?.message || ''
+    })
+
+    form.reset({
+      id: template?.id,
+      title: template?.title || '',
+      pinned: template?.pinned || false,
+      expirationDate: template?.expirationDate || null,
+      messageEn:
+        template?.messages.find(
+          (message) => message.language === formatLocale(PickedLocale.EnSe),
+        )?.message || '',
+      ...resetObject,
+    })
+
     setExpirationDate(template?.expirationDate || null)
     setLocales(
       defaultLocale
         ? [defaultLocale]
-        : template?.messages.map((msg) => msg.language as string) || [
+        : template?.messages.map((msg) => msg.language) || [
             formatLocale(PickedLocale.SvSe),
           ],
     )
@@ -94,38 +112,26 @@ export const TemplateForm: React.FC<
   const getMessages = (values: FieldValues): TemplateMessage[] => {
     const messages: TemplateMessage[] = []
 
-    Object.values(PickedLocale).forEach((locale) => {
-      if (values[`message-${locale}`]) {
+    locales
+      .filter((locale) => locale !== formatLocale(PickedLocale.EnSe))
+      .forEach((locale) => {
         messages.push({
-          message: values[`message-${locale}`],
+          message: values[`message-${locale}`] || '',
           language: locale,
         })
-      }
-    })
+      })
 
     return [
       ...messages,
       {
         message: values.messageEn,
-        language: PickedLocale.EnSe,
+        language: formatLocale(PickedLocale.EnSe),
       },
     ]
   }
 
   const createHandler = (values: FieldValues) => {
     if (!onCreate) {
-      return
-    }
-
-    if (
-      templates.some(
-        (template) => template.title === values.title,
-        template?.messages.some((msg) =>
-          locales.includes(msg.language as PickedLocale),
-        ),
-      )
-    ) {
-      toast.error(`Template with name '${values.name}' already exist`)
       return
     }
 
@@ -233,37 +239,28 @@ export const TemplateForm: React.FC<
           />
         </Field>
 
-        {Object.values(PickedLocale)
-          .filter(
-            (locale) =>
-              locale !== PickedLocale.EnDk &&
-              locale !== PickedLocale.EnNo &&
-              locale !== PickedLocale.EnSe,
-          )
-          .map(
-            (locale) =>
-              locales.includes(formatLocale(locale)) && (
-                <MessageField
-                  key={locale}
-                  label={`Message (${formatLocale(locale)})`}
-                  name={`message-${locale}`}
-                  placeholder="Message goes here"
-                  style={{ marginTop: '0.5rem' }}
-                  defaultValue={
-                    template?.messages.find(
-                      (msg) => msg.language === formatLocale(locale),
-                    )?.message || ''
-                  }
-                  rules={{
-                    required: false,
-                    pattern: {
-                      value: /[^\s]/,
-                      message: 'Cannot send a message without text',
-                    },
-                  }}
-                />
-              ),
-          )}
+        {locales
+          .filter((locale) => locale !== formatLocale(PickedLocale.EnSe))
+          .map((locale) => (
+            <MessageField
+              key={locale}
+              label={`Message (${locale})`}
+              name={`message-${locale}`}
+              placeholder="Message goes here"
+              style={{ marginTop: '0.5rem' }}
+              defaultValue={
+                template?.messages.find((msg) => msg.language === locale)
+                  ?.message || ''
+              }
+              rules={{
+                required: false,
+                pattern: {
+                  value: /[^\s]/,
+                  message: 'Cannot send a message without text',
+                },
+              }}
+            />
+          ))}
 
         <MessageField
           label="Message (EN)"

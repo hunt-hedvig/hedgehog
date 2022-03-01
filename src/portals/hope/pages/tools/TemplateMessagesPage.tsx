@@ -4,11 +4,11 @@ import { FadeIn, MainHeadline, Flex, Button, Tabs, Spinner } from '@hedvig-ui'
 import { CreateTemplate } from '../../features/template-messages/components/CreateTemplate'
 import { SearchTemplate } from '../../features/template-messages/components/SearchTemplate'
 import { TemplateView } from '../../features/template-messages/components/TemplateView'
-import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
 import {
-  PickedLocale,
-  PickedLocaleMarket,
-} from '../../features/config/constants'
+  uniquePickedLocales,
+  useTemplateMessages,
+} from 'portals/hope/features/template-messages/use-template-messages'
+import { PickedLocaleMarket } from '../../features/config/constants'
 import { Page } from 'portals/sos/pages/routes'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { Template, UpsertTemplateInput } from 'types/generated/graphql'
@@ -107,23 +107,16 @@ const TemplateMessagesPage: Page = () => {
       <Flex flex="0" align="center" justify="space-between">
         <Tabs
           style={{ width: '30%' }}
-          list={Object.values(PickedLocale)
-            .filter(
-              (locale) =>
-                locale !== PickedLocale.EnDk &&
-                locale !== PickedLocale.EnNo &&
-                locale !== PickedLocale.EnSe,
-            )
-            .map((locale) => ({
-              active: currentLocale === locale,
-              title:
-                PickedLocaleMarket[locale].charAt(0) +
-                PickedLocaleMarket[locale].toLowerCase().slice(1),
-              action: () => {
-                setSelectedTemplate(null)
-                changeCurrentLocale(locale)
-              },
-            }))}
+          list={uniquePickedLocales.map((locale) => ({
+            active: currentLocale === locale,
+            title:
+              PickedLocaleMarket[locale].charAt(0) +
+              PickedLocaleMarket[locale].toLowerCase().slice(1),
+            action: () => {
+              setSelectedTemplate(null)
+              changeCurrentLocale(locale)
+            },
+          }))}
         />
         <Button onClick={() => setIsCreating(true)}>Create New Template</Button>
       </Flex>

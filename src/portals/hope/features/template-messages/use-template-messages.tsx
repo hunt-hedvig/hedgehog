@@ -10,7 +10,6 @@ import {
   useRemoveTemplateMutation,
   useTogglePinStatusMutation,
   UpsertTemplateInput,
-  TemplateMessage,
   GetTemplatesDocument,
   GetTemplatesQuery,
 } from 'types/generated/graphql'
@@ -50,8 +49,8 @@ gql`
     }
   }
 
-  mutation UpsertTemplate($input: UpsertTemplateInput!, $locale: String!) {
-    upsertTemplate(input: $input, locale: $locale) {
+  mutation UpsertTemplate($input: UpsertTemplateInput!) {
+    upsertTemplate(input: $input) {
       id
       title
       messages {
@@ -70,6 +69,13 @@ gql`
 
 export const formatLocale = (locale: PickedLocale) =>
   locale.split('_')[0].toUpperCase()
+
+export const uniquePickedLocales = Object.values(PickedLocale).filter(
+  (locale) =>
+    locale !== PickedLocale.EnDk &&
+    locale !== PickedLocale.EnNo &&
+    locale !== PickedLocale.EnSe,
+)
 
 interface TemplateMessagesContextProps {
   templates: Template[]
@@ -118,20 +124,12 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
 
   const templates = data?.templates ?? []
 
-  const getFormattedMessages = (
-    messages: TemplateMessage[],
-  ): TemplateMessage[] =>
-    messages.map((message) => ({
-      ...message,
-      language: formatLocale(message.language as PickedLocale),
-    }))
-
   const createHandler = (newTemplate: UpsertTemplateInput) => {
     const template: Template = {
       id: 'temp-id',
       title: newTemplate.title,
       expirationDate: newTemplate.expirationDate,
-      messages: getFormattedMessages(newTemplate.messages),
+      messages: newTemplate.messages,
       pinned: false,
     }
 
@@ -143,13 +141,9 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             expirationDate: template.expirationDate,
             messages: template.messages,
           },
-          locale: formatLocale(locale),
         },
         optimisticResponse: {
-          upsertTemplate: [
-            ...templates,
-            { __typename: 'Template', ...template },
-          ],
+          upsertTemplate: { __typename: 'Template', ...template },
         },
         update: (
           cache: ApolloCache<NormalizedCacheObject>,
@@ -172,13 +166,15 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
                 },
               }) as GetTemplatesQuery
 
-              const cachedTemplates = (cachedData as GetTemplatesQuery)
-                .templates
+              const cachedTemplates =
+                (cachedData as GetTemplatesQuery)?.templates.filter(
+                  (temp) => temp.id !== response.upsertTemplate.id,
+                ) ?? []
 
               cache.writeQuery({
                 query: GetTemplatesDocument,
                 data: {
-                  templates: [...cachedTemplates, template],
+                  templates: [...cachedTemplates, response.upsertTemplate],
                 },
                 variables: {
                   locales: [language],
@@ -200,7 +196,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       id: newTemplate.id,
       title: newTemplate.title,
       expirationDate: newTemplate.expirationDate,
-      messages: getFormattedMessages(newTemplate.messages),
+      messages: newTemplate.messages,
       pinned: newTemplate.pinned,
     }
 
@@ -213,13 +209,9 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             expirationDate: template.expirationDate,
             messages: template.messages,
           },
-          locale: formatLocale(locale),
         },
         optimisticResponse: {
-          upsertTemplate: [
-            ...templates.filter((temp) => temp.id !== template.id),
-            { __typename: 'Template', ...template },
-          ],
+          upsertTemplate: { __typename: 'Template', ...template },
         },
         update: (
           cache: ApolloCache<NormalizedCacheObject>,
@@ -242,8 +234,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
                 },
               }) as GetTemplatesQuery
 
-              const cachedTemplates = (cachedData as GetTemplatesQuery)
-                .templates
+              const cachedTemplates =
+                (cachedData as GetTemplatesQuery)?.templates ?? []
 
               cache.writeQuery({
                 query: GetTemplatesDocument,
