@@ -3,6 +3,7 @@ import React, { lazy, Suspense, useEffect, useState } from 'react'
 import TagManager from 'react-gtm-module'
 import { Redirect, Route, Switch, useLocation } from 'react-router'
 import ImpersonateMemberPage from './tools/ImpersonateMemberPage'
+import { useFeatureFlag } from 'portals/hope/common/hooks/use-feature-flag'
 
 export type Page<T = void> = React.FC<T>
 
@@ -54,6 +55,7 @@ const getCleanPath = (pathname: string) =>
     .join('/')
 
 export const Routes: React.FC = () => {
+  const searchEverything = useFeatureFlag('SEARCH_EVERYTHING')
   const [prevPath, setPrevPath] = useState<string | null>(null)
   const location = useLocation()
 
@@ -95,7 +97,11 @@ export const Routes: React.FC = () => {
           path="/claims/:claimId/members/:memberId"
           to="/claims/:claimId"
         />
-        <Route exact path="/members" component={MemberSearchPage} />
+        <Route
+          exact
+          path="/members"
+          component={searchEverything.active ? SearchPage : MemberSearchPage}
+        />
         <Route path="/members/:memberId/:tab?" component={MemberPage} />
 
         <Route path="/tools" exact component={ToolsPage} />

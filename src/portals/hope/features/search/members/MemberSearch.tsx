@@ -79,9 +79,10 @@ export const MemberSearch: React.FC = () => {
         </Table>
       )}
       <Spacing top="medium" />
-      {hits.length !== 0 && hits.length >= 20 && (
+      {hits.length !== 0 && hits.length >= 10 && (
         <Flex justify="center">
           <Button
+            disabled={loading}
             variant="tertiary"
             onClick={() => {
               fetchMore()

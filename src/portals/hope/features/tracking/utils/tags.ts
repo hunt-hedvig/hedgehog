@@ -24,12 +24,3 @@ export const PushShortcutUsed = (name: string, keys: string[]) =>
       shortcutKeys: keys,
     },
   })
-
-export const PushKeyboardNavigation = (name: string, keys: string[]) =>
-  TagManager.dataLayer({
-    dataLayer: {
-      event: 'keyboard_navigation',
-      keyboardNavigationName: name,
-      keyboardNavigationKeys: keys,
-    },
-  })
