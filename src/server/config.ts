@@ -2,9 +2,6 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const defaultGatekeeperHost =
-  process.env.NODE_ENV === 'production' ? null : 'https://id.dev.hedvigit.com'
-
 const requireNotNullish = <T>(
   thing: T | null | undefined,
   description: string,
@@ -18,6 +15,22 @@ const requireNotNullish = <T>(
   return thing
 }
 
+const gatekeeperHost = requireNotNullish(
+  process.env.GATEKEEPER_HOST ??
+    (process.env.NODE_ENV === 'production'
+      ? null
+      : 'https://id.dev.hedvigit.com'),
+  'gatekeeper host',
+)
+const authServiceHost = requireNotNullish(
+  process.env.AUTH_HOST ??
+    (process.env.NODE_ENV === 'production'
+      ? null
+      : 'https://auth.dev.hedvigit.com'),
+  'auth service host',
+)
+const useAuthAsLogin = process.env.NODE_ENV !== 'production'
+
 export const config = {
   oauthClientId: requireNotNullish(
     process.env.OAUTH_CLIENT_ID,
@@ -27,10 +40,11 @@ export const config = {
     process.env.OAUTH_CLIENT_SECRET,
     'oauth client secret',
   ),
-  gatekeeperHost: requireNotNullish(
-    process.env.GATEKEEPER_HOST ?? defaultGatekeeperHost,
-    'gatekeeper host',
-  ),
+  gatekeeperHost,
+  authServiceHost,
+  loginUrl: useAuthAsLogin
+    ? `${authServiceHost}/login`
+    : `${gatekeeperHost}/sso`,
   stagingSpecificTools: process.env.USE_STAGING_SPECIFIC_TOOLS === 'true',
   useHelmet: process.env.USE_HELMET === 'true',
   useSecureCookies: process.env.USE_SECURE_COOKIES === 'true',

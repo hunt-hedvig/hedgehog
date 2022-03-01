@@ -57,27 +57,47 @@ export const loginCallback: Middleware<object> = async (ctx) => {
 
 export const logout: Middleware<object> = async (ctx) => {
   setTokenCookies(ctx, { accessToken: '', refreshToken: '' })
-  ctx.redirect('/gatekeeper')
+  ctx.redirect('/login-provider')
 }
 
 export const refreshTokenCallback: Middleware<LoggingMiddleware> = async (
   ctx,
 ) => {
+  const tokenSource = ctx.cookies.get('_hvg_src')
   const refreshToken = ctx.cookies.get('_hvg_rt') ?? ''
-  const request = [
-    'client_id=' + encodeURIComponent(config.oauthClientId),
-    'client_secret=' + encodeURIComponent(config.oauthClientSecret),
-    'grant_type=refresh_token',
-    'refresh_token=' + encodeURIComponent(refreshToken),
-  ]
-  const response = await fetch(config.gatekeeperHost + '/oauth2/token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Accept: 'application/json',
-    },
-    body: request.join('&'),
-  })
+
+  let response: any
+  if (tokenSource === 'auth') {
+    // We logged in with the Auth service, we should refresh in the auth service
+    const request = {
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken,
+    }
+    response = await fetch(config.authServiceHost + '/oauth/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(request),
+    })
+  } else {
+    // We're in Gatekeeper territory
+    const request = [
+      'client_id=' + encodeURIComponent(config.oauthClientId),
+      'client_secret=' + encodeURIComponent(config.oauthClientSecret),
+      'grant_type=refresh_token',
+      'refresh_token=' + encodeURIComponent(refreshToken),
+    ]
+    response = await fetch(config.gatekeeperHost + '/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      },
+      body: request.join('&'),
+    })
+  }
 
   const body = (await response.json()) as Record<string, string>
 

@@ -40,9 +40,8 @@ const Footer = styled.div`
 
 const redirectToLogin = () => {
   window.location.href = `${
-    (window as Window & typeof global & { GATEKEEPER_HOST: string })
-      .GATEKEEPER_HOST
-  }/sso?redirect=${window.location.protocol}//${
+    (window as Window & typeof global & { LOGIN_URL: string }).LOGIN_URL
+  }?redirect=${window.location.protocol}//${
     window.location.host
   }/login/callback`
 }
