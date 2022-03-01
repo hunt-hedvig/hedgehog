@@ -10,10 +10,10 @@ import {
   GetQuestionsGroupsDocument,
   useMarkQuestionAsResolvedMutation,
   useSendMessageMutation,
-  Template as TemplateMessages,
 } from 'types/generated/graphql'
 import { FileText } from 'react-bootstrap-icons'
 import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
+import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
@@ -155,17 +155,13 @@ export const ConversationChat: React.FC<{
       },
     ],
   })
-  const [hinting, setHinting] = useState(false)
-  const [proposedTemplate, setProposedTemplate] =
-    useState<TemplateMessages | null>(null)
 
-  const {
-    show,
-    selected,
-    templates,
-    locale,
-    loading: templatesLoading,
-  } = useTemplateMessages()
+  const { hinting, templateHint, onChange, onKeyDown } = useTemplatesHinting(
+    message,
+    setMessage,
+    isMetaKey,
+  )
+  const { show, selected } = useTemplateMessages()
 
   useEffect(() => {
     if (selected) {
@@ -173,137 +169,14 @@ export const ConversationChat: React.FC<{
     }
   }, [selected])
 
-  const searchTemplate = (searchText: string) =>
-    templates.find(
-      (template) =>
-        template.title.substring(0, searchText.length).toLowerCase() ===
-        searchText.toLowerCase(),
-    ) || null
-
-  const getTemplateName = (
-    searchTemplate: TemplateMessages | null,
-    searchText: string,
-  ) =>
-    searchTemplate?.title
-      .split('')
-      .map((letter: string, index: number) => {
-        if (searchText[index] === letter.toUpperCase()) {
-          return letter.toUpperCase()
-        }
-
-        return letter.toLowerCase()
-      })
-      .join('') || ''
-
   const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const text = e.currentTarget.value
-
-    if (!e.currentTarget.value.includes('/') && hinting) {
-      setHinting(false)
-    }
-
-    if (hinting) {
-      const searchText = text.slice(1)
-      const filteredTemplates = searchTemplate(searchText)
-      const templateName = getTemplateName(filteredTemplates, searchText)
-
-      setProposedTemplate(
-        filteredTemplates
-          ? { ...filteredTemplates, title: templateName }
-          : null,
-      )
-      setMessage(e.currentTarget.value)
-
-      return
-    }
+    onChange(e)
 
     setMessage(e.currentTarget.value)
   }
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (isPressing(e, Keys.Slash) && !hinting && !templatesLoading) {
-      e.preventDefault()
-
-      setProposedTemplate(searchTemplate(''))
-      setMessage('/')
-      setHinting(true)
-    }
-
-    if (
-      (isPressing(e, Keys.Down) || isPressing(e, Keys.Up)) &&
-      hinting &&
-      proposedTemplate &&
-      !templatesLoading
-    ) {
-      e.preventDefault()
-
-      const searchText = message.slice(1)
-
-      const templatesIds = templates
-        .filter(
-          (template) =>
-            !!template.messages.find((msg) => msg.language === locale),
-        )
-        .filter(
-          (template) =>
-            template.title.substring(0, searchText.length).toLowerCase() ===
-            searchText.toLowerCase(),
-        )
-        .map((template) => template.id)
-
-      const indexOfCurrentTemplate = templatesIds.indexOf(proposedTemplate.id)
-
-      if (
-        indexOfCurrentTemplate < templatesIds.length - 1 &&
-        isPressing(e, Keys.Down)
-      ) {
-        const template =
-          templates.find(
-            (template) =>
-              template.id === templatesIds[indexOfCurrentTemplate + 1],
-          ) || null
-
-        const templateName = getTemplateName(template, searchText)
-
-        setProposedTemplate(
-          template ? { ...template, title: templateName } : null,
-        )
-      }
-
-      if (indexOfCurrentTemplate > 0 && isPressing(e, Keys.Up)) {
-        const template =
-          templates.find(
-            (template) =>
-              template.id === templatesIds[indexOfCurrentTemplate - 1],
-          ) || null
-
-        const templateName = getTemplateName(template, searchText)
-
-        setProposedTemplate(
-          template ? { ...template, title: templateName } : null,
-        )
-      }
-    }
-
-    if (isPressing(e, Keys.Escape) && hinting) {
-      e.preventDefault()
-
-      setProposedTemplate(null)
-      setHinting(false)
-    }
-
-    if (!isMetaKey(e) && isPressing(e, Keys.Enter) && hinting) {
-      e.preventDefault()
-
-      const newMessage = proposedTemplate?.messages.find(
-        (msg) => msg.language === locale,
-      )?.message
-
-      setMessage(newMessage || '')
-
-      setProposedTemplate(null)
-      setHinting(false)
-    }
+    onKeyDown(e)
 
     if (
       isMetaKey(e) &&
@@ -368,9 +241,7 @@ export const ConversationChat: React.FC<{
           <HintContainer>
             {hinting ? (
               <HintText>
-                {proposedTemplate?.title
-                  ? `/${proposedTemplate?.title}`
-                  : message}
+                {templateHint?.title ? `/${templateHint?.title}` : message}
               </HintText>
             ) : (
               ''

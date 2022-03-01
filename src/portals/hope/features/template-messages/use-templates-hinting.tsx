@@ -1,0 +1,147 @@
+import { useState } from 'react'
+import { Template } from 'types/generated/graphql'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
+
+export const useTemplatesHinting = (
+  message: string,
+  setMessage: (e: string) => void,
+  isAdditionalKey: (e: React.KeyboardEvent | KeyboardEvent) => boolean,
+): {
+  hinting: boolean
+  templateHint: Template | null
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void
+} => {
+  const [hinting, setHinting] = useState(false)
+  const [templateHint, setTemplateHint] = useState<Template | null>(null)
+
+  const { templates, locale, loading } = useTemplateMessages()
+
+  const searchTemplate = (searchText: string) =>
+    templates.find(
+      (template) =>
+        template.title.substring(0, searchText.length).toLowerCase() ===
+        searchText.toLowerCase(),
+    ) || null
+
+  const getTemplateName = (
+    searchTemplate: Template | null,
+    searchText: string,
+  ) =>
+    searchTemplate?.title
+      .split('')
+      .map((letter: string, index: number) => {
+        if (searchText[index] === letter.toUpperCase()) {
+          return letter.toUpperCase()
+        }
+
+        return letter.toLowerCase()
+      })
+      .join('') || ''
+
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.currentTarget.value
+
+    if (!e.currentTarget.value.includes('/') && hinting) {
+      setHinting(false)
+    }
+
+    if (hinting) {
+      const searchText = text.slice(1)
+      const filteredTemplates = searchTemplate(searchText)
+      const templateName = getTemplateName(filteredTemplates, searchText)
+
+      setTemplateHint(
+        filteredTemplates
+          ? { ...filteredTemplates, title: templateName }
+          : null,
+      )
+    }
+  }
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (isPressing(e, Keys.Slash) && !hinting && !loading) {
+      e.preventDefault()
+
+      setTemplateHint(searchTemplate(''))
+      setMessage('/')
+      setHinting(true)
+    }
+
+    if (
+      (isPressing(e, Keys.Down) || isPressing(e, Keys.Up)) &&
+      hinting &&
+      templateHint &&
+      !loading
+    ) {
+      e.preventDefault()
+
+      const searchText = message.slice(1)
+
+      const templatesIds = templates
+        .filter(
+          (template) =>
+            template.title.substring(0, searchText.length).toLowerCase() ===
+            searchText.toLowerCase(),
+        )
+        .map((template) => template.id)
+
+      const indexOfCurrentTemplate = templatesIds.indexOf(templateHint.id)
+
+      if (
+        indexOfCurrentTemplate < templatesIds.length - 1 &&
+        isPressing(e, Keys.Down)
+      ) {
+        const template =
+          templates.find(
+            (template) =>
+              template.id === templatesIds[indexOfCurrentTemplate + 1],
+          ) || null
+
+        const templateName = getTemplateName(template, searchText)
+
+        setTemplateHint(template ? { ...template, title: templateName } : null)
+      }
+
+      if (indexOfCurrentTemplate > 0 && isPressing(e, Keys.Up)) {
+        const template =
+          templates.find(
+            (template) =>
+              template.id === templatesIds[indexOfCurrentTemplate - 1],
+          ) || null
+
+        const templateName = getTemplateName(template, searchText)
+
+        setTemplateHint(template ? { ...template, title: templateName } : null)
+      }
+    }
+
+    if (isPressing(e, Keys.Escape) && hinting) {
+      e.preventDefault()
+
+      setTemplateHint(null)
+      setHinting(false)
+    }
+
+    if (!isAdditionalKey(e) && isPressing(e, Keys.Enter) && hinting) {
+      e.preventDefault()
+
+      const newMessage = templateHint?.messages.find(
+        (msg) => msg.language === locale,
+      )?.message
+
+      setMessage(newMessage || '')
+
+      setTemplateHint(null)
+      setHinting(false)
+    }
+  }
+
+  return {
+    hinting,
+    templateHint,
+    onChange,
+    onKeyDown,
+  }
+}
