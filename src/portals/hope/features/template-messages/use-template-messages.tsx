@@ -159,24 +159,32 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             return
           }
 
-          const cachedData = cache.readQuery({
-            query: GetTemplatesDocument,
-            variables: {
-              locales: [formatLocale(locale)],
-            },
-          }) as GetTemplatesQuery
+          template.messages
+            .filter(
+              (message) => message.language !== formatLocale(PickedLocale.EnSe),
+            )
+            .map((message) => message.language)
+            .forEach((language) => {
+              const cachedData = cache.readQuery({
+                query: GetTemplatesDocument,
+                variables: {
+                  locales: [language],
+                },
+              }) as GetTemplatesQuery
 
-          const cachedTemplates = (cachedData as GetTemplatesQuery).templates
+              const cachedTemplates = (cachedData as GetTemplatesQuery)
+                .templates
 
-          cache.writeQuery({
-            query: GetTemplatesDocument,
-            data: {
-              templates: cachedTemplates,
-            },
-            variables: {
-              locales: [formatLocale(locale)],
-            },
-          })
+              cache.writeQuery({
+                query: GetTemplatesDocument,
+                data: {
+                  templates: [...cachedTemplates, template],
+                },
+                variables: {
+                  locales: [language],
+                },
+              })
+            })
         },
       }),
       {
@@ -213,6 +221,46 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             { __typename: 'Template', ...template },
           ],
         },
+        update: (
+          cache: ApolloCache<NormalizedCacheObject>,
+          { data: response },
+        ) => {
+          if (!response?.upsertTemplate) {
+            return
+          }
+
+          template.messages
+            .filter(
+              (message) => message.language !== formatLocale(PickedLocale.EnSe),
+            )
+            .map((message) => message.language)
+            .forEach((language) => {
+              const cachedData = cache.readQuery({
+                query: GetTemplatesDocument,
+                variables: {
+                  locales: [language],
+                },
+              }) as GetTemplatesQuery
+
+              const cachedTemplates = (cachedData as GetTemplatesQuery)
+                .templates
+
+              cache.writeQuery({
+                query: GetTemplatesDocument,
+                data: {
+                  templates: [
+                    ...cachedTemplates.filter(
+                      (temp) => temp.id !== template.id,
+                    ),
+                    template,
+                  ],
+                },
+                variables: {
+                  locales: [language],
+                },
+              })
+            })
+        },
       }),
       {
         loading: 'Updating template',
@@ -246,26 +294,35 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
           if (!response) {
             return
           }
-          const cachedData = cache.readQuery({
-            query: GetTemplatesDocument,
-            variables: {
-              locales: [formatLocale(locale)],
-            },
-          })
 
-          const cachedTemplates = (cachedData as GetTemplatesQuery).templates
+          deletingTemplate.messages
+            .filter(
+              (message) => message.language !== formatLocale(PickedLocale.EnSe),
+            )
+            .map((message) => message.language)
+            .forEach((language) => {
+              const cachedData = cache.readQuery({
+                query: GetTemplatesDocument,
+                variables: {
+                  locales: [language],
+                },
+              })
 
-          cache.writeQuery({
-            query: GetTemplatesDocument,
-            data: {
-              templates: cachedTemplates.filter(
-                (template) => template.id !== templateId,
-              ),
-            },
-            variables: {
-              locales: [formatLocale(locale)],
-            },
-          })
+              const cachedTemplates = (cachedData as GetTemplatesQuery)
+                .templates
+
+              cache.writeQuery({
+                query: GetTemplatesDocument,
+                data: {
+                  templates: cachedTemplates.filter(
+                    (template) => template.id !== templateId,
+                  ),
+                },
+                variables: {
+                  locales: [language],
+                },
+              })
+            })
         },
       }),
       {
