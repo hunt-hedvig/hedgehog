@@ -4,6 +4,7 @@ schema {
 }
 
 type QueryType {
+  search(query: String!, type: String!, from: Int, size: Int): [SearchResult!]!
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
@@ -51,99 +52,6 @@ type QueryType {
 
   templates(locales: [String!]!): [Template!]!
   template(id: ID!): Template!
-}
-
-type SimpleMemberLookupResult {
-  memberId: ID!
-  firstName: String!
-  lastName: String!
-  email: String!
-  phoneNumber: String!
-  market: String!
-  contracts: [SimpleMemberLookupContract!]!
-}
-
-type SimpleMemberLookupContract {
-  contractId: ID!
-  typeOfContract: String!
-  masterInception: LocalDate
-  terminationDate: LocalDate
-  numberCoInsured: Int!
-  address: Address
-}
-
-type ResourceAccessInformation {
-  resourceId: ID!
-  restrictedBy: User!
-  restrictedByMe: Boolean!
-
-  usersGranted: [User!]!
-  usersRestricted: [User!]!
-
-  rolesGranted: [String!]!
-  rolesRestricted: [String!]!
-}
-
-type Me {
-  scopes: [String!]!
-  role: String!
-  user: User!
-  settings(filters: UserSettingsFilter): [UserSetting!]!
-  portal: String!
-  availablePortals: [String!]!
-}
-
-input UserSettingsFilter {
-  keys: [UserSettingKey!]!
-}
-
-enum UserSettingKey {
-  DARK_MODE
-  FEATURE_FLAGS
-  NUMBER_OF_MEMBER_GROUPS
-  CLAIM_COMPLEXITY_FILTER
-  CLAIM_STATES_FILTER
-  MEMBER_GROUPS_FILTER
-  MARKET_FILTER
-  NUMBER_OF_CLAIMS_FILTER
-  OUTCOME_FILTER
-  FOCUS_MARKETS
-  LANGUAGES
-}
-
-type User {
-  id: ID!
-  email: String!
-  role: String
-  fullName: String!
-  signature: String!
-  phoneNumber: String
-  latestPresence: Instant
-  latestLocation: String
-  notifications(filters: UserNotificationsFilter): [UserNotification!]!
-  checkedIn: Boolean!
-  markets: [String!]!
-}
-
-input UserNotificationsFilter {
-  before: Instant
-  after: Instant
-}
-
-type UserNotification {
-  id: ID!
-  message: String!
-  createdAt: Instant!
-  url: String!
-  read: Boolean!
-  user: User!
-  from: User
-  verbose: Boolean!
-}
-
-type UserSetting {
-  key: UserSettingKey!
-  value: JSON!
 }
 
 type MutationType {
@@ -317,6 +225,161 @@ type MutationType {
   upsertTemplate(input: UpsertTemplateInput!): Template!
   removeTemplate(id: ID!): Boolean!
   togglePinStatus(id: ID!): Template!
+}
+
+type MemberSearchHit {
+  memberId: String
+  firstName: String
+  lastName: String
+}
+
+type Template {
+  id: ID!
+  title: String!
+  messages: [TemplateMessage!]!
+  expirationDate: LocalDate
+  pinned: Boolean!
+}
+
+type TemplateMessage {
+  language: String!
+  message: String!
+}
+
+input UpsertTemplateInput {
+  id: ID
+  title: String!
+  expirationDate: LocalDate
+  messages: [UpsertTemplateMessageInput!]!
+}
+
+input UpsertTemplateMessageInput {
+  language: String!
+  message: String!
+}
+
+type NoteSearchHit {
+  id: String
+  memberId: String
+  firstName: String
+  lastName: String
+  claimId: String
+  text: String
+  author: String
+}
+
+type SearchResultHighlight {
+  field: String!
+  values: [String!]!
+}
+
+union SearchHit = MemberSearchHit | NoteSearchHit
+
+type SearchResult {
+  hit: SearchHit!
+  highlights: [SearchResultHighlight!]!
+}
+
+type SimpleMemberLookupResult {
+  memberId: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String!
+  market: String!
+  contracts: [SimpleMemberLookupContract!]!
+}
+
+type SimpleMemberLookupContract {
+  contractId: ID!
+  typeOfContract: String!
+  masterInception: LocalDate
+  terminationDate: LocalDate
+  numberCoInsured: Int!
+  address: Address
+}
+
+type ResourceAccessInformation {
+  resourceId: ID!
+  restrictedBy: User!
+  restrictedByMe: Boolean!
+
+  usersGranted: [User!]!
+  usersRestricted: [User!]!
+
+  rolesGranted: [String!]!
+  rolesRestricted: [String!]!
+}
+
+type Me {
+  scopes: [String!]!
+  role: String!
+  user: User!
+  settings(filters: UserSettingsFilter): [UserSetting!]!
+  portal: String!
+  availablePortals: [String!]!
+}
+
+input UserSettingsFilter {
+  keys: [UserSettingKey!]!
+}
+
+enum UserSettingKey {
+  DARK_MODE
+  FEATURE_FLAGS
+  NUMBER_OF_MEMBER_GROUPS
+  CLAIM_COMPLEXITY_FILTER
+  CLAIM_STATES_FILTER
+  MEMBER_GROUPS_FILTER
+  MARKET_FILTER
+  NUMBER_OF_CLAIMS_FILTER
+  OUTCOME_FILTER
+  FOCUS_MARKETS
+  LANGUAGES
+}
+
+type User {
+  id: ID!
+  email: String!
+  role: String
+  fullName: String!
+  signature: String!
+  phoneNumber: String
+  latestPresence: Instant
+  latestLocation: String
+  notifications(filters: UserNotificationsFilter): [UserNotification!]!
+  checkedIn: Boolean!
+  markets: [String!]!
+  tasks(type: String): [Task!]!
+}
+
+union TaskResource = QuestionGroup | Claim
+
+type Task {
+  id: ID!
+  resource: TaskResource
+  createdAt: Instant!
+}
+
+input UserNotificationsFilter {
+  before: Instant
+  after: Instant
+}
+
+type UserNotification {
+  id: ID!
+  message: String!
+  createdAt: Instant!
+  url: String!
+  read: Boolean!
+  user: User!
+  from: User
+  verbose: Boolean!
+}
+
+type UserSetting {
+  key: UserSettingKey!
+  value: JSON!
 }
 
 enum GrantHolderType {
@@ -1259,31 +1322,6 @@ type MonetaryAmountV2 {
   currency: String!
 }
 
-type Template {
-  id: ID!
-  title: String!
-  messages: [TemplateMessage!]!
-  expirationDate: LocalDate
-  pinned: Boolean!
-}
-
-type TemplateMessage {
-  language: String!
-  message: String!
-}
-
-input UpsertTemplateInput {
-  id: ID
-  title: String!
-  expirationDate: LocalDate
-  messages: [UpsertTemplateMessageInput!]!
-}
-
-input UpsertTemplateMessageInput {
-  language: String!
-  message: String!
-}
-
 enum ClaimComplexity {
   SIMPLE
   COMPLEX
@@ -1305,7 +1343,7 @@ scalar LocalDateTime
 scalar Instant
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL
-# A Json Object represtation of `JsonNode`
+# A Json Object representation of `JsonNode`
 scalar JSON
 
 scalar BigDecimal
