@@ -29,7 +29,9 @@ const authServiceHost = requireNotNullish(
       : 'https://auth.dev.hedvigit.com'),
   'auth service host',
 )
-const useAuthAsLogin = process.env.NODE_ENV !== 'production'
+
+// Quick-and-dirty proxy for whether we run staging or not...
+const useAuthAsLogin = process.env.USE_STAGING_SPECIFIC_TOOLS === 'true'
 
 export const config = {
   oauthClientId: requireNotNullish(
