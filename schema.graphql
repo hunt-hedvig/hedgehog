@@ -280,6 +280,34 @@ type SearchResult {
   highlights: [SearchResultHighlight!]!
 }
 
+type MemberSearchHit {
+  memberId: String
+  firstName: String
+  lastName: String
+}
+
+type NoteSearchHit {
+  id: String
+  memberId: String
+  firstName: String
+  lastName: String
+  claimId: String
+  text: String
+  author: String
+}
+
+type SearchResultHighlight {
+  field: String!
+  values: [String!]!
+}
+
+union SearchHit = MemberSearchHit | NoteSearchHit
+
+type SearchResult {
+  hit: SearchHit!
+  highlights: [SearchResultHighlight!]!
+}
+
 type SimpleMemberLookupResult {
   memberId: ID!
   firstName: String!

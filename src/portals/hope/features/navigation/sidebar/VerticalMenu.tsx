@@ -185,7 +185,7 @@ export const VerticalMenu: React.FC = () => {
       route: routes.search,
       icon: Search,
       hotkey: 'S',
-      title: 'Member Search',
+      title: 'Search',
       single: true,
       external: false,
       hotkeyHandler: () => history.push(routes.search),
@@ -298,9 +298,15 @@ export const VerticalMenu: React.FC = () => {
                       marginBottom: single ? '4rem' : 0,
                       ...navigation.style,
                     }}
-                    isActive={(_match, location) =>
-                      location.pathname.startsWith(item.route)
-                    }
+                    isActive={(_match, location) => {
+                      if (
+                        location.pathname.startsWith('/search') &&
+                        item.route === '/members'
+                      ) {
+                        return true
+                      }
+                      return location.pathname.startsWith(item.route)
+                    }}
                     to={
                       item.route !== routes.claims
                         ? item.route
