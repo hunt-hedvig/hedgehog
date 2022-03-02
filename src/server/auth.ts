@@ -48,7 +48,7 @@ export const loginCallback: Middleware<object> = async (ctx) => {
   const accessToken = getTokenFromQuery(ctx.request.query['access-token'])
   const refreshToken = getTokenFromQuery(ctx.request.query['refresh-token'])
   const tokenSource =
-    ctx.request.query['source'] === 'auth-service' ? 'auth' : 'gatekeeper'
+    ctx.request.query['source'] === 'auth' ? 'auth' : 'gatekeeper'
 
   setTokenCookies(ctx, { accessToken, refreshToken, tokenSource })
 
