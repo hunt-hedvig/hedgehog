@@ -97,7 +97,13 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
     variables: { memberId },
   })
 
-  const { setLocale } = useTemplateMessages()
+  const { setLocale, setMemberId } = useTemplateMessages()
+
+  useEffect(() => {
+    if (memberId) {
+      setMemberId(memberId)
+    }
+  }, [memberId])
 
   useEffect(() => {
     setLocale((data?.member?.pickedLocale || PickedLocale.SvSe) as PickedLocale)

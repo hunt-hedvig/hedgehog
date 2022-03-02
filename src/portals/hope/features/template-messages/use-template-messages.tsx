@@ -88,6 +88,8 @@ interface TemplateMessagesContextProps {
   selected: string | null
   locale: PickedLocale
   setLocale: (locale: PickedLocale) => void
+  memberId?: string
+  setMemberId: (id: string) => void
   loading: boolean
 }
 
@@ -102,12 +104,15 @@ const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
   selected: null,
   locale: PickedLocale.SvSe,
   setLocale: () => void 0,
+  memberId: '',
+  setMemberId: () => void 0,
   loading: false,
 })
 
 export const useTemplateMessages = () => useContext(TemplateMessagesContext)
 
 export const TemplateMessagesProvider: React.FC = ({ children }) => {
+  const [memberId, setMemberId] = useState<string>()
   const [locale, setLocale] = useState<PickedLocale>(PickedLocale.SvSe)
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
@@ -300,20 +305,22 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
                 },
               })
 
-              const cachedTemplates = (cachedData as GetTemplatesQuery)
-                .templates
+              if (cachedData) {
+                const cachedTemplates = (cachedData as GetTemplatesQuery)
+                  .templates
 
-              cache.writeQuery({
-                query: GetTemplatesDocument,
-                data: {
-                  templates: cachedTemplates.filter(
-                    (template) => template.id !== templateId,
-                  ),
-                },
-                variables: {
-                  locales: [language],
-                },
-              })
+                cache.writeQuery({
+                  query: GetTemplatesDocument,
+                  data: {
+                    templates: cachedTemplates.filter(
+                      (template) => template.id !== templateId,
+                    ),
+                  },
+                  variables: {
+                    locales: [language],
+                  },
+                })
+              }
             })
         },
       }),
@@ -366,6 +373,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         selected: selectedText,
         locale,
         setLocale: (newLocale: PickedLocale) => setLocale(newLocale),
+        memberId,
+        setMemberId,
         loading,
       }}
     >
