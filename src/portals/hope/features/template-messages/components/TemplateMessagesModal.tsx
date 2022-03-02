@@ -178,7 +178,8 @@ export const TemplateMessagesModal: React.FC<{
     if (currentLocaleDisplayed?.isEnglishLocale) {
       select(
         selectedTemplate.messages.find(
-          (message) => message.language === formatLocale(PickedLocale.EnSe),
+          (message) =>
+            message.language === formatLocale(PickedLocale.EnSe, true),
         )?.message || '',
       )
 
@@ -357,7 +358,8 @@ export const TemplateMessagesModal: React.FC<{
               text={
                 currentLocaleDisplayed?.isEnglishLocale
                   ? template.messages.find(
-                      (msg) => msg.language === formatLocale(PickedLocale.EnSe),
+                      (msg) =>
+                        msg.language === formatLocale(PickedLocale.EnSe, true),
                     )?.message || ''
                   : template.messages.find(
                       (msg) => msg.language === formatLocale(currentLocale),

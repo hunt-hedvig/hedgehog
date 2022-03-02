@@ -94,40 +94,41 @@ export const TemplateForm: React.FC<
       expirationDate: template?.expirationDate || null,
       messageEn:
         template?.messages.find(
-          (message) => message.language === formatLocale(PickedLocale.EnSe),
+          (message) =>
+            message.language === formatLocale(PickedLocale.EnSe, true),
         )?.message || '',
       ...resetObject,
     })
 
     setExpirationDate(template?.expirationDate || null)
+
     setLocales(
       defaultLocale
         ? [defaultLocale]
-        : template?.messages.map((msg) => msg.language) || [
-            formatLocale(PickedLocale.SvSe),
-          ],
+        : template?.messages
+            .filter(
+              (msg) => msg.language !== formatLocale(PickedLocale.EnSe, true),
+            )
+            .map((msg) => msg.language) || [formatLocale(PickedLocale.SvSe)],
     )
   }, [template])
 
   const getMessages = (values: FieldValues): TemplateMessage[] => {
-    const messages: TemplateMessage[] = []
-
-    locales
-      .filter((locale) => locale !== formatLocale(PickedLocale.EnSe))
-      .forEach((locale) => {
-        messages.push({
-          message: values[`message-${locale}`] || '',
-          language: locale,
-        })
-      })
-
-    return [
-      ...messages,
+    const messages: TemplateMessage[] = [
       {
         message: values.messageEn,
-        language: formatLocale(PickedLocale.EnSe),
+        language: formatLocale(PickedLocale.EnSe, true),
       },
     ]
+
+    locales.forEach((locale) => {
+      messages.push({
+        message: values[`message-${locale}`] || '',
+        language: locale,
+      })
+    })
+
+    return messages
   }
 
   const createHandler = (values: FieldValues) => {
@@ -239,28 +240,26 @@ export const TemplateForm: React.FC<
           />
         </Field>
 
-        {locales
-          .filter((locale) => locale !== formatLocale(PickedLocale.EnSe))
-          .map((locale) => (
-            <MessageField
-              key={locale}
-              label={`Message (${locale})`}
-              name={`message-${locale}`}
-              placeholder="Message goes here"
-              style={{ marginTop: '0.5rem' }}
-              defaultValue={
-                template?.messages.find((msg) => msg.language === locale)
-                  ?.message || ''
-              }
-              rules={{
-                required: false,
-                pattern: {
-                  value: /[^\s]/,
-                  message: 'Cannot send a message without text',
-                },
-              }}
-            />
-          ))}
+        {locales.map((locale) => (
+          <MessageField
+            key={locale}
+            label={`Message (${locale})`}
+            name={`message-${locale}`}
+            placeholder="Message goes here"
+            style={{ marginTop: '0.5rem' }}
+            defaultValue={
+              template?.messages.find((msg) => msg.language === locale)
+                ?.message || ''
+            }
+            rules={{
+              required: false,
+              pattern: {
+                value: /[^\s]/,
+                message: 'Cannot send a message without text',
+              },
+            }}
+          />
+        ))}
 
         <MessageField
           label="Message (EN)"
@@ -269,7 +268,7 @@ export const TemplateForm: React.FC<
           style={{ marginTop: '0.5rem' }}
           defaultValue={
             template?.messages.find(
-              (msg) => msg.language === formatLocale(PickedLocale.EnSe),
+              (msg) => msg.language === formatLocale(PickedLocale.EnSe, true),
             )?.message || ''
           }
           rules={{

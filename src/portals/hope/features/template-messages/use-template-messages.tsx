@@ -67,8 +67,8 @@ gql`
   }
 `
 
-export const formatLocale = (locale: PickedLocale) =>
-  locale.split('_')[0].toUpperCase()
+export const formatLocale = (locale: PickedLocale, isEn?: boolean) =>
+  isEn ? locale.split('_')[0].toUpperCase() : locale.split('_')[1].toUpperCase()
 
 export const uniquePickedLocales: PickedLocale[] = Object.values(
   PickedLocale,
@@ -162,7 +162,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
 
           template.messages
             .filter(
-              (message) => message.language !== formatLocale(PickedLocale.EnSe),
+              (message) =>
+                message.language !== formatLocale(PickedLocale.EnSe, true),
             )
             .map((message) => message.language)
             .forEach((language) => {
@@ -230,7 +231,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
 
           template.messages
             .filter(
-              (message) => message.language !== formatLocale(PickedLocale.EnSe),
+              (message) =>
+                message.language !== formatLocale(PickedLocale.EnSe, true),
             )
             .map((message) => message.language)
             .forEach((language) => {
@@ -296,7 +298,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
 
           deletingTemplate.messages
             .filter(
-              (message) => message.language !== formatLocale(PickedLocale.EnSe),
+              (message) =>
+                message.language !== formatLocale(PickedLocale.EnSe, true),
             )
             .map((message) => message.language)
             .forEach((language) => {
