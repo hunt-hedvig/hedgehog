@@ -39,11 +39,9 @@ const Footer = styled.div`
 `
 
 const redirectToLogin = () => {
-  window.location.href = `${
-    (window as Window & typeof global & { LOGIN_URL: string }).LOGIN_URL
-  }?redirect=${window.location.protocol}//${
-    window.location.host
-  }/login/callback`
+  const win = window as Window &
+    typeof global & { LOGIN_URL: string; LOGIN_SOURCE: string }
+  window.location.href = `${win.LOGIN_URL}?redirect=${window.location.protocol}//${window.location.host}/login/callback?source=${win.LOGIN_SOURCE}`
 }
 
 const MainPage: Page = () => {

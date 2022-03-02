@@ -44,6 +44,7 @@ const template = () => `
 
   <script>
     window.LOGIN_URL = ${JSON.stringify(config.loginUrl)};
+    window.LOGIN_SOURCE = ${JSON.stringify(config.loginSource)};
     window.HOPE_FEATURES = {
       "stagingSpecificTools": ${JSON.stringify(config.stagingSpecificTools)},
       "swishPayoutsEnabled": ${JSON.stringify(config.swishPayoutsEnabled)},
