@@ -70,7 +70,9 @@ gql`
 export const formatLocale = (locale: PickedLocale) =>
   locale.split('_')[0].toUpperCase()
 
-export const uniquePickedLocales = Object.values(PickedLocale).filter(
+export const uniquePickedLocales: PickedLocale[] = Object.values(
+  PickedLocale,
+).filter(
   (locale) =>
     locale !== PickedLocale.EnDk &&
     locale !== PickedLocale.EnNo &&

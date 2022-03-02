@@ -211,7 +211,7 @@ export const TemplateMessagesModal: React.FC<{
     const message = `By switching this setting, The default language used by this member will be changing to ${
       currentLocaleDisplayed?.isEnglishLocale
         ? PickedLocaleMarket[currentLocale]
-        : 'English'
+        : 'ENGLISH'
     }`
 
     if (confirm(message)) {

@@ -13,6 +13,10 @@ import React, { useEffect } from 'react'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { useTemplateMessages } from '../../template-messages/use-template-messages'
+import {
+  formatLocale,
+  uniquePickedLocales,
+} from 'portals/hope/features/template-messages/use-template-messages'
 
 const MemberPlaceholder = styled.div`
   border-radius: 8px;
@@ -106,6 +110,20 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   }, [memberId])
 
   useEffect(() => {
+    if (
+      data?.member?.pickedLocale &&
+      formatLocale(data?.member?.pickedLocale as PickedLocale) ===
+        formatLocale(PickedLocale.EnSe)
+    ) {
+      const neededLocale = uniquePickedLocales.find(
+        (locale) =>
+          locale.split('_')[1] === data?.member?.pickedLocale?.split('_')[1],
+      )
+
+      setLocale(neededLocale || PickedLocale.SvSe)
+
+      return
+    }
     setLocale((data?.member?.pickedLocale || PickedLocale.SvSe) as PickedLocale)
   }, [data?.member?.pickedLocale])
 
