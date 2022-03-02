@@ -47,7 +47,6 @@ export const config = {
   loginUrl: useAuthAsLogin
     ? `${authServiceHost}/login`
     : `${gatekeeperHost}/sso`,
-  loginSource: useAuthAsLogin ? 'auth-service' : 'gatekeeper',
   stagingSpecificTools: process.env.USE_STAGING_SPECIFIC_TOOLS === 'true',
   useHelmet: process.env.USE_HELMET === 'true',
   useSecureCookies: process.env.USE_SECURE_COOKIES === 'true',
