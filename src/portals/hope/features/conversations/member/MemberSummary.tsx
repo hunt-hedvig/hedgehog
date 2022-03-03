@@ -12,7 +12,10 @@ import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-numb
 import React, { useEffect } from 'react'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
 import { PickedLocale } from 'portals/hope/features/config/constants'
-import { useTemplateMessages } from '../../template-messages/use-template-messages'
+import {
+  formatLocale,
+  useTemplateMessages,
+} from '../../template-messages/use-template-messages'
 
 const MemberPlaceholder = styled.div`
   border-radius: 8px;
@@ -97,7 +100,8 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
     variables: { memberId },
   })
 
-  const { setLocale, setMemberId } = useTemplateMessages()
+  const { setLocale, setMemberId, changeLocaleDisplayed } =
+    useTemplateMessages()
 
   useEffect(() => {
     if (memberId) {
@@ -106,6 +110,14 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   }, [memberId])
 
   useEffect(() => {
+    if (
+      data?.member?.pickedLocale &&
+      formatLocale(data?.member?.pickedLocale as PickedLocale, true) ===
+        formatLocale(PickedLocale.EnSe, true)
+    ) {
+      changeLocaleDisplayed(memberId, true)
+    }
+
     setLocale((data?.member?.pickedLocale || PickedLocale.SvSe) as PickedLocale)
   }, [data?.member?.pickedLocale])
 

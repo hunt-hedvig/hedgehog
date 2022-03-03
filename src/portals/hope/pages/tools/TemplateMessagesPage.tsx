@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { FadeIn, MainHeadline, Flex, Button, Tabs, Spinner } from '@hedvig-ui'
+import { FadeIn, MainHeadline, Flex, Button, Tabs } from '@hedvig-ui'
 import { CreateTemplate } from '../../features/template-messages/components/CreateTemplate'
 import { SearchTemplate } from '../../features/template-messages/components/SearchTemplate'
 import { TemplateView } from '../../features/template-messages/components/TemplateView'
@@ -40,7 +40,6 @@ const TemplateMessagesPage: Page = () => {
     delete: deleteTemplate,
     locale: currentLocale,
     setLocale: changeCurrentLocale,
-    loading,
   } = useTemplateMessages()
 
   useEffect(() => {
@@ -63,9 +62,7 @@ const TemplateMessagesPage: Page = () => {
   }
 
   const createHandler = (newTemplate: UpsertTemplateInput) => {
-    createTemplate(newTemplate)
-
-    setIsCreating(false)
+    createTemplate(newTemplate, () => setIsCreating(false))
   }
 
   const deleteHandler = (id: string) => {
@@ -74,14 +71,6 @@ const TemplateMessagesPage: Page = () => {
         deleteTemplate(id)
         setSelectedTemplate(null)
       },
-    )
-  }
-
-  if (loading) {
-    return (
-      <Container style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Spinner />
-      </Container>
     )
   }
 

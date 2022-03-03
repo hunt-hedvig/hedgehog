@@ -88,7 +88,7 @@ export interface LocaleDisplayed {
 interface TemplateMessagesContextProps {
   templates: Template[]
   show: () => void
-  create: (template: UpsertTemplateInput) => void
+  create: (template: UpsertTemplateInput, actionOnSuccess?: () => void) => void
   edit: (template: Template) => void
   delete: (id: string) => void
   pin: (id: string) => void
@@ -99,7 +99,7 @@ interface TemplateMessagesContextProps {
   memberId?: string
   setMemberId: (id: string) => void
   currentLocaleDisplayed: LocaleDisplayed | null
-  changeLocaleDisplayed: (memberId: string) => void
+  changeLocaleDisplayed: (memberId: string, isEnglish?: boolean) => void
   loading: boolean
 }
 
@@ -160,7 +160,10 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     }
   }, [memberId])
 
-  const createHandler = (newTemplate: UpsertTemplateInput) => {
+  const createHandler = (
+    newTemplate: UpsertTemplateInput,
+    actionOnSuccess?: () => void,
+  ) => {
     const template: Template = {
       id: 'temp-id',
       title: newTemplate.title,
@@ -222,7 +225,10 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       }),
       {
         loading: 'Creating template',
-        success: 'Template created',
+        success: () => {
+          actionOnSuccess?.()
+          return 'Template created'
+        },
         error: 'Could not create template',
       },
     )
@@ -394,11 +400,14 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     }
   }
 
-  const changeLocaleDisplayed = (memberId: string) => {
+  const changeLocaleDisplayed = (memberId: string, isEnglish?: boolean) => {
     setLocalesDisplayed((prev) =>
       prev.map((locale) => {
         if (locale.memberId === memberId) {
-          return { ...locale, isEnglishLocale: !locale.isEnglishLocale }
+          return {
+            ...locale,
+            isEnglishLocale: isEnglish || !locale.isEnglishLocale,
+          }
         }
 
         return locale
@@ -409,7 +418,15 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   return (
     <TemplateMessagesContext.Provider
       value={{
-        templates,
+        templates: [...templates].sort((a, b) => {
+          if (a.title < b.title) {
+            return -1
+          }
+          if (a.title > b.title) {
+            return 1
+          }
+          return 0
+        }),
         show: () => setShowTemplateMessages(true),
         create: createHandler,
         edit: editHandler,

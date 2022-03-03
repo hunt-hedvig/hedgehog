@@ -4,7 +4,7 @@ import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { keyframes } from '@emotion/react'
 import { TemplateForm } from './TemplateForm'
 import { SearchIcon } from '../../members-search/styles'
-import { Input, Tabs, Button, SecondLevelHeadline, Spinner } from '@hedvig-ui'
+import { Input, Tabs, Button, SecondLevelHeadline } from '@hedvig-ui'
 import {
   Pen as EditIcon,
   PinAngle,
@@ -123,7 +123,6 @@ export const TemplateMessagesModal: React.FC<{
     delete: deleteTemplate,
     pin: pinTemplate,
     locale: currentLocale,
-    loading,
     memberId,
     currentLocaleDisplayed,
     changeLocaleDisplayed,
@@ -206,17 +205,6 @@ export const TemplateMessagesModal: React.FC<{
       )
       .filter((template) => (isPinnedTab ? template.pinned : true))
 
-  if (loading) {
-    return (
-      <Container
-        closing={closing}
-        style={{ alignItems: 'center', justifyContent: 'center' }}
-      >
-        <Spinner />
-      </Container>
-    )
-  }
-
   if (isCreating) {
     return (
       <Container
@@ -230,9 +218,7 @@ export const TemplateMessagesModal: React.FC<{
           isModal
           isCreating
           onCreate={(newTemplate: UpsertTemplateInput) => {
-            createTemplate(newTemplate)
-
-            setIsCreating(false)
+            createTemplate(newTemplate, () => setIsCreating(false))
           }}
           onClose={() => {
             setIsCreating(false)

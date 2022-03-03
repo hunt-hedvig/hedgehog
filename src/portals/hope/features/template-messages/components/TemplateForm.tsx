@@ -131,8 +131,22 @@ export const TemplateForm: React.FC<
     return messages
   }
 
+  const expirationDateValid = () => {
+    let isValid
+
+    if (expirationDate) {
+      setTimeout(() => {
+        isValid = new Date(expirationDate) < new Date()
+      }, 0)
+    } else {
+      isValid = true
+    }
+
+    return isValid
+  }
+
   const createHandler = (values: FieldValues) => {
-    if (!onCreate) {
+    if (!onCreate || !expirationDateValid()) {
       return
     }
 
@@ -147,7 +161,7 @@ export const TemplateForm: React.FC<
   }
 
   const editHandler = (values: FieldValues) => {
-    if (isCreating || !template || !onEdit) {
+    if (isCreating || !template || !onEdit || !expirationDateValid()) {
       return
     }
 
@@ -170,6 +184,7 @@ export const TemplateForm: React.FC<
         {...props}
       >
         <FormInput
+          autoFocus
           label="Template Name"
           placeholder="Write template name here..."
           name="title"
