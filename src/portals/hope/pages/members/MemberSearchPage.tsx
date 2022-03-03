@@ -1,4 +1,4 @@
-import { FadeIn, MainHeadline, TablePageSelect } from '@hedvig-ui'
+import { Button, FadeIn, Flex, MainHeadline, TablePageSelect } from '@hedvig-ui'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MembersList } from 'portals/hope/features/members-search/components/MembersList'
 import { MemberSuggestions } from 'portals/hope/features/members-search/components/MemberSuggestions'
@@ -7,6 +7,7 @@ import {
   ExtraInstruction,
   Instructions,
   MemberSuggestionsWrapper,
+  NewSearchWrapper,
   NoMembers,
 } from 'portals/hope/features/members-search/styles'
 import React, { useRef } from 'react'
@@ -16,8 +17,11 @@ import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-hi
 import { useMemberSearch } from 'portals/hope/features/members-search/hooks/use-member-search'
 import { ExtensiveMemberSearchQuery } from 'types/generated/graphql'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useFeatureFlag } from 'portals/hope/common/hooks/use-feature-flag'
+import { Stars } from 'react-bootstrap-icons'
 
 const MemberSearchPage: Page = () => {
+  const { activate } = useFeatureFlag('SEARCH_EVERYTHING')
   const [query, setQuery] = React.useState('')
   const [includeAll, setIncludeAll] = React.useState(false)
   const [luckySearch, setLuckySearch] = React.useState(false)
@@ -100,6 +104,28 @@ const MemberSearchPage: Page = () => {
               <ExtraInstruction>Press enter to search</ExtraInstruction>
             )}
           </Instructions>
+
+          <NewSearchWrapper>
+            <div style={{ width: '50rem', marginTop: '2rem' }}>
+              <Flex>
+                <Button
+                  onClick={() => {
+                    activate()
+                    window.location.reload()
+                  }}
+                  icon={
+                    <Stars
+                      width="1rem"
+                      height="1rem"
+                      style={{ marginRight: '0.5rem' }}
+                    />
+                  }
+                >
+                  Try new search
+                </Button>
+              </Flex>
+            </div>
+          </NewSearchWrapper>
 
           <MemberSuggestionsWrapper>
             <MainHeadline>Suggestions</MainHeadline>

@@ -35,6 +35,13 @@ export const MemberSuggestionsWrapper = styled(Instructions)({
   animationDelay: '750ms',
 })
 
+export const NewSearchWrapper = styled(Instructions)({
+  width: '100%',
+  maxWidth: '50rem',
+  animation: `${fadeIn(1)} 1000ms forwards`,
+  animationDelay: '750ms',
+})
+
 export const NoMembers = styled(Instructions)({
   width: '100%',
   flex: 1,
@@ -58,7 +65,7 @@ export const SearchInputGroup = styled('div')({
   display: 'flex',
   position: 'relative',
   fontSize: '1rem',
-  maxWidth: '40rem',
+  maxWidth: '50rem',
 })
 export const SearchIcon = styled(SearchBootstrapIcon)<{ muted: boolean }>(
   ({ muted, theme }) => ({
@@ -76,11 +83,6 @@ export const EscapeButton = styled(Button)<{ visible: number }>(
     marginLeft: '4rem',
   }),
 )
-
-export const MemberAgeWrapper = styled('div')(({ theme }) => ({
-  color: theme.mutedText,
-  fontSize: '0.8rem',
-}))
 
 export const MemberHistoryWrapper = styled.div`
   display: flex;
@@ -127,5 +129,5 @@ export const SearchTip = styled(Paragraph)`
   width: fit-content;
   font-size: 0.8em;
   color: ${({ theme }) => theme.semiStrongForeground};
-  margin-left: 4rem;
+  margin-left: 13rem;
 `
