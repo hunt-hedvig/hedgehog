@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { Template } from 'types/generated/graphql'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
+import {
+  formatLocale,
+  useTemplateMessages,
+} from 'portals/hope/features/template-messages/use-template-messages'
+import { PickedLocale } from '../config/constants'
 
 export const useTemplatesHinting = (
   message: string,
@@ -16,7 +20,8 @@ export const useTemplatesHinting = (
   const [hinting, setHinting] = useState(false)
   const [templateHint, setTemplateHint] = useState<Template | null>(null)
 
-  const { templates, locale, loading } = useTemplateMessages()
+  const { templates, locale, currentLocaleDisplayed, loading } =
+    useTemplateMessages()
 
   const searchTemplate = (searchText: string) =>
     templates.find(
@@ -127,8 +132,10 @@ export const useTemplatesHinting = (
     if (!isAdditionalKey(e) && isPressing(e, Keys.Enter) && hinting) {
       e.preventDefault()
 
-      const newMessage = templateHint?.messages.find(
-        (msg) => msg.language === locale,
+      const newMessage = templateHint?.messages.find((msg) =>
+        currentLocaleDisplayed?.isEnglishLocale
+          ? msg.language === formatLocale(PickedLocale.EnSe, true)
+          : msg.language === formatLocale(locale),
       )?.message
 
       setMessage(newMessage || '')

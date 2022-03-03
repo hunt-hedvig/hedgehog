@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import gql from 'graphql-tag'
 import toast from 'react-hot-toast'
 import { TemplateMessagesModal } from './components/TemplateMessagesModal'
@@ -14,6 +14,7 @@ import {
   GetTemplatesQuery,
 } from 'types/generated/graphql'
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
+import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 
 gql`
   query GetTemplates($locales: [String!]!) {
@@ -79,6 +80,11 @@ export const uniquePickedLocales: PickedLocale[] = Object.values(
     locale !== PickedLocale.EnSe,
 )
 
+export interface LocaleDisplayed {
+  isEnglishLocale: boolean
+  memberId?: string
+}
+
 interface TemplateMessagesContextProps {
   templates: Template[]
   show: () => void
@@ -92,6 +98,8 @@ interface TemplateMessagesContextProps {
   setLocale: (locale: PickedLocale) => void
   memberId?: string
   setMemberId: (id: string) => void
+  currentLocaleDisplayed: LocaleDisplayed | null
+  changeLocaleDisplayed: (memberId: string) => void
   loading: boolean
 }
 
@@ -108,6 +116,8 @@ const TemplateMessagesContext = createContext<TemplateMessagesContextProps>({
   setLocale: () => void 0,
   memberId: '',
   setMemberId: () => void 0,
+  currentLocaleDisplayed: null,
+  changeLocaleDisplayed: () => void 0,
   loading: false,
 })
 
@@ -118,6 +128,10 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [locale, setLocale] = useState<PickedLocale>(PickedLocale.SvSe)
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
+
+  const [localesDisplayed, setLocalesDisplayed] = useInsecurePersistentState<
+    LocaleDisplayed[]
+  >('templates:member:language', [])
 
   const { data } = useGetTemplatesQuery({
     variables: {
@@ -130,6 +144,21 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [removeTemplate] = useRemoveTemplateMutation()
 
   const templates = data?.templates ?? []
+
+  useEffect(() => {
+    if (
+      memberId &&
+      !localesDisplayed?.find((locale) => locale.memberId === memberId)
+    ) {
+      setLocalesDisplayed((prev) => [
+        ...prev,
+        {
+          isEnglishLocale: false,
+          memberId,
+        },
+      ])
+    }
+  }, [memberId])
 
   const createHandler = (newTemplate: UpsertTemplateInput) => {
     const template: Template = {
@@ -365,6 +394,18 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     }
   }
 
+  const changeLocaleDisplayed = (memberId: string) => {
+    setLocalesDisplayed((prev) =>
+      prev.map((locale) => {
+        if (locale.memberId === memberId) {
+          return { ...locale, isEnglishLocale: !locale.isEnglishLocale }
+        }
+
+        return locale
+      }),
+    )
+  }
+
   return (
     <TemplateMessagesContext.Provider
       value={{
@@ -380,6 +421,10 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         setLocale: (newLocale: PickedLocale) => setLocale(newLocale),
         memberId,
         setMemberId,
+        currentLocaleDisplayed:
+          localesDisplayed?.find((locale) => locale.memberId === memberId) ||
+          null,
+        changeLocaleDisplayed,
         loading,
       }}
     >

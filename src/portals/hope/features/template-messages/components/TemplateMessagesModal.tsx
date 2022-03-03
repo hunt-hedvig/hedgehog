@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { keyframes } from '@emotion/react'
@@ -12,7 +12,6 @@ import {
   Trash,
 } from 'react-bootstrap-icons'
 import { formatLocale, useTemplateMessages } from '../use-template-messages'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { Template, UpsertTemplateInput } from 'types/generated/graphql'
 import { PickedLocale, PickedLocaleMarket } from '../../config/constants'
 
@@ -107,11 +106,6 @@ export const EmptyContainer = styled.div`
   font-size: 12px;
 `
 
-interface LocaleDisplayed {
-  isEnglishLocale: boolean
-  memberId?: string
-}
-
 export const TemplateMessagesModal: React.FC<{
   hide: () => void
 }> = ({ hide }) => {
@@ -131,30 +125,9 @@ export const TemplateMessagesModal: React.FC<{
     locale: currentLocale,
     loading,
     memberId,
+    currentLocaleDisplayed,
+    changeLocaleDisplayed,
   } = useTemplateMessages()
-
-  const [localesDisplayed, setLocalesDisplayed] = useInsecurePersistentState<
-    LocaleDisplayed[]
-  >('templates:member:language', [])
-
-  const currentLocaleDisplayed = localesDisplayed?.find(
-    (locale) => locale.memberId === memberId,
-  )
-
-  useEffect(() => {
-    if (
-      memberId &&
-      !localesDisplayed?.find((locale) => locale.memberId === memberId)
-    ) {
-      setLocalesDisplayed((prev) => [
-        ...prev,
-        {
-          isEnglishLocale: false,
-          memberId,
-        },
-      ])
-    }
-  }, [memberId])
 
   const templatesRef = useRef<HTMLDivElement>(null)
 
@@ -209,6 +182,10 @@ export const TemplateMessagesModal: React.FC<{
   }
 
   const switchMarketHandler = () => {
+    if (!memberId) {
+      return
+    }
+
     const message = `By switching this setting, The default language used by this member will be changing to ${
       currentLocaleDisplayed?.isEnglishLocale
         ? PickedLocaleMarket[currentLocale]
@@ -216,15 +193,7 @@ export const TemplateMessagesModal: React.FC<{
     }`
 
     if (confirm(message)) {
-      setLocalesDisplayed((prev) =>
-        prev.map((locale) => {
-          if (locale.memberId === memberId) {
-            return { ...locale, isEnglishLocale: !locale.isEnglishLocale }
-          }
-
-          return locale
-        }),
-      )
+      changeLocaleDisplayed(memberId)
     }
   }
 

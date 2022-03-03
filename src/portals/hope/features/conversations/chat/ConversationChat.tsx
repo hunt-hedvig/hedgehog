@@ -239,12 +239,10 @@ export const ConversationChat: React.FC<{
         <MessagesList memberId={memberId} />
         <ConversationFooter>
           <HintContainer>
-            {hinting ? (
+            {hinting && (
               <HintText>
                 {templateHint?.title ? `/${templateHint?.title}` : message}
               </HintText>
-            ) : (
-              ''
             )}
           </HintContainer>
 
