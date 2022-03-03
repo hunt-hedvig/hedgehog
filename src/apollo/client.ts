@@ -97,7 +97,9 @@ export const client = new ApolloClient({
     onError((error) => {
       if (
         document.hidden ||
-        (error?.networkError as ServerError)?.response?.status !== 403
+        ![401, 403].includes(
+          (error?.networkError as ServerError)?.response?.status,
+        )
       ) {
         return
       }
