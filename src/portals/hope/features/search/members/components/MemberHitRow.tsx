@@ -1,7 +1,6 @@
 import React from 'react'
 import { ArrayElement } from '@hedvig-ui/utils/array-element'
 import { ContractStatus, SearchQuery } from 'types/generated/graphql'
-import { useHistory } from 'react-router'
 import {
   Flex,
   Loadable,
@@ -114,7 +113,6 @@ const SearchHitTag: React.FC<{
 export const MemberHitRow: React.FC<{
   result: ArrayElement<SearchQuery['search']>
 }> = ({ result }) => {
-  const history = useHistory()
   const { member, loading, groupBy, contracts } = useMemberSearchContracts(
     result.hit.memberId ?? '',
   )
@@ -128,7 +126,7 @@ export const MemberHitRow: React.FC<{
   return (
     <TableRow
       tabIndex={0}
-      onClick={() => history.push(`/members/${result.hit.memberId}/contracts`)}
+      onClick={() => window.open(`/members/${result.hit.memberId}/contracts`)}
     >
       <TableColumn style={{ verticalAlign: 'top' }}>
         <Flex direction="column">
