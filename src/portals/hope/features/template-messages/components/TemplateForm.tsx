@@ -104,7 +104,7 @@ export const TemplateForm: React.FC<
 
     setLocales(
       defaultLocale
-        ? [defaultLocale]
+        ? [formatLocale(defaultLocale)]
         : template?.messages
             .filter(
               (msg) => msg.language !== formatLocale(PickedLocale.EnSe, true),
