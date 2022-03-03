@@ -63,7 +63,10 @@ export const logout: Middleware<object> = async (ctx) => {
 export const refreshTokenCallback: Middleware<LoggingMiddleware> = async (
   ctx,
 ) => {
-  const tokenSource = ctx.cookies.get('_hvg_src')
+  const tokenSource = ctx.cookies.get('_hvg_src') as
+    | 'auth'
+    | 'gatekeeper'
+    | undefined
   const refreshToken = ctx.cookies.get('_hvg_rt') ?? ''
 
   let response: any
@@ -112,6 +115,7 @@ export const refreshTokenCallback: Middleware<LoggingMiddleware> = async (
   setTokenCookies(ctx, {
     accessToken: body['access_token'],
     refreshToken: body['refresh_token'],
+    tokenSource,
   })
 
   ctx.status = 200
