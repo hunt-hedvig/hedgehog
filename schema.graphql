@@ -4,7 +4,7 @@ schema {
 }
 
 type QueryType {
-  search(query: String!, type: String!, from: Int, size: Int): [SearchResult!]!
+  search(query: String!, type: String!, from: Int, size: Int, wide: Boolean): [SearchResult!]!
   member(id: ID!): Member
   claim(id: ID!): Claim
   paymentSchedule(status: ChargeStatus!): [SchedulerState]
@@ -56,8 +56,8 @@ type QueryType {
 
 type MutationType {
   chargeMember(
-    id: ID!
-    amount: MonetaryAmount!
+    id: ID!,
+    amount: MonetaryAmount!,
     allowManualCharge: Boolean
   ): Member
   addAccountEntryToMember(
@@ -94,6 +94,10 @@ type MutationType {
     claimId: ID!
     claimFileId: ID!
     category: String
+  ): ClaimFileUpload
+  parseClaimFileMetadata(
+    claimId: ID!,
+    claimFileId: ID!
   ): ClaimFileUpload
 
   addAgreementFromQuote(
@@ -225,59 +229,6 @@ type MutationType {
   upsertTemplate(input: UpsertTemplateInput!): Template!
   removeTemplate(id: ID!): Boolean!
   togglePinStatus(id: ID!): Template!
-}
-
-type MemberSearchHit {
-  memberId: String
-  firstName: String
-  lastName: String
-}
-
-type Template {
-  id: ID!
-  title: String!
-  messages: [TemplateMessage!]!
-  expirationDate: LocalDate
-  pinned: Boolean!
-}
-
-type TemplateMessage {
-  language: String!
-  message: String!
-}
-
-input UpsertTemplateInput {
-  id: ID
-  title: String!
-  expirationDate: LocalDate
-  messages: [UpsertTemplateMessageInput!]!
-}
-
-input UpsertTemplateMessageInput {
-  language: String!
-  message: String!
-}
-
-type NoteSearchHit {
-  id: String
-  memberId: String
-  firstName: String
-  lastName: String
-  claimId: String
-  text: String
-  author: String
-}
-
-type SearchResultHighlight {
-  field: String!
-  values: [String!]!
-}
-
-union SearchHit = MemberSearchHit | NoteSearchHit
-
-type SearchResult {
-  hit: SearchHit!
-  highlights: [SearchResultHighlight!]!
 }
 
 type MemberSearchHit {
@@ -588,7 +539,7 @@ enum ContractStatus {
 
 type TermsAndConditions {
   commencementDate: LocalDate!
-  displayName: String!
+  displayName: String!,
   url: String!
 }
 
@@ -755,7 +706,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -1350,6 +1301,31 @@ type MonetaryAmountV2 {
   currency: String!
 }
 
+type Template {
+  id: ID!
+  title: String!
+  messages: [TemplateMessage!]!
+  expirationDate: LocalDate
+  pinned: Boolean!
+}
+
+type TemplateMessage {
+  language: String!
+  message: String!
+}
+
+input UpsertTemplateInput {
+  id: ID
+  title: String!
+  expirationDate: LocalDate
+  messages: [UpsertTemplateMessageInput!]!
+}
+
+input UpsertTemplateMessageInput {
+  language: String!
+  message: String!
+}
+
 enum ClaimComplexity {
   SIMPLE
   COMPLEX
@@ -1371,7 +1347,7 @@ scalar LocalDateTime
 scalar Instant
 # A String-representation of `java.net.URL`, ex: "https://www.google.com/"
 scalar URL
-# A Json Object representation of `JsonNode`
+# A Json Object represtation of `JsonNode`
 scalar JSON
 
 scalar BigDecimal

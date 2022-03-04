@@ -8,8 +8,14 @@ import { useEffect, useState } from 'react'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`
-  query Search($query: String!, $type: String!, $from: Int, $size: Int) {
-    search(query: $query, type: $type, from: $from, size: $size) {
+  query Search(
+    $query: String!
+    $type: String!
+    $from: Int
+    $size: Int
+    $wide: Boolean
+  ) {
+    search(query: $query, type: $type, from: $from, size: $size, wide: $wide) {
       highlights {
         field
         values

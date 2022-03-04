@@ -4,6 +4,7 @@ import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-hi
 import { SearchInput } from 'portals/hope/features/search/SearchInput'
 import {
   Button,
+  Checkbox,
   fadeIn,
   Flex,
   MainHeadline,
@@ -46,6 +47,7 @@ const MemberSuggestionsWrapper = styled(Instructions)`
 `
 
 export const MemberSearch: React.FC = () => {
+  const [wide, setWide] = useState(false)
   const [query, setQuery] = useState('')
   const { hits, loading, search, fetchMore } = useSearch(query)
   const { memberHistory } = useMemberHistory()
@@ -58,6 +60,14 @@ export const MemberSearch: React.FC = () => {
         onSearch={() => search()}
         loading={loading}
         suggestion={suggestionString}
+      />
+      <Checkbox
+        onChange={(e) => {
+          setWide(e.currentTarget.checked)
+          search()
+        }}
+        checked={wide}
+        label="Wide search"
       />
 
       <Spacing top="large" />
