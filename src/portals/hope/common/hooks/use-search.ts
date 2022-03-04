@@ -52,7 +52,7 @@ export const useSearch = (
   const getOptions = (options?: SearchQueryOptions): SearchQueryOptions => ({
     from: options?.from ?? baseOptions?.from,
     size: options?.size ?? baseOptions?.size,
-    type: options?.type ?? baseOptions?.type ?? 'ALL',
+    type: options?.type ?? baseOptions?.type ?? 'MEMBERS',
   })
 
   useEffect(() => {
