@@ -34,7 +34,7 @@ export const FilterWrapper = styled.div`
   max-width: 1500px;
 
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   column-gap: 3rem;
   align-items: flex-start;
   margin: 2rem 0;
@@ -70,12 +70,20 @@ export const StyledLabel = styled(Label)`
   }
 `
 
-const OutcomeFilter: React.FC<{
+interface OutcomeFilterProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect' | 'onChange'> {
   outcomes: ClaimOutcomes[]
   onSelect: (value: string | null) => void
   open: boolean
   multi: boolean
-}> = ({ outcomes, onSelect, open }) => {
+}
+
+const OutcomeFilter: React.FC<OutcomeFilterProps> = ({
+  outcomes,
+  onSelect,
+  open,
+  ...props
+}) => {
   const options = [
     ...Object.keys(ClaimOutcomes).map((value) => ({
       value,
@@ -95,7 +103,8 @@ const OutcomeFilter: React.FC<{
         onSelect(selectedValue.value)
       }}
       clearHandler={() => onSelect(null)}
-      style={{ minWidth: '10rem' }}
+      style={{ minWidth: '10rem', ...props.style }}
+      {...props}
     />
   )
 }
@@ -231,6 +240,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         {Object.values(ClaimState).map((state, index) => {
           const states = Object.keys(ClaimState)
           const stateName = state.charAt(0) + state.toLowerCase().slice(1)
+          const complexities = Object.keys(ClaimComplexity)
 
           const navigation = register(stateName, {
             focus: index === 0 ? Keys.F : undefined,
@@ -240,7 +250,10 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
             neighbors: {
               up: index ? states[index - 1] : undefined,
               down: index < states.length - 1 ? states[index + 1] : undefined,
-              right: Object.keys(ClaimComplexity)[0],
+              right:
+                complexities[
+                  index < complexities.length ? index : complexities.length - 1
+                ],
             },
           })
 
@@ -283,13 +296,13 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
               )
             },
             neighbors: {
-              left: Object.keys(ClaimState)[0],
+              left: Object.keys(ClaimState)[index],
               up: index ? complexities[index - 1] : undefined,
               down:
                 index < complexities.length - 1
                   ? complexities[index + 1]
                   : undefined,
-              right: `Member Groups ${numberMemberGroupsOptions[0].label}`,
+              right: `Member Groups ${numberMemberGroupsOptions[index].label}`,
             },
           })
 
@@ -324,6 +337,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       <FilterElement>
         <Label>Number of member groups</Label>
         {numberMemberGroupsOptions.map((option, index) => {
+          const complexities = Object.keys(ClaimComplexity)
+          const memberGroups = range(numberMemberGroups)
+
           const navigation = register(`Member Groups ${option.label}`, {
             resolve: () => {
               updateNumberMemberSetting(option.value)
@@ -333,7 +349,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
               setNumberMemberGroups(option.value)
             },
             neighbors: {
-              left: Object.keys(ClaimComplexity)[0],
+              left: complexities[
+                index < complexities.length ? index : complexities.length - 1
+              ],
               up: index
                 ? `Member Groups ${numberMemberGroupsOptions[index - 1].label}`
                 : undefined,
@@ -343,7 +361,11 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                       numberMemberGroupsOptions[index + 1].label
                     }`
                   : undefined,
-              right: `Member Number ${range(numberMemberGroups)[0]}`,
+              right: `Member Number ${
+                memberGroups[
+                  index < memberGroups.length ? index : memberGroups.length - 1
+                ]
+              }`,
             },
           })
 
@@ -371,6 +393,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       <FilterElement>
         <Label>Groups</Label>
         {range(numberMemberGroups).map((filterNumber, index) => {
+          const memberNumbers = numberMemberGroupsOptions
+          const markets = Object.keys(Market)
+
           const navigation = register(`Member Number ${filterNumber}`, {
             resolve: () => {
               updateFilterHandler(
@@ -379,7 +404,13 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
               )
             },
             neighbors: {
-              left: `Member Groups ${numberMemberGroupsOptions[0].label}`,
+              left: `Member Groups ${
+                memberNumbers[
+                  index < memberNumbers.length
+                    ? index
+                    : memberNumbers.length - 1
+                ].label
+              }`,
               up: index
                 ? `Member Number ${range(numberMemberGroups)[index - 1]}`
                 : undefined,
@@ -387,7 +418,8 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 index < range(numberMemberGroups).length - 1
                   ? `Member Number ${range(numberMemberGroups)[index + 1]}`
                   : undefined,
-              right: Object.keys(Market)[0],
+              right:
+                markets[index < markets.length ? index : markets.length - 1],
             },
           })
 
@@ -425,13 +457,18 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         {Object.values(Market).map((market, index) => {
           const markets = Object.keys(Market)
           const marketName = market.charAt(0) + market.toLowerCase().slice(1)
+          const memberGroups = range(numberMemberGroups)
 
           const navigation = register(marketName, {
             resolve: () => {
               updateFilterHandler(UserSettingKey.MarketFilter, market)
             },
             neighbors: {
-              left: `Member Number ${range(numberMemberGroups)[0]}`,
+              left: `Member Number ${
+                memberGroups[
+                  index < memberGroups.length ? index : memberGroups.length - 1
+                ]
+              }`,
               up: index ? markets[index - 1] : undefined,
               down: index < markets.length - 1 ? markets[index + 1] : undefined,
               right: `Outcome Filter`,
