@@ -12,6 +12,7 @@ import { useAuthenticate } from 'portals/hope/features/user/hooks/use-authentica
 import { MeProvider } from 'portals/hope/features/user/hooks/use-me'
 import { MemberHistoryProvider } from 'portals/hope/features/user/hooks/use-member-history'
 import { NumberMemberGroupsProvider } from 'portals/hope/features/user/hooks/use-number-member-groups'
+import { TemplateMessagesProvider } from 'portals/hope/features/template-messages/use-template-messages'
 import { Routes } from 'portals/hope/pages/routes'
 import React, { useEffect } from 'react'
 import TagManager from 'react-gtm-module'
@@ -74,30 +75,34 @@ const App: React.FC = () => {
           <NumberMemberGroupsProvider>
             <MeProvider me={me}>
               <CommandLineProvider>
-                <ConfirmDialogProvider>
-                  <Layout>
-                    <Tracker />
-                    {!history.location.pathname.startsWith('/login') && (
-                      <VerticalMenu />
-                    )}
-                    <Main dark={history.location.pathname.startsWith('/login')}>
-                      <TopBar />
-                      <MainContent>
-                        <Switch>
-                          <Routes />
-                        </Switch>
-                        <Toaster
-                          position="top-center"
-                          toastOptions={{
-                            style: {
-                              padding: '20px 25px',
-                            },
-                          }}
-                        />
-                      </MainContent>
-                    </Main>
-                  </Layout>
-                </ConfirmDialogProvider>
+                <TemplateMessagesProvider>
+                  <ConfirmDialogProvider>
+                    <Layout>
+                      <Tracker />
+                      {!history.location.pathname.startsWith('/login') && (
+                        <VerticalMenu />
+                      )}
+                      <Main
+                        dark={history.location.pathname.startsWith('/login')}
+                      >
+                        <TopBar />
+                        <MainContent>
+                          <Switch>
+                            <Routes />
+                          </Switch>
+                          <Toaster
+                            position="top-center"
+                            toastOptions={{
+                              style: {
+                                padding: '20px 25px',
+                              },
+                            }}
+                          />
+                        </MainContent>
+                      </Main>
+                    </Layout>
+                  </ConfirmDialogProvider>
+                </TemplateMessagesProvider>
               </CommandLineProvider>
             </MeProvider>
           </NumberMemberGroupsProvider>

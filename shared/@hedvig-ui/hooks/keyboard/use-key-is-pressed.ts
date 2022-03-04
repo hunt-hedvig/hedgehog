@@ -259,6 +259,10 @@ export const Keys: { [name: string]: Key } = {
     code: 'F12',
     hint: 'F12',
   },
+  Slash: {
+    code: 'Slash',
+    hint: '/',
+  },
 }
 
 export const NumberKeys: ReadonlyArray<Key> = [

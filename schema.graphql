@@ -49,6 +49,9 @@ type QueryType {
   resourceAccess(resourceId: String!): ResourceAccessInformation
 
   simpleMemberLookup(ssn: String!): SimpleMemberLookupResult!
+
+  templates(locales: [String!]!): [Template!]!
+  template(id: ID!): Template!
 }
 
 type MutationType {
@@ -218,6 +221,63 @@ type MutationType {
 
   userCheckIn: User!
   userCheckOut: User!
+
+  upsertTemplate(input: UpsertTemplateInput!): Template!
+  removeTemplate(id: ID!): Boolean!
+  togglePinStatus(id: ID!): Template!
+}
+
+type MemberSearchHit {
+  memberId: String
+  firstName: String
+  lastName: String
+}
+
+type Template {
+  id: ID!
+  title: String!
+  messages: [TemplateMessage!]!
+  expirationDate: LocalDate
+  pinned: Boolean!
+}
+
+type TemplateMessage {
+  language: String!
+  message: String!
+}
+
+input UpsertTemplateInput {
+  id: ID
+  title: String!
+  expirationDate: LocalDate
+  messages: [UpsertTemplateMessageInput!]!
+}
+
+input UpsertTemplateMessageInput {
+  language: String!
+  message: String!
+}
+
+type NoteSearchHit {
+  id: String
+  memberId: String
+  firstName: String
+  lastName: String
+  claimId: String
+  text: String
+  author: String
+}
+
+type SearchResultHighlight {
+  field: String!
+  values: [String!]!
+}
+
+union SearchHit = MemberSearchHit | NoteSearchHit
+
+type SearchResult {
+  hit: SearchHit!
+  highlights: [SearchResultHighlight!]!
 }
 
 type MemberSearchHit {

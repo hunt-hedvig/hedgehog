@@ -9,9 +9,13 @@ import {
   getMemberIdColor,
 } from 'portals/hope/features/member/utils'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ClaimState, useGetMemberInfoQuery } from 'types/generated/graphql'
 import { PickedLocale } from 'portals/hope/features/config/constants'
+import {
+  formatLocale,
+  useTemplateMessages,
+} from '../../template-messages/use-template-messages'
 
 const MemberPlaceholder = styled.div`
   border-radius: 8px;
@@ -96,7 +100,28 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
     variables: { memberId },
   })
 
-  if (!data) {
+  const { setLocale, setMemberId, changeLocaleDisplayed } =
+    useTemplateMessages()
+
+  useEffect(() => {
+    if (memberId) {
+      setMemberId(memberId)
+    }
+  }, [memberId])
+
+  useEffect(() => {
+    if (
+      data?.member?.pickedLocale &&
+      formatLocale(data?.member?.pickedLocale as PickedLocale, true) ===
+        formatLocale(PickedLocale.EnSe, true)
+    ) {
+      changeLocaleDisplayed(memberId, true)
+    }
+
+    setLocale((data?.member?.pickedLocale || PickedLocale.SvSe) as PickedLocale)
+  }, [data?.member?.pickedLocale])
+
+  if (!data?.member) {
     return (
       <Loadable loading>
         <MemberPlaceholder />
@@ -105,14 +130,6 @@ export const MemberSummary: React.FC<{ memberId: string }> = ({ memberId }) => {
   }
 
   const { member } = data
-
-  if (!member) {
-    return (
-      <Loadable loading>
-        <MemberPlaceholder />
-      </Loadable>
-    )
-  }
 
   const { birthDate, claims } = member
   const age = differenceInYears(new Date(), parseISO(birthDate))
