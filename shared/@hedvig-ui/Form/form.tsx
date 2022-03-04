@@ -159,6 +159,7 @@ const FormTextAreaComponent: React.FC<TextAreaProps & FormFieldProps> = ({
   name,
   rules,
   defaultValue,
+  ...props
 }) => {
   return (
     <Controller
@@ -171,6 +172,7 @@ const FormTextAreaComponent: React.FC<TextAreaProps & FormFieldProps> = ({
           onBlur={onBlur}
           onChange={onChange}
           value={value}
+          {...props}
         />
       )}
     />

@@ -71,7 +71,7 @@ export const SearchIcon = styled(SearchBootstrapIcon)<{ muted: boolean }>(
   ({ muted, theme }) => ({
     transform: 'translateY(-1.5px)',
     zIndex: 1,
-    fill: muted ? theme.mutedText : undefined,
+    fill: muted ? theme.mutedText : theme.foreground,
     transition: 'fill 300ms',
   }),
 )

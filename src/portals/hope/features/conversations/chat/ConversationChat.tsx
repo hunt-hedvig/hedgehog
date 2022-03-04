@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
-import { FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
+import { Button, FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useDraft } from '@hedvig-ui/hooks/use-draft'
 import {
@@ -11,6 +11,9 @@ import {
   useMarkQuestionAsResolvedMutation,
   useSendMessageMutation,
 } from 'types/generated/graphql'
+import { FileText } from 'react-bootstrap-icons'
+import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
+import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
@@ -27,20 +30,112 @@ const ConversationFooter = styled.div`
   width: 100%;
   padding: 1em;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
 `
 
 const ConversationTextArea = styled(TextArea)`
   &&&& {
+    position: relative;
+    z-index: 1;
+    background: transparent;
     resize: none;
     border: none;
-    border-radius: 8px;
+    border-radius: 8px 8px 0 0;
     min-height: 100px;
+  }
+`
+
+const TextAreaFooter = styled.div`
+  position: relative;
+  padding: 4px 15px;
+  border-radius: 0 0 8px 8px;
+  background: ${({ theme }) => theme.accentContrast};
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+
+  & * {
+    color: ${({ theme }) => theme.semiStrongForeground};
+  }
+
+  &:hover * {
+    color: ${({ theme }) => theme.foreground};
+  }
+
+  & span {
+    margin-left: 0.25rem;
+    line-height: 0;
+    font-size: 12px;
+  }
+
+  & .divider {
+    position: absolute;
+    top: -1px;
+    left: 15px;
+    width: calc(100% - 30px);
+    height: 1px;
+    background: ${({ theme }) => theme.accentBackground};
   }
 `
 
 const Tip = styled(Paragraph)`
   font-size: 0.7em;
   color: ${({ theme }) => theme.semiStrongForeground};
+`
+
+const TemplatesButton = styled(Button)`
+  padding: 4px;
+  border-radius: 2px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.accentBackground};
+  }
+`
+
+const HintContainer = styled.div`
+  position: absolute;
+  top: calc(1.2rem - 1px);
+  left: calc(1.2rem - 0.7px);
+  border-radius: 8px 8px 0 0;
+
+  width: calc(100% - 2.4rem + 1.5px);
+  height: calc(100% - 4.5rem + 2.4px);
+
+  background: ${({ theme }) => theme.backgroundLight};
+
+  word-wrap: break-word;
+
+  padding-top: 11.2px;
+  padding-bottom: 10.8px;
+  padding-left: 13.8px;
+  padding-right: 14px;
+
+  z-index: 0;
+
+  color: ${({ theme }) => theme.placeholderColor};
+`
+
+const HintText = styled.span`
+  position: absolute;
+  top: 8px;
+  left: 9px;
+
+  font-size: 14px;
+  font-family: sans-serif;
+  line-height: 1.15;
+
+  padding: 4px 5px;
+  border-radius: 4px;
+
+  background: ${({ theme }) => theme.accentBackground};
+
+  @media only screen and (max-width: 1900px) {
+    top: 7px;
+  }
 `
 
 export const ConversationChat: React.FC<{
@@ -61,8 +156,35 @@ export const ConversationChat: React.FC<{
     ],
   })
 
+  const { hinting, templateHint, onChange, onKeyDown } = useTemplatesHinting(
+    message,
+    setMessage,
+    isMetaKey,
+  )
+  const { show, selected } = useTemplateMessages()
+
+  useEffect(() => {
+    if (selected) {
+      setMessage(selected)
+    }
+  }, [selected])
+
+  const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChange(e)
+
+    setMessage(e.currentTarget.value)
+  }
+
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (isMetaKey(e) && isPressing(e, Keys.Enter) && !loading && message) {
+    onKeyDown(e)
+
+    if (
+      isMetaKey(e) &&
+      isPressing(e, Keys.Enter) &&
+      !loading &&
+      message &&
+      !hinting
+    ) {
       toast.promise(
         sendMessage({
           variables: {
@@ -116,6 +238,14 @@ export const ConversationChat: React.FC<{
       <ConversationContent>
         <MessagesList memberId={memberId} />
         <ConversationFooter>
+          <HintContainer>
+            {hinting && (
+              <HintText>
+                {templateHint?.title ? `/${templateHint?.title}` : message}
+              </HintText>
+            )}
+          </HintContainer>
+
           <ConversationTextArea
             onFocus={() => {
               setInputFocused(true)
@@ -125,13 +255,25 @@ export const ConversationChat: React.FC<{
               setInputFocused(false)
               onBlur()
             }}
-            placeholder={'Your message goes here...'}
+            placeholder={
+              !hinting ? `Message goes here or type '/' for templates` : ''
+            }
             value={message}
-            onChange={(e) => {
-              setMessage(e.currentTarget.value)
-            }}
+            onChange={onChangeHandler}
             onKeyDown={(e) => handleOnKeyDown(e)}
           />
+          <TextAreaFooter onClick={show}>
+            <div className="divider" />
+            <TemplatesButton
+              size="small"
+              variant="tertiary"
+              icon={
+                <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
+              }
+            >
+              templates
+            </TemplatesButton>
+          </TextAreaFooter>
         </ConversationFooter>
       </ConversationContent>
       <Flex fullWidth justify={'space-between'} style={{ marginTop: '1.0em' }}>

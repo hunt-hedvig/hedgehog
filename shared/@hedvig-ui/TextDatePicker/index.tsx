@@ -58,8 +58,9 @@ const InlineDatePicker: React.FC<{
   setValue: (dateValue: Date) => void
   onClose: () => void
   maxDate?: Date
+  minDate?: Date
   showTimePicker?: boolean
-}> = ({ setValue, onClose, maxDate, showTimePicker }) => {
+}> = ({ setValue, onClose, maxDate, minDate, showTimePicker }) => {
   const pickerRef = React.useRef<HTMLDivElement>(null)
 
   useClickOutside(pickerRef, () => onClose())
@@ -75,6 +76,7 @@ const InlineDatePicker: React.FC<{
           }}
           showTimeSelect={showTimePicker}
           maxDate={maxDate}
+          minDate={minDate}
         />
       </FadeIn>
     </DatePickerWrapper>
@@ -86,6 +88,7 @@ interface TextDatePickerProps extends Omit<InputProps, 'value' | 'onChange'> {
   onChange: (date: string | null, event: TextDatePickerChangeEvent) => void
   errorMessage?: string
   maxDate?: Date
+  minDate?: Date
   showTimePicker?: boolean
   withCurrentTime?: boolean
 }
@@ -102,6 +105,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   error,
   errorMessage,
   maxDate,
+  minDate,
   showTimePicker,
   withCurrentTime,
   ...props
@@ -136,6 +140,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
     const date = getDate(textValue || '')
 
     if (!date) {
+      onChange(null, event)
       return
     }
 
@@ -145,13 +150,23 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
 
     const newDate = new Date(date.start)
 
-    if (maxDate && maxDate < newDate) {
-      const formattedDate = formatDate(maxDate, 'yyyy-MM-dd')
-
+    if (minDate && newDate < minDate) {
       const message =
-        formattedDate === formatDate(new Date(), 'yyyy-MM-dd')
+        minDate === new Date()
+          ? 'Date cannot be in the past'
+          : `Date cannot be before ${formatDate(minDate, 'yyyy-MM-dd')}`
+
+      toast.error(message)
+      setTextValue(value)
+
+      return
+    }
+
+    if (maxDate && newDate > maxDate) {
+      const message =
+        maxDate === new Date()
           ? 'Date cannot be in the future'
-          : `Date cannot be after ${formattedDate}`
+          : `Date cannot be after ${formatDate(maxDate, 'yyyy-MM-dd')}`
 
       toast.error(message)
       setTextValue(value)
@@ -189,6 +204,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
           setValue={(dateValue: Date) => formatAndSetDate(dateValue, undefined)}
           onClose={() => setShowOldDatepicker(false)}
           maxDate={maxDate}
+          minDate={minDate}
           showTimePicker={showTimePicker}
         />
       )}

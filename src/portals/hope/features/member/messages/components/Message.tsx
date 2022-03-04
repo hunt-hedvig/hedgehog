@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import ImageMessage from 'portals/hope/features/member/messages/components/ImageMessage'
 import SelectMessage from 'portals/hope/features/member/messages/components/SelectMessage'
 import React from 'react'
+import Linkify from 'react-linkify'
 
 const MessageRow = styled.div<
   WithLeft & { isQuestion?: boolean; isVisible: boolean }
@@ -44,6 +45,11 @@ const MessageBody = styled.div<WithLeft>`
     props.left ? props.theme.accent : props.theme.accentLight};
   border-radius: 0.5rem;
   padding: 1rem 1.5rem;
+
+  & a {
+    color: ${({ theme }) => theme.accentSaturated};
+    text-decoration: underline;
+  }
 
   &:before {
     position: absolute;
@@ -149,7 +155,7 @@ export const Message = React.forwardRef<
       <MessageBox>
         <MessageBody left={left}>
           {isImage(content.text) && <Image src={content.text} />}
-          {!isImage(content.text) && <>{content.text}</>}
+          {!isImage(content.text) && <Linkify>{content.text}</Linkify>}
           <br />
           <MessageContent content={content} />
         </MessageBody>
