@@ -5,6 +5,7 @@ import {
   CardsWrapper,
   FadeIn,
   Flex,
+  HotkeyStyled,
   LoadingMessage,
   MainHeadline,
   Paragraph,
@@ -35,6 +36,9 @@ import {
 import { Page } from 'portals/hope/pages/routes'
 import { useRestrictClaim } from 'portals/hope/common/hooks/use-restrict-claim'
 import gql from 'graphql-tag'
+import { useCommandLine } from '../../features/commands/use-command-line'
+import chroma from 'chroma-js'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 
 const ChatPaneAdjustedContainer = styled.div`
   width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
@@ -55,6 +59,16 @@ const NoCarrierMessage = styled(StandaloneMessage)`
 const NoCarrierSubtitle = styled(Paragraph)`
   font-size: 0.8em;
   padding-top: 1em;
+`
+
+const Hotkey = styled(HotkeyStyled)`
+  right: 0.5rem;
+  top: 0.5rem;
+  padding: 0.5rem;
+  line-height: 0.5rem;
+
+  background-color: ${({ theme }) =>
+    chroma(theme.accentLighter).brighten(0.4).hex()}};
 `
 
 const RestrictedClaimMessage: React.FC<{ claimId: string }> = ({ claimId }) => {
@@ -118,6 +132,8 @@ const ClaimDetailsPage: Page<
   const { restriction } = useRestrictClaim(claimId)
   const { pushToMemberHistory } = useMemberHistory()
   const [showEvents, setShowEvents] = useState(false)
+  const [focus, setFocus] = useState<string>()
+  const { registerActions, isHintingControl } = useCommandLine()
 
   const { data, error } = useClaimDetailsQuery({
     variables: { claimId },
@@ -126,6 +142,58 @@ const ClaimDetailsPage: Page<
   const memberId = data?.claim?.member.memberId
   const transcriptions = data?.claim?.transcriptions ?? []
   const carrier = data?.claim?.agreement?.carrier
+
+  registerActions([
+    {
+      label: 'Member Info',
+      keys: [Keys.Control, Keys.One],
+      onResolve: () => {
+        setFocus('member-info')
+      },
+    },
+    {
+      label: 'Claim Info',
+      keys: [Keys.Control, Keys.Two],
+      onResolve: () => {
+        setFocus('claim-info')
+      },
+    },
+    {
+      label: 'Claim Type',
+      keys: [Keys.Control, Keys.Three],
+      onResolve: () => {
+        setFocus('claim-type')
+      },
+    },
+    {
+      label: 'Claim Notes',
+      keys: [Keys.Control, Keys.Four],
+      onResolve: () => {
+        setFocus('claim-notes')
+      },
+    },
+    {
+      label: 'Claim Reserve',
+      keys: [Keys.Control, Keys.Five],
+      onResolve: () => {
+        setFocus('claim-reserve')
+      },
+    },
+    {
+      label: 'Claim Payments',
+      keys: [Keys.Control, Keys.Six],
+      onResolve: () => {
+        setFocus('claim-payments')
+      },
+    },
+    {
+      label: 'Claim Files',
+      keys: [Keys.Control, Keys.Seven],
+      onResolve: () => {
+        setFocus('claim-files')
+      },
+    },
+  ])
 
   useEffect(() => {
     if (!memberId) {
@@ -173,13 +241,23 @@ const ClaimDetailsPage: Page<
           )}
           <CardsWrapper contentWrap="noWrap">
             <Card span={3}>
-              <MemberInformation claimId={claimId} memberId={memberId} />
+              {isHintingControl && <Hotkey>1</Hotkey>}
+              <MemberInformation
+                claimId={claimId}
+                focus={focus === 'member-info'}
+                memberId={memberId}
+              />
             </Card>
             <Card span={3}>
-              <ClaimInformation claimId={claimId} />
+              {isHintingControl && <Hotkey>2</Hotkey>}
+              <ClaimInformation
+                claimId={claimId}
+                focus={focus === 'claim-info'}
+              />
             </Card>
             <Card span={3}>
-              <ClaimType claimId={claimId} />
+              {isHintingControl && <Hotkey>3</Hotkey>}
+              <ClaimType claimId={claimId} focus={focus === 'claim-type'} />
             </Card>
           </CardsWrapper>
           {!!transcriptions.length && (
@@ -191,7 +269,8 @@ const ClaimDetailsPage: Page<
           )}
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              <ClaimNotes claimId={claimId} />
+              {isHintingControl && <Hotkey>4</Hotkey>}
+              <ClaimNotes claimId={claimId} focus={focus === 'claim-notes'} />
             </Card>
           </CardsWrapper>
           {carrier && (
@@ -213,12 +292,20 @@ const ClaimDetailsPage: Page<
             <>
               <CardsWrapper contentWrap="noWrap">
                 <Card>
-                  <ClaimReserve claimId={claimId} />
+                  {isHintingControl && <Hotkey>5</Hotkey>}
+                  <ClaimReserve
+                    claimId={claimId}
+                    focus={focus === 'claim-reserve'}
+                  />
                 </Card>
               </CardsWrapper>
               <CardsWrapper contentWrap="noWrap">
                 <Card>
-                  <ClaimPayments claimId={claimId} />
+                  {isHintingControl && <Hotkey>6</Hotkey>}
+                  <ClaimPayments
+                    claimId={claimId}
+                    focus={focus === 'claim-payments'}
+                  />
                 </Card>
               </CardsWrapper>
             </>
@@ -226,7 +313,12 @@ const ClaimDetailsPage: Page<
 
           <CardsWrapper contentWrap="noWrap">
             <Card>
-              <ClaimFileTable claimId={claimId} memberId={memberId} />
+              {isHintingControl && <Hotkey>7</Hotkey>}
+              <ClaimFileTable
+                claimId={claimId}
+                focus={focus === 'claim-files'}
+                memberId={memberId}
+              />
             </Card>
           </CardsWrapper>
 

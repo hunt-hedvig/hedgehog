@@ -238,7 +238,8 @@ export const useClaimCoInsured = (claimId: string): UseClaimCoInsuredResult => {
 
 export const ClaimInformation: React.FC<{
   claimId: string
-}> = ({ claimId }) => {
+  focus?: boolean
+}> = ({ claimId, focus }) => {
   const { confirm } = useConfirmDialog()
   const { restrict, restriction } = useRestrictClaim(claimId)
 
@@ -301,7 +302,7 @@ export const ClaimInformation: React.FC<{
         {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
         <SelectWrapper>
           <Label>Status</Label>
-          <ClaimStatusDropdown claimId={claimId} />
+          <ClaimStatusDropdown claimId={claimId} focus={focus} />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Claim outcome</Label>

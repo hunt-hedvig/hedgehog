@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { FileEarmark, FileEarmarkArrowUpFill } from 'react-bootstrap-icons'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
@@ -35,7 +35,21 @@ export const FileUpload: React.FC<{
   claimId: string
   memberId: string
   onUpload: () => void
-}> = ({ claimId, memberId, onUpload }) => {
+  focus?: boolean
+}> = ({ claimId, memberId, onUpload, focus }) => {
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (focus && buttonRef) {
+      buttonRef.current?.focus()
+      buttonRef.current?.scrollIntoView({
+        inline: 'center',
+        block: 'center',
+        behavior: 'smooth',
+      })
+    }
+  }, [focus])
+
   const handleDrop = (acceptedFiles: ReadonlyArray<File>) => {
     const claimFiles = new FormData()
 
@@ -65,7 +79,7 @@ export const FileUpload: React.FC<{
       <FileUploadContainer>
         <Dropzone onDrop={handleDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => (
-            <Button {...getRootProps()}>
+            <Button {...getRootProps()} ref={buttonRef}>
               <div style={{ width: '100%' }}>
                 <div style={{ fontSize: '4.0em' }}>
                   {isDragActive ? <FileEarmarkArrowUpFill /> : <FileEarmark />}

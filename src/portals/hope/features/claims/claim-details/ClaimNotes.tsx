@@ -1,6 +1,6 @@
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { addSeconds, format, parseISO } from 'date-fns'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   ClaimNotesFragment,
   useAddClaimNoteMutation,
@@ -136,13 +136,28 @@ export const useClaimNotes = (claimId: string): UseClaimNotesResult => {
   return { notes, createNote, creating: loading }
 }
 
-const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
+const ClaimNotes: React.FC<{ claimId: string; focus?: boolean }> = ({
+  claimId,
+  focus,
+}) => {
   const { notes, createNote, creating } = useClaimNotes(claimId)
   const [note, setNote] = useDraft(claimId)
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   const { isMetaKey, metaKey } = usePlatform()
 
   const [textFieldFocused, setTextFieldFocused] = useState(false)
+
+  useEffect(() => {
+    if (focus && textAreaRef) {
+      textAreaRef.current?.focus()
+      textAreaRef.current?.scrollIntoView({
+        inline: 'center',
+        block: 'center',
+        behavior: 'smooth',
+      })
+    }
+  }, [focus])
 
   return (
     <CardContent>
@@ -170,6 +185,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
         placeholder="Your note goes here..."
         value={creating ? '' : note}
         onChange={(e) => setNote(e.currentTarget.value)}
+        ref={textAreaRef}
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
         onKeyDown={(e) => {

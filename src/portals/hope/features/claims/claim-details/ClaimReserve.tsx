@@ -16,7 +16,10 @@ const ReservesText = styled(Paragraph)`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
-export const ClaimReserve: React.FC<{ claimId: string }> = ({ claimId }) => {
+export const ClaimReserve: React.FC<{ claimId: string; focus?: boolean }> = ({
+  claimId,
+  focus,
+}) => {
   const {
     data: reserveData,
     error: queryError,
@@ -53,7 +56,7 @@ export const ClaimReserve: React.FC<{ claimId: string }> = ({ claimId }) => {
         </ReservesTag>{' '}
         <ReservesText>reserved</ReservesText>
       </div>
-      <ClaimReserveForm claimId={claimId} />
+      <ClaimReserveForm claimId={claimId} focus={focus} />
     </>
   )
 }

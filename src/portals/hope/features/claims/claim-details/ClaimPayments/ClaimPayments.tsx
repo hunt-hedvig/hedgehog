@@ -50,7 +50,8 @@ gql`
 
 export const ClaimPayments: React.FC<{
   claimId: string
-}> = ({ claimId }) => {
+  focus?: boolean
+}> = ({ claimId, focus }) => {
   const { data, error: queryError } = useClaimPaymentsQuery({
     variables: { claimId },
   })
@@ -111,7 +112,7 @@ export const ClaimPayments: React.FC<{
       <ClaimPaymentsTable claimId={claimId} />
 
       <Spacing top="medium" />
-      <ClaimPaymentForm claimId={claimId} />
+      <ClaimPaymentForm claimId={claimId} focus={focus} />
     </CardContent>
   )
 }

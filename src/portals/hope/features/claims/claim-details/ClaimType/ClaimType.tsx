@@ -1,7 +1,7 @@
 import { CardContent, CardTitle, Flex, SearchableDropdown } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { ClaimPropertyForm } from 'portals/hope/features/claims/claim-details/ClaimType/components/ClaimPropertyForm'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import {
@@ -68,10 +68,23 @@ gql`
 
 export const ClaimType: React.FC<{
   claimId: string
-}> = ({ claimId }) => {
+  focus?: boolean
+}> = ({ claimId, focus }) => {
   const { data: claimTypeInformation } = useClaimTypeInformationQuery({
     variables: { claimId },
   })
+
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (focus && containerRef) {
+      containerRef.current?.scrollIntoView({
+        inline: 'center',
+        block: 'center',
+        behavior: 'smooth',
+      })
+    }
+  }, [focus])
 
   const { data, error } = useGetClaimTypesQuery()
   const [setClaimType] = useSetClaimTypeMutation()
@@ -95,7 +108,7 @@ export const ClaimType: React.FC<{
   }
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" ref={containerRef}>
       <CardContent>
         <Flex direction="column" justify="space-between">
           <div style={{ width: '100%' }}>
