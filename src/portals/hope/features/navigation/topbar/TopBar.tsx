@@ -106,7 +106,7 @@ export const TopBar = () => {
   const [showShareModal, setShowShareModal] = useState(false)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
-  const { register } = useNavigation()
+  const { register, setCursor } = useNavigation()
 
   useEffect(() => {
     if (isEscapePressed) {
@@ -128,6 +128,7 @@ export const TopBar = () => {
       {showUserNotifications && (
         <NotificationsModal
           onClose={() => {
+            setCursor('NotificationsButton')
             setShowUserNotifications(false)
           }}
         />
