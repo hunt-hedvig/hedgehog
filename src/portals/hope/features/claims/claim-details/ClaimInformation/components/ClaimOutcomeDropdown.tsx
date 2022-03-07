@@ -54,7 +54,7 @@ const useClaimOutcome = (claimId: string): UseClaimOutcomeResult => {
   const state = data?.claim?.state ?? null
 
   const setOutcome = (newOutcome: string | null) => {
-    if (state === ClaimState.Closed) {
+    if (state === ClaimState.Closed && outcome !== null) {
       toast.error('This claim is closed')
       return
     }
