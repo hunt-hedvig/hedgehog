@@ -22,6 +22,7 @@ import { useNameAutoComplete } from 'portals/hope/features/search/members/hooks/
 import { SearchCategoryButtons } from 'portals/hope/features/search/components/SearchCategoryButtons'
 import { useHistory } from 'react-router'
 import { Instructions } from 'portals/hope/features/search/components/Instructions'
+import { MemberSearchHit } from 'types/generated/graphql'
 
 const MemberSuggestionsWrapper = styled(Instructions)`
   padding-top: 20vh;
@@ -35,7 +36,7 @@ export const MemberSearch: React.FC = () => {
   const history = useHistory()
   const [query, setQuery] = useState('')
   const [hasSearched, setHasSearched] = useState(false)
-  const { hits, loading, search, fetchMore } = useSearch(query)
+  const { hits, loading, search, fetchMore } = useSearch<MemberSearchHit>(query)
   const { memberHistory } = useMemberHistory()
   const { suggestionString } = useNameAutoComplete(query)
 

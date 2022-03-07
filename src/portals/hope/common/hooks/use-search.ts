@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 import {
-  SearchQuery,
   SearchQueryVariables,
+  SearchResultHighlight,
   useSearchLazyQuery,
 } from 'types/generated/graphql'
 import { useEffect, useState } from 'react'
@@ -43,8 +43,13 @@ gql`
   }
 `
 
-export interface UseSearchResult {
-  hits: SearchQuery['search']
+interface GenericSearchResult<T> {
+  highlights: SearchResultHighlight[]
+  hit: T
+}
+
+export interface UseSearchResult<T> {
+  hits: GenericSearchResult<T>[]
   loading: boolean
   search: (options?: SearchQueryOptions) => void
   fetchMore: (amount?: number, options?: SearchQueryOptions) => void
@@ -52,11 +57,11 @@ export interface UseSearchResult {
 
 type SearchQueryOptions = Omit<SearchQueryVariables, 'query'>
 
-export const useSearch = (
+export const useSearch = <T>(
   query: string,
   baseOptions?: SearchQueryOptions,
-): UseSearchResult => {
-  const [result, setResult] = useState<SearchQuery['search']>([])
+): UseSearchResult<T> => {
+  const [result, setResult] = useState<GenericSearchResult<T>[]>([])
   const [search, { loading, refetch, data }] = useSearchLazyQuery()
 
   const getOptions = (options?: SearchQueryOptions): SearchQueryOptions => ({
@@ -67,8 +72,8 @@ export const useSearch = (
 
   useEffect(() => {
     if (data?.search) {
-      PushUserAction('members', 'search', null, 'new')
-      setResult(data.search)
+      PushUserAction(baseOptions?.type ?? 'MEMBERS', 'search', null, 'new')
+      setResult(data.search as GenericSearchResult<T>[])
     }
   }, [data])
 
