@@ -58,6 +58,11 @@ const useClaimStatus = (claimId: string): UseClamStatusResult => {
       return false
     }
 
+    if (!outcome && status !== ClaimState.Closed) {
+      toast.error('Claim outcome is required')
+      return false
+    }
+
     if (status === ClaimState.Closed && newStatus === ClaimState.Open) {
       toast.error('The claim can only be reopened')
       return false
