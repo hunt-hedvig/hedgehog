@@ -67,11 +67,6 @@ export const QuoteSearch: React.FC = () => {
           </Button>
         </Flex>
       )}
-
-      {hits.length === 0 && query && (
-        <StandaloneMessage>No results</StandaloneMessage>
-      )}
-
       {hits.length === 0 && !query && (
         <div>
           <Instructions>
