@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSearch } from 'portals/hope/common/hooks/use-search'
 import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
 import { SearchInput } from 'portals/hope/features/search/components/SearchInput'
@@ -8,6 +8,7 @@ import {
   Flex,
   MainHeadline,
   Spacing,
+  StandaloneMessage,
   Table,
   TableBody,
   TableHeader,
@@ -33,15 +34,23 @@ const MemberSuggestionsWrapper = styled(Instructions)`
 export const MemberSearch: React.FC = () => {
   const history = useHistory()
   const [query, setQuery] = useState('')
+  const [hasSearched, setHasSearched] = useState(false)
   const { hits, loading, search, fetchMore } = useSearch(query)
   const { memberHistory } = useMemberHistory()
   const { suggestionString } = useNameAutoComplete(query)
+
+  useEffect(() => {
+    setHasSearched(false)
+  }, [query])
 
   return (
     <>
       <SearchInput
         onChange={(value) => setQuery(value)}
-        onSearch={() => search()}
+        onSearch={() => {
+          search()
+          setHasSearched(true)
+        }}
         loading={loading}
         suggestion={suggestionString}
       />
@@ -68,6 +77,9 @@ export const MemberSearch: React.FC = () => {
             ))}
           </TableBody>
         </Table>
+      )}
+      {hits.length === 0 && query && hasSearched && (
+        <StandaloneMessage>No results</StandaloneMessage>
       )}
       {hits.length !== 0 && hits.length >= 10 && (
         <>

@@ -1,24 +1,40 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { useSearch } from 'portals/hope/common/hooks/use-search'
 import { SearchInput } from 'portals/hope/features/search/components/SearchInput'
 import { SearchCategoryButtons } from 'portals/hope/features/search/components/SearchCategoryButtons'
-import { Button, Flex, Spacing } from '@hedvig-ui'
+import { Button, Flex, Spacing, StandaloneMessage } from '@hedvig-ui'
 import {
   ExtraInstruction,
   Instructions,
 } from 'portals/hope/features/search/components/Instructions'
+import { QuoteResult } from 'portals/hope/features/search/quotes/components/QuoteResult'
+import { QuoteSearchHit } from 'types/generated/graphql'
 
 export const QuoteSearch: React.FC = () => {
   const history = useHistory()
   const [query, setQuery] = useState('')
-  const { hits, loading, search, fetchMore } = useSearch(query)
+  const [hasSearched, setHasSearched] = useState(false)
+  const { hits, loading, search, fetchMore } = useSearch(query, {
+    type: 'QUOTES',
+  })
+
+  useEffect(() => {
+    console.log(hits)
+  }, [hits])
+
+  useEffect(() => {
+    setHasSearched(false)
+  }, [query])
 
   return (
     <>
       <SearchInput
         onChange={(value) => setQuery(value)}
-        onSearch={() => search()}
+        onSearch={() => {
+          search()
+          setHasSearched(true)
+        }}
         loading={loading}
       />
 
@@ -28,6 +44,18 @@ export const QuoteSearch: React.FC = () => {
       />
 
       <Spacing top="large" />
+      {hits.length !== 0 &&
+        hits.map(({ hit }, index) => (
+          <QuoteResult
+            key={((hit as QuoteSearchHit)?.id ?? '') + index}
+            quote={hit as QuoteSearchHit}
+          />
+        ))}
+
+      {hits.length === 0 && query && hasSearched && (
+        <StandaloneMessage>No results</StandaloneMessage>
+      )}
+
       {hits.length !== 0 && hits.length >= 10 && (
         <Flex justify="center">
           <Button
@@ -39,6 +67,11 @@ export const QuoteSearch: React.FC = () => {
           </Button>
         </Flex>
       )}
+
+      {hits.length === 0 && query && (
+        <StandaloneMessage>No results</StandaloneMessage>
+      )}
+
       {hits.length === 0 && !query && (
         <div>
           <Instructions>

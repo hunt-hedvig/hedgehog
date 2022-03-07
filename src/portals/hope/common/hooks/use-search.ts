@@ -21,12 +21,22 @@ gql`
           lastName
         }
         ... on NoteSearchHit {
+          id
           memberId
           firstName
           lastName
           claimId
           text
           author
+        }
+        ... on QuoteSearchHit {
+          id
+          memberId
+          ssn
+          fullName
+          street
+          postalCode
+          city
         }
       }
     }
