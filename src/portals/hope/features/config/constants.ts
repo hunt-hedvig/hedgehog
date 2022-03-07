@@ -50,7 +50,7 @@ export const MemberGroupColors: Record<string, string> = {
   [MemberGroups.First]: lightTheme.danger,
   [MemberGroups.Second]: lightTheme.success,
   [MemberGroups.Third]: lightTheme.highlight,
-  [MemberGroups.Fourth]: lightTheme.accent,
+  [MemberGroups.Fourth]: lightTheme.warning,
 }
 
 export enum InsuranceType {

@@ -1,3 +1,4 @@
+import { convertCamelcaseToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { ArrayElement } from '@hedvig-ui/utils/array-element'
 import { ContractStatus, SearchQuery } from 'types/generated/graphql'
@@ -80,8 +81,8 @@ const SearchHitExplanation = styled.div`
 `
 
 const convertTagText = (text: string) => {
-  const result = text.replaceAll(/([A-Z])/g, ' $1')
-  return result.charAt(0).toUpperCase() + result.slice(1)
+  const result = text.split('.').map((word) => convertCamelcaseToTitle(word))
+  return result.join(' → ')
 }
 
 const SearchHitTag: React.FC<{
