@@ -256,13 +256,14 @@ input UpsertTemplateMessageInput {
 }
 
 type MemberSearchHit {
+  id: ID!
   memberId: String
   firstName: String
   lastName: String
 }
 
 type NoteSearchHit {
-  id: String
+  id: ID!
   memberId: String
   firstName: String
   lastName: String

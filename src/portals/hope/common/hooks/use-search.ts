@@ -16,6 +16,7 @@ gql`
       }
       hit {
         ... on MemberSearchHit {
+          id
           memberId
           firstName
           lastName
