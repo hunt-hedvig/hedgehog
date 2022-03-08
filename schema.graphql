@@ -227,12 +227,6 @@ type MutationType {
   togglePinStatus(id: ID!): Template!
 }
 
-type MemberSearchHit {
-  memberId: String
-  firstName: String
-  lastName: String
-}
-
 type Template {
   id: ID!
   title: String!
@@ -258,36 +252,15 @@ input UpsertTemplateMessageInput {
   message: String!
 }
 
-type NoteSearchHit {
-  id: String
-  memberId: String
-  firstName: String
-  lastName: String
-  claimId: String
-  text: String
-  author: String
-}
-
-type SearchResultHighlight {
-  field: String!
-  values: [String!]!
-}
-
-union SearchHit = MemberSearchHit | NoteSearchHit
-
-type SearchResult {
-  hit: SearchHit!
-  highlights: [SearchResultHighlight!]!
-}
-
 type MemberSearchHit {
+  id: ID!
   memberId: String
   firstName: String
   lastName: String
 }
 
 type NoteSearchHit {
-  id: String
+  id: ID!
   memberId: String
   firstName: String
   lastName: String

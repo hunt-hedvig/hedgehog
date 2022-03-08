@@ -16,11 +16,13 @@ gql`
       }
       hit {
         ... on MemberSearchHit {
+          id
           memberId
           firstName
           lastName
         }
         ... on NoteSearchHit {
+          id
           memberId
           firstName
           lastName
