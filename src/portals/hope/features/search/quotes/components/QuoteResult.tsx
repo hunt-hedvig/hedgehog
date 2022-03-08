@@ -1,8 +1,12 @@
 import React from 'react'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
-import { QuoteSearchHit } from 'types/generated/graphql'
-import { Button, Flex } from '@hedvig-ui'
+import {
+  QuoteSearchHit,
+  useQuoteSearchQuoteQuery,
+} from 'types/generated/graphql'
+import { Button, Flex, Label, Loadable } from '@hedvig-ui'
+import gql from 'graphql-tag'
 
 const Wrapper = styled.div`
   max-width: 60rem;
@@ -32,12 +36,12 @@ const Wrapper = styled.div`
       chroma(theme.semiStrongForeground).brighten(1.75).hex()};
   }
 
-  .ssn {
+  .labeled-information {
     margin-bottom: 0;
     color: ${({ theme }) => theme.semiStrongForeground};
   }
 
-  .ssn-placeholder {
+  .labeled-information-placeholder {
     margin-bottom: 0;
     color: ${({ theme }) =>
       chroma(theme.semiStrongForeground).brighten(1.75).hex()};
@@ -52,7 +56,33 @@ const Wrapper = styled.div`
   border-radius: 0.25rem;
 `
 
+gql`
+  query QuoteSearchQuote($id: String!) {
+    quote(id: $id) {
+      id
+      price
+      currency
+      createdAt
+      memberId
+    }
+  }
+`
+
+const SmallLabel = styled(Label)`
+  font-size: 0.8rem;
+  margin-bottom: -0.2rem;
+  margin-top: 0.2rem;
+  color: ${({ theme }) => chroma(theme.semiStrongForeground).brighten(1).hex()};
+`
+
 export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
+  const { data, loading } = useQuoteSearchQuoteQuery({
+    variables: { id: quote.id ?? '' },
+  })
+
+  const price = data?.quote?.price
+  const currency = data?.quote?.currency
+
   const geoInfo = [quote?.street, quote?.city, quote?.postalCode].filter(
     (q) => !!q,
   )
@@ -67,16 +97,50 @@ export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
             <div className="name-placeholder">Name not available</div>
           )}
 
-          {quote?.ssn ? (
-            <div className="ssn">{quote?.ssn}</div>
-          ) : (
-            <div className="ssn-placeholder">SSN not available</div>
-          )}
+          <Flex style={{ marginTop: '1rem' }}>
+            <div>
+              <SmallLabel>SSN</SmallLabel>
+              {quote?.ssn ? (
+                <div className="labeled-information">{quote?.ssn}</div>
+              ) : (
+                <div className="labeled-information-placeholder">
+                  Not available
+                </div>
+              )}
+            </div>
+            <div style={{ marginLeft: '2rem' }}>
+              <SmallLabel>Member ID</SmallLabel>
+              {quote?.memberId ? (
+                <div className="labeled-information">
+                  <a href={`/members/${quote.memberId}`}>{quote.memberId}</a>
+                </div>
+              ) : (
+                <div className="labeled-information-placeholder">
+                  Not available
+                </div>
+              )}
+            </div>
+          </Flex>
 
-          <h5>{geoInfo.join(' • ')}</h5>
+          <Flex style={{ marginTop: '1rem' }}>
+            <div>
+              <SmallLabel>Address</SmallLabel>
+              {geoInfo.length !== 0 ? (
+                <div className="labeled-information">{geoInfo.join(', ')}</div>
+              ) : (
+                <div className="labeled-information-placeholder">
+                  Not available
+                </div>
+              )}
+            </div>
+          </Flex>
         </Flex>
         <Flex direction="column" justify="space-between" align="flex-end">
-          <div className="price">159 SEK</div>
+          <Loadable loading={loading || !price || !currency}>
+            <div className="price">
+              {price ?? '123'} {currency ?? 'ABC'}
+            </div>
+          </Loadable>
           <Button variant="secondary">Details</Button>
         </Flex>
       </Flex>
