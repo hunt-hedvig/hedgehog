@@ -1,5 +1,6 @@
 import gql from 'graphql-tag'
 import {
+  SearchHit,
   SearchQueryVariables,
   SearchResultHighlight,
   useSearchLazyQuery,
@@ -16,6 +17,7 @@ gql`
       }
       hit {
         ... on MemberSearchHit {
+          id
           memberId
           firstName
           lastName
@@ -57,12 +59,14 @@ export interface UseSearchResult<T> {
 
 type SearchQueryOptions = Omit<SearchQueryVariables, 'query'>
 
-export const useSearch = <T>(
+export const useSearch = <T extends SearchHit>(
   query: string,
   baseOptions?: SearchQueryOptions,
 ): UseSearchResult<T> => {
   const [result, setResult] = useState<GenericSearchResult<T>[]>([])
-  const [search, { loading, refetch, data }] = useSearchLazyQuery()
+  const [search, { loading, refetch, data }] = useSearchLazyQuery({
+    fetchPolicy: 'no-cache',
+  })
 
   const getOptions = (options?: SearchQueryOptions): SearchQueryOptions => ({
     from: options?.from ?? baseOptions?.from,

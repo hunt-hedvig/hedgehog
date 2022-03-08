@@ -15,9 +15,12 @@ export const QuoteSearch: React.FC = () => {
   const history = useHistory()
   const [query, setQuery] = useState('')
   const [hasSearched, setHasSearched] = useState(false)
-  const { hits, loading, search, fetchMore } = useSearch(query, {
-    type: 'QUOTES',
-  })
+  const { hits, loading, search, fetchMore } = useSearch<QuoteSearchHit>(
+    query,
+    {
+      type: 'QUOTES',
+    },
+  )
 
   useEffect(() => {
     setHasSearched(false)
@@ -35,7 +38,7 @@ export const QuoteSearch: React.FC = () => {
       />
 
       <SearchCategoryButtons
-        category="quotes"
+        category="members" // TODO: Use 'quotes' instead
         onChange={(category) => history.push(`/search/${category}`)}
       />
 
