@@ -53,6 +53,7 @@ export const MemberFile: React.FC<{
   const { data, loading, error } = useFileUploadsQueryQuery({
     variables: { memberId },
   })
+
   if (error) {
     return (
       <div>
