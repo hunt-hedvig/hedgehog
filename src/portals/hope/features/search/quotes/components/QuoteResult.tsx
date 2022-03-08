@@ -7,6 +7,8 @@ import {
 } from 'types/generated/graphql'
 import { Button, Flex, Label, Loadable } from '@hedvig-ui'
 import gql from 'graphql-tag'
+import formatDate from 'date-fns/format'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
 
 const Wrapper = styled.div`
   max-width: 60rem;
@@ -64,6 +66,7 @@ gql`
       currency
       createdAt
       memberId
+      state
     }
   }
 `
@@ -82,6 +85,8 @@ export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
 
   const price = data?.quote?.price
   const currency = data?.quote?.currency
+  const createdAt = data?.quote?.createdAt
+  const state = data?.quote?.state
 
   const geoInfo = [quote?.street, quote?.city, quote?.postalCode].filter(
     (q) => !!q,
@@ -113,6 +118,30 @@ export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
               {quote?.memberId ? (
                 <div className="labeled-information">
                   <a href={`/members/${quote.memberId}`}>{quote.memberId}</a>
+                </div>
+              ) : (
+                <div className="labeled-information-placeholder">
+                  Not available
+                </div>
+              )}
+            </div>
+            <div style={{ marginLeft: '2rem', minWidth: '6.5rem' }}>
+              <SmallLabel>Created at</SmallLabel>
+              {createdAt ? (
+                <div className="labeled-information">
+                  {formatDate(new Date(createdAt), 'yyyy-MM-dd')}
+                </div>
+              ) : (
+                <div className="labeled-information-placeholder">
+                  Not available
+                </div>
+              )}
+            </div>
+            <div style={{ marginLeft: '2rem' }}>
+              <SmallLabel>State</SmallLabel>
+              {state ? (
+                <div className="labeled-information">
+                  {convertEnumOrSentenceToTitle(state)}
                 </div>
               ) : (
                 <div className="labeled-information-placeholder">
