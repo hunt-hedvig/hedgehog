@@ -5,7 +5,6 @@ import { MemberSuggestions } from 'portals/hope/features/members-search/componen
 import { SearchForm } from 'portals/hope/features/members-search/components/SearchForm'
 import {
   ExtraInstruction,
-  Instructions,
   MemberSuggestionsWrapper,
   NewSearchWrapper,
   NoMembers,
@@ -19,6 +18,7 @@ import { ExtensiveMemberSearchQuery } from 'types/generated/graphql'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 import { useFeatureFlag } from 'portals/hope/common/hooks/use-feature-flag'
 import { Stars } from 'react-bootstrap-icons'
+import { Instructions } from 'portals/hope/features/search/components/Instructions'
 
 const MemberSearchPage: Page = () => {
   const { activate } = useFeatureFlag('SEARCH_EVERYTHING')

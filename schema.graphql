@@ -52,6 +52,9 @@ type QueryType {
 
   templates(locales: [String!]!): [Template!]!
   template(id: ID!): Template!
+
+  quotes(ids: [String!]!): [Quote!]!
+  quote(id: String!): Quote!
 }
 
 type MutationType {
@@ -269,12 +272,22 @@ type NoteSearchHit {
   author: String
 }
 
+type QuoteSearchHit {
+  id: ID!
+  memberId: String
+  ssn: String
+  fullName: String
+  street: String
+  postalCode: String
+  city: String
+}
+
 type SearchResultHighlight {
   field: String!
   values: [String!]!
 }
 
-union SearchHit = MemberSearchHit | NoteSearchHit
+union SearchHit = MemberSearchHit | NoteSearchHit | QuoteSearchHit
 
 type SearchResult {
   hit: SearchHit!

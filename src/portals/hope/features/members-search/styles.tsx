@@ -1,31 +1,9 @@
-import { css, keyframes } from '@emotion/react'
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Button, Paragraph } from '@hedvig-ui'
+import { Button, fadeIn, Paragraph } from '@hedvig-ui'
 import { Search as SearchBootstrapIcon } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
-
-const fadeIn = (max: number) =>
-  keyframes({
-    from: { opacity: 0, transform: 'translateY(5%)' },
-    to: { opacity: max, transform: 'translateY(0)' },
-  })
-
-export const Instructions = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 1rem;
-  padding-top: 2rem;
-
-  code {
-    background: ${({ theme }) => theme.backgroundTransparent};
-    padding: 1px 2px;
-    border-radius: 0.25rem;
-  }
-  opacity: 0;
-  animation: ${fadeIn(0.3)} 1000ms forwards;
-  animation-delay: 500ms;
-`
+import { Instructions } from 'portals/hope/features/search/components/Instructions'
 
 export const MemberSuggestionsWrapper = styled(Instructions)({
   paddingTop: '25vh',

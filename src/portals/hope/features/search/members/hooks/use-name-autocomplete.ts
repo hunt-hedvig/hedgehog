@@ -4,16 +4,17 @@ import {
   UseSearchResult,
 } from 'portals/hope/common/hooks/use-search'
 import { useEffect } from 'react'
+import { MemberSearchHit } from 'types/generated/graphql'
 
 interface UseNameAutocompleteResult {
-  suggestion: ArrayElement<UseSearchResult['hits']> | null
+  suggestion: ArrayElement<UseSearchResult<MemberSearchHit>['hits']> | null
   suggestionString: string
 }
 
 export const useNameAutoComplete = (
   query: string,
 ): UseNameAutocompleteResult => {
-  const { hits, search } = useSearch(query, {
+  const { hits, search } = useSearch<MemberSearchHit>(query, {
     type: 'FULL_NAME',
   })
 
