@@ -52,6 +52,9 @@ type QueryType {
 
   templates(locales: [String!]!): [Template!]!
   template(id: ID!): Template!
+
+  quotes(ids: [String!]!): [Quote!]!
+  quote(id: String!): Quote!
 }
 
 type MutationType {
@@ -737,7 +740,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

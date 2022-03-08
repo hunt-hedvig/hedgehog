@@ -20,10 +20,6 @@ export const QuoteSearch: React.FC = () => {
   })
 
   useEffect(() => {
-    console.log(hits)
-  }, [hits])
-
-  useEffect(() => {
     setHasSearched(false)
   }, [query])
 
