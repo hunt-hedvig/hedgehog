@@ -4,7 +4,6 @@ import React, { useEffect, useRef } from 'react'
 import { FadeIn, FadeInProps } from '@hedvig-ui'
 import { QuestionGroup } from 'types/generated/graphql'
 import { AnswerForm } from './AnswerForm'
-// import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const QuestionGroupWrapper = styled(FadeIn)<{ isVisible: boolean }>`
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
@@ -32,12 +31,13 @@ export interface QuestionGroupItemProps
   extends React.HTMLAttributes<HTMLDivElement>,
     FadeInProps {
   questionGroup: QuestionGroup
+  isFocused: boolean
 }
 
 export const QuestionGroupItem = React.forwardRef<
   HTMLDivElement,
   QuestionGroupItemProps
->(({ questionGroup, ...props }, forwardRef) => {
+>(({ questionGroup, isFocused, ...props }, forwardRef) => {
   const [isVisible, setVisible] = React.useState(false)
 
   const internalRef = useRef<HTMLDivElement>(null)
@@ -61,6 +61,7 @@ export const QuestionGroupItem = React.forwardRef<
         memberId={questionGroup.memberId}
         onDone={() => setVisible(false)}
         onError={() => setVisible(true)}
+        isFocused={isFocused}
       />
     </QuestionGroupWrapper>
   )

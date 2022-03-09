@@ -1,25 +1,26 @@
 import styled from '@emotion/styled'
 import {
+  Button,
   Checkbox,
-  // FadeIn,
-  Form,
-  FormTextArea,
-  // Shadowed,
+  FadeIn,
+  Shadowed,
   Spacing,
-  SubmitButton,
+  TextArea,
 } from '@hedvig-ui'
-// import {
-//   Keys,
-//   useKeyIsPressed,
-// } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import React from 'react'
-import { FieldValues, FormProvider, useForm } from 'react-hook-form'
+import {
+  isPressing,
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import {
   GetQuestionsGroupsDocument,
   useAnswerQuestionMutation,
   useMarkQuestionAsResolvedMutation,
 } from 'types/generated/graphql'
+import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 
 const SpacingStyled = styled(Spacing)`
   & .form__field {
@@ -28,32 +29,37 @@ const SpacingStyled = styled(Spacing)`
 `
 
 const MarkAsResolvedWrapper = styled.div`
-  padding-left: 1rem;
   display: flex;
 `
 
 const SubmitButtonWrapper = styled.div`
   display: flex;
   align-items: flex-end;
+  margin-top: 1rem;
 `
 
-// const CheckTip = styled.div`
-//   width: fit-content;
-//   font-size: 0.8em;
-//   color: ${({ theme }) => theme.semiStrongForeground};
+const CheckTip = styled.div`
+  width: fit-content;
+  font-size: 0.8em;
+  color: ${({ theme }) => theme.semiStrongForeground};
 
-//   position: absolute;
-//   right: 0;
-// `
+  position: absolute;
+  right: 0;
+`
 
 export const AnswerForm: React.FC<{
   memberId: string
   onDone: () => void
   onError: () => void
-}> = ({ memberId, onDone, onError }) => {
-  const form = useForm()
-  // const isEnterPressed = useKeyIsPressed(Keys.Enter)
-  // const isCommandPressed = useKeyIsPressed(Keys.Command)
+  isFocused: boolean
+}> = ({ memberId, onDone, onError, isFocused }) => {
+  const [answer, setAnswer] = useState<string>()
+
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
+
+  const { isMetaKey } = usePlatform()
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
+  const isCommandPressed = useKeyIsPressed(Keys.Command)
 
   const [answerQuestion, { loading: loadingAnswerQuestion }] =
     useAnswerQuestionMutation()
@@ -61,18 +67,21 @@ export const AnswerForm: React.FC<{
   const [markQuestionAsResolved, { loading: loadingMarkQuestionAsResolved }] =
     useMarkQuestionAsResolvedMutation()
 
-  const loading =
-    loadingAnswerQuestion ||
-    loadingMarkQuestionAsResolved ||
-    form.formState.isSubmitting
+  const loading = loadingAnswerQuestion || loadingMarkQuestionAsResolved
 
-  const onSubmit = (data: FieldValues) => {
+  const { cursor } = useNavigation()
+
+  const onSubmit = () => {
+    if (!answer) {
+      return
+    }
+
     onDone()
     toast.promise(
       answerQuestion({
         variables: {
           memberId,
-          answer: data.answer.trim(),
+          answer,
         },
         refetchQueries: [
           {
@@ -115,36 +124,43 @@ export const AnswerForm: React.FC<{
     )
   }
 
-  // useEffect(() => {
-  //   if (isEnterPressed && isCommandPressed && isGroupFocused && !isFocused) {
-  //     handleMarkAsResolved()
-  //   }
-  //   if (isEnterPressed && isCommandPressed && isFocused) {
-  //     onSubmit(form.getValues())
-  //   }
-  // }, [isEnterPressed, isCommandPressed])
+  useEffect(() => {
+    if (isFocused) {
+      setTimeout(() => {
+        textAreaRef.current?.focus()
+      })
+    } else {
+      textAreaRef.current?.blur()
+    }
+  }, [isFocused])
+
+  useEffect(() => {
+    if (
+      isEnterPressed &&
+      isCommandPressed &&
+      !isFocused &&
+      cursor === `Question-${memberId}`
+    ) {
+      handleMarkAsResolved()
+    }
+  }, [isEnterPressed, isCommandPressed])
 
   return (
     <>
       <SpacingStyled top="small" bottom="small">
-        <FormProvider {...form}>
-          <Form onSubmit={onSubmit}>
-            <FormTextArea
-              name="answer"
-              defaultValue=""
-              rules={{
-                required: 'Cannot send an empty message',
-                pattern: {
-                  value: /[^\s]/,
-                  message: 'Cannot send a message without text',
-                },
-              }}
-            />
-            <SubmitButtonWrapper>
-              <SubmitButton>Send</SubmitButton>
-            </SubmitButtonWrapper>
-          </Form>
-        </FormProvider>
+        <TextArea
+          value={answer}
+          onChange={({ currentTarget: { value } }) => setAnswer(value)}
+          ref={textAreaRef}
+          onKeyDown={(e) => {
+            if (isMetaKey(e) && isPressing(e, Keys.Enter) && isFocused) {
+              onSubmit()
+            }
+          }}
+        />
+        <SubmitButtonWrapper>
+          <Button onClick={onSubmit}>Send</Button>
+        </SubmitButtonWrapper>
       </SpacingStyled>
       <MarkAsResolvedWrapper>
         <Checkbox
@@ -153,7 +169,7 @@ export const AnswerForm: React.FC<{
           disabled={loading}
         />
       </MarkAsResolvedWrapper>
-      {/* {isGroupFocused && !isFocused && (
+      {!isFocused && (
         <FadeIn duration={200}>
           <CheckTip>
             Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
@@ -168,7 +184,7 @@ export const AnswerForm: React.FC<{
             send
           </CheckTip>
         </FadeIn>
-      )} */}
+      )}
     </>
   )
 }
