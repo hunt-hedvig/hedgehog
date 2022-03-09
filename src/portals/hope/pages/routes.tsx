@@ -86,7 +86,7 @@ export const Routes: React.FC = () => {
         <Route path="/dashborad" component={DashboardPage} />
         <Route path="/questions" component={QuestionsPage} />
         <Route path="/notifications" component={NotificationsPage} />
-        <Route path="/search" component={SearchPage} />
+        <Route path="/search/:category" component={SearchPage} />
         <Route
           path="/conversations/onboarding"
           component={ConversationsOnboardingPage}

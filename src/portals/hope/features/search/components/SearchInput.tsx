@@ -64,7 +64,9 @@ export const SearchInput: React.FC<{
 
         <SuggestionText>{suggestion || '\u00a0'}</SuggestionText>
       </div>{' '}
-      <div style={{ width: '50rem', marginTop: '1.5rem' }}>
+      <div
+        style={{ width: '50rem', marginTop: '1.5rem', marginBottom: '-1rem' }}
+      >
         <Flex justify="flex-end">
           <a
             style={{ fontSize: '0.85rem' }}
