@@ -39,6 +39,7 @@ const Wrapper = styled.div`
   }
 
   .labeled-information {
+    min-width: 8rem;
     margin-bottom: 0;
     color: ${({ theme }) => theme.semiStrongForeground};
   }
@@ -96,7 +97,7 @@ export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
     <Wrapper>
       <Flex justify="space-between">
         <Flex direction="column">
-          {quote?.fullName ? (
+          {quote?.fullName && quote?.fullName !== ' ' ? (
             <div className="name">{quote?.fullName}</div>
           ) : (
             <div className="name-placeholder">Name not available</div>
@@ -125,7 +126,7 @@ export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
                 </div>
               )}
             </div>
-            <div style={{ marginLeft: '2rem', minWidth: '6.5rem' }}>
+            <div style={{ marginLeft: '2rem' }}>
               <SmallLabel>Created at</SmallLabel>
               {createdAt ? (
                 <div className="labeled-information">
