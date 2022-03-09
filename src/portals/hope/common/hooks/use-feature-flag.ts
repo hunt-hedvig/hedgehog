@@ -33,23 +33,11 @@ export const useFeatureFlag = (flag: string): UseFeatureFlag => {
         setFlags(tempFlags)
       }
     })
-  }, [])
 
-  useEffect(() => {
-    const onStorageHandler = (e: StorageEvent) => {
-      if (e.key === `hvg:feature-flags` && e.newValue) {
-        const parsedFlags = JSON.parse(e.newValue) as FeatureFlagRegistry
-        const parsedFlag = parsedFlags[flag]
-
-        if (Object.keys(parsedFlags).includes(flag)) {
-          handleChange(parsedFlag.active)
-        }
-      }
-    }
-
-    window.addEventListener('storage', onStorageHandler)
-
-    return () => window.removeEventListener('storage', onStorageHandler)
+    setFlags((prevFlags) => ({
+      ...prevFlags,
+      [flag]: { ...prevFlags[flag], accessedAt: now },
+    }))
   }, [])
 
   const handleChange = (value: boolean) => {

@@ -1,7 +1,11 @@
 import { convertCamelcaseToTitle } from '@hedvig-ui/utils/text'
 import React from 'react'
 import { ArrayElement } from '@hedvig-ui/utils/array-element'
-import { ContractStatus, SearchQuery } from 'types/generated/graphql'
+import {
+  ContractStatus,
+  MemberSearchHit,
+  SearchQuery,
+} from 'types/generated/graphql'
 import {
   Flex,
   Loadable,
@@ -118,6 +122,8 @@ export const MemberHitRow: React.FC<{
     result.hit.memberId ?? '',
   )
 
+  const hit = result.hit as MemberSearchHit
+
   const contractsByStatus = groupBy('status')
 
   const filteredResults = result.highlights.filter(
@@ -131,15 +137,15 @@ export const MemberHitRow: React.FC<{
     >
       <TableColumn style={{ verticalAlign: 'top' }}>
         <Flex direction="column">
-          {result.hit.firstName && result.hit.lastName ? (
-            `${result.hit.firstName} ${result.hit.lastName}`
+          {hit.firstName && hit.lastName ? (
+            `${hit.firstName} ${hit.lastName}`
           ) : (
             <Placeholder>Not available</Placeholder>
           )}{' '}
           {member?.contractMarketInfo &&
             getMemberFlag(member.contractMarketInfo)}
           <Flex>
-            <TableColumnSubtext>{result.hit.memberId}</TableColumnSubtext>
+            <TableColumnSubtext>{hit.memberId}</TableColumnSubtext>
             <MemberAgeWrapper>
               <MemberAge birthDateString={member?.birthDate} />
             </MemberAgeWrapper>

@@ -229,7 +229,14 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
           actionOnSuccess?.()
           return 'Template created'
         },
-        error: 'Could not create template',
+        error: (err) => {
+          if (err.toString().includes('already exists')) {
+            const splittedError = err.toString().split(': ')
+            return splittedError[splittedError.length - 1]
+          }
+
+          return 'Could not create template'
+        },
       },
     )
   }
