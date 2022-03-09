@@ -3,11 +3,14 @@ import { range } from '@hedvig-ui/utils/range'
 import {
   complexityIcons,
   FilterElement,
-  FilterGroupState,
   FilterWrapper,
   LabelWithPopover,
 } from 'portals/hope/features/claims/claims-list/filters/ClaimListFilters'
-import { Market, MarketFlags } from 'portals/hope/features/config/constants'
+import {
+  Market,
+  MarketFlags,
+  MemberGroups,
+} from 'portals/hope/features/config/constants'
 import { MemberGroupColorBadge } from 'portals/hope/features/questions/MemberGroupColorBadge'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage'
@@ -169,7 +172,9 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
           (filterNumber) => (
             <Flex key={filterNumber} direction="row" align="center">
               <Checkbox
-                label={FilterGroupState[filterNumber]}
+                label={Object.keys(MemberGroups).find(
+                  (_, index) => index === filterNumber,
+                )}
                 checked={filterExists(
                   filterNumber,
                   'filterSelectedMemberGroups',
