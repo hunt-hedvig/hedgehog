@@ -1,18 +1,18 @@
 import styled from '@emotion/styled'
 import {
   Checkbox,
-  FadeIn,
+  // FadeIn,
   Form,
   FormTextArea,
-  Shadowed,
+  // Shadowed,
   Spacing,
   SubmitButton,
 } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import React, { useEffect } from 'react'
+// import {
+//   Keys,
+//   useKeyIsPressed,
+// } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import React from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import {
@@ -37,25 +37,23 @@ const SubmitButtonWrapper = styled.div`
   align-items: flex-end;
 `
 
-const CheckTip = styled.div`
-  width: fit-content;
-  font-size: 0.8em;
-  color: ${({ theme }) => theme.semiStrongForeground};
+// const CheckTip = styled.div`
+//   width: fit-content;
+//   font-size: 0.8em;
+//   color: ${({ theme }) => theme.semiStrongForeground};
 
-  position: absolute;
-  right: 0;
-`
+//   position: absolute;
+//   right: 0;
+// `
 
 export const AnswerForm: React.FC<{
   memberId: string
   onDone: () => void
   onError: () => void
-  isFocused: boolean
-  isGroupFocused: boolean
-}> = ({ memberId, onDone, onError, isGroupFocused, isFocused }) => {
+}> = ({ memberId, onDone, onError }) => {
   const form = useForm()
-  const isEnterPressed = useKeyIsPressed(Keys.Enter)
-  const isCommandPressed = useKeyIsPressed(Keys.Command)
+  // const isEnterPressed = useKeyIsPressed(Keys.Enter)
+  // const isCommandPressed = useKeyIsPressed(Keys.Command)
 
   const [answerQuestion, { loading: loadingAnswerQuestion }] =
     useAnswerQuestionMutation()
@@ -117,14 +115,14 @@ export const AnswerForm: React.FC<{
     )
   }
 
-  useEffect(() => {
-    if (isEnterPressed && isCommandPressed && isGroupFocused && !isFocused) {
-      handleMarkAsResolved()
-    }
-    if (isEnterPressed && isCommandPressed && isFocused) {
-      onSubmit(form.getValues())
-    }
-  }, [isEnterPressed, isCommandPressed])
+  // useEffect(() => {
+  //   if (isEnterPressed && isCommandPressed && isGroupFocused && !isFocused) {
+  //     handleMarkAsResolved()
+  //   }
+  //   if (isEnterPressed && isCommandPressed && isFocused) {
+  //     onSubmit(form.getValues())
+  //   }
+  // }, [isEnterPressed, isCommandPressed])
 
   return (
     <>
@@ -155,7 +153,7 @@ export const AnswerForm: React.FC<{
           disabled={loading}
         />
       </MarkAsResolvedWrapper>
-      {isGroupFocused && !isFocused && (
+      {/* {isGroupFocused && !isFocused && (
         <FadeIn duration={200}>
           <CheckTip>
             Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to
@@ -170,7 +168,7 @@ export const AnswerForm: React.FC<{
             send
           </CheckTip>
         </FadeIn>
-      )}
+      )} */}
     </>
   )
 }
