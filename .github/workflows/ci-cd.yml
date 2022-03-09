@@ -9,20 +9,19 @@ on:
       - master
 
 jobs:
-  build:
-    name: 'Build and Test'
+  lint:
+    name: "Linting"
     runs-on: ubuntu-latest
 
     steps:
-      - name: SETUP - Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: SETUP - Install Node
+      - name: Install Node
         uses: actions/setup-node@v2
         with:
           node-version: 16.13.0
           cache: 'yarn'
-
 
       - name: Install dependencies
         run: yarn install
@@ -33,11 +32,71 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      - name: Test
+  test:
+    name: "Testing"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.13.0
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Generate GraphQL types
+        run: yarn graphql:gen
+
+      - name: Testing
         run: yarn test
 
-      - name: Typecheck
+  typecheck:
+    name: "Typechecking"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.13.0
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Generate GraphQL types
+        run: yarn graphql:gen
+
+      - name: Typechecking
         run: yarn typecheck
+
+  build:
+    name: 'Building'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.13.0
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Generate GraphQL types
+        run: yarn graphql:gen
 
       - name: Build
         run: yarn build
