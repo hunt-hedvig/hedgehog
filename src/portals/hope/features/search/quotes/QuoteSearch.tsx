@@ -38,7 +38,7 @@ export const QuoteSearch: React.FC = () => {
       />
 
       <SearchCategoryButtons
-        category="members" // TODO: Use 'quotes' instead
+        category="quotes"
         onChange={(category) => history.push(`/search/${category}`)}
       />
 
