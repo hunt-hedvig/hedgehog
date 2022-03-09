@@ -7,6 +7,7 @@ import {
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { toast } from 'react-hot-toast'
 
 gql`
   query CurrentClaimContract($claimId: ID!) {
@@ -25,6 +26,9 @@ gql`
         contracts {
           ...PartialMemberContract
         }
+      }
+      payments {
+        id
       }
     }
   }
@@ -109,6 +113,11 @@ export const useClaimContracts = (claimId: string): UseClaimContractsResult => {
   const selected = data?.claim?.contract?.id ?? data?.claim?.trial?.id ?? null
 
   const handleSelectTrial = (trialId: string) => {
+    if (data?.claim?.payments?.length) {
+      toast.error("Can't change contract when a payment has been made")
+      return
+    }
+
     PushUserAction('claim', 'set', 'trial', null)
     setTrialForClaim({
       variables: {
@@ -129,6 +138,10 @@ export const useClaimContracts = (claimId: string): UseClaimContractsResult => {
   }
 
   const handleSelectContract = (contractId: string) => {
+    if (data?.claim?.payments?.length) {
+      toast.error("Can't change contract when a payment has been made")
+      return
+    }
     PushUserAction('claim', 'set', 'contract', null)
     setContractForClaim({
       variables: {
