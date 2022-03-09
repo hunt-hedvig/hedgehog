@@ -40,12 +40,13 @@ jobs:
 
       - name: Build
         run: yarn build
-        if: ${{ github.ref != 'refs/heads/master' }}
+        if: ${{ github.event_name == 'pull_request' }}
 
   deploy:
     name: 'Deploy to Heroku'
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}
+    needs: build
+    if: github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v2
