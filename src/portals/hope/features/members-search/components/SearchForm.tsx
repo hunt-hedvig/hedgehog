@@ -85,7 +85,6 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
         <Group>
           <SearchInputGroup>
             <Input
-              style={{ borderRadius: '0.5rem' }}
               {...register('Member Search Form', { autoFocus: true })}
               onChange={({ target: { value } }) => {
                 if (shouldIgnoreInput(value)) {
@@ -111,6 +110,10 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
               }}
               onBlur={() => setTextFieldFocused(false)}
               onKeyDown={(e) => {
+                if (isPressing(e, Keys.Escape)) {
+                  focus('Search')
+                }
+
                 if (isPressing(e, Keys.Down)) {
                   if (membersLength) {
                     focus('Table Row 0')

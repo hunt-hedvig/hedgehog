@@ -41,18 +41,18 @@ export const NotificationsModal: React.FC<{
 }> = ({ onClose }) => {
   const { me } = useMe()
   const [markAllNotificationsAsRead] = useMarkAllNotificationsAsReadMutation()
-  const { setCursor } = useNavigation()
+  const { focus } = useNavigation()
   const history = useHistory()
 
   useEffect(() => {
-    setCursor('NotificationsModal')
+    focus('NotificationsModal')
 
     markAllNotificationsAsRead({
       refetchQueries: ['GetMe'],
     })
 
     return () => {
-      setCursor('NotificationsButton')
+      focus('NotificationsButton')
     }
   }, [])
 

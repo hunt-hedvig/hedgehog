@@ -57,12 +57,12 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
     onClose()
   }
 
-  const { register, setCursor } = useNavigation()
+  const { register, focus } = useNavigation()
 
   useEffect(() => {
-    setCursor('CreateFilterModal')
+    focus('CreateFilterModal')
 
-    return () => setCursor('Add Template')
+    return () => focus('Add Template')
   }, [])
 
   return (
