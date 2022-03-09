@@ -313,7 +313,11 @@ export const useNavigation = () => {
       }
 
       if (cursor !== name) {
-        return {}
+        return {
+          style: {
+            border: '2px solid transparent',
+          },
+        }
       }
 
       return {
