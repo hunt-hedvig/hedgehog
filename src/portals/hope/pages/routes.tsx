@@ -7,7 +7,7 @@ import { useFeatureFlag } from 'portals/hope/common/hooks/use-feature-flag'
 
 export type Page<T = void> = React.FC<T>
 
-const DashboardPage = lazy(() => import('./DashboardPage'))
+const DashboardPage = lazy(() => import('./dashboard/DashboardPage'))
 const SearchPage = lazy(() => import('./search/SearchPage'))
 const ProfilePage = lazy(() => import('./settings/ProfilePage'))
 const QuestionsPage = lazy(() => import('./QuestionsPage'))

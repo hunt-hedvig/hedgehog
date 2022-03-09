@@ -11,7 +11,7 @@ import {
   MetricName,
   MetricNumber,
   metricStyles,
-} from 'portals/hope/pages/DashboardPage'
+} from 'portals/hope/features/dashboard/MetricList'
 
 const IconsWrapper = styled.div`
   position: absolute;

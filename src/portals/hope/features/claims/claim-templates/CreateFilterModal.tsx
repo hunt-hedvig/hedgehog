@@ -2,9 +2,10 @@ import styled from '@emotion/styled'
 import { Button, Input, Modal, ThirdLevelHeadline } from '@hedvig-ui'
 import { ClaimFilterTemplate } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
 import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { ClaimTemplateFilters } from 'portals/hope/features/claims/claim-templates/components/ClaimTemplateFilters'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const ClaimFilters = styled(ClaimTemplateFilters)`
   display: grid;
@@ -56,16 +57,26 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
     onClose()
   }
 
+  const { register, setCursor } = useNavigation()
+
+  useEffect(() => {
+    setCursor('CreateFilterModal')
+
+    return () => setCursor('Add Template')
+  }, [])
+
   return (
     <Modal onClose={onClose} style={{ padding: '1.5rem', width: 700 }}>
       <ThirdLevelHeadline>Create claim filter</ThirdLevelHeadline>
       <Body>
         <Input
+          autoFocus
           placeholder="Template name"
           value={name}
           onChange={(e) => {
             setName(e.currentTarget.value)
           }}
+          {...register('CreateFilterModal', {})}
         />
 
         <ClaimFilters filters={filters} setFilters={setFilters} />
