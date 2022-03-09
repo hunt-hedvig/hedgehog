@@ -21,12 +21,37 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.13.0
+          cache: 'yarn'
 
-      - name: Build & Test
-        run:  |
-          yarn install
-          yarn graphql:gen
-          yarn lint
-          yarn test
-          yarn typecheck
-          yarn build
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Generate GraphQL types
+        run: yarn graphql:gen
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Build
+        run: yarn build
+        if: ${{ github.ref != 'refs/heads/master' }}
+
+  deploy:
+    name: 'Deploy to Heroku'
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/master' }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "hedvig-hope-staging"
+          heroku_email: "rasmus@hedvig.com"
+
