@@ -129,7 +129,6 @@
     "prebuild": "yarn graphql:gen",
     "build": "NODE_ENV=production webpack --mode production --config webpack/webpack.config.client.production.js",
     "clean": "rm -rf ./build && rm -rf tsconfig.tsbuildinfo",
-    "build:vendor": "NODE_ENV=development webpack --config webpack/webpack.config.vendor.js",
     "watch:staging": "API_URL=https://backoffice.dev.hedvigit.com/ yarn watch",
     "watch": "concurrently -n wds,srv,gql 'npm:watch-client' 'npm:watch-server' 'npm:watch-graphql'",
     "watch-client": "NODE_ENV=development webpack serve --config webpack/webpack.config.client.development.js",
