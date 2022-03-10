@@ -21,6 +21,7 @@ const App: React.FC = () => {
 
   if (error) {
     window.location.pathname = '/login/logout'
+
     return null
   }
 
