@@ -1,8 +1,9 @@
 module.exports = {
   transform: {
-    '\\.tsx?$': 'babel-jest',
+    '^.+\\.(t|j)sx?$': '@swc/jest',
   },
   testRegex: '\\.test\\.(ts|tsx|js)$',
+  testPathIgnorePatterns: ['/node_modules/', '/dist/', '/types/'],
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   moduleDirectories: ['node_modules', 'src', 'shared'],
   moduleNameMapper: {
@@ -10,9 +11,4 @@ module.exports = {
   },
   setupFiles: ['<rootDir>/test-setup-enzyme.js'],
   testEnvironment: 'jsdom',
-  globals: {
-    'ts-jest': {
-      isolatedModules: true,
-    },
-  },
 }
