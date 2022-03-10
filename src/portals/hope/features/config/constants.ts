@@ -126,7 +126,7 @@ export enum TypeOfContract {
     NoHomeContentYouthRent = 'NO_HOME_CONTENT_YOUTH_RENT',
     NoTravel = 'NO_TRAVEL',
     NoTravelYouth = 'NO_TRAVEL_YOUTH',
-    NoAccident = "NO_ACCIDENT",
+    NoAccident = 'NO_ACCIDENT',
     DkHomeContentOwn = 'DK_HOME_CONTENT_OWN',
     DkHomeContentRent = 'DK_HOME_CONTENT_RENT',
     DkHomeContentStudentOwn = 'DK_HOME_CONTENT_STUDENT_OWN',
