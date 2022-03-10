@@ -59,7 +59,7 @@ export enum InsuranceType {
     SwedishAccident = 'SWEDISH_ACCIDENT',
     NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
     NorwegianTravel = 'NORWEGIAN_TRAVEL',
-    NorwegianAccident = "NORWEGIAN_ACCIDENT",
+    NorwegianAccident = 'NORWEGIAN_ACCIDENT',
     DanishHomeContent = 'DANISH_HOME_CONTENT',
     DanishTravel = 'DANISH_TRAVEL',
     DanishAccident = 'DANISH_ACCIDENT',
