@@ -22,7 +22,17 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
       rules: [
         {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader'],
+          use: [
+            'style-loader',
+            'css-loader',
+            {
+              loader: 'esbuild-loader',
+              options: {
+                loader: 'css',
+                minify: true,
+              },
+            },
+          ],
         },
         {
           test: /\.(tsx?|js)$/,
@@ -60,7 +70,6 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
       minimizer: [
         new ESBuildMinifyPlugin({
           target: 'es2017',
-          css: true,
         }),
       ],
     },
