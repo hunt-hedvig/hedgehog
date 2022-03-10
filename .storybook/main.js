@@ -15,7 +15,7 @@ module.exports = {
       test: /\.tsx?$/,
       use: [
         {
-          loader: require.resolve('babel-loader'),
+          loader: require.resolve('esbuild-loader'),
         },
       ],
     })
