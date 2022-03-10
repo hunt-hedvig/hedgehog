@@ -1,8 +1,4 @@
-const threadLoader = require('thread-loader')
 const path = require('path')
-const babelrc = require('../.babelrc')
-
-threadLoader.warmup({}, ['babel-loader'])
 
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 
@@ -30,13 +26,11 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
         {
           test: /\.(tsx?|js)$/,
           include: /(src|shared)/,
-          use: [
-            'thread-loader',
-            {
-              loader: 'babel-loader',
-              options: { ...babelrc, cacheDirectory: true },
-            },
-          ],
+          loader: 'esbuild-loader',
+          options: {
+            loader: 'tsx',
+            target: 'es2017',
+          },
         },
         {
           test: /\.m?js/,

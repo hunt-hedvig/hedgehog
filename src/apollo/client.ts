@@ -86,9 +86,9 @@ const SCHEMA_VERSION_KEY = 'apollo-schema-version'
 const currentVersion = localStorage.getItem(SCHEMA_VERSION_KEY)
 
 if (currentVersion === SCHEMA_VERSION) {
-  await persistor.restore()
+  persistor.restore()
 } else {
-  await persistor.purge()
+  persistor.purge()
   localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION)
 }
 
