@@ -35,7 +35,13 @@ const MemberFileTable: React.FC<{
         .map((memberFile) => (
           <TableRow border key={memberFile.fileUploadUrl}>
             <TableColumn>
-              <Image src={memberFile.fileUploadUrl} />
+              {memberFile.mimeType?.toLowerCase()?.includes('image') ? (
+                <Image src={memberFile.fileUploadUrl} />
+              ) : (
+                <a href={memberFile.fileUploadUrl} target="_blank">
+                  Open file
+                </a>
+              )}
             </TableColumn>
             <TableColumn>
               {dateTimeFormatter(memberFile.timestamp, 'yyyy-MM-dd HH:mm:ss')}
@@ -53,6 +59,7 @@ export const MemberFile: React.FC<{
   const { data, loading, error } = useFileUploadsQueryQuery({
     variables: { memberId },
   })
+
   if (error) {
     return (
       <div>

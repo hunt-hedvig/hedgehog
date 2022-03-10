@@ -1,7 +1,8 @@
 import gql from 'graphql-tag'
 import {
-  SearchQuery,
+  SearchHit,
   SearchQueryVariables,
+  SearchResultHighlight,
   useSearchLazyQuery,
 } from 'types/generated/graphql'
 import { useEffect, useState } from 'react'
@@ -16,11 +17,13 @@ gql`
       }
       hit {
         ... on MemberSearchHit {
+          id
           memberId
           firstName
           lastName
         }
         ... on NoteSearchHit {
+          id
           memberId
           firstName
           lastName
@@ -28,13 +31,27 @@ gql`
           text
           author
         }
+        ... on QuoteSearchHit {
+          id
+          memberId
+          ssn
+          fullName
+          street
+          postalCode
+          city
+        }
       }
     }
   }
 `
 
-export interface UseSearchResult {
-  hits: SearchQuery['search']
+interface GenericSearchResult<T> {
+  highlights: SearchResultHighlight[]
+  hit: T
+}
+
+export interface UseSearchResult<T> {
+  hits: GenericSearchResult<T>[]
   loading: boolean
   search: (options?: SearchQueryOptions) => void
   fetchMore: (amount?: number, options?: SearchQueryOptions) => void
@@ -42,23 +59,25 @@ export interface UseSearchResult {
 
 type SearchQueryOptions = Omit<SearchQueryVariables, 'query'>
 
-export const useSearch = (
+export const useSearch = <T extends SearchHit>(
   query: string,
   baseOptions?: SearchQueryOptions,
-): UseSearchResult => {
-  const [result, setResult] = useState<SearchQuery['search']>([])
-  const [search, { loading, refetch, data }] = useSearchLazyQuery()
+): UseSearchResult<T> => {
+  const [result, setResult] = useState<GenericSearchResult<T>[]>([])
+  const [search, { loading, refetch, data }] = useSearchLazyQuery({
+    fetchPolicy: 'no-cache',
+  })
 
   const getOptions = (options?: SearchQueryOptions): SearchQueryOptions => ({
     from: options?.from ?? baseOptions?.from,
     size: options?.size ?? baseOptions?.size,
-    type: options?.type ?? baseOptions?.type ?? 'ALL',
+    type: options?.type ?? baseOptions?.type ?? 'MEMBERS',
   })
 
   useEffect(() => {
     if (data?.search) {
-      PushUserAction('members', 'search', null, 'new')
-      setResult(data.search)
+      PushUserAction(baseOptions?.type ?? 'MEMBERS', 'search', null, 'new')
+      setResult(data.search as GenericSearchResult<T>[])
     }
   }, [data])
 

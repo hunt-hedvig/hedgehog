@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSearch } from 'portals/hope/common/hooks/use-search'
 import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
-import { SearchInput } from 'portals/hope/features/search/SearchInput'
+import { SearchInput } from 'portals/hope/features/search/components/SearchInput'
 import {
   Button,
   fadeIn,
   Flex,
   MainHeadline,
   Spacing,
+  StandaloneMessage,
   Table,
   TableBody,
   TableHeader,
@@ -18,24 +19,10 @@ import { MemberSuggestions } from 'portals/hope/features/members-search/componen
 import styled from '@emotion/styled'
 import { MemberHitRow } from 'portals/hope/features/search/members/components/MemberHitRow'
 import { useNameAutoComplete } from 'portals/hope/features/search/members/hooks/use-name-autocomplete'
-
-const Instructions = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 1rem;
-  padding-top: 2rem;
-
-  code {
-    background: ${({ theme }) => theme.backgroundTransparent};
-    padding: 1px 2px;
-    border-radius: 0.25rem;
-  }
-
-  opacity: 0;
-  animation: ${fadeIn(0.3)} 1000ms forwards;
-  animation-delay: 500ms;
-`
+import { SearchCategoryButtons } from 'portals/hope/features/search/components/SearchCategoryButtons'
+import { useHistory } from 'react-router'
+import { Instructions } from 'portals/hope/features/search/components/Instructions'
+import { MemberSearchHit } from 'types/generated/graphql'
 
 const MemberSuggestionsWrapper = styled(Instructions)`
   padding-top: 20vh;
@@ -46,18 +33,32 @@ const MemberSuggestionsWrapper = styled(Instructions)`
 `
 
 export const MemberSearch: React.FC = () => {
+  const history = useHistory()
   const [query, setQuery] = useState('')
-  const { hits, loading, search, fetchMore } = useSearch(query)
+  const [hasSearched, setHasSearched] = useState(false)
+  const { hits, loading, search, fetchMore } = useSearch<MemberSearchHit>(query)
   const { memberHistory } = useMemberHistory()
   const { suggestionString } = useNameAutoComplete(query)
+
+  useEffect(() => {
+    setHasSearched(false)
+  }, [query])
 
   return (
     <>
       <SearchInput
         onChange={(value) => setQuery(value)}
-        onSearch={() => search()}
+        onSearch={() => {
+          search()
+          setHasSearched(true)
+        }}
         loading={loading}
         suggestion={suggestionString}
+      />
+
+      <SearchCategoryButtons
+        category="members"
+        onChange={(category) => history.push(`/search/${category}`)}
       />
 
       <Spacing top="large" />
@@ -78,19 +79,22 @@ export const MemberSearch: React.FC = () => {
           </TableBody>
         </Table>
       )}
-      <Spacing top="medium" />
+      {hits.length === 0 && query && hasSearched && (
+        <StandaloneMessage>No results</StandaloneMessage>
+      )}
       {hits.length !== 0 && hits.length >= 10 && (
-        <Flex justify="center">
-          <Button
-            disabled={loading}
-            variant="tertiary"
-            onClick={() => {
-              fetchMore()
-            }}
-          >
-            Show more
-          </Button>
-        </Flex>
+        <>
+          <Spacing top="medium" />
+          <Flex justify="center">
+            <Button
+              disabled={loading}
+              variant="tertiary"
+              onClick={() => fetchMore()}
+            >
+              Show more
+            </Button>
+          </Flex>
+        </>
       )}
       {hits.length === 0 && !query && (
         <div>
@@ -102,7 +106,8 @@ export const MemberSearch: React.FC = () => {
               <code>name</code>, <code>member ID</code>, <code>SSN</code>,{' '}
               <code>email</code>, <code>phone</code>, <code>claim notes</code>{' '}
               <br />
-              <code>street</code>, <code>city</code>, <code>messages</code>
+              <code>street</code>, <code>postal code</code>, <code>city</code>,{' '}
+              <code>messages</code>
             </div>
             {query && (
               <ExtraInstruction>Press enter to search</ExtraInstruction>

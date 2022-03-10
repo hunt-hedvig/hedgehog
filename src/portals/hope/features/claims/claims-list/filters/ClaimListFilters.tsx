@@ -23,7 +23,11 @@ import {
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { numberMemberGroupsOptions } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
-import { Market, MarketFlags } from 'portals/hope/features/config/constants'
+import {
+  Market,
+  MarketFlags,
+  MemberGroups,
+} from 'portals/hope/features/config/constants'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
@@ -131,12 +135,6 @@ export const LabelWithPopover: React.FC<{ label: string; popover: string }> = ({
     </Popover>
   </StyledLabel>
 )
-
-export enum FilterGroupState {
-  First,
-  Second,
-  Third,
-}
 
 interface ClaimListFiltersProps extends React.HTMLAttributes<HTMLDivElement> {
   date: string | null
@@ -431,7 +429,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
               {...navigation}
             >
               <Checkbox
-                label={FilterGroupState[filterNumber]}
+                label={Object.keys(MemberGroups).find(
+                  (_, index) => index === filterNumber,
+                )}
                 checked={settingExist(
                   UserSettingKey.MemberGroupsFilter,
                   filterNumber,

@@ -5,11 +5,14 @@ import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 import {
   complexityIcons,
   FilterElement,
-  FilterGroupState,
   FilterWrapper,
   LabelWithPopover,
 } from 'portals/hope/features/claims/claims-list/filters/ClaimListFilters'
-import { Market, MarketFlags } from 'portals/hope/features/config/constants'
+import {
+  Market,
+  MarketFlags,
+  MemberGroups,
+} from 'portals/hope/features/config/constants'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage'
 import { MemberGroupColorBadge } from 'portals/hope/features/questions/MemberGroupColorBadge'
@@ -274,7 +277,9 @@ export const ClaimListTemplateFilters: React.FC<
                 {...navigation}
               >
                 <Checkbox
-                  label={FilterGroupState[filterNumber]}
+                  label={Object.keys(MemberGroups).find(
+                    (_, index) => index === filterNumber,
+                  )}
                   checked={filterExists(
                     filterNumber,
                     'filterSelectedMemberGroups',
