@@ -144,10 +144,6 @@
     "build-storybook": "build-storybook"
   },
   "peerDependencies": {
-    "apollo-client": "^2.3.8",
     "graphql": "^0.13.0"
-  },
-  "resolutions": {
-    "react-month-picker-input/webpack-dev-server": "3.9.0"
   }
 }
