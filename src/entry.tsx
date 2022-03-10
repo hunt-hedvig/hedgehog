@@ -2,7 +2,6 @@ import { ApolloProvider } from '@apollo/client'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import React from 'react'
 import { CookiesProvider } from 'react-cookie'
-import ReactDOM from 'react-dom'
 import { client } from 'apollo/client'
 import { app } from 'portals'
 import { Global } from '@emotion/react'
@@ -12,6 +11,7 @@ import { useAuthenticate } from 'auth/use-authenticate'
 import { Route, Router, Switch } from 'react-router'
 import { PortalsPage } from 'auth/PortalsPage'
 import { Spinner, StandaloneMessage } from '@hedvig-ui'
+import { render } from 'react-dom'
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
@@ -37,7 +37,7 @@ const App: React.FC = () => {
   return Portal ? <Portal /> : null
 }
 
-ReactDOM.render(
+render(
   <CookiesProvider>
     <Router history={history}>
       <ApolloProvider client={client}>

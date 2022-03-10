@@ -129,6 +129,6 @@ app.use(
   }),
 )
 
-const server = app.listen(getPort(), () => {
+export const server = app.listen(getPort(), () => {
   logger.info(`Server started 🚀 listening on port ${getPort()}`)
 })
