@@ -26,9 +26,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Generate GraphQL types
-        run: yarn graphql:gen
-
       - name: Lint
         run: yarn lint
 
@@ -48,9 +45,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
-
-      - name: Generate GraphQL types
-        run: yarn graphql:gen
 
       - name: Testing
         run: yarn test
@@ -72,9 +66,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Generate GraphQL types
-        run: yarn graphql:gen
-
       - name: Typechecking
         run: yarn typecheck
 
@@ -94,9 +85,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
-
-      - name: Generate GraphQL types
-        run: yarn graphql:gen
 
       - name: Build
         run: yarn build
