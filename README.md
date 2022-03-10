@@ -1,7 +1,5 @@
 # Hope
 
-[![Codefresh build status](https://g.codefresh.io/api/badges/pipeline/hedvig/Web%2Fhedgehog?type=cf-1&key=eyJhbGciOiJIUzI1NiJ9.NWVlNjk0MjRkMDJlMTUxOGI3OTQ1YTBl.n3iEbmbkeEdSMRB3wD9Cp7NfbhNuEV5yQIs-rVprniE)](https://g.codefresh.io/pipelines/edit/new/builds?id=5fb3a2b39b4e24eba071cecf&pipeline=hedgehog&projects=Web&projectId=5fa3c2982d5cdeef9964a26a)
-
 ## Debugging
 
 ### Dependencies

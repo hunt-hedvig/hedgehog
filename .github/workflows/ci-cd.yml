@@ -81,6 +81,7 @@ jobs:
   build:
     name: 'Building'
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
 
     steps:
       - name: Checkout repository
@@ -97,7 +98,6 @@ jobs:
 
       - name: Build
         run: yarn build
-        if: ${{ github.event_name == 'pull_request' }}
 
   deploy:
     name: 'Deploy to Heroku'
