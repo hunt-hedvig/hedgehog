@@ -244,6 +244,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
             focus: index === 0 ? Keys.F : undefined,
             resolve: () => {
               updateFilterHandler(UserSettingKey.ClaimStatesFilter, state)
+              return stateName
             },
             neighbors: {
               up: index ? states[index - 1] : undefined,
@@ -292,6 +293,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 UserSettingKey.ClaimComplexityFilter,
                 complexity,
               )
+              return complexityName
             },
             neighbors: {
               left: Object.keys(ClaimState)[index],
@@ -345,6 +347,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 value: option.value,
               })
               setNumberMemberGroups(option.value)
+              return `Member Groups ${option.label}`
             },
             neighbors: {
               left: complexities[
@@ -400,6 +403,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 UserSettingKey.MemberGroupsFilter,
                 filterNumber,
               )
+              return `Member Number ${filterNumber}`
             },
             neighbors: {
               left: `Member Groups ${
@@ -462,6 +466,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           const navigation = register(marketName, {
             resolve: () => {
               updateFilterHandler(UserSettingKey.MarketFilter, market)
+              return marketName
             },
             neighbors: {
               left: `Member Number ${
