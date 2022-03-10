@@ -9,6 +9,5 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css)$': '<rootDir>/test/__mocks__/styleMock.ts',
   },
-  setupFiles: ['<rootDir>/test/test-setup-enzyme.ts'],
   testEnvironment: 'jsdom',
 }
