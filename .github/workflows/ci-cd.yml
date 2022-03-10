@@ -95,9 +95,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Generate GraphQL types
-        run: yarn graphql:gen
-
       - name: Build
         run: yarn build
         if: ${{ github.event_name == 'pull_request' }}
