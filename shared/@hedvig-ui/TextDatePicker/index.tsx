@@ -17,9 +17,9 @@ const Wrapper = styled.div`
   position: relative;
 `
 
-const DatePickerWrapper = styled.div`
+const DatePickerWrapper = styled.div<{ position?: 'top' | 'bottom' }>`
   position: absolute;
-  top: 45px;
+  ${({ position }) => (position === 'top' ? 'bottom: 40px' : 'top: 45px')};
   z-index: 1000;
 `
 
@@ -60,13 +60,14 @@ const InlineDatePicker: React.FC<{
   maxDate?: Date
   minDate?: Date
   showTimePicker?: boolean
-}> = ({ setValue, onClose, maxDate, minDate, showTimePicker }) => {
+  position?: 'top' | 'bottom'
+}> = ({ setValue, onClose, maxDate, minDate, showTimePicker, position }) => {
   const pickerRef = React.useRef<HTMLDivElement>(null)
 
   useClickOutside(pickerRef, () => onClose())
 
   return (
-    <DatePickerWrapper ref={pickerRef}>
+    <DatePickerWrapper ref={pickerRef} position={position}>
       <FadeIn duration={250}>
         <DatePicker
           inline
@@ -91,6 +92,7 @@ interface TextDatePickerProps extends Omit<InputProps, 'value' | 'onChange'> {
   minDate?: Date
   showTimePicker?: boolean
   withCurrentTime?: boolean
+  position?: 'top' | 'bottom'
 }
 
 type TextDatePickerChangeEvent =
@@ -108,6 +110,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   minDate,
   showTimePicker,
   withCurrentTime,
+  position,
   ...props
 }) => {
   const [showOldDatepicker, setShowOldDatepicker] = React.useState(false)
@@ -206,6 +209,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
           maxDate={maxDate}
           minDate={minDate}
           showTimePicker={showTimePicker}
+          position={position}
         />
       )}
     </Wrapper>
