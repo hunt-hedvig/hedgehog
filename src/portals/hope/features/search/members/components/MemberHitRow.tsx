@@ -6,16 +6,8 @@ import {
   MemberSearchHit,
   SearchQuery,
 } from 'types/generated/graphql'
-import {
-  Flex,
-  Loadable,
-  Placeholder,
-  Popover,
-  TableColumn,
-  TableRow,
-} from '@hedvig-ui'
+import { Flex, Loadable, Placeholder, TableColumn, TableRow } from '@hedvig-ui'
 import { getMemberFlag, MemberAge } from 'portals/hope/features/member/utils'
-import parse from 'html-react-parser'
 import formatDate from 'date-fns/format'
 import { parseISO } from 'date-fns'
 import {
@@ -93,27 +85,7 @@ const convertTagText = (text: string) => {
 const SearchHitTag: React.FC<{
   highlight: ArrayElement<SearchQuery['search'][0]['highlights']>
 }> = ({ highlight }) => {
-  const contents = parse(
-    [...new Set(highlight.values)]
-      .reduce<string>((acc, value) => acc + value + '<br/>', '')
-      .replaceAll('<em>', '<b>')
-      .replaceAll('</em>', '</b>'),
-  )
-
-  return (
-    <Tag>
-      <Popover
-        style={{
-          maxWidth: '60rem',
-          minWidth: '15rem',
-          overflowWrap: 'break-word',
-        }}
-        contents={contents}
-      >
-        {convertTagText(highlight.field).replaceAll('.', ', ')}
-      </Popover>
-    </Tag>
-  )
+  return <Tag>{convertTagText(highlight.field).replaceAll('.', ', ')}</Tag>
 }
 
 export const MemberHitRow: React.FC<{
