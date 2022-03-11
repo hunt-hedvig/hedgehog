@@ -34,8 +34,6 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
 }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
 
-  console.log(templateId)
-
   const filterExists = (
     state: string | number,
     field: keyof ClaimsFiltersType,
