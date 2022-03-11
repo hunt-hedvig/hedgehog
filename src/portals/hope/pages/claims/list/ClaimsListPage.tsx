@@ -2,13 +2,13 @@ import styled from '@emotion/styled'
 import { FadeIn, MainHeadline } from '@hedvig-ui'
 import { ClaimsTemplates } from 'portals/hope/features/claims/claim-templates/ClaimsTemplatesList'
 import { ClaimListFilters } from 'portals/hope/features/claims/claims-list/filters/ClaimListFilters'
-import { ClaimListTemplateFilters } from 'portals/hope/features/claims/claims-list/filters/ClaimListTemplateFilters'
 import { LargeClaimsList } from 'portals/hope/features/claims/claims-list/LargeClaimsList'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
 import { useTemplateClaims } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
+import { ClaimTemplateFilters } from 'portals/hope/features/claims/claim-templates/components/ClaimTemplateFilters'
 
 const ListPage = styled.div`
   display: flex;
@@ -85,7 +85,7 @@ const ClaimsListPage: Page<
       />
 
       {templateActive && selectedTemplate ? (
-        <ClaimListTemplateFilters
+        <ClaimTemplateFilters
           templateId={selectedTemplate}
           template={localFilter}
           editTemplate={editTemplate}

@@ -68,7 +68,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
           }}
         />
 
-        <ClaimFilters filters={filters} setFilters={setFilters} />
+        <ClaimFilters template={filters} editTemplate={setFilters} />
 
         <Button onClick={createFilterHandler}>
           {!editableTemplate ? 'Create' : 'Save'}
