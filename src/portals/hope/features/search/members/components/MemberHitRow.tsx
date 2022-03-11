@@ -15,7 +15,7 @@ import {
   TableRow,
 } from '@hedvig-ui'
 import { getMemberFlag, MemberAge } from 'portals/hope/features/member/utils'
-//import parse from 'html-react-parser'
+import parse from 'html-react-parser'
 import formatDate from 'date-fns/format'
 import { parseISO } from 'date-fns'
 import {
@@ -93,14 +93,14 @@ const convertTagText = (text: string) => {
 const SearchHitTag: React.FC<{
   highlight: ArrayElement<SearchQuery['search'][0]['highlights']>
 }> = ({ highlight }) => {
-  /*
   const contents = parse(
     [...new Set(highlight.values)]
-      .reduce<string>((acc, value) => acc + value + '<br/>', '')
-      .replaceAll('<em>', '<b>')
-      .replaceAll('</em>', '</b>'),
+      ?.reduce<string>((acc, value) => acc + value + '<br/>', '')
+      ?.replaceAll('<em>', '<b>')
+      ?.replaceAll('</em>', '</b>') ?? '',
   )
-   */
+
+  console.warn(contents)
 
   return (
     <Tag>
@@ -110,7 +110,7 @@ const SearchHitTag: React.FC<{
           minWidth: '15rem',
           overflowWrap: 'break-word',
         }}
-        contents={''}
+        contents={contents}
       >
         {convertTagText(highlight.field).replaceAll('.', ', ')}
       </Popover>
