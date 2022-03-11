@@ -15,6 +15,7 @@ import {
 } from 'types/generated/graphql'
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`
   query GetTemplates($locales: [String!]!) {
@@ -227,6 +228,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         loading: 'Creating template',
         success: () => {
           actionOnSuccess?.()
+          PushUserAction('template', 'created', null, null)
           return 'Template created'
         },
         error: (err) => {
@@ -307,7 +309,10 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       }),
       {
         loading: 'Updating template',
-        success: 'Template updated',
+        success: () => {
+          PushUserAction('template', 'updated', null, null)
+          return 'Template updated'
+        },
         error: 'Could not update template',
       },
     )
@@ -373,7 +378,10 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       }),
       {
         loading: 'Deleting template',
-        success: 'Template deleted',
+        success: () => {
+          PushUserAction('template', 'deleted', null, null)
+          return 'Template deleted'
+        },
         error: 'Could not delete template',
       },
     )
@@ -400,7 +408,10 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         }),
         {
           loading: 'Pinning template',
-          success: 'Template pinned',
+          success: () => {
+            PushUserAction('template', 'pinned', null, null)
+            return 'Template pinned'
+          },
           error: 'Could not pin template',
         },
       )
