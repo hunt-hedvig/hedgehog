@@ -39,7 +39,7 @@ gql`
 `
 
 interface UseWhitelistMemberResult {
-  whitelist: (memberId: string) => Promise<void>
+  whitelist: () => Promise<void>
   eligible: boolean
 }
 

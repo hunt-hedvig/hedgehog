@@ -8,7 +8,7 @@ import { useWhitelistMember } from 'portals/hope/common/hooks/use-whitelist-memb
 export const WhitelistMemberButton: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
-  const { whitelist } = useWhitelistMember()
+  const { whitelist } = useWhitelistMember(memberId)
   const [memberName] = useGetMemberName(memberId)
   const { confirm } = useConfirmDialog()
 
@@ -18,7 +18,7 @@ export const WhitelistMemberButton: React.FC<{
         confirm(
           `Are you sure you want to whitelist ${memberName?.firstName} ${memberName?.lastName}?`,
         ).then(() =>
-          toast.promise(whitelist(memberId), {
+          toast.promise(whitelist(), {
             loading: 'Whitelisting member',
             success: 'Member whitelisted',
             error: 'Could not whitelist member',
