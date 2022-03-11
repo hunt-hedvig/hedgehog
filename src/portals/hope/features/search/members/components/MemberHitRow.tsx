@@ -70,6 +70,7 @@ const MemberAgeWrapper = styled.span`
 const Tag = styled.div`
   background-color: ${({ theme }) =>
     chroma(theme.semiStrongForeground).brighten(2.25).alpha(0.5).hex()};
+
   color: ${({ theme }) => theme.semiStrongForeground};
 
   padding: 0.15rem 0.3rem;
