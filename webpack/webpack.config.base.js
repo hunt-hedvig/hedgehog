@@ -40,14 +40,14 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
           loader: 'esbuild-loader',
           options: {
             loader: 'tsx',
-            target: 'es2017',
+            target: 'es2015',
           },
         },
         {
           test: /\.m?js/,
           resolve: {
             fullySpecified: false,
-            unsafeCache: true,
+            unsafeCache: false,
           },
         },
       ],
@@ -61,7 +61,7 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
       moduleIds: 'named',
       minimizer: [
         new ESBuildMinifyPlugin({
-          target: 'es2017',
+          target: 'es2015',
         }),
       ],
     },
