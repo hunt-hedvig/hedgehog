@@ -93,14 +93,7 @@ const convertTagText = (text: string) => {
 const SearchHitTag: React.FC<{
   highlight: ArrayElement<SearchQuery['search'][0]['highlights']>
 }> = ({ highlight }) => {
-  const contents = parse(
-    [...new Set(highlight.values)]
-      ?.reduce<string>((acc, value) => acc + value + '<br/>', '')
-      ?.replaceAll('<em>', '<b>')
-      ?.replaceAll('</em>', '</b>') ?? '',
-  )
-
-  console.warn(contents)
+  const contents = parse('<b>test</b>')
 
   return (
     <Tag>
