@@ -1,5 +1,0 @@
-mutation whitelistMember($memberId: ID!) {
-  whitelistMember(memberId: $memberId) {
-    memberId
-  }
-}
