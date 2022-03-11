@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 
 const DatePickerWrapper = styled.div<{ position?: 'top' | 'bottom' }>`
   position: absolute;
-  ${({ position }) => (position === 'top' ? 'bottom: 45px' : 'top: 45px')};
+  ${({ position }) => (position === 'top' ? 'bottom: 40px' : 'top: 45px')};
   z-index: 1000;
 `
 
