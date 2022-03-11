@@ -93,7 +93,14 @@ const convertTagText = (text: string) => {
 const SearchHitTag: React.FC<{
   highlight: ArrayElement<SearchQuery['search'][0]['highlights']>
 }> = ({ highlight }) => {
-  const contents = parse('<b>test</b>')
+  const contents = parse(
+    [...new Set(highlight.values)]
+      .reduce<string>((acc, value) => acc + value + '<br/>', '')
+      .replaceAll('<em>', '<b>')
+      .replaceAll('</em>', '</b>'),
+  )
+
+  console.warn(<div>{contents}</div>)
 
   return (
     <Tag>
@@ -103,7 +110,7 @@ const SearchHitTag: React.FC<{
           minWidth: '15rem',
           overflowWrap: 'break-word',
         }}
-        contents={contents}
+        contents={''}
       >
         {convertTagText(highlight.field).replaceAll('.', ', ')}
       </Popover>
