@@ -11,10 +11,12 @@ interface Draft {
 export const useDraft = (id: string): [string, (draft: string) => void] => {
   const hour = 60 * 60 * 1000
   const ttl = 24 * hour
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const [drafts, setDrafts] = useDraftState<Record<string, Draft>>({})
 
   useEffect(() => {
-    setDrafts((prevDrafts) => {
+    setDrafts((prevDrafts: { [x: string]: Draft }) => {
       const now = new Date().getTime()
 
       return Object.keys(prevDrafts)
@@ -34,7 +36,7 @@ export const useDraft = (id: string): [string, (draft: string) => void] => {
   }
 
   const update = (draft: string) => {
-    setDrafts((prevDrafts) => {
+    setDrafts((prevDrafts: Record<string, Draft>) => {
       if (draft) {
         return {
           ...prevDrafts,
@@ -48,5 +50,7 @@ export const useDraft = (id: string): [string, (draft: string) => void] => {
     })
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return [drafts[id]?.content ?? '', update]
 }

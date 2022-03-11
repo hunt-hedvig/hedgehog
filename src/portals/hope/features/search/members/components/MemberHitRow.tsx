@@ -100,8 +100,6 @@ const SearchHitTag: React.FC<{
       .replaceAll('</em>', '</b>'),
   )
 
-  console.warn(<div>{contents}</div>)
-
   return (
     <Tag>
       <Popover
@@ -110,7 +108,7 @@ const SearchHitTag: React.FC<{
           minWidth: '15rem',
           overflowWrap: 'break-word',
         }}
-        contents={''}
+        contents={contents}
       >
         {convertTagText(highlight.field).replaceAll('.', ', ')}
       </Popover>
