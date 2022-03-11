@@ -5,7 +5,7 @@ import {
   QuoteSearchHit,
   useQuoteSearchQuoteQuery,
 } from 'types/generated/graphql'
-import { Button, Flex, Label, Loadable } from '@hedvig-ui'
+import { Flex, Label, Loadable } from '@hedvig-ui'
 import gql from 'graphql-tag'
 import formatDate from 'date-fns/format'
 import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
@@ -26,14 +26,28 @@ const Wrapper = styled.div`
     color: ${({ theme }) => theme.semiStrongForeground};
   }
 
+  .type {
+    color: ${({ theme }) =>
+      chroma(theme.semiStrongForeground).brighten(0.5).hex()};
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+
+  .type-placeholder {
+    color: ${({ theme }) =>
+      chroma(theme.semiStrongForeground).brighten(1).hex()};
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+
   .name {
     font-size: 1.6rem;
-    margin-bottom: 0;
+    margin-bottom: 1rem;
   }
 
   .name-placeholder {
     font-size: 1.6rem;
-    margin-bottom: 0;
+    margin-bottom: 1rem;
     color: ${({ theme }) =>
       chroma(theme.semiStrongForeground).brighten(1.75).hex()};
   }
@@ -68,6 +82,7 @@ gql`
       createdAt
       memberId
       state
+      productType
     }
   }
 `
@@ -88,6 +103,7 @@ export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
   const currency = data?.quote?.currency
   const createdAt = data?.quote?.createdAt
   const state = data?.quote?.state
+  const productType = data?.quote?.productType
 
   const geoInfo = [quote?.street, quote?.city, quote?.postalCode].filter(
     (q) => !!q,
@@ -97,6 +113,13 @@ export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
     <Wrapper>
       <Flex justify="space-between">
         <Flex direction="column">
+          {productType ? (
+            <div className="type">
+              {convertEnumOrSentenceToTitle(productType)}
+            </div>
+          ) : (
+            <div className="type-placeholder">No product type</div>
+          )}
           {quote?.fullName && quote?.fullName !== ' ' ? (
             <div className="name">{quote?.fullName}</div>
           ) : (
@@ -171,7 +194,6 @@ export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
               {price ?? '123'} {currency ?? 'ABC'}
             </div>
           </Loadable>
-          <Button variant="secondary">Details</Button>
         </Flex>
       </Flex>
     </Wrapper>
