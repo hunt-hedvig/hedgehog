@@ -56,15 +56,7 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
     context,
     stats: 'errors-only',
     output,
-    plugins: [
-      /*
-      new webpack.DllReferencePlugin({
-        context: __dirname,
-        manifest: path.join(__dirname, '../build', 'vendor-manifest.json'),
-      }),
-      */
-      ...(plugins || []),
-    ],
+    plugins: [...(plugins || [])],
     optimization: {
       moduleIds: 'named',
       minimizer: [
