@@ -23,14 +23,14 @@ const PopoverWrapper = styled.div<{ disableHover: boolean }>`
   position: relative;
   display: inline-flex;
 
-  ${Contents} {
+  div:first-of-type {
     display: none;
   }
 
   ${({ disableHover }) =>
     !disableHover &&
     css`
-      &:hover ${Contents} {
+      &:hover div:first-of-type {
         display: block;
       }
     `};

@@ -1,10 +1,7 @@
-const threadLoader = require('thread-loader')
 const path = require('path')
-const babelrc = require('../.babelrc')
-
-threadLoader.warmup({}, ['babel-loader'])
 
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const { ESBuildMinifyPlugin } = require('esbuild-loader')
 
 const smp = new SpeedMeasurePlugin()
 
@@ -25,18 +22,26 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
       rules: [
         {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader'],
+          use: [
+            'style-loader',
+            'css-loader',
+            {
+              loader: 'esbuild-loader',
+              options: {
+                loader: 'css',
+                minify: true,
+              },
+            },
+          ],
         },
         {
           test: /\.(tsx?|js)$/,
           include: /(src|shared)/,
-          use: [
-            'thread-loader',
-            {
-              loader: 'babel-loader',
-              options: { ...babelrc, cacheDirectory: true },
-            },
-          ],
+          loader: 'esbuild-loader',
+          options: {
+            loader: 'tsx',
+            target: 'es2017',
+          },
         },
         {
           test: /\.m?js/,
@@ -51,17 +56,14 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
     context,
     stats: 'errors-only',
     output,
-    plugins: [
-      /*
-      new webpack.DllReferencePlugin({
-        context: __dirname,
-        manifest: path.join(__dirname, '../build', 'vendor-manifest.json'),
-      }),
-      */
-      ...(plugins || []),
-    ],
+    plugins: [...(plugins || [])],
     optimization: {
       moduleIds: 'named',
+      minimizer: [
+        new ESBuildMinifyPlugin({
+          target: 'es2017',
+        }),
+      ],
     },
     bail: true,
     experiments: {

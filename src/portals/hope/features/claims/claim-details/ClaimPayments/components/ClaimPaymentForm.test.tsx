@@ -1,7 +1,5 @@
 import { MockedProvider } from '@apollo/client/testing'
 import { sleep, tickAsync } from '@hedvig-ui/utils/sleep'
-import { mount } from 'enzyme'
-import { PaymentConfirmationModal } from 'portals/hope/features/claims/claim-details/ClaimPayments/components/PaymentConfirmationModal'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import {
@@ -11,6 +9,7 @@ import {
   MemberPaymentInformationDocument,
 } from 'types/generated/graphql'
 import { ClaimPaymentForm } from './ClaimPaymentForm'
+import { fireEvent, render } from '@testing-library/react'
 
 const PaymentInformationMock = {
   request: {
@@ -49,7 +48,7 @@ const PaymentInformationMock = {
 }
 
 it("doesn't submit empty form", async () => {
-  const wrapper = mount(
+  const wrapper = render(
     <MockedProvider mocks={[PaymentInformationMock]}>
       <ClaimPaymentForm claimId="abc123" />
     </MockedProvider>,
@@ -57,14 +56,12 @@ it("doesn't submit empty form", async () => {
 
   await act(() => tickAsync())
 
-  wrapper.update()
-
-  await act(() => {
-    wrapper.find('FormProvider').simulate('submit')
+  await act(async () => {
+    wrapper.getByText('Create payment').click()
     return tickAsync()
   })
 
-  expect(wrapper.exists(PaymentConfirmationModal)).toBe(false)
+  expect(wrapper.queryByText('To perform the payment')).toBeNull()
 })
 
 it('submits valid form with confirmation', async () => {
@@ -85,7 +82,7 @@ it('submits valid form with confirmation', async () => {
     paidAt: null,
   }
 
-  const wrapper = mount(
+  const wrapper = render(
     <MockedProvider
       mocks={[
         PaymentInformationMock,
@@ -117,38 +114,39 @@ it('submits valid form with confirmation', async () => {
 
   await act(() => tickAsync())
 
-  wrapper.update()
-
   await act(async () => {
-    wrapper.find('input[name="amount"]').simulate('change', {
+    const amountInput = wrapper.getByPlaceholderText('Payout amount')
+    const deductibleInput = wrapper.getByPlaceholderText('Deductible')
+    const noteInput = wrapper.getByPlaceholderText('Note')
+
+    fireEvent.change(amountInput, {
       target: { value: '100', name: 'amount' },
     })
-    wrapper.find('input[name="deductible"]').simulate('change', {
+
+    fireEvent.change(deductibleInput, {
       target: { value: '10', name: 'deductible' },
     })
-    wrapper.find('input[name="note"]').simulate('change', {
+
+    fireEvent.change(noteInput, {
       target: { value: 'test value with more than 5 chars', name: 'note' },
     })
 
     await tickAsync()
 
-    wrapper.find('form').simulate('submit', {})
+    wrapper.getByText('Create payment').click()
     await tickAsync()
   })
 
-  wrapper.update()
-
-  expect(wrapper.exists(PaymentConfirmationModal)).toBe(true)
+  expect(wrapper.queryByText('To perform the payment')).toBeDefined()
 
   await act(async () => {
-    wrapper
-      .find(PaymentConfirmationModal)
-      .find('input[name="confirmation"]')
-      .simulate('change', { target: { value: '100' } })
+    fireEvent.change(wrapper.getByPlaceholderText('Amount'), {
+      target: { value: '100' },
+    })
 
     await tickAsync()
 
-    wrapper.find(PaymentConfirmationModal).prop('onSubmit')()
+    wrapper.getByText('Confirm').click()
 
     await tickAsync()
   })

@@ -131,22 +131,8 @@ export const TemplateForm: React.FC<
     return messages
   }
 
-  const expirationDateValid = () => {
-    let isValid
-
-    if (expirationDate) {
-      setTimeout(() => {
-        isValid = new Date(expirationDate) < new Date()
-      }, 0)
-    } else {
-      isValid = true
-    }
-
-    return isValid
-  }
-
   const createHandler = (values: FieldValues) => {
-    if (!onCreate || !expirationDateValid()) {
+    if (!onCreate) {
       return
     }
 
@@ -161,7 +147,7 @@ export const TemplateForm: React.FC<
   }
 
   const editHandler = (values: FieldValues) => {
-    if (isCreating || !template || !onEdit || !expirationDateValid()) {
+    if (isCreating || !template || !onEdit) {
       return
     }
 
@@ -311,6 +297,7 @@ export const TemplateForm: React.FC<
           <Field>
             <Label>This template will be deleted after</Label>
             <TextDatePicker
+              position="top"
               minDate={new Date()}
               value={formatDate(new Date(expirationDate), 'yyyy-MM-dd')}
               onChange={(value) => {

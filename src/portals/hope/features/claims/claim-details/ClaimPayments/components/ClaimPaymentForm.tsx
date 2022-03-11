@@ -137,6 +137,13 @@ export const ClaimPaymentForm: React.FC<{
     }
   }, [focus])
 
+  const claim = data?.claim
+  const member = data?.claim?.member
+
+  const isPaymentActivated =
+    !!member?.directDebitStatus?.activated ||
+    !!member?.payoutMethodStatus?.activated
+
   useEffect(() => {
     if (isExGratia && form.getValues().type === ClaimPaymentType.Automatic) {
       form.setValue('type', undefined)
@@ -157,13 +164,6 @@ export const ClaimPaymentForm: React.FC<{
   ) {
     return null
   }
-
-  const { claim } = data
-  const { member } = claim
-
-  const isPaymentActivated =
-    !!member.directDebitStatus?.activated ||
-    !!member.payoutMethodStatus?.activated
 
   const categoryOptions: CategoryOptionsType[] = [
     ...Object.keys(ClaimPaymentType).map((paymentType, index) => ({

@@ -18,6 +18,7 @@ export const useGetMemberName = (memberId: string): GetPersonReturnTuple => {
     variables: {
       memberId,
     },
+    fetchPolicy: 'cache-first',
   })
   const name = queryResult.data?.member as MemberName | undefined
   return [name, queryResult]

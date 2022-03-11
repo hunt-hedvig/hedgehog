@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import { Button, ButtonsGroup, Input, Modal, Paragraph } from '@hedvig-ui'
+import { Button, ButtonsGroup, Input, Modal } from '@hedvig-ui'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { Market } from 'portals/hope/features/config/constants'
 import React, { useState } from 'react'
 
-const Explanation = styled(Paragraph)`
+const Explanation = styled.p`
   margin-top: 2em;
   font-size: 0.9em;
   color: ${({ theme }) => theme.semiStrongForeground};
