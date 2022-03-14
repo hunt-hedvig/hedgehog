@@ -337,7 +337,7 @@ export const VerticalMenu: React.FC = () => {
                   />
                 )
               })}
-              {checkedIn && (
+              {checkedIn && !isCollapsed && !shouldAlwaysCollapse && (
                 <CheckedInWrapper>
                   <Flex direction="column">
                     <Flex align="center" justify="space-between">
