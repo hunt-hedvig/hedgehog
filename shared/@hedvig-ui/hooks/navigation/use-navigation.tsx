@@ -48,10 +48,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   const handleKeydown = (e: KeyboardEvent) => {
-    if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) {
-      return
-    }
-
     if (!(e.target instanceof Node)) {
       return
     }
@@ -63,8 +59,19 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
     Object.keys(registry.current).some((name) => {
       const options = registry.current[name]
 
+      if (
+        !options.metaKey &&
+        (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey)
+      ) {
+        return
+      }
+
       if (!options?.focus) {
         return false
+      }
+
+      if (options.metaKey && !e[options.metaKey]) {
+        return
       }
 
       if (isPressing(e, options.focus)) {
@@ -271,6 +278,7 @@ interface UseNavigationRegisterOptions {
     direction: 'up' | 'down' | 'left' | 'right',
   ) => void
   focus?: Key
+  metaKey?: 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey'
   resolve?: string | ((ref: unknown) => string | void)
   parent?: string | ((ref: unknown) => string)
   neighbors?: NodeNavigationDirections
