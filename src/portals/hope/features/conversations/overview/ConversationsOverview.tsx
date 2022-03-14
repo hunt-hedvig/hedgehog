@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Flex } from '@hedvig-ui'
+import { FadeDirection, FadeType, Flex } from '@hedvig-ui'
 import { Button } from '@hedvig-ui/Button/button'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
@@ -11,6 +11,7 @@ import {
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
 import { ConversationItem } from './ConversationItem'
 
@@ -31,7 +32,8 @@ export const ConversationsOverview: React.FC<{
   currentQuestionOrder: number
   filters: ReadonlyArray<FilterStateType>
   setFilters: (filter: FilterStateType, settingField?: UserSettingKey) => void
-}> = ({ filteredGroups, currentMemberId, filters, setFilters }) => {
+  fade: (direction: FadeDirection, type: FadeType) => Promise<void>
+}> = ({ filteredGroups, currentMemberId, filters, setFilters, fade }) => {
   const { settings, updateSetting } = useMe()
   const history = useHistory()
   const { confirm } = useConfirmDialog()
@@ -44,6 +46,7 @@ export const ConversationsOverview: React.FC<{
     }`,
     [filteredGroups],
   )
+
   useEffect(() => {
     if (
       !settings[UserSettingKey.FeatureFlags] ||
@@ -56,6 +59,8 @@ export const ConversationsOverview: React.FC<{
       history.go(0)
     }
   }, [])
+
+  const { register } = useNavigation()
 
   return (
     <Flex direction="column">
@@ -99,13 +104,44 @@ export const ConversationsOverview: React.FC<{
         </Flex>
 
         <ConversationWrapper>
-          {filteredGroups.map((group) => (
-            <ConversationItem
-              key={group.id}
-              group={group}
-              currentMemberId={currentMemberId}
-            />
-          ))}
+          {filteredGroups.map((group, index) => {
+            const navigation = register(
+              group.memberId,
+              {
+                autoFocus: index === 0,
+                resolve: 'Conversation Chat',
+                neighbors: {
+                  up: index ? filteredGroups[index - 1].memberId : undefined,
+                  down:
+                    index < filteredGroups.length - 1
+                      ? filteredGroups[index + 1].memberId
+                      : undefined,
+                },
+                onNavigation: (nextMemberId, direction) => {
+                  if (direction === 'up' || direction === 'down') {
+                    fade(direction, 'out').then(() => {
+                      history.push(`/conversations/${nextMemberId}`)
+                    })
+                  }
+                },
+              },
+              {
+                border: 'none',
+              },
+              {
+                border: 'none',
+              },
+            )
+
+            return (
+              <ConversationItem
+                key={group.id}
+                group={group}
+                currentMemberId={currentMemberId}
+                {...navigation}
+              />
+            )
+          })}
         </ConversationWrapper>
       </Flex>
     </Flex>

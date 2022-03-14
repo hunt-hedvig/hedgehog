@@ -6,10 +6,6 @@ import {
   StandaloneMessage,
   useFadeAnimation,
 } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { ConversationChat } from 'portals/hope/features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'portals/hope/features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'portals/hope/features/conversations/overview/ConversationsOverview'
@@ -52,7 +48,6 @@ const ConversationsPage: Page<
   const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const [questionGroups] = useQuestionGroups(3000)
-  const [chatFocused, setChatFocused] = useState(false)
   const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
   const { settings, updateSetting } = useMe()
 
@@ -95,9 +90,6 @@ const ConversationsPage: Page<
     }
   }
 
-  const isUpKeyPressed = useKeyIsPressed(Keys.Up)
-  const isDownKeyPressed = useKeyIsPressed(Keys.Down)
-
   const filteredGroups = useMemo(
     () =>
       filters.length > 0
@@ -112,38 +104,6 @@ const ConversationsPage: Page<
     () => filteredGroups.findIndex((group) => group.memberId === memberId),
     [filteredGroups, memberId, filters],
   )
-
-  useEffect(() => {
-    if (
-      chatFocused ||
-      (!isUpKeyPressed && !isDownKeyPressed) ||
-      !memberId ||
-      filteredGroups.length <= 1 ||
-      currentQuestionOrder === filteredGroups.length
-    ) {
-      return
-    }
-
-    if (isDownKeyPressed && currentQuestionOrder < filteredGroups.length - 1) {
-      fade('up', 'out').then(() => {
-        history.push(
-          `/conversations/${
-            filteredGroups[currentQuestionOrder + 1]?.memberId
-          }`,
-        )
-      })
-    }
-
-    if (isUpKeyPressed && currentQuestionOrder > 0) {
-      fade('down', 'out').then(() => {
-        history.push(
-          `/conversations/${
-            filteredGroups[currentQuestionOrder - 1]?.memberId
-          }`,
-        )
-      })
-    }
-  }, [isDownKeyPressed, isUpKeyPressed])
 
   useEffect(() => {
     if (!filteredGroups.length) {
@@ -171,8 +131,6 @@ const ConversationsPage: Page<
               <FadeWrapper {...fadeProps}>
                 <ConversationChat
                   memberId={memberId}
-                  onFocus={() => setChatFocused(true)}
-                  onBlur={() => setChatFocused(false)}
                   onResolve={() =>
                     fade('up', 'out').then(() => {
                       if (currentQuestionOrder === 0) {
@@ -212,6 +170,7 @@ const ConversationsPage: Page<
             currentMemberId={memberId}
             filters={filters}
             setFilters={toggleFilterHandler}
+            fade={fade}
           />
         </Wrapper>
       ) : (
@@ -226,6 +185,7 @@ const ConversationsPage: Page<
             currentMemberId={memberId}
             filters={filters}
             setFilters={toggleFilterHandler}
+            fade={fade}
           />
         </div>
       )}

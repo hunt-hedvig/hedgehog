@@ -111,14 +111,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
         return
       }
 
-      if (
-        target?.focus?.code === 'Enter' &&
-        typeof target?.resolve !== 'string'
-      ) {
-        target?.resolve(target)
-        return
-      }
-
       if (typeof target.resolve === 'string') {
         if (!validate(target.resolve)) {
           return
@@ -150,6 +142,10 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
         return
       }
 
+      if (target.onNavigation) {
+        target.onNavigation(nextCursor, 'up')
+      }
+
       setCursor(nextCursor)
       cursorRef.current = nextCursor
       return
@@ -164,6 +160,10 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (!validate(nextCursor)) {
         return
+      }
+
+      if (target.onNavigation) {
+        target.onNavigation(nextCursor, 'down')
       }
 
       setCursor(nextCursor)
@@ -182,6 +182,10 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
         return
       }
 
+      if (target.onNavigation) {
+        target.onNavigation(nextCursor, 'left')
+      }
+
       setCursor(nextCursor)
       cursorRef.current = nextCursor
       return
@@ -196,6 +200,10 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (!validate(nextCursor)) {
         return
+      }
+
+      if (target.onNavigation) {
+        target.onNavigation(nextCursor, 'right')
       }
 
       setCursor(nextCursor)
@@ -258,6 +266,10 @@ interface NodeNavigationDirections {
 
 interface UseNavigationRegisterOptions {
   autoFocus?: boolean
+  onNavigation?: (
+    nextCursor: string,
+    direction: 'up' | 'down' | 'left' | 'right',
+  ) => void
   focus?: Key
   resolve?: string | ((ref: unknown) => string | void)
   parent?: string | ((ref: unknown) => string)

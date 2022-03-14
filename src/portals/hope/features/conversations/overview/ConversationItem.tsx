@@ -64,6 +64,7 @@ interface ConversationItemProps extends React.HTMLAttributes<HTMLDivElement> {
 export const ConversationItem: React.FC<ConversationItemProps> = ({
   group,
   currentMemberId,
+  ...props
 }) => {
   const { numberMemberGroups } = useNumberMemberGroups()
 
@@ -80,6 +81,7 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
       tabIndex={0}
       onClick={() => history.push(`/conversations/${group.memberId}`)}
       selected={group.memberId === currentMemberId}
+      {...props}
     >
       <MemberName isPlaceholder={!nameAvailable}>
         {nameAvailable
