@@ -22,6 +22,7 @@ import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import chroma from 'chroma-js'
 
 const Wrapper = styled.div<{ collapsed: boolean }>`
   display: inline-block;
@@ -277,19 +278,26 @@ export const VerticalMenu: React.FC = () => {
 
             <Menu className="menu">
               {MenuItemsList.map(({ external, single, ...item }, index) => {
-                const navigation = register(item.title, {
-                  focus: index === 0 ? Keys.S : undefined,
-                  resolve: () => {
-                    item.hotkeyHandler()
+                const navigation = register(
+                  item.title,
+                  {
+                    focus: index === 0 ? Keys.S : undefined,
+                    resolve: () => {
+                      item.hotkeyHandler()
+                    },
+                    neighbors: {
+                      up: index ? MenuItemsList[index - 1].title : undefined,
+                      down:
+                        index < MenuItemsList.length - 1
+                          ? MenuItemsList[index + 1].title
+                          : undefined,
+                    },
                   },
-                  neighbors: {
-                    up: index ? MenuItemsList[index - 1].title : undefined,
-                    down:
-                      index < MenuItemsList.length - 1
-                        ? MenuItemsList[index + 1].title
-                        : undefined,
+                  {
+                    background: chroma(colorsV3.gray700).brighten(0.8).hex(),
+                    borderColor: 'transparent',
                   },
-                })
+                )
 
                 return !external ? (
                   <MenuItem

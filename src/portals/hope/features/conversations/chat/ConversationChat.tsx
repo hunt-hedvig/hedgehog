@@ -14,6 +14,7 @@ import {
 import { FileText } from 'react-bootstrap-icons'
 import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
 import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
@@ -140,10 +141,10 @@ const HintText = styled.span`
 
 export const ConversationChat: React.FC<{
   memberId: string
+  onResolve: () => void
   onFocus: () => void
   onBlur: () => void
-  onResolve: () => void
-}> = ({ memberId, onFocus, onBlur, onResolve }) => {
+}> = ({ memberId, onResolve, onFocus, onBlur }) => {
   const [message, setMessage] = useDraft(memberId)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()
@@ -163,6 +164,8 @@ export const ConversationChat: React.FC<{
   )
   const { show, selected } = useTemplateMessages()
 
+  const { register, focus } = useNavigation()
+
   useEffect(() => {
     if (selected) {
       setMessage(selected)
@@ -176,6 +179,11 @@ export const ConversationChat: React.FC<{
   }
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (isPressing(e, Keys.Escape)) {
+      e.currentTarget.blur()
+      focus(null)
+    }
+
     onKeyDown(e)
 
     if (
@@ -247,6 +255,19 @@ export const ConversationChat: React.FC<{
           </HintContainer>
 
           <ConversationTextArea
+            {...register(
+              'Conversations Chat',
+              {
+                focus: Keys.Enter,
+                resolve: () => {
+                  // TODO: Better solution?
+                  // ref.ref.focus()
+                },
+              },
+              {
+                border: '2px solid transparent',
+              },
+            )}
             onFocus={() => {
               setInputFocused(true)
               onFocus()

@@ -1,4 +1,5 @@
 import { css, Theme } from '@emotion/react'
+import chroma from 'chroma-js'
 import styled from '@emotion/styled'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
@@ -11,6 +12,7 @@ import { Plus } from 'react-bootstrap-icons'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { useHistory } from 'react-router'
 import { CreateFilterModal } from '../claims/claim-templates/CreateFilterModal'
+import { lightTheme } from '@hedvig-ui'
 
 const MetricsWrapper = styled.div`
   display: flex;
@@ -119,19 +121,25 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
       <MetricsWrapper>
         <Metric
           to="/claims/list/1"
-          {...register('ClaimsMetric', {
-            autoFocus: true,
-            resolve: () => {
-              history.push('/claims/list/1')
+          {...register(
+            'ClaimsMetric',
+            {
+              autoFocus: true,
+              resolve: () => {
+                history.push('/claims/list/1')
+              },
+              neighbors: {
+                right:
+                  settings[UserSettingKey.FeatureFlags] &&
+                  settings[UserSettingKey.FeatureFlags]?.conversations
+                    ? 'ConversationsMetric'
+                    : 'QuestionsMetric',
+              },
             },
-            neighbors: {
-              right:
-                settings[UserSettingKey.FeatureFlags] &&
-                settings[UserSettingKey.FeatureFlags]?.conversations
-                  ? 'ConversationsMetric'
-                  : 'QuestionsMetric',
+            {
+              background: chroma(lightTheme.accent).brighten(0.8).hex(),
             },
-          })}
+          )}
         >
           <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
           <MetricName>claims</MetricName>
@@ -140,17 +148,23 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
         settings[UserSettingKey.FeatureFlags]?.conversations ? (
           <Metric
             to="/conversations"
-            {...register('ConversationsMetric', {
-              resolve: () => {
-                history.push('/conversations')
+            {...register(
+              'ConversationsMetric',
+              {
+                resolve: () => {
+                  history.push('/conversations')
+                },
+                neighbors: {
+                  left: 'ClaimsMetric',
+                  right: templateFilters.length
+                    ? templateFilters[0].name
+                    : 'Add Template',
+                },
               },
-              neighbors: {
-                left: 'ClaimsMetric',
-                right: templateFilters.length
-                  ? templateFilters[0].name
-                  : 'Add Template',
+              {
+                background: chroma(lightTheme.accent).brighten(0.8).hex(),
               },
-            })}
+            )}
           >
             <MetricNumber>
               {dashboardNumbers?.numberOfQuestions || 0}
@@ -160,17 +174,23 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
         ) : (
           <Metric
             to="/questions"
-            {...register('QuestionsMetric', {
-              resolve: () => {
-                history.push('/questions')
+            {...register(
+              'QuestionsMetric',
+              {
+                resolve: () => {
+                  history.push('/questions')
+                },
+                neighbors: {
+                  left: 'ClaimsMetric',
+                  right: templateFilters.length
+                    ? templateFilters[0].name
+                    : 'Add Template',
+                },
               },
-              neighbors: {
-                left: 'ClaimsMetric',
-                right: templateFilters.length
-                  ? templateFilters[0].name
-                  : 'Add Template',
+              {
+                background: chroma(lightTheme.accent).brighten(0.8).hex(),
               },
-            })}
+            )}
           >
             <MetricNumber>
               {dashboardNumbers?.numberOfQuestions || 0}
@@ -180,23 +200,29 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
         )}
 
         {templateFilters.map((template, index) => {
-          const registeredTemplate = register(template.name, {
-            resolve: () => {
-              history.push(`/claims/list/1?template=${template.id}`)
+          const registeredTemplate = register(
+            template.name,
+            {
+              resolve: () => {
+                history.push(`/claims/list/1?template=${template.id}`)
+              },
+              neighbors: {
+                left: index
+                  ? templateFilters[index - 1].name
+                  : settings[UserSettingKey.FeatureFlags] &&
+                    settings[UserSettingKey.FeatureFlags]?.conversations
+                  ? 'ConversationsMetric'
+                  : 'QuestionsMetric',
+                right:
+                  index < templateFilters.length - 1
+                    ? templateFilters[index + 1].name
+                    : 'Add Template',
+              },
             },
-            neighbors: {
-              left: index
-                ? templateFilters[index - 1].name
-                : settings[UserSettingKey.FeatureFlags] &&
-                  settings[UserSettingKey.FeatureFlags]?.conversations
-                ? 'ConversationsMetric'
-                : 'QuestionsMetric',
-              right:
-                index < templateFilters.length - 1
-                  ? templateFilters[index + 1].name
-                  : 'Add Template',
+            {
+              background: chroma(lightTheme.accent).brighten(0.8).hex(),
             },
-          })
+          )
 
           return (
             <FilteredMetric
@@ -213,19 +239,24 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
         })}
 
         <AddMetricCard
-          {...register('Add Template', {
-            resolve: () => {
-              setCreateFilter(true)
+          {...register(
+            'Add Template',
+            {
+              resolve: () => {
+                setCreateFilter(true)
+              },
+              neighbors: {
+                left: templateFilters.length
+                  ? templateFilters[templateFilters.length - 1].name
+                  : settings[UserSettingKey.FeatureFlags] &&
+                    settings[UserSettingKey.FeatureFlags]?.conversations
+                  ? 'ConversationsMetric'
+                  : 'QuestionsMetric',
+              },
             },
-            neighbors: {
-              left: templateFilters.length
-                ? templateFilters[templateFilters.length - 1].name
-                : settings[UserSettingKey.FeatureFlags] &&
-                  settings[UserSettingKey.FeatureFlags]?.conversations
-                ? 'ConversationsMetric'
-                : 'QuestionsMetric',
-            },
-          })}
+            {},
+            { border: `2px dotted ${lightTheme.border}` },
+          )}
           tabIndex={0}
           onClick={() => setCreateFilter(true)}
           onKeyDown={(e) => {

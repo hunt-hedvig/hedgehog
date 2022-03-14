@@ -111,6 +111,14 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
         return
       }
 
+      if (
+        target?.focus?.code === 'Enter' &&
+        typeof target?.resolve !== 'string'
+      ) {
+        target?.resolve(target)
+        return
+      }
+
       if (typeof target.resolve === 'string') {
         if (!validate(target.resolve)) {
           return
@@ -301,7 +309,12 @@ export const useNavigation = () => {
   }, [])
 
   return {
-    register: (name: string, options: UseNavigationRegisterOptions) => {
+    register: (
+      name: string,
+      options: UseNavigationRegisterOptions,
+      activeStyle?: React.CSSProperties,
+      style?: React.CSSProperties,
+    ) => {
       if (!itemExists(name)) {
         registerItem(name, options)
       }
@@ -310,6 +323,7 @@ export const useNavigation = () => {
         return {
           style: {
             border: '2px solid transparent',
+            ...style,
           },
         }
       }
@@ -317,6 +331,7 @@ export const useNavigation = () => {
       return {
         style: {
           border: `2px solid ${chroma(lightTheme.accent).brighten(1).hex()}`,
+          ...activeStyle,
         },
         // eslint-disable-next-line
         ref: (ref: any) => {
@@ -330,6 +345,6 @@ export const useNavigation = () => {
         },
       }
     },
-    focus: (name: string) => setCursor(name),
+    focus: (name: string | null) => setCursor(name),
   }
 }
