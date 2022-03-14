@@ -15,7 +15,7 @@ export const lightTheme = {
   borderStrong: '#36658f',
   backgroundTransparent: 'rgba(0, 0, 0, .1)',
   backgroundTransparentContrast: 'rgba(255, 255, 255, .4)',
-  accent: '#36658f',
+  accent: '#308de5',
   accentLight: '#c6d6e4',
   accentLighter: '#e0eaf3',
   accentSaturated: '#CFE2F2',

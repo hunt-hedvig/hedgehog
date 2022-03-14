@@ -19,6 +19,7 @@ const ConversationsPage = lazy(
 )
 
 const TasksPage = lazy(() => import('./tasks/TasksPage'))
+const CheckInPage = lazy(() => import('./tasks/CheckInPage'))
 
 const ClaimsListPage = lazy(() => import('./claims/list/ClaimsListPage'))
 const ClaimDetailsPage = lazy(() => import('./claims/ClaimDetailsPage'))
@@ -88,7 +89,8 @@ export const Routes: React.FC = () => {
         <Route path="/profile" component={ProfilePage} />
         <Route path="/dashborad" component={DashboardPage} />
         <Route path="/questions" component={QuestionsPage} />
-        <Route path="/tasks" component={TasksPage} />
+        <Route path="/tasks" exact component={TasksPage} />
+        <Route path="/tasks/check-in" exact component={CheckInPage} />
         <Route path="/notifications" component={NotificationsPage} />
         <Route path="/search/:category" component={SearchPage} />
         <Route
