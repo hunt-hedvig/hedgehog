@@ -133,7 +133,7 @@ const Menu = styled('div')({
 const routes = {
   dashborad: '/dashborad',
   claims: '/claims/list/1',
-  questions: '/questions',
+  questions: '/tasks/check-in',
   conversations: '/conversations',
   search: '/members',
   tools: '/tools',
