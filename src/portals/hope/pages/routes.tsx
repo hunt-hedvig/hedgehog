@@ -17,6 +17,9 @@ const ConversationsOnboardingPage = lazy(
 const ConversationsPage = lazy(
   () => import('./conversations/ConversationsPage'),
 )
+
+const TasksPage = lazy(() => import('./tasks/TasksPage'))
+
 const ClaimsListPage = lazy(() => import('./claims/list/ClaimsListPage'))
 const ClaimDetailsPage = lazy(() => import('./claims/ClaimDetailsPage'))
 const MemberSearchPage = lazy(() => import('./members/MemberSearchPage'))
@@ -85,6 +88,7 @@ export const Routes: React.FC = () => {
         <Route path="/profile" component={ProfilePage} />
         <Route path="/dashborad" component={DashboardPage} />
         <Route path="/questions" component={QuestionsPage} />
+        <Route path="/tasks" component={TasksPage} />
         <Route path="/notifications" component={NotificationsPage} />
         <Route path="/search/:category" component={SearchPage} />
         <Route

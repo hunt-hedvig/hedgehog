@@ -39,7 +39,7 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 4rem 4rem 2rem 4rem;
+  padding: 4rem 4rem 0 4rem;
   overflow-y: auto;
 `
 
