@@ -1,13 +1,9 @@
 import styled from '@emotion/styled'
 import { Button, FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
-import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useDraft } from '@hedvig-ui/hooks/use-draft'
 import {
@@ -18,7 +14,6 @@ import {
 import { FileText } from 'react-bootstrap-icons'
 import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
 import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
@@ -161,25 +156,6 @@ export const ConversationChat: React.FC<{
     ],
   })
 
-  const isEnterPressed = useKeyIsPressed(Keys.Enter)
-  const isEscapePressed = useKeyIsPressed(Keys.Escape)
-
-  const { cursor } = useNavigation()
-
-  const textAreaRef = useRef<HTMLTextAreaElement>(null)
-
-  useEffect(() => {
-    if (textAreaRef?.current && !cursor) {
-      textAreaRef.current.focus()
-    }
-  }, [isEnterPressed])
-
-  useEffect(() => {
-    if (textAreaRef?.current && !cursor) {
-      textAreaRef.current.blur()
-    }
-  }, [isEscapePressed])
-
   const { hinting, templateHint, onChange, onKeyDown } = useTemplatesHinting(
     message,
     setMessage,
@@ -271,7 +247,6 @@ export const ConversationChat: React.FC<{
           </HintContainer>
 
           <ConversationTextArea
-            ref={textAreaRef}
             onFocus={() => {
               setInputFocused(true)
               onFocus()

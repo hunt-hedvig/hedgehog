@@ -12,7 +12,7 @@ import {
   SearchInputGroup,
   SearchTip,
 } from 'portals/hope/features/members-search/styles'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 interface SearchFieldProps {
@@ -50,28 +50,15 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
       setIncludeAll,
       currentResultSize,
       setLuckySearch,
-      membersLength,
-      suggestionsLength,
     },
     forwardRef,
   ) => {
     const [textFieldFocused, setTextFieldFocused] = useState(false)
     const { isMetaKey, metaKey } = usePlatform()
-    const { focus, register, cursor } = useNavigation()
+    const { register } = useNavigation()
 
     const defaultRef = useRef<HTMLInputElement>(null)
     const ref = (forwardRef ?? defaultRef) as React.RefObject<HTMLInputElement>
-
-    useEffect(() => {
-      if (ref.current) {
-        if (cursor === 'Member Search Form') {
-          ref.current.focus()
-          return
-        }
-
-        ref.current.blur()
-      }
-    }, [cursor])
 
     return (
       <form
@@ -110,17 +97,17 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
               }}
               onBlur={() => setTextFieldFocused(false)}
               onKeyDown={(e) => {
-                if (isPressing(e, Keys.Escape)) {
-                  focus('Search')
-                }
+                // if (isPressing(e, Keys.Escape)) {
+                //   focus('Search')
+                // }
 
-                if (isPressing(e, Keys.Down)) {
-                  if (membersLength) {
-                    focus('Table Row 0')
-                  } else if (suggestionsLength) {
-                    focus('Member Suggestion 1')
-                  }
-                }
+                // if (isPressing(e, Keys.Down)) {
+                //   if (membersLength) {
+                //     focus('Table Row 0')
+                //   } else if (suggestionsLength) {
+                //     focus('Member Suggestion 1')
+                //   }
+                // }
 
                 if (
                   isMetaKey(e) &&

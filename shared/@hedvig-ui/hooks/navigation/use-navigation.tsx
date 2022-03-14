@@ -331,7 +331,5 @@ export const useNavigation = () => {
       }
     },
     focus: (name: string) => setCursor(name),
-    cursor,
-    setCursor,
   }
 }

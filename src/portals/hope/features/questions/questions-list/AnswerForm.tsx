@@ -14,7 +14,6 @@ import {
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import {
   GetQuestionsGroupsDocument,
   useAnswerQuestionMutation,
@@ -68,8 +67,6 @@ export const AnswerForm: React.FC<{
     useMarkQuestionAsResolvedMutation()
 
   const loading = loadingAnswerQuestion || loadingMarkQuestionAsResolved
-
-  const { cursor } = useNavigation()
 
   const onSubmit = () => {
     if (!answer) {
@@ -135,12 +132,7 @@ export const AnswerForm: React.FC<{
   }, [isFocused])
 
   useEffect(() => {
-    if (
-      isEnterPressed &&
-      isCommandPressed &&
-      !isFocused &&
-      cursor === `Question-${memberId}`
-    ) {
+    if (isEnterPressed && isCommandPressed && !isFocused) {
       handleMarkAsResolved()
     }
   }, [isEnterPressed, isCommandPressed])
