@@ -64,10 +64,12 @@ export const FileRow: React.FC<{
   return (
     <TableRow>
       <TableColumn>
-        {claimFile.contentType === 'application/pdf' ? (
-          <embed src={claimFile.fileUploadUrl} width="800px" height="300px" />
-        ) : (
+        {claimFile.contentType?.toLowerCase()?.includes('image') ? (
           <Image src={claimFile.fileUploadUrl} />
+        ) : (
+          <a href={claimFile.fileUploadUrl} target="_blank">
+            Open file
+          </a>
         )}
       </TableColumn>
       <TableColumn>
