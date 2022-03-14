@@ -36,6 +36,7 @@ import {
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { toast } from 'react-hot-toast'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const SelectWrapper = styled.div`
   margin-top: 1em;
@@ -238,8 +239,7 @@ export const useClaimCoInsured = (claimId: string): UseClaimCoInsuredResult => {
 
 export const ClaimInformation: React.FC<{
   claimId: string
-  focus?: boolean
-}> = ({ claimId, focus }) => {
+}> = ({ claimId }) => {
   const { confirm } = useConfirmDialog()
   const { restrict, restriction } = useRestrictClaim(claimId)
 
@@ -252,6 +252,8 @@ export const ClaimInformation: React.FC<{
   const { coInsured, removeCoInsured } = useClaimCoInsured(claimId)
 
   const { registrationDate, recordingUrl, agreement, trial } = data?.claim ?? {}
+
+  const { register } = useNavigation()
 
   const coInsureHandler = async (value: string) => {
     setCreatingCoInsured(value === 'True')
@@ -302,19 +304,57 @@ export const ClaimInformation: React.FC<{
         {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
         <SelectWrapper>
           <Label>Status</Label>
-          <ClaimStatusDropdown claimId={claimId} focus={focus} />
+          <ClaimStatusDropdown
+            claimId={claimId}
+            {...register('Claim Status', {
+              parent: 'Claim Card #2',
+              neighbors: {
+                down: 'Claim Outcome',
+              },
+            })}
+          />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Claim outcome</Label>
-          <ClaimOutcomeDropdown claimId={claimId} />
+          <ClaimOutcomeDropdown
+            claimId={claimId}
+            {...register('Claim Outcome', {
+              parent: 'Claim Card #2',
+              neighbors: {
+                up: 'Claim Status',
+                down: 'Date of Occurrence',
+              },
+            })}
+          />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Date of Occurrence</Label>
-          <ClaimDatePicker claimId={claimId} />
+          <ClaimDatePicker
+            claimId={claimId}
+            {...register('Date of Occurrence', {
+              parent: 'Claim Card #2',
+              neighbors: {
+                up: 'Claim Outcome',
+                down: 'Contract for Claim',
+              },
+            })}
+          />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Contract for Claim</Label>
-          <ClaimContractDropdown claimId={claimId} />
+          <ClaimContractDropdown
+            claimId={claimId}
+            {...register('Contract for Claim', {
+              parent: 'Claim Card #2',
+              neighbors: {
+                up: 'Date of Occurrence',
+                down:
+                  agreement && agreement.termsAndConditions?.url
+                    ? 'Terms And Conditions'
+                    : 'Employee Claim',
+              },
+            })}
+          />
         </SelectWrapper>
 
         {agreement ? (
@@ -323,9 +363,22 @@ export const ClaimInformation: React.FC<{
               href={agreement.termsAndConditions?.url}
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                fontSize: '0.9rem',
-              }}
+              {...register(
+                'Terms and Conditions',
+                {
+                  parent: 'Claim Card #2',
+                  neighbors: {
+                    up: 'Contract for Claim',
+                    down: 'Employee Claim',
+                  },
+                },
+                {
+                  fontSize: '0.9rem',
+                },
+                {
+                  fontSize: '0.9rem',
+                },
+              )}
             >
               Terms and Conditions
             </a>
@@ -337,11 +390,32 @@ export const ClaimInformation: React.FC<{
         )}
         <SelectWrapper>
           <Label>Employee Claim</Label>
-          <ClaimEmployeeDropdown claimId={claimId} />
+          <ClaimEmployeeDropdown
+            claimId={claimId}
+            {...register('Employee Claim', {
+              parent: 'Claim Card #2',
+              neighbors: {
+                up:
+                  agreement && agreement.termsAndConditions?.url
+                    ? 'Terms And Conditions'
+                    : 'Contract for Claim',
+                down: 'Co-insured Claim',
+              },
+            })}
+          />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Co-insured Claim</Label>
-          <Dropdown>
+          <Dropdown
+            style={
+              register('Co-insured Claim', {
+                parent: 'Claim Card #2',
+                neighbors: {
+                  up: 'Employee Claim',
+                },
+              }).style
+            }
+          >
             {coInsuredClaimOptions.map((opt) => (
               <DropdownOption
                 key={opt.key}

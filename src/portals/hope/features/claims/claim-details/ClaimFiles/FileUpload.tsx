@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { FileEarmark, FileEarmarkArrowUpFill } from 'react-bootstrap-icons'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const UploadClaimFileWrapper = styled('div')`
   padding: 1rem 1rem;
@@ -35,20 +36,8 @@ export const FileUpload: React.FC<{
   claimId: string
   memberId: string
   onUpload: () => void
-  focus?: boolean
-}> = ({ claimId, memberId, onUpload, focus }) => {
-  const buttonRef = useRef<HTMLButtonElement>(null)
-
-  useEffect(() => {
-    if (focus && buttonRef) {
-      buttonRef.current?.focus()
-      buttonRef.current?.scrollIntoView({
-        inline: 'center',
-        block: 'center',
-        behavior: 'smooth',
-      })
-    }
-  }, [focus])
+}> = ({ claimId, memberId, onUpload }) => {
+  const { register } = useNavigation()
 
   const handleDrop = (acceptedFiles: ReadonlyArray<File>) => {
     const claimFiles = new FormData()
@@ -79,7 +68,12 @@ export const FileUpload: React.FC<{
       <FileUploadContainer>
         <Dropzone onDrop={handleDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => (
-            <Button {...getRootProps()} ref={buttonRef}>
+            <Button
+              {...getRootProps()}
+              {...register('Claim File Input', {
+                parent: 'Claim Card #7',
+              })}
+            >
               <div style={{ width: '100%' }}>
                 <div style={{ fontSize: '4.0em' }}>
                   {isDragActive ? <FileEarmarkArrowUpFill /> : <FileEarmark />}

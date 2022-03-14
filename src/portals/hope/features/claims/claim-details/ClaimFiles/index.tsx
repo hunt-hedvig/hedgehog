@@ -51,8 +51,7 @@ gql`
 export const ClaimFileTable: React.FC<{
   claimId: string
   memberId: string
-  focus?: boolean
-}> = ({ claimId, memberId, focus }) => {
+}> = ({ claimId, memberId }) => {
   const { data, error, loading, refetch } = useClaimFilesQuery({
     variables: { claimId },
   })
@@ -74,7 +73,6 @@ export const ClaimFileTable: React.FC<{
         }
       />
       <FileUpload
-        focus={focus}
         claimId={claimId}
         memberId={memberId}
         onUpload={async () => {

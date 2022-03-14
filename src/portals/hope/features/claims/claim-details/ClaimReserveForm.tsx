@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import {
   ClaimPaymentsDocument,
   useUpdateReserveMutation,
@@ -6,34 +6,24 @@ import {
 
 import { Button, Input, Spacing } from '@hedvig-ui'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const isStringNumber = (s: string) => /^-?\d+$/.test(s) || /^\d+\.\d+$/.test(s)
 
-const ClaimReserveForm: React.FC<{ claimId: string; focus?: boolean }> = ({
-  claimId,
-  focus,
-}) => {
+const ClaimReserveForm: React.FC<{ claimId: string }> = ({ claimId }) => {
   const [updateReserve, { loading }] = useUpdateReserveMutation()
   const [value, setValue] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    if (focus && inputRef) {
-      inputRef.current?.focus()
-      inputRef.current?.scrollIntoView({
-        inline: 'center',
-        block: 'center',
-        behavior: 'smooth',
-      })
-    }
-  }, [focus])
+  const { register } = useNavigation()
 
   return (
     <>
       <Input
         placeholder="Reserve amount"
         onChange={(e) => setValue(e.currentTarget.value)}
-        ref={inputRef}
+        {...register('Claim Reserve Input', {
+          parent: 'Claim Card #5',
+        })}
       />
       <Spacing top="small" />
       <Button

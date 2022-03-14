@@ -7,7 +7,7 @@ import { MemberClaimsView } from 'portals/hope/features/claims/claim-details/Mem
 import { MemberGeneralView } from 'portals/hope/features/claims/claim-details/MemberInformation/components/MemberGeneralView'
 import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
 import { getMemberFlag } from 'portals/hope/features/member/utils'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -44,25 +44,11 @@ const MemberCard = styled.div`
 export const MemberInformation: React.FC<{
   claimId: string
   memberId: string
-  focus?: boolean
-}> = ({ claimId, memberId, focus }) => {
+}> = ({ claimId, memberId }) => {
   const [tab, setTab] = useState<'general' | 'claims'>('general')
   const { data, loading } = useGetMemberInfoQuery({ variables: { memberId } })
   const { registerActions } = useCommandLine()
   const history = useHistory()
-
-  const idRef = useRef<HTMLAnchorElement>(null)
-
-  useEffect(() => {
-    if (focus && idRef) {
-      idRef.current?.focus()
-      idRef.current?.scrollIntoView({
-        inline: 'center',
-        block: 'center',
-        behavior: 'smooth',
-      })
-    }
-  }, [focus])
 
   const member = data?.member
 
@@ -113,9 +99,7 @@ export const MemberInformation: React.FC<{
             <h3>
               {(member?.firstName ?? '') + ' ' + (member?.lastName ?? '')}
             </h3>
-            <Link ref={idRef} to={`/members/${memberId}`}>
-              {memberId}
-            </Link>{' '}
+            <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
           </div>
           <div>{flag}</div>
         </MemberCard>

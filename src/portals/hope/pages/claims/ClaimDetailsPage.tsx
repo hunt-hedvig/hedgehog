@@ -133,7 +133,6 @@ const ClaimDetailsPage: Page<
   const { restriction } = useRestrictClaim(claimId)
   const { pushToMemberHistory } = useMemberHistory()
   const [showEvents, setShowEvents] = useState(false)
-  const [focus] = useState<string>()
   const { isHintingControl } = useCommandLine()
 
   const { data, error } = useClaimDetailsQuery({
@@ -145,58 +144,6 @@ const ClaimDetailsPage: Page<
   const carrier = data?.claim?.agreement?.carrier
 
   const { register } = useNavigation()
-
-  // registerActions([
-  //   {
-  //     label: 'Member Info',
-  //     keys: [Keys.Control, Keys.One],
-  //     onResolve: () => {
-  //       setFocus('member-info')
-  //     },
-  //   },
-  //   {
-  //     label: 'Claim Info',
-  //     keys: [Keys.Control, Keys.Two],
-  //     onResolve: () => {
-  //       setFocus('claim-info')
-  //     },
-  //   },
-  //   {
-  //     label: 'Claim Type',
-  //     keys: [Keys.Control, Keys.Three],
-  //     onResolve: () => {
-  //       setFocus('claim-type')
-  //     },
-  //   },
-  //   {
-  //     label: 'Claim Notes',
-  //     keys: [Keys.Control, Keys.Four],
-  //     onResolve: () => {
-  //       setFocus('claim-notes')
-  //     },
-  //   },
-  //   {
-  //     label: 'Claim Reserve',
-  //     keys: [Keys.Control, Keys.Five],
-  //     onResolve: () => {
-  //       setFocus('claim-reserve')
-  //     },
-  //   },
-  //   {
-  //     label: 'Claim Payments',
-  //     keys: [Keys.Control, Keys.Six],
-  //     onResolve: () => {
-  //       setFocus('claim-payments')
-  //     },
-  //   },
-  //   {
-  //     label: 'Claim Files',
-  //     keys: [Keys.Control, Keys.Seven],
-  //     onResolve: () => {
-  //       setFocus('claim-files')
-  //     },
-  //   },
-  // ])
 
   useEffect(() => {
     if (!memberId) {
@@ -250,6 +197,7 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.One,
                   metaKey: 'ctrlKey',
+                  resolve: '',
                 },
                 {
                   border: '5px solid blue',
@@ -260,11 +208,7 @@ const ClaimDetailsPage: Page<
               )}
             >
               {isHintingControl && <Hotkey>1</Hotkey>}
-              <MemberInformation
-                claimId={claimId}
-                focus={focus === 'member-info'}
-                memberId={memberId}
-              />
+              <MemberInformation claimId={claimId} memberId={memberId} />
             </Card>
             <Card
               span={3}
@@ -273,6 +217,7 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Two,
                   metaKey: 'ctrlKey',
+                  resolve: 'Claim Status',
                 },
                 {
                   border: '5px solid blue',
@@ -283,10 +228,7 @@ const ClaimDetailsPage: Page<
               )}
             >
               {isHintingControl && <Hotkey>2</Hotkey>}
-              <ClaimInformation
-                claimId={claimId}
-                focus={focus === 'claim-info'}
-              />
+              <ClaimInformation claimId={claimId} />
             </Card>
             <Card
               span={3}
@@ -295,6 +237,7 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Three,
                   metaKey: 'ctrlKey',
+                  resolve: 'Claim Type',
                 },
                 {
                   border: '5px solid blue',
@@ -305,7 +248,7 @@ const ClaimDetailsPage: Page<
               )}
             >
               {isHintingControl && <Hotkey>3</Hotkey>}
-              <ClaimType claimId={claimId} focus={focus === 'claim-type'} />
+              <ClaimType claimId={claimId} />
             </Card>
           </CardsWrapper>
           {!!transcriptions.length && (
@@ -322,6 +265,7 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Four,
                   metaKey: 'ctrlKey',
+                  resolve: 'Claim Notes Textarea',
                 },
                 {
                   border: '5px solid blue',
@@ -332,7 +276,7 @@ const ClaimDetailsPage: Page<
               )}
             >
               {isHintingControl && <Hotkey>4</Hotkey>}
-              <ClaimNotes claimId={claimId} focus={focus === 'claim-notes'} />
+              <ClaimNotes claimId={claimId} />
             </Card>
           </CardsWrapper>
           {carrier && (
@@ -359,6 +303,7 @@ const ClaimDetailsPage: Page<
                   {
                     focus: Keys.Five,
                     metaKey: 'ctrlKey',
+                    resolve: 'Claim Reserve Input',
                   },
                   {
                     border: '5px solid blue',
@@ -370,10 +315,7 @@ const ClaimDetailsPage: Page<
               >
                 <Card>
                   {isHintingControl && <Hotkey>5</Hotkey>}
-                  <ClaimReserve
-                    claimId={claimId}
-                    focus={focus === 'claim-reserve'}
-                  />
+                  <ClaimReserve claimId={claimId} />
                 </Card>
               </CardsWrapper>
               <CardsWrapper
@@ -383,6 +325,7 @@ const ClaimDetailsPage: Page<
                   {
                     focus: Keys.Six,
                     metaKey: 'ctrlKey',
+                    resolve: 'Claim Payments Payout',
                   },
                   {
                     border: '5px solid blue',
@@ -394,10 +337,7 @@ const ClaimDetailsPage: Page<
               >
                 <Card>
                   {isHintingControl && <Hotkey>6</Hotkey>}
-                  <ClaimPayments
-                    claimId={claimId}
-                    focus={focus === 'claim-payments'}
-                  />
+                  <ClaimPayments claimId={claimId} />
                 </Card>
               </CardsWrapper>
             </>
@@ -410,6 +350,7 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Seven,
                   metaKey: 'ctrlKey',
+                  resolve: 'Claim File Input',
                 },
                 {
                   border: '5px solid blue',
@@ -420,11 +361,7 @@ const ClaimDetailsPage: Page<
               )}
             >
               {isHintingControl && <Hotkey>7</Hotkey>}
-              <ClaimFileTable
-                claimId={claimId}
-                focus={focus === 'claim-files'}
-                memberId={memberId}
-              />
+              <ClaimFileTable claimId={claimId} memberId={memberId} />
             </Card>
           </CardsWrapper>
 

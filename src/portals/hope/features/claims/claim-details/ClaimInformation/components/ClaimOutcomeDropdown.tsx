@@ -85,7 +85,7 @@ const useClaimOutcome = (claimId: string): UseClaimOutcomeResult => {
 
 export const ClaimOutcomeDropdown: React.FC<{
   claimId: string
-}> = ({ claimId }) => {
+}> = ({ claimId, ...props }) => {
   const { outcome, setOutcome } = useClaimOutcome(claimId)
 
   const options = [
@@ -97,7 +97,7 @@ export const ClaimOutcomeDropdown: React.FC<{
   ]
 
   return (
-    <Dropdown placeholder="Not specified">
+    <Dropdown placeholder="Not specified" {...props}>
       {options.map((option) => {
         const selected =
           outcome === option.value ||

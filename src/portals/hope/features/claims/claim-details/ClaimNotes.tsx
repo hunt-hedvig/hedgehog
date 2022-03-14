@@ -1,6 +1,6 @@
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { addSeconds, format, parseISO } from 'date-fns'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import {
   ClaimNotesFragment,
   useAddClaimNoteMutation,
@@ -27,6 +27,7 @@ import formatDate from 'date-fns/format'
 import { useDraft } from '@hedvig-ui/hooks/use-draft'
 import gql from 'graphql-tag'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const ClaimNoteWrapper = styled.div`
   display: flex;
@@ -136,28 +137,15 @@ export const useClaimNotes = (claimId: string): UseClaimNotesResult => {
   return { notes, createNote, creating: loading }
 }
 
-const ClaimNotes: React.FC<{ claimId: string; focus?: boolean }> = ({
-  claimId,
-  focus,
-}) => {
+const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
   const { notes, createNote, creating } = useClaimNotes(claimId)
   const [note, setNote] = useDraft(claimId)
-  const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   const { isMetaKey, metaKey } = usePlatform()
 
   const [textFieldFocused, setTextFieldFocused] = useState(false)
 
-  useEffect(() => {
-    if (focus && textAreaRef) {
-      textAreaRef.current?.focus()
-      textAreaRef.current?.scrollIntoView({
-        inline: 'center',
-        block: 'center',
-        behavior: 'smooth',
-      })
-    }
-  }, [focus])
+  const { register } = useNavigation()
 
   return (
     <CardContent>
@@ -185,7 +173,6 @@ const ClaimNotes: React.FC<{ claimId: string; focus?: boolean }> = ({
         placeholder="Your note goes here..."
         value={creating ? '' : note}
         onChange={(e) => setNote(e.currentTarget.value)}
-        ref={textAreaRef}
         onFocus={() => setTextFieldFocused(true)}
         onBlur={() => setTextFieldFocused(false)}
         onKeyDown={(e) => {
@@ -194,6 +181,9 @@ const ClaimNotes: React.FC<{ claimId: string; focus?: boolean }> = ({
             setNote('')
           }
         }}
+        {...register('Claim Notes Textarea', {
+          parent: 'Claim Card #4',
+        })}
       />
       <Spacing top="small" />
       <SubNoteWrapper>

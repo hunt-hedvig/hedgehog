@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import {
   ClaimState,
   useClaimStatusQuery,
@@ -98,25 +98,12 @@ const useClaimStatus = (claimId: string): UseClamStatusResult => {
 
 export const ClaimStatusDropdown: React.FC<{
   claimId: string
-  focus?: boolean
-}> = ({ claimId, focus }) => {
+}> = ({ claimId, ...props }) => {
   const { status, setStatus } = useClaimStatus(claimId)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (focus && dropdownRef) {
-      dropdownRef.current?.focus()
-      dropdownRef.current?.scrollIntoView({
-        inline: 'center',
-        block: 'center',
-        behavior: 'smooth',
-      })
-    }
-  }, [focus])
 
   const options = Object.values(ClaimState)
   return (
-    <Dropdown placeholder="State" ref={dropdownRef}>
+    <Dropdown placeholder="State" {...props}>
       {options.map((state) => (
         <DropdownOption
           key={state}

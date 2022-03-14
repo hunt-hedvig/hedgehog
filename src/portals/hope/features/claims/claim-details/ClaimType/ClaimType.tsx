@@ -1,7 +1,7 @@
 import { CardContent, CardTitle, Flex, SearchableDropdown } from '@hedvig-ui'
 import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { ClaimPropertyForm } from 'portals/hope/features/claims/claim-details/ClaimType/components/ClaimPropertyForm'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import {
@@ -11,6 +11,7 @@ import {
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 gql`
   query ClaimTypeInformation($claimId: ID!) {
@@ -68,23 +69,10 @@ gql`
 
 export const ClaimType: React.FC<{
   claimId: string
-  focus?: boolean
-}> = ({ claimId, focus }) => {
+}> = ({ claimId }) => {
   const { data: claimTypeInformation } = useClaimTypeInformationQuery({
     variables: { claimId },
   })
-
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (focus && containerRef) {
-      containerRef.current?.scrollIntoView({
-        inline: 'center',
-        block: 'center',
-        behavior: 'smooth',
-      })
-    }
-  }, [focus])
 
   const { data, error } = useGetClaimTypesQuery()
   const [setClaimType] = useSetClaimTypeMutation()
@@ -107,8 +95,10 @@ export const ClaimType: React.FC<{
     }).catch(() => toast.error('Could not set type'))
   }
 
+  const { register } = useNavigation()
+
   return (
-    <Flex direction="column" ref={containerRef}>
+    <Flex direction="column">
       <CardContent>
         <Flex direction="column" justify="space-between">
           <div style={{ width: '100%' }}>
@@ -145,6 +135,9 @@ export const ClaimType: React.FC<{
                 label: convertEnumToTitle(claimType),
                 searchTerms: claimType,
               }))}
+              {...register('Claim Type', {
+                parent: 'Claim Card #3',
+              })}
             />
             {!!selectedClaimType && (
               <ClaimPropertyForm
