@@ -26,10 +26,11 @@ export const SearchInput: React.FC<{
   onSearch: (query: string) => void
   loading?: boolean
   suggestion?: string
-}> = ({ onSearch, onChange, loading, suggestion = '' }) => {
+  defaultValue?: string
+}> = ({ onSearch, onChange, loading, suggestion = '', defaultValue = '' }) => {
   const { confirm } = useConfirmDialog()
   const { disable } = useFeatureFlag('SEARCH_EVERYTHING')
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState(defaultValue)
 
   return (
     <form
