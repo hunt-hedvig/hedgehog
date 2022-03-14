@@ -8,7 +8,10 @@ import {
 import { Flex, Label, Loadable } from '@hedvig-ui'
 import gql from 'graphql-tag'
 import formatDate from 'date-fns/format'
-import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
+import {
+  convertEnumOrSentenceToTitle,
+  convertEnumToTitle,
+} from '@hedvig-ui/utils/text'
 
 const Wrapper = styled.div`
   max-width: 60rem;
@@ -59,6 +62,7 @@ const Wrapper = styled.div`
   }
 
   .labeled-information-placeholder {
+    min-width: 8rem;
     margin-bottom: 0;
     color: ${({ theme }) =>
       chroma(theme.semiStrongForeground).brighten(1.75).hex()};
@@ -83,6 +87,7 @@ gql`
       memberId
       state
       productType
+      breachedUnderwritingGuidelines
     }
   }
 `
@@ -92,6 +97,15 @@ const SmallLabel = styled(Label)`
   margin-bottom: -0.2rem;
   margin-top: 0.2rem;
   color: ${({ theme }) => chroma(theme.semiStrongForeground).brighten(1).hex()};
+`
+
+const BreachedGuidelineTag = styled.div`
+  color: ${({ theme }) => theme.accentContrast};
+  background-color: ${({ theme }) => theme.danger};
+  padding: 0.25rem 0.45rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  text-align: center;
 `
 
 export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
@@ -104,6 +118,7 @@ export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
   const createdAt = data?.quote?.createdAt
   const state = data?.quote?.state
   const productType = data?.quote?.productType
+  const breachedGuidelines = data?.quote?.breachedUnderwritingGuidelines ?? []
 
   const geoInfo = [quote?.street, quote?.city, quote?.postalCode].filter(
     (q) => !!q,
@@ -186,6 +201,18 @@ export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
                 </div>
               )}
             </div>
+            {breachedGuidelines.length !== 0 && (
+              <div style={{ marginLeft: '2rem' }}>
+                <SmallLabel>Breached guidelines</SmallLabel>
+                <Flex>
+                  {breachedGuidelines.map((guideline) => (
+                    <BreachedGuidelineTag key={guideline + quote.id}>
+                      {convertEnumToTitle(guideline)}
+                    </BreachedGuidelineTag>
+                  ))}
+                </Flex>
+              </div>
+            )}
           </Flex>
         </Flex>
         <Flex direction="column" justify="space-between" align="flex-end">
