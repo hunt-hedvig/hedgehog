@@ -11,9 +11,11 @@ import {
 import { QuoteResult } from 'portals/hope/features/search/quotes/components/QuoteResult'
 import { QuoteSearchHit } from 'types/generated/graphql'
 
-export const QuoteSearch: React.FC = () => {
+export const QuoteSearch: React.FC<{ query: string | null }> = ({
+  query: defaultQuery,
+}) => {
   const history = useHistory()
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(defaultQuery ?? '')
   const [hasSearched, setHasSearched] = useState(false)
   const { hits, loading, search, fetchMore } = useSearch<QuoteSearchHit>(
     query,
@@ -26,20 +28,27 @@ export const QuoteSearch: React.FC = () => {
     setHasSearched(false)
   }, [query])
 
+  useEffect(() => {
+    if (query !== '') search()
+  }, [defaultQuery])
+
   return (
     <>
       <SearchInput
         onChange={(value) => setQuery(value)}
         onSearch={() => {
-          search()
+          history.push(`/search/quotes?query=${query}`)
           setHasSearched(true)
         }}
         loading={loading}
+        defaultValue={defaultQuery ?? ''}
       />
 
       <SearchCategoryButtons
         category="quotes"
-        onChange={(category) => history.push(`/search/${category}`)}
+        onChange={(category) =>
+          history.push(`/search/${category}?query=${query}`)
+        }
       />
 
       <Spacing top="large" />

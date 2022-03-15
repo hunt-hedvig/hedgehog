@@ -6,5 +6,6 @@ query Users {
     email
     latestPresence
     latestLocation
+    checkedIn
   }
 }

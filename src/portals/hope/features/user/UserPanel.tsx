@@ -125,7 +125,7 @@ const UserName = styled.div`
   color: white;
 `
 
-type UserStatus = 'online' | 'away' | 'offline'
+type UserStatus = 'online' | 'checked-in' | 'offline'
 
 const UserStatusOrb = styled.div<{ status: UserStatus }>`
   width: 14px;
@@ -133,7 +133,7 @@ const UserStatusOrb = styled.div<{ status: UserStatus }>`
   background-color: ${({ theme, status }) =>
     status === 'online'
       ? theme.success
-      : status === 'away'
+      : status === 'checked-in'
       ? theme.accent
       : theme.placeholderColor};
   border-radius: 50%;
@@ -225,11 +225,15 @@ export const UserPanel: React.FC<{
                 <UserName>{user.fullName}</UserName>
                 <LatestSeenLabel>
                   <span className="navigate-label">Go to location</span>
-                  <span className="time-label">Active now</span>
+                  <span className="time-label">
+                    Active now{user.checkedIn ? ' | Checked-in' : ''}
+                  </span>
                 </LatestSeenLabel>
               </Flex>
               <div>
-                <UserStatusOrb status="online" />
+                <UserStatusOrb
+                  status={user.checkedIn ? 'checked-in' : 'online'}
+                />
               </div>
             </UserItem>
           )

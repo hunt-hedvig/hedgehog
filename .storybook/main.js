@@ -8,16 +8,15 @@ module.exports = {
     '@storybook/addon-knobs',
   ],
   webpackFinal: async (config) => {
-    // do mutation to the config
-
     config.resolve.modules.push(path.resolve(__dirname, '../shared'))
     config.module.rules.push({
-      test: /\.tsx?$/,
-      use: [
-        {
-          loader: require.resolve('esbuild-loader'),
-        },
-      ],
+      test: /\.(tsx?|js)$/,
+      include: /(src|shared)/,
+      loader: 'esbuild-loader',
+      options: {
+        loader: 'tsx',
+        target: 'es2015',
+      },
     })
     config.resolve.extensions.push('.ts', '.tsx')
 
