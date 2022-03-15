@@ -20,6 +20,7 @@ import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 
 export const FilterState: Record<string, number> = {
   ...Object.keys(MemberGroups).reduce<Record<string, number>>(
@@ -105,6 +106,7 @@ export const FilterSelect: React.FC<{
   push,
   small,
 }) => {
+  const { markets: userMarkets } = useMyMarkets()
   const [questionGroups] = useQuestionGroups()
 
   const getCountByFilter = (
@@ -183,52 +185,54 @@ export const FilterSelect: React.FC<{
           marginTop: !small ? '1.0em' : '0.6em',
         }}
       >
-        {Object.keys(Market).map((market, index) => {
-          const navigation = register(`Market ${market} Filter`, {
-            resolve: () => {
-              onToggle(FilterState[market], UserSettingKey.MarketFilter)
-            },
-            neighbors: {
-              up: `Member Group ${range(numberMemberGroups)[index]} Filter`,
-              left: index
-                ? `Market ${Object.keys(Market)[index - 1]} Filter`
-                : undefined,
-              right:
-                index < Object.keys(Market).length - 1
-                  ? `Market ${Object.keys(Market)[index + 1]} Filter`
+        {Object.keys(Market)
+          .filter((m) => userMarkets.includes(m.toUpperCase() as Market))
+          .map((market, index) => {
+            const navigation = register(`Market ${market} Filter`, {
+              resolve: () => {
+                onToggle(FilterState[market], UserSettingKey.MarketFilter)
+              },
+              neighbors: {
+                up: `Member Group ${range(numberMemberGroups)[index]} Filter`,
+                left: index
+                  ? `Market ${Object.keys(Market)[index - 1]} Filter`
                   : undefined,
-              down: index === 2 ? `No Claims Filter` : 'Open Claims Filter',
-            },
-          })
+                right:
+                  index < Object.keys(Market).length - 1
+                    ? `Market ${Object.keys(Market)[index + 1]} Filter`
+                    : undefined,
+                down: index === 2 ? `No Claims Filter` : 'Open Claims Filter',
+              },
+            })
 
-          return (
-            <FadeIn
-              delay={`${
-                animationDelay + animationItemDelay * (numberMemberGroups + 1)
-              }ms`}
-              key={market}
-              {...navigation}
-            >
-              <FilterButton
-                small={small}
-                selected={filters.includes(FilterState[market])}
-                onClick={() =>
-                  onToggle(FilterState[market], UserSettingKey.MarketFilter)
-                }
+            return (
+              <FadeIn
+                delay={`${
+                  animationDelay + animationItemDelay * (numberMemberGroups + 1)
+                }ms`}
+                key={market}
+                {...navigation}
               >
-                {convertEnumToTitle(market)}{' '}
-                <span style={{ marginLeft: !small ? '0.5em' : '0.3em' }}>
-                  {MarketFlags[market.toUpperCase() as Market]}
-                </span>
-                <CountBadge selected={filters.includes(FilterState[market])}>
-                  <div>
-                    {getCountByFilter(FilterState[market], doMarketFilter)}
-                  </div>
-                </CountBadge>
-              </FilterButton>
-            </FadeIn>
-          )
-        })}
+                <FilterButton
+                  small={small}
+                  selected={filters.includes(FilterState[market])}
+                  onClick={() =>
+                    onToggle(FilterState[market], UserSettingKey.MarketFilter)
+                  }
+                >
+                  {convertEnumToTitle(market)}{' '}
+                  <span style={{ marginLeft: !small ? '0.5em' : '0.3em' }}>
+                    {MarketFlags[market.toUpperCase() as Market]}
+                  </span>
+                  <CountBadge selected={filters.includes(FilterState[market])}>
+                    <div>
+                      {getCountByFilter(FilterState[market], doMarketFilter)}
+                    </div>
+                  </CountBadge>
+                </FilterButton>
+              </FadeIn>
+            )
+          })}
       </ButtonsGroup>
       <ButtonsGroup
         style={{
