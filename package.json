@@ -121,8 +121,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=production ts-node -P tsconfig-server.json src/server/entry.ts",
-    "prebuild": "yarn graphql:gen",
-    "build": "NODE_ENV=production webpack --mode production --config webpack/webpack.config.client.production.js",
+    "build": "graphql-codegen && NODE_ENV=production webpack --mode production --config webpack/webpack.config.client.production.js",
     "clean": "rm -rf ./build && rm -rf tsconfig.tsbuildinfo",
     "watch:staging": "API_URL=https://backoffice.dev.hedvigit.com/ yarn watch",
     "watch": "concurrently -n wds,srv,gql 'npm:watch-client' 'npm:watch-server' 'npm:watch-graphql'",
