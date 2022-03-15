@@ -10,3 +10,11 @@ yarn-error.log
 tsconfig.tsbuildinfo
 src/types/generated/graphql.tsx
 graphql.schema.json
+
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
