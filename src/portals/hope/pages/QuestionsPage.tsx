@@ -17,6 +17,8 @@ import { UserSettingKey } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
+import { Market } from 'portals/hope/features/config/constants'
+import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 
 const ListPage = styled.div`
   display: flex;
@@ -27,6 +29,7 @@ const ListPage = styled.div`
 `
 
 const QuestionsPage: Page = () => {
+  const { markets: userMarkets } = useMyMarkets()
   const { settings, updateSetting } = useMe()
 
   const getQuestionsFilter = (field: UserSettingKey) =>
@@ -38,6 +41,13 @@ const QuestionsPage: Page = () => {
     ...getQuestionsFilter(UserSettingKey.ClaimComplexityFilter),
     ...getQuestionsFilter(UserSettingKey.MarketFilter),
   ])
+
+  // TODO: This is temporary; we'll kill off user settings in this form later
+  const intermediateMarketFilterMap: Record<number, Market> = {
+    6: Market.Sweden,
+    7: Market.Norway,
+    8: Market.Denmark,
+  }
 
   const [questionGroups, { loading }] = useQuestionGroups()
 
@@ -105,7 +115,12 @@ const QuestionsPage: Page = () => {
       </Spacing>
 
       <QuestionGroups
-        selectedFilters={selectedFilters}
+        selectedFilters={selectedFilters.filter((filter) => {
+          if (filter >= 6 && filter <= 8) {
+            return userMarkets.includes(intermediateMarketFilterMap[filter])
+          }
+          return true
+        })}
         questionGroups={questionGroups}
       />
     </ListPage>
