@@ -14,6 +14,7 @@ import { useHistory } from 'react-router'
 import { useCheckInOut } from 'portals/hope/features/tasks/hooks/use-check-in-out'
 import { toast } from 'react-hot-toast'
 import { useHasPermission } from 'portals/hope/common/hooks/use-has-permission'
+import { UpdateUserMarketModal } from 'portals/hope/features/tasks/components/UpdateUserMarketModal'
 
 const MessageCard = styled.div`
   background-color: ${({ theme }) =>
@@ -52,34 +53,37 @@ const CheckInPage: Page = () => {
   }
 
   return (
-    <FadeIn>
-      <MessageCard>
-        <SecondLevelHeadline>
-          Check in to start answering questions
-        </SecondLevelHeadline>
-        <Paragraph style={{ maxWidth: '25rem' }}>
-          By checking in, you signal to other users in Hope that you are working
-          with questions.
-        </Paragraph>
-        <Spacing top="small" />
-        <Flex align="center">
-          <Button
-            size="medium"
-            onClick={() => {
-              toast.success('You are now checked-in')
-              checkIn()
-            }}
-            style={{ minWidth: '10rem' }}
-            disabled={!hasPermission}
-          >
-            Check in
-          </Button>
-          {!hasPermission && (
-            <div className="restricted-label">Only available for IEX</div>
-          )}
-        </Flex>
-      </MessageCard>
-    </FadeIn>
+    <>
+      <UpdateUserMarketModal onClose={() => void 0} />
+      <FadeIn>
+        <MessageCard>
+          <SecondLevelHeadline>
+            Check in to start answering questions
+          </SecondLevelHeadline>
+          <Paragraph style={{ maxWidth: '25rem' }}>
+            By checking in, you signal to other users in Hope that you are
+            working with questions.
+          </Paragraph>
+          <Spacing top="small" />
+          <Flex align="center">
+            <Button
+              size="medium"
+              onClick={() => {
+                toast.success('You are now checked-in')
+                checkIn()
+              }}
+              style={{ minWidth: '10rem' }}
+              disabled={!hasPermission}
+            >
+              Check in
+            </Button>
+            {!hasPermission && (
+              <div className="restricted-label">Only available for IEX</div>
+            )}
+          </Flex>
+        </MessageCard>
+      </FadeIn>
+    </>
   )
 }
 
