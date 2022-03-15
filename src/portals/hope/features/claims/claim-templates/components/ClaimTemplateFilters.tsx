@@ -18,6 +18,7 @@ import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage
 import React from 'react'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
 
 interface ClaimTemplateFiltersProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -134,7 +135,7 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
         {Object.values(ClaimState).map((state) => (
           <Flex key={state} direction="row" align="center">
             <Checkbox
-              label={state.charAt(0) + state.toLowerCase().slice(1)}
+              label={convertEnumOrSentenceToTitle(state)}
               checked={filterExists(state, 'filterClaimStates')}
               onChange={() => setFilterHandler(state, 'filterClaimStates')}
             />
@@ -157,7 +158,7 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
         {Object.values(ClaimComplexity).map((complexity) => (
           <Flex key={complexity} direction="row" align="center">
             <Checkbox
-              label={complexity.charAt(0) + complexity.toLowerCase().slice(1)}
+              label={convertEnumOrSentenceToTitle(complexity)}
               checked={filterExists(complexity, 'filterComplexities')}
               onChange={() =>
                 setFilterHandler(complexity, 'filterComplexities')
@@ -222,7 +223,7 @@ export const ClaimTemplateFilters: React.FC<ClaimTemplateFiltersProps> = ({
         {Object.values(Market).map((market) => (
           <Flex key={market} direction="row" align="center">
             <Checkbox
-              label={market.charAt(0) + market.toLowerCase().slice(1)}
+              label={convertEnumOrSentenceToTitle(market)}
               checked={filterExists(market, 'filterMarkets')}
               onChange={() => setFilterHandler(market, 'filterMarkets')}
             />
