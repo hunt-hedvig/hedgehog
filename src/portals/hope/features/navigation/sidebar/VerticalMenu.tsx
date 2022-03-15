@@ -309,7 +309,7 @@ export const VerticalMenu: React.FC = () => {
 
                       if (
                         location.pathname.startsWith('/questions') &&
-                        item.route === '/questions'
+                        item.route === '/tasks/check-in'
                       )
                         return true
 
