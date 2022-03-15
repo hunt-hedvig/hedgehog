@@ -59,46 +59,46 @@ const Wrapper = styled.div<{ collapsed: boolean }>`
   }
 `
 
-const InnerWrapper = styled('div')({
-  position: 'sticky',
-  display: 'flex',
-  flexDirection: 'column',
-  top: 0,
-  height: '100vh',
-  overflowY: 'scroll',
-  width: '100%',
-  margin: 'auto',
+const InnerWrapper = styled.div`
+  position: sticky;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  margin: auto;
 
-  '&::-webkit-scrollbar, &::-moz-scrollbar': {
-    appearance: 'none',
-    width: 0,
-    display: 'none',
-  },
-})
+  &::-webkit-scrollbar {
+    appearance: none;
+    width: 0;
+    display: none;
+  }
+`
 
-const Header = styled('div')({
-  position: 'relative',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'flex-start',
-  padding: '2rem 0',
-  flexShrink: 0,
-})
-const HeaderLogo = styled(Logo)<{ collapsed: boolean }>(({ collapsed }) => ({
-  width: collapsed ? 0 : '7rem',
-  opacity: collapsed ? 0 : 1,
-  marginRight: 0,
-  marginLeft: collapsed ? 0 : '2rem',
-  transition: 'margin 500ms, width 500ms, opacity: 500ms',
-  fill: colorsV3.gray100,
-}))
-const HeaderLogoIcon = styled(LogoIcon)<{ collapsed: boolean }>(
-  ({ collapsed }) => ({
-    width: collapsed ? '2rem' : '1rem',
-    fill: colorsV3.gray100,
-    transition: 'margin-left 500ms, width 500ms',
-  }),
-)
+const Header = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 2rem 0;
+  flex-shrink: 0;
+`
+
+const HeaderLogo = styled(Logo)<{ collapsed: boolean }>`
+  width: ${({ collapsed }) => (collapsed ? '0' : '7rem')};
+  opacity: ${({ collapsed }) => (collapsed ? '0' : '1')};
+  margin-right: 0;
+  margin-left: ${({ collapsed }) => (collapsed ? '0' : '2rem')};
+  transition: all 500ms;
+  fill: ${colorsV3.gray100};
+`
+
+const HeaderLogoIcon = styled(LogoIcon)<{ collapsed: boolean }>`
+  width: ${({ collapsed }) => (collapsed ? '2rem' : '1rem')};
+  fill: ${colorsV3.gray100};
+  transition: all 500ms;
+`
 
 const CollapseToggle = styled('button')<{ collapsed?: boolean }>(
   ({ collapsed, theme }) => ({

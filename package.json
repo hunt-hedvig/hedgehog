@@ -1,7 +1,6 @@
 {
   "version": "1.5.0",
   "main": "build/index.js",
-  "private": false,
   "engines": {
     "node": "16.13.0",
     "npm": "8.1.0"
@@ -45,11 +44,11 @@
     "react-bootstrap-icons": "^1.6.1",
     "react-cookie": "^4.1.1",
     "react-datepicker": "^3.6.0",
-    "react-dom": "npm:@hot-loader/react-dom",
+    "react-dom": "^17.0.2",
     "react-dropzone": "^10.1.10",
     "react-gtm-module": "^2.0.11",
     "react-hook-form": "^6.11.2",
-    "react-hot-loader": "^4.3.11",
+    "react-hot-loader": "^4.13.0",
     "react-hot-toast": "^2.1.0",
     "react-linkify": "^1.0.0-alpha",
     "react-media": "^1.10.0",
@@ -77,11 +76,6 @@
     "@graphql-codegen/typescript-operations": "^2.2.2",
     "@graphql-codegen/typescript-react-apollo": "^3.2.4",
     "@hypnosphi/create-react-context": "^0.3.1",
-    "@storybook/addon-actions": "^6.4.19",
-    "@storybook/addon-knobs": "^6.4.0",
-    "@storybook/addon-links": "^6.4.19",
-    "@storybook/addons": "^6.4.19",
-    "@storybook/react": "^6.4.19",
     "@swc/core": "^1.2.152",
     "@swc/jest": "^0.2.20",
     "@testing-library/react": "^12.1.2",
@@ -138,9 +132,7 @@
     "typecheck": "tsc",
     "lint": "eslint 'src/**/*.{ts,tsx}' 'shared/**/*.{ts,tsx}'",
     "fix": "eslint 'src/**/*.{ts,tsx}' 'shared/**/*.{ts,tsx}' --fix && pretty-quick",
-    "graphql:gen": "graphql-codegen",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "graphql:gen": "graphql-codegen"
   },
   "peerDependencies": {
     "graphql": "^0.13.0"
