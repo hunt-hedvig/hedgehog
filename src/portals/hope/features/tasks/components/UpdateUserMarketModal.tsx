@@ -2,6 +2,9 @@ import styled from '@emotion/styled'
 import { Button, Checkbox, Flex, Label, Modal } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import React from 'react'
+import { Market, MarketFlags } from 'portals/hope/features/config/constants'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
+import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 
 const StyledModal = styled(Modal)`
   width: 24rem;
@@ -31,6 +34,8 @@ const StyledModal = styled(Modal)`
 export const UpdateUserMarketModal: React.FC<{ onClose: () => void }> = ({
   onClose,
 }) => {
+  const { markets: userMarkets, removeMarket, addMarket } = useMyMarkets()
+
   return (
     <StyledModal onClose={onClose}>
       <Flex
@@ -54,18 +59,21 @@ export const UpdateUserMarketModal: React.FC<{ onClose: () => void }> = ({
             }}
             justify="space-between"
           >
-            <Checkbox
-              style={{ width: '50%', marginTop: '0.25rem' }}
-              label="Sweden 🇸🇪"
-            />
-            <Checkbox
-              style={{ width: '50%', marginTop: '0.25rem' }}
-              label="Norway 🇳🇴"
-            />
-            <Checkbox
-              style={{ width: '50%', marginTop: '0.25rem' }}
-              label="Denmark 🇩🇰"
-            />
+            {Object.values(Market).map((market) => {
+              const checked = userMarkets.includes(market)
+              return (
+                <Checkbox
+                  style={{ width: '50%', marginTop: '0.25rem' }}
+                  label={`${convertEnumOrSentenceToTitle(market)} ${
+                    MarketFlags[market]
+                  }`}
+                  checked={checked}
+                  onChange={() =>
+                    checked ? removeMarket(market) : addMarket(market)
+                  }
+                />
+              )
+            })}
           </Flex>
         </div>
         <div style={{ width: '100%' }}>
