@@ -31,9 +31,10 @@ const StyledModal = styled(Modal)`
   }
 `
 
-export const UpdateUserMarketModal: React.FC<{ onClose: () => void }> = ({
-  onClose,
-}) => {
+export const UpdateUserMarketModal: React.FC<{
+  onClose: () => void
+  onSubmit: () => void
+}> = ({ onClose, onSubmit }) => {
   const { markets: userMarkets, removeMarket, addMarket } = useMyMarkets()
 
   return (
@@ -44,7 +45,7 @@ export const UpdateUserMarketModal: React.FC<{ onClose: () => void }> = ({
         justify="space-between"
       >
         <div>
-          <h4>Account Settings</h4>
+          <h4>Select Markets</h4>
           <p>
             Hope will assign you questions and claims according to the market(s)
             you handle.
@@ -61,8 +62,10 @@ export const UpdateUserMarketModal: React.FC<{ onClose: () => void }> = ({
           >
             {Object.values(Market).map((market) => {
               const checked = userMarkets.includes(market)
+
               return (
                 <Checkbox
+                  key={market}
                   style={{ width: '50%', marginTop: '0.25rem' }}
                   label={`${convertEnumOrSentenceToTitle(market)} ${
                     MarketFlags[market]
@@ -77,7 +80,13 @@ export const UpdateUserMarketModal: React.FC<{ onClose: () => void }> = ({
           </Flex>
         </div>
         <div style={{ width: '100%' }}>
-          <Button style={{ width: '100%' }}>Update Settings</Button>
+          <Button
+            style={{ width: '100%' }}
+            disabled={!userMarkets.length}
+            onClick={onSubmit}
+          >
+            Check-in
+          </Button>
           <div className="tip">
             These can be changed under your profile settings
           </div>

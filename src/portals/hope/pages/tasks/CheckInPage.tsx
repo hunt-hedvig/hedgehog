@@ -1,6 +1,6 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Button,
   FadeIn,
@@ -38,6 +38,7 @@ const MessageCard = styled.div`
 `
 
 const CheckInPage: Page = () => {
+  const [showModal, setShowModal] = useState(false)
   const hasPermission = useHasPermission('questions')
   const { checkedIn, checkIn, loading } = useCheckInOut()
   const history = useHistory()
@@ -54,7 +55,15 @@ const CheckInPage: Page = () => {
 
   return (
     <>
-      <UpdateUserMarketModal onClose={() => void 0} />
+      {showModal && (
+        <UpdateUserMarketModal
+          onClose={() => setShowModal(false)}
+          onSubmit={() => {
+            toast.success('You are now checked-in')
+            checkIn()
+          }}
+        />
+      )}
       <FadeIn>
         <MessageCard>
           <SecondLevelHeadline>
@@ -68,10 +77,7 @@ const CheckInPage: Page = () => {
           <Flex align="center">
             <Button
               size="medium"
-              onClick={() => {
-                toast.success('You are now checked-in')
-                checkIn()
-              }}
+              onClick={() => setShowModal(true)}
               style={{ minWidth: '10rem' }}
               disabled={!hasPermission}
             >
