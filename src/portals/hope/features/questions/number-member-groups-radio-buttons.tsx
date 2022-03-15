@@ -25,7 +25,7 @@ export const numberMemberGroupsOptions = range(
   }
 })
 
-interface MemberGroupsProps {
+interface MemberGroupsProps extends React.HTMLAttributes<HTMLDivElement> {
   groupsNumber?: number
   setGroupsNumber?: (value: number) => void
   additionalSettingUpdate?: (value: number) => void
@@ -35,12 +35,13 @@ export const NumberMemberGroupsRadioButtons: React.FC<MemberGroupsProps> = ({
   groupsNumber,
   setGroupsNumber,
   additionalSettingUpdate,
+  ...props
 }) => {
   const { updateSetting } = useMe()
   const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
 
   return (
-    <Group>
+    <Group {...props}>
       <RadioGroup
         value={groupsNumber || numberMemberGroups}
         onChange={(e) => {
