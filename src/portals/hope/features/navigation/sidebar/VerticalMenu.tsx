@@ -78,6 +78,8 @@ const Header = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  padding: 2rem 0;
+  flex-shrink: 0;
 `
 
 const HeaderLogo = styled(Logo)<{ collapsed: boolean }>`
