@@ -187,31 +187,13 @@ export const FilterSelect: React.FC<{
       >
         {Object.keys(Market)
           .filter((m) => userMarkets.includes(m.toUpperCase() as Market))
-          .map((market, index) => {
-            const navigation = register(`Market ${market} Filter`, {
-              resolve: () => {
-                onToggle(FilterState[market], UserSettingKey.MarketFilter)
-              },
-              neighbors: {
-                up: `Member Group ${range(numberMemberGroups)[index]} Filter`,
-                left: index
-                  ? `Market ${Object.keys(Market)[index - 1]} Filter`
-                  : undefined,
-                right:
-                  index < Object.keys(Market).length - 1
-                    ? `Market ${Object.keys(Market)[index + 1]} Filter`
-                    : undefined,
-                down: index === 2 ? `No Claims Filter` : 'Open Claims Filter',
-              },
-            })
-
+          .map((market) => {
             return (
               <FadeIn
                 delay={`${
                   animationDelay + animationItemDelay * (numberMemberGroups + 1)
                 }ms`}
                 key={market}
-                {...navigation}
               >
                 <FilterButton
                   small={small}

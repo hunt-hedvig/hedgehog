@@ -306,6 +306,13 @@ export const VerticalMenu: React.FC = () => {
                       ) {
                         return true
                       }
+
+                      if (
+                        location.pathname.startsWith('/questions') &&
+                        item.route === '/questions'
+                      )
+                        return true
+
                       return location.pathname.startsWith(item.route)
                     }}
                     to={
