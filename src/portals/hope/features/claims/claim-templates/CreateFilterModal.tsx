@@ -35,7 +35,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
   const [name, setName] = useState<string>(
     (editableTemplate && editableTemplate.name) || '',
   )
-  const [filters, setFilters] = useState<ClaimsFiltersType>(
+  const [template, setTemplate] = useState<ClaimsFiltersType>(
     editableTemplate || {
       filterClaimStates: null,
       filterCreatedBeforeOrOnDate: null,
@@ -50,7 +50,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
 
   const createFilterHandler = () => {
     onSave({
-      ...filters,
+      ...template,
       name,
       id: editableTemplate ? editableTemplate.id : uuidv4(),
     })
@@ -79,7 +79,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
           {...register('CreateFilterModal', {})}
         />
 
-        <ClaimFilters filters={filters} setFilters={setFilters} />
+        <ClaimFilters template={template} editTemplate={setTemplate} />
 
         <Button onClick={createFilterHandler}>
           {!editableTemplate ? 'Create' : 'Save'}

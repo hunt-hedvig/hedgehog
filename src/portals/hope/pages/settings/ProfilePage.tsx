@@ -1,9 +1,11 @@
 import {
   Button,
+  Checkbox,
   Flex,
   Input,
   Label,
   MainHeadline,
+  Paragraph,
   Spacing,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
@@ -13,12 +15,16 @@ import { toast } from 'react-hot-toast'
 import { useGetMeQuery, useUpdateUserMutation } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
 import { AvailablePortals } from 'auth/components/AvailablePortals'
+import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
+import { Market, MarketFlags } from 'portals/hope/features/config/constants'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
 
 const ProfilePage: Page = () => {
   const { data } = useGetMeQuery()
   const [fullName, setFullName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState<null | string>('')
   const [updateUser] = useUpdateUserMutation()
+  const { markets, addMarket, removeMarket } = useMyMarkets()
 
   const portals = data?.me.availablePortals ?? []
   const currentPortal = data?.me.portal ?? ''
@@ -123,6 +129,43 @@ const ProfilePage: Page = () => {
           </form>
         </Flex>
       </div>
+      <>
+        <Spacing top="large" />
+        <div>
+          <ThirdLevelHeadline>Markets</ThirdLevelHeadline>
+          <Paragraph secondary style={{ fontSize: '1rem' }}>
+            These are your focus markets and will be used to customize your
+            workflow
+          </Paragraph>
+          <Flex
+            style={{
+              flexWrap: 'wrap',
+              marginTop: '0.25rem',
+              marginBottom: '2.5rem',
+              maxWidth: '30rem',
+            }}
+            justify="space-between"
+          >
+            {Object.values(Market).map((market) => {
+              const checked = markets.includes(market)
+
+              return (
+                <Checkbox
+                  key={market}
+                  style={{ width: '30%', marginTop: '0.25rem' }}
+                  label={`${convertEnumOrSentenceToTitle(market)} ${
+                    MarketFlags[market]
+                  }`}
+                  checked={checked}
+                  onChange={() =>
+                    checked ? removeMarket(market) : addMarket(market)
+                  }
+                />
+              )
+            })}
+          </Flex>
+        </div>
+      </>
       {portals.length > 1 && (
         <>
           <Spacing top="large" />

@@ -30,7 +30,10 @@ import {
 } from 'portals/hope/features/config/constants'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import {
+  convertEnumOrSentenceToTitle,
+  convertEnumToTitle,
+} from '@hedvig-ui/utils/text'
 import { ClaimOutcomes } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
 
 export const FilterWrapper = styled.div`
@@ -237,7 +240,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         <Label>States</Label>
         {Object.values(ClaimState).map((state, index) => {
           const states = Object.keys(ClaimState)
-          const stateName = state.charAt(0) + state.toLowerCase().slice(1)
+          const stateName = convertEnumOrSentenceToTitle(state)
           const complexities = Object.keys(ClaimComplexity)
 
           const navigation = register(stateName, {
@@ -284,8 +287,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         />
         {Object.values(ClaimComplexity).map((complexity, index) => {
           const complexities = Object.keys(ClaimComplexity)
-          const complexityName =
-            complexity.charAt(0) + complexity.toLowerCase().slice(1)
+          const complexityName = convertEnumOrSentenceToTitle(complexity)
 
           const navigation = register(complexityName, {
             resolve: () => {
@@ -460,7 +462,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         <Label>Markets</Label>
         {Object.values(Market).map((market, index) => {
           const markets = Object.keys(Market)
-          const marketName = market.charAt(0) + market.toLowerCase().slice(1)
+          const marketName = convertEnumOrSentenceToTitle(market)
           const memberGroups = range(numberMemberGroups)
 
           const navigation = register(marketName, {
