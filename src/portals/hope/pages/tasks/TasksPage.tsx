@@ -8,6 +8,7 @@ import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-que
 import { Question, QuestionGroup } from 'types/generated/graphql'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
+import { TaskChatInput } from 'portals/hope/features/tasks/components/TaskChatInput'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -15,14 +16,16 @@ const TaskNavigationWrapper = styled.div`
   clip-path: inset(0px -10rem 0px 0px);
   background-color: white;
 
+  min-width: 60%;
+
   margin-left: -4rem;
 `
 
 const TaskChatWrapper = styled.div`
+  position: relative;
   height: 100%;
+  min-width: 40%;
   width: 100%;
-  min-width: 37rem;
-  overflow-y: scroll;
 
   &::-webkit-scrollbar {
     appearance: none;
@@ -119,9 +122,8 @@ const ListItem = styled.div<{ selected?: boolean }>`
     selected ? chroma(theme.highlight).alpha(0.25).hex() : undefined};
 
   .name {
-    min-width: 18rem;
-    padding-right: 2rem;
     width: 30%;
+    padding-right: 2rem;
 
     white-space: nowrap;
     overflow: hidden;
@@ -129,22 +131,20 @@ const ListItem = styled.div<{ selected?: boolean }>`
   }
 
   .preview {
+    width: 70%;
     color: ${({ theme }) =>
       chroma(theme.semiStrongForeground).brighten(1).hex()};
 
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
-    width: 50%;
   }
 
   .options {
+    width: 10rem;
     color: ${({ theme }) =>
       chroma(theme.semiStrongForeground).brighten(1).hex()};
 
-    min-width: 10rem;
-    width: 20%;
     text-align: right;
   }
 `
@@ -214,12 +214,34 @@ const TasksPage: Page = () => {
       </TaskNavigationWrapper>
       <TaskChatWrapper>
         {selectedQuestionGroup && (
-          <MessagesList
-            memberId={selectedQuestionGroup.memberId}
-            style={{
-              padding: '2rem',
-            }}
-          />
+          <>
+            <div style={{ height: 'calc(100% - 15rem)' }}>
+              <MessagesList
+                memberId={selectedQuestionGroup.memberId}
+                style={{
+                  padding: '2rem',
+                  marginBottom: '6rem',
+                  paddingBottom: '0',
+                }}
+              />
+            </div>
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                minHeight: '10rem',
+              }}
+            >
+              <TaskChatInput
+                memberId={selectedQuestionGroup.memberId}
+                onBlur={() => void 0}
+                onFocus={() => void 0}
+                onResolve={() => void 0}
+              />
+            </div>
+          </>
         )}
       </TaskChatWrapper>
     </Container>

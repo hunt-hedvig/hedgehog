@@ -1,30 +1,18 @@
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { Button, FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { usePlatform } from '@hedvig-ui/hooks/use-platform'
-import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
-import React, { useEffect, useState } from 'react'
-import { toast } from 'react-hot-toast'
 import { useDraft } from '@hedvig-ui/hooks/use-draft'
 import {
   GetQuestionsGroupsDocument,
   useMarkQuestionAsResolvedMutation,
   useSendMessageMutation,
 } from 'types/generated/graphql'
-import { FileText } from 'react-bootstrap-icons'
-import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
+import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
-
-const ConversationContent = styled.div`
-  background-color: ${({ theme }) => theme.accentBackground};
-  width: 100%;
-  height: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  max-height: 70vh;
-  border-radius: 8px;
-`
+import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { toast } from 'react-hot-toast'
+import { FileText } from 'react-bootstrap-icons'
 
 const ConversationFooter = styled.div`
   width: 100%;
@@ -36,7 +24,7 @@ const ConversationFooter = styled.div`
   position: relative;
 `
 
-const ConversationTextArea = styled(TextArea)`
+const TaskTextArea = styled(TextArea)`
   &&&& {
     position: relative;
     z-index: 1;
@@ -135,7 +123,7 @@ const HintText = styled.span`
   }
 `
 
-export const ConversationChat: React.FC<{
+export const TaskChatInput: React.FC<{
   memberId: string
   onFocus: () => void
   onBlur: () => void
@@ -231,49 +219,50 @@ export const ConversationChat: React.FC<{
   }
 
   return (
-    <FadeIn style={{ width: '100%', height: '100%' }}>
-      <ConversationContent>
-        <MessagesList memberId={memberId} />
-        <ConversationFooter>
-          <HintContainer>
-            {hinting && (
-              <HintText>
-                {templateHint?.title ? `/${templateHint?.title}` : message}
-              </HintText>
-            )}
-          </HintContainer>
+    <>
+      <ConversationFooter>
+        <HintContainer>
+          {hinting && (
+            <HintText>
+              {templateHint?.title ? `/${templateHint?.title}` : message}
+            </HintText>
+          )}
+        </HintContainer>
 
-          <ConversationTextArea
-            onFocus={() => {
-              setInputFocused(true)
-              onFocus()
-            }}
-            onBlur={() => {
-              setInputFocused(false)
-              onBlur()
-            }}
-            placeholder={
-              !hinting ? `Message goes here or type '/' for templates` : ''
+        <TaskTextArea
+          onFocus={() => {
+            setInputFocused(true)
+            onFocus()
+          }}
+          onBlur={() => {
+            setInputFocused(false)
+            onBlur()
+          }}
+          placeholder={
+            !hinting ? `Message goes here or type '/' for templates` : ''
+          }
+          value={message}
+          onChange={onChangeHandler}
+          onKeyDown={(e) => handleOnKeyDown(e)}
+        />
+        <TextAreaFooter onClick={show}>
+          <div className="divider" />
+          <TemplatesButton
+            size="small"
+            variant="tertiary"
+            icon={
+              <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
             }
-            value={message}
-            onChange={onChangeHandler}
-            onKeyDown={(e) => handleOnKeyDown(e)}
-          />
-          <TextAreaFooter onClick={show}>
-            <div className="divider" />
-            <TemplatesButton
-              size="small"
-              variant="tertiary"
-              icon={
-                <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
-              }
-            >
-              templates
-            </TemplatesButton>
-          </TextAreaFooter>
-        </ConversationFooter>
-      </ConversationContent>
-      <Flex fullWidth justify={'space-between'} style={{ marginTop: '1.0em' }}>
+          >
+            templates
+          </TemplatesButton>
+        </TextAreaFooter>
+      </ConversationFooter>
+      <Flex
+        fullWidth
+        justify={'space-between'}
+        style={{ padding: '0 1.25rem', marginBottom: '2rem' }}
+      >
         <FadeIn duration={200}>
           <Tip>
             <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
@@ -289,6 +278,6 @@ export const ConversationChat: React.FC<{
           </FadeIn>
         )}
       </Flex>
-    </FadeIn>
+    </>
   )
 }
