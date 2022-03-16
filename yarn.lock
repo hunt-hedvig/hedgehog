@@ -1545,6 +1545,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hot-loader/react-dom@npm:^17.0.2":
+  version: 17.0.2
+  resolution: "@hot-loader/react-dom@npm:17.0.2"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    scheduler: ^0.20.2
+  peerDependencies:
+    react: 17.0.2
+  checksum: 180de3211aff1d60fd9d2a9130ba7977e2e356b1ecd2e7c50a98e6507bb7873f0523b44fa63142f0ffdc629d2933994f4add86e1f19288941f9d223bd28f5e48
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.5.0":
   version: 0.5.0
   resolution: "@humanwhocodes/config-array@npm:0.5.0"
@@ -11344,13 +11357,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:17.0.1":
-  version: 17.0.1
-  resolution: "react@npm:17.0.1"
+"react@npm:17.0.2":
+  version: 17.0.2
+  resolution: "react@npm:17.0.2"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: 83b9df9529a2b489f00a4eaa608fc7d55518b258e046c100344ae068713e43ae64e477a140f87e38cfe75489bcfd26d27fce5818f89f4ec41bdbda7ead4bb426
+  checksum: b254cc17ce3011788330f7bbf383ab653c6848902d7936a87b09d835d091e3f295f7e9dd1597c6daac5dc80f90e778c8230218ba8ad599f74adcc11e33b9d61b
   languageName: node
   linkType: hard
 
@@ -11737,6 +11750,7 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": ^3.2.4
     "@hedviginsurance/brand": ^3.0.7
     "@hookform/error-message": ^0.0.4
+    "@hot-loader/react-dom": ^17.0.2
     "@hypnosphi/create-react-context": ^0.3.1
     "@rjsf/core": ^2.4.0
     "@swc/core": ^1.2.152
@@ -11795,7 +11809,7 @@ __metadata:
     node-fetch: ^2.6.7
     nodemon: ^2.0.14
     prettier: ^2.5.1
-    react: 17.0.1
+    react: 17.0.2
     react-bootstrap-icons: ^1.6.1
     react-cookie: ^4.1.1
     react-datepicker: ^3.6.0
