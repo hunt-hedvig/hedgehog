@@ -13,7 +13,7 @@ interface UseAuthenticateResult {
 
 gql`
   query Authentication {
-    me @persist {
+    me {
       role
       portal
       availablePortals
