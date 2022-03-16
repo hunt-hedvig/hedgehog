@@ -1,7 +1,7 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import { Flex, Modal } from '@hedvig-ui'
+import { Flex, Label, Modal } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 import { Question, QuestionGroup } from 'types/generated/graphql'
@@ -15,6 +15,12 @@ import {
   doMemberGroupFilter,
 } from 'portals/hope/features/questions/utils'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
+import {
+  getMemberFlag,
+  getMemberIdColor,
+} from 'portals/hope/features/member/utils'
+import { PickedLocale } from 'portals/hope/features/config/constants'
+import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -42,6 +48,7 @@ const TaskChatWrapper = styled.div`
 
 const TopBar = styled.div`
   display: flex;
+  justify-content: space-between;
   border-bottom: 1px solid
     ${({ theme }) => chroma(theme.semiStrongForeground).brighten(3.25).hex()};
   width: 100%;
@@ -74,13 +81,6 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
     margin-left: 1rem;
     margin-top: 0.1rem;
   }
-`
-
-const FilterBar = styled.div`
-  display: flex;
-  border-bottom: 1px solid
-    ${({ theme }) => chroma(theme.semiStrongForeground).brighten(3.25).hex()};
-  width: 100%;
 `
 
 const FilterBarItem = styled.button`
@@ -121,11 +121,30 @@ const ListItem = styled.div<{ selected?: boolean }>`
 
   :hover {
     background-color: ${({ theme }) =>
-      chroma(theme.highlight).alpha(0.25).hex()};
+      chroma(theme.accent).alpha(0.2).brighten(2).hex()};
   }
 
   background-color: ${({ selected, theme }) =>
-    selected ? chroma(theme.highlight).alpha(0.25).hex() : undefined};
+    selected ? chroma(theme.accent).alpha(0.2).brighten(1).hex() : undefined};
+
+  .orb {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 3rem;
+
+    div {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+
+      background-color: transparent;
+    }
+  }
+
+  .flag {
+    padding: 0 2rem;
+  }
 
   .name {
     width: 30%;
@@ -164,7 +183,7 @@ const Container = styled(Flex)`
 `
 
 const FilterModal = styled(Modal)`
-  width: 50rem;
+  width: 60rem;
 
   padding: 1.5rem 1.5rem 5rem;
 
@@ -222,16 +241,28 @@ const TasksPage: Page = () => {
               Incoming questions
               <div className="count">{groups.length}</div>
             </TopBarItem>
-          </TopBar>
-          <FilterBar>
             <FilterBarItem onClick={() => setShowFilters(true)}>
               Filters
             </FilterBarItem>
-          </FilterBar>
+          </TopBar>
           <ListContainer>
             {groups.map((group) => {
               const previewQuestion = group?.questions?.slice(-1)[0] ?? ''
               const preview = getQuestionBody(previewQuestion)
+
+              const orbColor = getMemberIdColor(
+                group.memberId,
+                numberMemberGroups,
+              )
+
+              const flag = group.market
+                ? getMemberFlag(
+                    {
+                      market: group.market ?? '',
+                    },
+                    group.pickedLocale as PickedLocale,
+                  )
+                : '🏳'
 
               return (
                 <ListItem
@@ -239,8 +270,18 @@ const TasksPage: Page = () => {
                   onClick={() => setSelectedQuestionGroup(group)}
                   selected={group.memberId === selectedQuestionGroup?.memberId}
                 >
+                  <div className="orb">
+                    <div style={{ backgroundColor: orbColor }} />
+                  </div>
+                  <div className="flag">{flag}</div>
                   <span className="name">
-                    {(group?.firstName ?? '') + ' ' + (group?.lastName ?? '')}
+                    <a
+                      href={`/members/${group.memberId}`}
+                      target="_blank"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {(group?.firstName ?? '') + ' ' + (group?.lastName ?? '')}
+                    </a>
                   </span>
                   <span className="preview">{preview.text}</span>
                   <div className="options">
@@ -313,10 +354,19 @@ const TasksPage: Page = () => {
               <Flex
                 style={{
                   flexWrap: 'wrap',
-                  marginTop: '4rem',
+                  marginTop: '3rem',
                 }}
                 justify="space-between"
               >
+                <Flex
+                  direction="column"
+                  align="center"
+                  fullWidth
+                  style={{ marginBottom: '2rem' }}
+                >
+                  <Label>Number of member groups</Label>
+                  <NumberMemberGroupsRadioButtons />
+                </Flex>
                 <FilterSelect
                   filters={selectedFilters}
                   onToggle={toggleFilter}
