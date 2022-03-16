@@ -67,7 +67,12 @@ export const useTemplatesHinting = (
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (isPressing(e, Keys.Slash) && !hinting && !loading) {
+    if (
+      isPressing(e, Keys.Slash) &&
+      !hinting &&
+      !loading &&
+      !e.currentTarget.value
+    ) {
       e.preventDefault()
 
       setTemplateHint(searchTemplate(''))
