@@ -16,12 +16,15 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
         path.resolve(context, 'shared'),
       ],
       symlinks: false,
+      alias: {
+        'react-dom': '@hot-loader/react-dom',
+      },
     },
     entry,
     module: {
       rules: [
         {
-          test: /\.(js|jsx)$/,
+          test: /\.(tsx?|js)$/,
           use: 'react-hot-loader/webpack',
           include: /node_modules/,
         },
