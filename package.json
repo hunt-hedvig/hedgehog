@@ -3,11 +3,14 @@
   "main": "build/index.js",
   "engines": {
     "node": "16.13.0",
-    "npm": "please-use-yarn",
+    "npm": "8.1.0",
     "yarn": ">= 3.2.0"
   },
   "browserslist": [
     "> 0.25%, not dead, not IE > 0, not op_mini all"
+  ],
+  "cacheDirectories": [
+    ".yarn/cache"
   ],
   "dependencies": {
     "@apollo/client": "^3.5.6",
