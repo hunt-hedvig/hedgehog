@@ -366,66 +366,52 @@ export const useNavigation = () => {
     }
   }
 
-  const registerListItem = ({
-    itemName,
-    listName,
+  function registerList<T>({
     list,
+    name,
+    nameField,
     focus,
     resolve,
     focusCondition,
   }: {
-    itemName: string
-    listName: string
-    list: string[]
+    list: T[]
+    name: string
+    nameField: keyof T
     focus: Key
-    resolve?: (itemName: string) => void
+    resolve?: (item: T) => void
     focusCondition?: (itemName: string) => boolean
-  }) => {
-    const name = `${listName} - ${itemName}`
-    const itemIndex = list.indexOf(itemName)
+  }) {
+    return {
+      registerItem: (item: T) => {
+        const listName = `${name} - ${item[nameField]}`
 
-    return register(name, {
-      focus,
-      resolve: () => {
-        resolve?.(itemName)
+        const itemIndex = list
+          .map((item) => item[nameField])
+          .indexOf(item[nameField])
+
+        return register(listName, {
+          focus,
+          resolve: () => {
+            resolve?.(item)
+          },
+          neighbors: {
+            up: itemIndex
+              ? `${name} - ${list[itemIndex - 1][nameField]}`
+              : undefined,
+            down:
+              itemIndex < list.length - 1
+                ? `${name} - ${list[itemIndex + 1][nameField]}`
+                : undefined,
+          },
+          focusCondition,
+        })
       },
-      neighbors: {
-        up: itemIndex ? `${listName} - ${list[itemIndex - 1]}` : undefined,
-        down:
-          itemIndex < list.length - 1
-            ? `${listName} - ${list[itemIndex + 1]}`
-            : undefined,
-      },
-      focusCondition,
-    })
+    }
   }
 
   return {
     register,
-    registerList: ({
-      list,
-      name,
-      focus,
-      resolve,
-      focusCondition,
-    }: {
-      list: string[]
-      name: string
-      focus: Key
-      resolve?: (name: string) => void
-      focusCondition?: (itemName: string) => boolean
-    }) => ({
-      registerItem: (itemName: string) =>
-        // registerListItem(itemName, name, list, focus, resolve, focusCondition),
-        registerListItem({
-          itemName,
-          listName: name,
-          list,
-          focus,
-          resolve,
-          focusCondition,
-        }),
-    }),
+    registerList,
     focus: (name: string | null) => setCursor(name),
   }
 }

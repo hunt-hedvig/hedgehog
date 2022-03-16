@@ -260,13 +260,11 @@ export const VerticalMenu: React.FC = () => {
   ]
 
   const { registerItem } = registerList({
-    list: MenuItemsList.map((item) => item.title),
+    list: MenuItemsList,
     name: 'VerticalMenu',
+    nameField: 'title',
     focus: Keys.S,
-    resolve: (item) =>
-      MenuItemsList.find(
-        (menuItem) => menuItem.title === item,
-      )?.hotkeyHandler(),
+    resolve: (item) => item.hotkeyHandler(),
     focusCondition: (name) => {
       const itemTitle = name.split(' - ')[1]
 
@@ -296,13 +294,13 @@ export const VerticalMenu: React.FC = () => {
             </Header>
 
             <Menu className="menu">
-              {MenuItemsList.map(({ external, single, ...item }) =>
-                !external ? (
+              {MenuItemsList.map((item) =>
+                !item.external ? (
                   <MenuItem
                     key={item.route}
                     style={{
-                      ...registerItem(item.title).style,
-                      marginBottom: single ? '4rem' : 0,
+                      ...registerItem(item).style,
+                      marginBottom: item.single ? '4rem' : 0,
                     }}
                     isActive={(_match, location) => {
                       if (
@@ -333,8 +331,8 @@ export const VerticalMenu: React.FC = () => {
                   <ExternalMenuItem
                     key={item.route}
                     style={{
-                      ...registerItem(item.title).style,
-                      marginBottom: single ? '4rem' : 0,
+                      ...registerItem(item).style,
+                      marginBottom: item.single ? '4rem' : 0,
                     }}
                     href={item.route}
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
