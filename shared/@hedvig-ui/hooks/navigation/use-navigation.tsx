@@ -74,7 +74,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
         return
       }
 
-      if (isPressing(e, options.focus)) {
+      if (isPressing(e, options.focus) && options.focusCondition?.(name)) {
         setCursor(name)
         cursorRef.current = name
         return true
@@ -283,6 +283,7 @@ interface UseNavigationRegisterOptions {
   parent?: string | ((ref: unknown) => string)
   neighbors?: NodeNavigationDirections
   ref?: unknown
+  focusCondition?: (item: string) => boolean
 }
 
 export const useNavigation = () => {
@@ -328,43 +329,103 @@ export const useNavigation = () => {
     }
   }, [])
 
-  return {
-    register: (
-      name: string,
-      options: UseNavigationRegisterOptions,
-      activeStyle?: React.CSSProperties,
-      style?: React.CSSProperties,
-    ) => {
-      if (!itemExists(name)) {
-        registerItem(name, options)
-      }
+  const register = (
+    name: string,
+    options: UseNavigationRegisterOptions,
+    activeStyle?: React.CSSProperties,
+    style?: React.CSSProperties,
+  ) => {
+    if (!itemExists(name)) {
+      registerItem(name, options)
+    }
 
-      if (cursor !== name) {
-        return {
-          style: {
-            border: '2px solid transparent',
-            ...style,
-          },
-        }
-      }
-
+    if (cursor !== name) {
       return {
         style: {
-          border: `2px solid ${chroma(lightTheme.accent).brighten(1).hex()}`,
-          ...activeStyle,
-        },
-        // eslint-disable-next-line
-        ref: (ref: any) => {
-          assignRef(name, ref)
-
-          ref?.scrollIntoView({
-            inline: 'center',
-            block: 'center',
-            behavior: 'smooth',
-          })
+          border: '2px solid transparent',
+          ...style,
         },
       }
-    },
+    }
+
+    return {
+      style: {
+        border: `2px solid ${chroma(lightTheme.accent).brighten(1).hex()}`,
+        ...activeStyle,
+      },
+      // eslint-disable-next-line
+      ref: (ref: any) => {
+        assignRef(name, ref)
+
+        ref?.scrollIntoView({
+          inline: 'center',
+          block: 'center',
+          behavior: 'smooth',
+        })
+      },
+    }
+  }
+
+  const registerListItem = ({
+    itemName,
+    listName,
+    list,
+    focus,
+    resolve,
+    focusCondition,
+  }: {
+    itemName: string
+    listName: string
+    list: string[]
+    focus: Key
+    resolve?: (itemName: string) => void
+    focusCondition?: (itemName: string) => boolean
+  }) => {
+    const name = `${listName} - ${itemName}`
+    const itemIndex = list.indexOf(itemName)
+
+    return register(name, {
+      focus,
+      resolve: () => {
+        resolve?.(itemName)
+      },
+      neighbors: {
+        up: itemIndex ? `${listName} - ${list[itemIndex - 1]}` : undefined,
+        down:
+          itemIndex < list.length - 1
+            ? `${listName} - ${list[itemIndex + 1]}`
+            : undefined,
+      },
+      focusCondition,
+    })
+  }
+
+  return {
+    register,
+    registerList: ({
+      list,
+      name,
+      focus,
+      resolve,
+      focusCondition,
+    }: {
+      list: string[]
+      name: string
+      focus: Key
+      resolve?: (name: string) => void
+      focusCondition?: (itemName: string) => boolean
+    }) => ({
+      registerItem: (itemName: string) =>
+        // registerListItem(itemName, name, list, focus, resolve, focusCondition),
+        registerListItem({
+          itemName,
+          listName: name,
+          list,
+          focus,
+          resolve,
+          focusCondition,
+        }),
+    }),
     focus: (name: string | null) => setCursor(name),
   }
 }

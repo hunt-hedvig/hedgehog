@@ -158,7 +158,7 @@ export const VerticalMenu: React.FC = () => {
       false,
   )
 
-  const { register } = useNavigation()
+  const { registerList } = useNavigation()
 
   useEffect(() => {
     const latestLocations = [pathname, ...locations].filter(
@@ -259,6 +259,25 @@ export const VerticalMenu: React.FC = () => {
     },
   ]
 
+  const { registerItem } = registerList({
+    list: MenuItemsList.map((item) => item.title),
+    name: 'VerticalMenu',
+    focus: Keys.S,
+    resolve: (item) =>
+      MenuItemsList.find(
+        (menuItem) => menuItem.title === item,
+      )?.hotkeyHandler(),
+    focusCondition: (name) => {
+      const itemTitle = name.split(' - ')[1]
+
+      const route = MenuItemsList.find(
+        (menuItem) => menuItem.title === itemTitle,
+      )?.route
+
+      return route ? history.location.pathname.includes(route) : false
+    },
+  })
+
   return (
     <MediaQuery query="(max-width: 1300px)">
       {(shouldAlwaysCollapse) => (
@@ -277,34 +296,13 @@ export const VerticalMenu: React.FC = () => {
             </Header>
 
             <Menu className="menu">
-              {MenuItemsList.map(({ external, single, ...item }, index) => {
-                const navigation = register(
-                  item.title,
-                  {
-                    focus: index === 0 ? Keys.S : undefined,
-                    resolve: () => {
-                      item.hotkeyHandler()
-                    },
-                    neighbors: {
-                      up: index ? MenuItemsList[index - 1].title : undefined,
-                      down:
-                        index < MenuItemsList.length - 1
-                          ? MenuItemsList[index + 1].title
-                          : undefined,
-                    },
-                  },
-                  {
-                    background: chroma(colorsV3.gray700).brighten(0.8).hex(),
-                    borderColor: 'transparent',
-                  },
-                )
-
-                return !external ? (
+              {MenuItemsList.map(({ external, single, ...item }) =>
+                !external ? (
                   <MenuItem
                     key={item.route}
                     style={{
+                      ...registerItem(item.title).style,
                       marginBottom: single ? '4rem' : 0,
-                      ...navigation.style,
                     }}
                     isActive={(_match, location) => {
                       if (
@@ -333,19 +331,18 @@ export const VerticalMenu: React.FC = () => {
                   />
                 ) : (
                   <ExternalMenuItem
-                    {...navigation}
                     key={item.route}
                     style={{
+                      ...registerItem(item.title).style,
                       marginBottom: single ? '4rem' : 0,
-                      ...navigation.style,
                     }}
                     href={item.route}
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
                     isCollapsed={isCollapsed}
                     {...item}
                   />
-                )
-              })}
+                ),
+              )}
               {!isCollapsed && !shouldAlwaysCollapse && <CheckedInCard />}
             </Menu>
           </InnerWrapper>
