@@ -166,6 +166,7 @@ const getQuestionBody = (question: Question) => {
 }
 
 const TasksPage: Page = () => {
+  const [isLarge, setIsLarge] = useState(false)
   const [selectedQuestionGroup, setSelectedQuestionGroup] =
     useState<QuestionGroup | null>(null)
   const [questionGroups] = useQuestionGroups()
@@ -215,7 +216,12 @@ const TasksPage: Page = () => {
       <TaskChatWrapper>
         {selectedQuestionGroup && (
           <>
-            <div style={{ height: 'calc(100% - 15rem)' }}>
+            <div
+              style={{
+                height: isLarge ? 'calc(100% - 27rem)' : 'calc(100% - 15rem)',
+                transition: 'height 200ms',
+              }}
+            >
               <MessagesList
                 memberId={selectedQuestionGroup.memberId}
                 style={{
@@ -235,6 +241,8 @@ const TasksPage: Page = () => {
               }}
             >
               <TaskChatInput
+                onResize={() => setIsLarge(!isLarge)}
+                isLarge={isLarge}
                 memberId={selectedQuestionGroup.memberId}
                 onBlur={() => void 0}
                 onFocus={() => void 0}

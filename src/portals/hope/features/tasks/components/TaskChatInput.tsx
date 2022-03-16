@@ -12,11 +12,12 @@ import { useTemplatesHinting } from 'portals/hope/features/template-messages/use
 import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { toast } from 'react-hot-toast'
-import { FileText } from 'react-bootstrap-icons'
+import { FileText, TextareaResize } from 'react-bootstrap-icons'
+import chroma from 'chroma-js'
 
-const ConversationFooter = styled.div`
+const Container = styled.div`
   width: 100%;
-  padding: 1em;
+  padding: 1rem;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -33,6 +34,7 @@ const TaskTextArea = styled(TextArea)`
     border: none;
     border-radius: 8px 8px 0 0;
     min-height: 100px;
+    transition: height 200ms;
   }
 `
 
@@ -123,12 +125,34 @@ const HintText = styled.span`
   }
 `
 
+const ResizeButton = styled(TextareaResize)`
+  position: absolute;
+  right: 1.75rem;
+  top: 1.75rem;
+
+  z-index: 100;
+
+  fill: ${({ theme }) => chroma(theme.semiStrongForeground).alpha(0.75).hex()};
+
+  transition: fill 200ms;
+  :hover {
+    fill: ${({ theme }) => chroma(theme.semiStrongForeground).alpha(1).hex()};
+  }
+
+  width: 1.1rem;
+  height: 1.1rem;
+
+  cursor: pointer;
+`
+
 export const TaskChatInput: React.FC<{
   memberId: string
   onFocus: () => void
   onBlur: () => void
   onResolve: () => void
-}> = ({ memberId, onFocus, onBlur, onResolve }) => {
+  onResize: () => void
+  isLarge: boolean
+}> = ({ memberId, onFocus, onBlur, onResolve, isLarge, onResize }) => {
   const [message, setMessage] = useDraft(memberId)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()
@@ -220,7 +244,8 @@ export const TaskChatInput: React.FC<{
 
   return (
     <>
-      <ConversationFooter>
+      <Container>
+        <ResizeButton onClick={onResize} />
         <HintContainer>
           {hinting && (
             <HintText>
@@ -230,6 +255,7 @@ export const TaskChatInput: React.FC<{
         </HintContainer>
 
         <TaskTextArea
+          style={{ height: isLarge ? '20rem' : '8rem' }}
           onFocus={() => {
             setInputFocused(true)
             onFocus()
@@ -238,9 +264,7 @@ export const TaskChatInput: React.FC<{
             setInputFocused(false)
             onBlur()
           }}
-          placeholder={
-            !hinting ? `Message goes here or type '/' for templates` : ''
-          }
+          placeholder={!hinting ? `Message goes here` : ''}
           value={message}
           onChange={onChangeHandler}
           onKeyDown={(e) => handleOnKeyDown(e)}
@@ -257,7 +281,7 @@ export const TaskChatInput: React.FC<{
             templates
           </TemplatesButton>
         </TextAreaFooter>
-      </ConversationFooter>
+      </Container>
       <Flex
         fullWidth
         justify={'space-between'}
