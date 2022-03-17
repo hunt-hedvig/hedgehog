@@ -166,7 +166,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
     if (currentValue.includes(value)) {
       updateSetting(
         field,
-        currentValue.filter((item) => item !== value),
+        currentValue.filter((item: string | number) => item !== value),
       )
 
       return

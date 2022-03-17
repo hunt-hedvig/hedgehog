@@ -20,7 +20,7 @@ interface MeContextProps {
   me: PartialMe
   // eslint-disable-next-line
   settings: UserSettings
-  updateSetting: (key: UserSettingKey, value?: any) => Promise<FetchResult>
+  updateSetting: (key: UserSettingKey, value?: unknown) => Promise<FetchResult>
 }
 
 interface MeProviderProps {
@@ -48,10 +48,10 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
 
   const updateSetting = (
     key: UserSettingKey,
-    value?: any,
+    value?: unknown,
   ): Promise<FetchResult> => {
     return upsertUserSettings({
-      variables: { settings: [{ key, value: value }] },
+      variables: { settings: [{ key, value }] },
       optimisticResponse: {
         upsertUserSettings: {
           ...me.settings,

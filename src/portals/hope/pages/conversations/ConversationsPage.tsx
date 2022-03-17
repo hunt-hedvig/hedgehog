@@ -76,7 +76,7 @@ const ConversationsPage: Page<
     updateSetting(
       settingField,
       currentValue?.includes(filter)
-        ? currentValue?.filter((item) => item !== filter)
+        ? currentValue?.filter((item: string | number) => item !== filter)
         : [...(currentValue || []), filter],
     )
 
