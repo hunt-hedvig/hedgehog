@@ -17,11 +17,11 @@ import {
 } from 'react-bootstrap-icons'
 import MediaQuery from 'react-media'
 import { useHistory, useLocation } from 'react-router'
-import { UserSettingKey } from 'types/generated/graphql'
 import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { UserSettingKey } from 'types/generated/graphql'
 
 const Wrapper = styled.div<{ collapsed: boolean }>`
   display: inline-block;
@@ -152,9 +152,7 @@ export const VerticalMenu: React.FC = () => {
   )
   const [locations, setLocations] = useState<string[]>([])
   const [conversationsEnabled] = useState<boolean>(
-    (settings[UserSettingKey.FeatureFlags] &&
-      settings[UserSettingKey.FeatureFlags]?.conversations) ||
-      false,
+    settings[UserSettingKey.FeatureFlags]?.conversations,
   )
 
   const { register } = useNavigation()

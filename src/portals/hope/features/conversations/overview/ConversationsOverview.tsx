@@ -30,7 +30,7 @@ export const ConversationsOverview: React.FC<{
   currentMemberId?: string
   currentQuestionOrder: number
   filters: ReadonlyArray<FilterStateType>
-  setFilters: (filter: FilterStateType, settingField?: UserSettingKey) => void
+  setFilters: (filter: FilterStateType, settingField: UserSettingKey) => void
 }> = ({ filteredGroups, currentMemberId, filters, setFilters }) => {
   const { settings, updateSetting } = useMe()
   const history = useHistory()
@@ -45,10 +45,7 @@ export const ConversationsOverview: React.FC<{
     [filteredGroups],
   )
   useEffect(() => {
-    if (
-      !settings.featureFlags ||
-      !settings.featureFlags.filter(entry => entry.key === "conversations")
-    ) {
+    if (!settings.featureFlags?.conversations) {
       updateSetting(UserSettingKey.FeatureFlags, {
         ...settings.featureFlags,
         conversations: true,
@@ -87,9 +84,10 @@ export const ConversationsOverview: React.FC<{
                   updateSetting(UserSettingKey.FeatureFlags, {
                     ...settings.featureFlags,
                     conversations: false,
+                  }).then(() => {
+                    history.replace('/questions')
+                    history.go(0)
                   })
-                  history.replace('/questions')
-                  history.go(0)
                 },
               )
             }

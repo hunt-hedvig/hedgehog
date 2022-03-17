@@ -57,37 +57,28 @@ const ConversationsPage: Page<
   const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
   const { settings, updateSetting } = useMe()
 
-  const getQuestionsFilter = (field: string | number) =>
-    (settings[field] && settings[field].questions) || []
-
   const [filters, setFilters] = useState<number[]>([
-    ...getQuestionsFilter(UserSettingKey.ClaimStatesFilter),
-    ...getQuestionsFilter(UserSettingKey.MemberGroupsFilter),
-    ...getQuestionsFilter(UserSettingKey.ClaimComplexityFilter),
-    ...getQuestionsFilter(UserSettingKey.MarketFilter),
+    ...(settings.claimStatesFilterQuestions || []),
+    ...(settings.memberGroupsFilterQuestions || []),
+    ...(settings.marketFilterQuestions || []),
   ])
 
   const toggleFilterHandler = (
     filter: FilterStateType,
-    settingField?: UserSettingKey,
+    settingField: UserSettingKey,
   ) => {
-    if (settingField) {
-      if (settings[settingField] && settings[settingField].questions) {
-        updateSetting(settingField, {
-          ...settings[settingField],
-          questions: settings[settingField].questions.includes(filter)
-            ? settings[settingField].questions.filter(
-                (prevFilter: number) => filter !== prevFilter,
-              )
-            : [...settings[settingField].questions, filter],
-        })
-      } else {
-        updateSetting(settingField, {
-          ...settings[settingField],
-          questions: [filter],
-        })
-      }
+    const currentValue = settings[settingField]
+
+    if (typeof currentValue !== 'object') {
+      return
     }
+
+    updateSetting(
+      settingField,
+      currentValue?.includes(filter)
+        ? currentValue?.filter((item) => item !== filter)
+        : [...(currentValue || []), filter],
+    )
 
     if (filters.includes(filter)) {
       setFilters(filters.filter((prevFilter) => filter !== prevFilter))

@@ -174,19 +174,16 @@ const DashboardPage: Page = () => {
                 history.push('/claims/list/1')
               },
               neighbors: {
-                right:
-                  settings[UserSettingKey.FeatureFlags] &&
-                  settings[UserSettingKey.FeatureFlags]?.conversations
-                    ? 'ConversationsMetric'
-                    : 'QuestionsMetric',
+                right: settings[UserSettingKey.FeatureFlags]?.conversations
+                  ? 'ConversationsMetric'
+                  : 'QuestionsMetric',
               },
             })}
           >
             <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
             <MetricName>claims</MetricName>
           </Metric>
-          {settings[UserSettingKey.FeatureFlags] &&
-          settings[UserSettingKey.FeatureFlags]?.conversations ? (
+          {settings[UserSettingKey.FeatureFlags]?.conversations ? (
             <Metric
               to="/conversations"
               {...register('ConversationsMetric', {
@@ -236,8 +233,7 @@ const DashboardPage: Page = () => {
               neighbors: {
                 left: index
                   ? templateFilters[index - 1].name
-                  : settings[UserSettingKey.FeatureFlags] &&
-                    settings[UserSettingKey.FeatureFlags]?.conversations
+                  : settings[UserSettingKey.FeatureFlags]?.conversations
                   ? 'ConversationsMetric'
                   : 'QuestionsMetric',
                 right:
@@ -269,8 +265,7 @@ const DashboardPage: Page = () => {
               neighbors: {
                 left: templateFilters.length
                   ? templateFilters[templateFilters.length - 1].name
-                  : settings[UserSettingKey.FeatureFlags] &&
-                    settings[UserSettingKey.FeatureFlags]?.conversations
+                  : settings[UserSettingKey.FeatureFlags]?.conversations
                   ? 'ConversationsMetric'
                   : 'QuestionsMetric',
               },

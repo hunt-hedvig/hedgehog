@@ -396,7 +396,7 @@ type UserNotification {
 
 type UserSettings {
   darkMode: Boolean
-  featureFlags: [JSON!]!
+  featureFlags: JSON
   numberOfMemberGroups: Int
   claimComplexityFilterClaims: [String!]
   claimStatesFilterClaims: [String!]

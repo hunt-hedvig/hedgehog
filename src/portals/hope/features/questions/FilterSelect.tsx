@@ -92,7 +92,7 @@ const CountBadge = styled.div<{ selected: boolean }>`
 
 export const FilterSelect: React.FC<{
   filters: ReadonlyArray<FilterStateType>
-  onToggle: (filter: FilterStateType, settingField?: UserSettingKey) => void
+  onToggle: (filter: FilterStateType, settingField: UserSettingKey) => void
   animationDelay?: number
   animationItemDelay?: number
   push?: 'left' | 'right'
@@ -127,7 +127,7 @@ export const FilterSelect: React.FC<{
           const navigation = register(`Member Group ${memberGroup} Filter`, {
             focus: index === 0 ? Keys.F : undefined,
             resolve: () => {
-              onToggle(memberGroup, UserSettingKey.MemberGroupsFilter)
+              onToggle(memberGroup, UserSettingKey.MemberGroupsFilterQuestions)
             },
             neighbors: {
               left: index
@@ -152,7 +152,10 @@ export const FilterSelect: React.FC<{
               <FilterButton
                 small={small}
                 onClick={() =>
-                  onToggle(memberGroup, UserSettingKey.MemberGroupsFilter)
+                  onToggle(
+                    memberGroup,
+                    UserSettingKey.MemberGroupsFilterQuestions,
+                  )
                 }
                 selected={filters.includes(memberGroup)}
               >
@@ -186,7 +189,10 @@ export const FilterSelect: React.FC<{
         {Object.keys(Market).map((market, index) => {
           const navigation = register(`Market ${market} Filter`, {
             resolve: () => {
-              onToggle(FilterState[market], UserSettingKey.MarketFilter)
+              onToggle(
+                FilterState[market],
+                UserSettingKey.MarketFilterQuestions,
+              )
             },
             neighbors: {
               up: `Member Group ${range(numberMemberGroups)[index]} Filter`,
@@ -213,7 +219,10 @@ export const FilterSelect: React.FC<{
                 small={small}
                 selected={filters.includes(FilterState[market])}
                 onClick={() =>
-                  onToggle(FilterState[market], UserSettingKey.MarketFilter)
+                  onToggle(
+                    FilterState[market],
+                    UserSettingKey.MarketFilterQuestions,
+                  )
                 }
               >
                 {convertEnumToTitle(market)}{' '}
@@ -244,7 +253,7 @@ export const FilterSelect: React.FC<{
             resolve: () => {
               onToggle(
                 FilterState.HasOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
+                UserSettingKey.ClaimStatesFilterQuestions,
               )
             },
             neighbors: {
@@ -259,7 +268,7 @@ export const FilterSelect: React.FC<{
             onClick={() =>
               onToggle(
                 FilterState.HasOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
+                UserSettingKey.ClaimStatesFilterQuestions,
               )
             }
           >
@@ -280,7 +289,7 @@ export const FilterSelect: React.FC<{
             resolve: () => {
               onToggle(
                 FilterState.NoOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
+                UserSettingKey.ClaimStatesFilterQuestions,
               )
             },
             neighbors: {
@@ -297,7 +306,7 @@ export const FilterSelect: React.FC<{
             onClick={() =>
               onToggle(
                 FilterState.NoOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
+                UserSettingKey.ClaimStatesFilterQuestions,
               )
             }
           >
