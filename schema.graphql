@@ -225,6 +225,8 @@ type MutationType {
   userCheckIn: User!
   userCheckOut: User!
 
+  userSetMarket(market: String!, value: Boolean): User!
+
   upsertTemplate(input: UpsertTemplateInput!): Template!
   removeTemplate(id: ID!): Boolean!
   togglePinStatus(id: ID!): Template!

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Template } from 'types/generated/graphql'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import {
@@ -6,6 +6,7 @@ import {
   useTemplateMessages,
 } from 'portals/hope/features/template-messages/use-template-messages'
 import { PickedLocale } from '../config/constants'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 export const useTemplatesHinting = (
   message: string,
@@ -66,12 +67,18 @@ export const useTemplatesHinting = (
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (isPressing(e, Keys.Slash) && !hinting && !loading) {
+    if (
+      isPressing(e, Keys.Slash) &&
+      !hinting &&
+      !loading &&
+      !e.currentTarget.value
+    ) {
       e.preventDefault()
 
       setTemplateHint(searchTemplate(''))
       setMessage('/')
       setHinting(true)
+      PushUserAction('template', 'hinting', null, null)
     }
 
     if (
@@ -139,6 +146,7 @@ export const useTemplatesHinting = (
       )?.message
 
       setMessage(newMessage || '')
+      PushUserAction('template', 'used', null, null)
 
       setTemplateHint(null)
       setHinting(false)

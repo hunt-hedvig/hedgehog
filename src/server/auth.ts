@@ -20,7 +20,7 @@ function setTokenCookies(
     path: '/',
     httpOnly: true,
     secure: config.useSecureCookies,
-    expires: addMinutes(new Date(), 3 * 60),
+    expires: addMinutes(new Date(), 29),
   })
   ctx.cookies.set('_hvg_rt', refreshToken, {
     path: '/',
@@ -69,6 +69,7 @@ export const refreshTokenCallback: Middleware<LoggingMiddleware> = async (
     | undefined
   const refreshToken = ctx.cookies.get('_hvg_rt') ?? ''
 
+  // eslint-disable-next-line
   let response: any
   if (tokenSource === 'auth') {
     // We logged in with the Auth service, we should refresh in the auth service

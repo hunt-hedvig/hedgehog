@@ -117,7 +117,7 @@ const PerilsEditorPage: Page = () => {
       <MainHeadline>📝 Perils editor</MainHeadline>
       <ReactDropZone onDrop={handleFileUpload} accept={['application/json']}>
         {({ getRootProps, getInputProps, isDragActive }) => (
-          <Button {...getRootProps()} css={undefined}>
+          <Button {...getRootProps()}>
             <input {...getInputProps()} />
             {isDragActive ? 'Drag file to edit' : 'Select file to edit'}
           </Button>

@@ -9,6 +9,7 @@ import { persistenceMapper } from 'apollo/persistence/mapper'
 import { createPersistLink } from 'apollo/persistence/link'
 import gql from 'graphql-tag'
 import { BatchHttpLink } from '@apollo/client/link/batch-http'
+import { addMinutes, parseISO } from 'date-fns'
 
 gql`
   # Declare custom directive for IDE completion; don't want this to actually be resolved server-side
@@ -43,6 +44,7 @@ const getItemWithExpiry = (key: string) => {
 
 const addTimezoneOffsetHeader = setContext((_operation, previousContext) => {
   const { headers } = previousContext
+
   return {
     ...previousContext,
     headers: {
@@ -80,7 +82,7 @@ export const persistor = new CachePersistor({
   debounce: 100,
 })
 
-const SCHEMA_VERSION = '3'
+const SCHEMA_VERSION = '4'
 const SCHEMA_VERSION_KEY = 'apollo-schema-version'
 
 const currentVersion = localStorage.getItem(SCHEMA_VERSION_KEY)
@@ -91,6 +93,40 @@ if (currentVersion === SCHEMA_VERSION) {
   persistor.purge()
   localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION)
 }
+
+const storeTokenRenewalDate = () => {
+  const RENEW_TOKEN_MINUTES = 20
+  const date = addMinutes(new Date(), RENEW_TOKEN_MINUTES)
+  localStorage.setItem('_tk_r', date.toISOString())
+}
+
+const renewAccessTokenLink = new ApolloLink((operation, forward) => {
+  const nextRefetch = localStorage.getItem('_tk_r')
+
+  if (!nextRefetch) {
+    storeTokenRenewalDate()
+
+    refreshAccessToken().catch((e) => {
+      console.error('Failed to refresh access token', e)
+      toast.loading('Authentication failed')
+      window.location.pathname = '/login/logout'
+    })
+    return forward(operation)
+  }
+
+  const parsedNextRefetch = parseISO(nextRefetch)
+
+  if (parsedNextRefetch < new Date()) {
+    storeTokenRenewalDate()
+    refreshAccessToken().catch((e) => {
+      console.error('Failed to refresh access token', e)
+      toast.loading('Authentication failed')
+      window.location.pathname = '/login/logout'
+    })
+  }
+
+  return forward(operation)
+})
 
 export const client = new ApolloClient({
   link: ApolloLink.from([
@@ -110,6 +146,7 @@ export const client = new ApolloClient({
         window.location.pathname = '/login/logout'
       })
     }),
+    renewAccessTokenLink,
     addTimezoneOffsetHeader,
     createPersistLink(),
     new BatchHttpLink({

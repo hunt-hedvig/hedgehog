@@ -12,7 +12,7 @@ interface WithTransparent {
 }
 
 const MenuItemStyled = styled<
-  React.ComponentType<NavLinkProps & WithTransparent>
+  React.ComponentType<NavLinkProps & WithTransparent & { accent?: boolean }>
 >(NavLink)`
   display: inline-flex;
   flex-shrink: 0;
@@ -22,6 +22,8 @@ const MenuItemStyled = styled<
   color: #fff !important;
   border-radius: 0.5rem;
   transition: background 500ms, font-size 300ms, width 300ms;
+
+  background: ${({ theme, accent }) => (accent ? theme.accent : undefined)};
 
   &:hover,
   &:focus,
@@ -64,6 +66,7 @@ interface MenuItemProps extends NavLinkProps {
   transparent?: boolean
   hotkey: string
   hotkeyHandler: () => void
+  accent?: boolean
 }
 
 interface ExternalMenuItemProps

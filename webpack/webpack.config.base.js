@@ -16,10 +16,18 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
         path.resolve(context, 'shared'),
       ],
       symlinks: false,
+      alias: {
+        'react-dom': '@hot-loader/react-dom',
+      },
     },
     entry,
     module: {
       rules: [
+        {
+          test: /\.(tsx?|js)$/,
+          use: 'react-hot-loader/webpack',
+          include: /node_modules/,
+        },
         {
           test: /\.css$/,
           use: [
@@ -40,14 +48,14 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
           loader: 'esbuild-loader',
           options: {
             loader: 'tsx',
-            target: 'es2017',
+            target: 'es2015',
           },
         },
         {
           test: /\.m?js/,
           resolve: {
             fullySpecified: false,
-            unsafeCache: true,
+            unsafeCache: false,
           },
         },
       ],
@@ -56,20 +64,12 @@ module.exports = ({ mode, entry, target, plugins, output, context, ...rest }) =>
     context,
     stats: 'errors-only',
     output,
-    plugins: [
-      /*
-      new webpack.DllReferencePlugin({
-        context: __dirname,
-        manifest: path.join(__dirname, '../build', 'vendor-manifest.json'),
-      }),
-      */
-      ...(plugins || []),
-    ],
+    plugins: [...(plugins || [])],
     optimization: {
       moduleIds: 'named',
       minimizer: [
         new ESBuildMinifyPlugin({
-          target: 'es2017',
+          target: 'es2015',
         }),
       ],
     },

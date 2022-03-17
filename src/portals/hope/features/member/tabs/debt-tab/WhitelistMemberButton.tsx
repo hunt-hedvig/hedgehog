@@ -3,12 +3,12 @@ import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { useGetMemberName } from 'portals/hope/features/member/tabs/debt-tab/hooks/use-get-member-name'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { useWhitelistMemberMutation } from 'types/generated/graphql'
+import { useWhitelistMember } from 'portals/hope/common/hooks/use-whitelist-member'
 
 export const WhitelistMemberButton: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
-  const [whitelistMember] = useWhitelistMemberMutation()
+  const { whitelist } = useWhitelistMember(memberId)
   const [memberName] = useGetMemberName(memberId)
   const { confirm } = useConfirmDialog()
 
@@ -17,21 +17,13 @@ export const WhitelistMemberButton: React.FC<{
       onClick={() => {
         confirm(
           `Are you sure you want to whitelist ${memberName?.firstName} ${memberName?.lastName}?`,
-        ).then(() => {
-          toast.promise(
-            whitelistMember({
-              variables: {
-                memberId,
-              },
-              refetchQueries: ['GetPerson'],
-            }),
-            {
-              loading: 'Whitelisting member',
-              success: 'Member whitelisted',
-              error: 'Could not whitelist member',
-            },
-          )
-        })
+        ).then(() =>
+          toast.promise(whitelist(), {
+            loading: 'Whitelisting member',
+            success: 'Member whitelisted',
+            error: 'Could not whitelist member',
+          }),
+        )
       }}
     >
       Whitelist Member

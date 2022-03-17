@@ -32,9 +32,11 @@ const MemberSuggestionsWrapper = styled(Instructions)`
   animation-delay: 750ms;
 `
 
-export const MemberSearch: React.FC = () => {
+export const MemberSearch: React.FC<{ query: string | null }> = ({
+  query: defaultQuery,
+}) => {
   const history = useHistory()
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(defaultQuery ?? '')
   const [hasSearched, setHasSearched] = useState(false)
   const { hits, loading, search, fetchMore } = useSearch<MemberSearchHit>(query)
   const { memberHistory } = useMemberHistory()
@@ -44,21 +46,28 @@ export const MemberSearch: React.FC = () => {
     setHasSearched(false)
   }, [query])
 
+  useEffect(() => {
+    if (query !== '') search()
+  }, [defaultQuery])
+
   return (
     <>
       <SearchInput
         onChange={(value) => setQuery(value)}
         onSearch={() => {
-          search()
+          history.push(`/search/members?query=${query}`)
           setHasSearched(true)
         }}
         loading={loading}
         suggestion={suggestionString}
+        defaultValue={query}
       />
 
       <SearchCategoryButtons
         category="members"
-        onChange={(category) => history.push(`/search/${category}`)}
+        onChange={(category) =>
+          history.push(`/search/${category}?query=${query}`)
+        }
       />
 
       <Spacing top="large" />

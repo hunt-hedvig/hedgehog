@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { BaseStyle, Spinner, StandaloneMessage } from '@hedvig-ui'
+import { BaseStyle, Flex, Spinner, StandaloneMessage } from '@hedvig-ui'
 import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { history } from 'entry'
@@ -33,14 +33,31 @@ const Main = styled.div<{ dark: boolean }>`
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  height: 100%;
+  &::-webkit-scrollbar {
+    appearance: none;
+    width: 0;
+    display: none;
+  }
 `
 
 const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 4rem 4rem 2rem 4rem;
-  overflow-y: auto;
+  padding: 4rem 0 0 4rem;
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+`
+
+const Content = styled(Flex)`
+  height: 100vh;
+  width: 100%;
+  overflow-y: hidden;
 `
 
 const App: React.FC = () => {
@@ -79,27 +96,29 @@ const App: React.FC = () => {
                   <ConfirmDialogProvider>
                     <Layout>
                       <Tracker />
-                      {!history.location.pathname.startsWith('/login') && (
-                        <VerticalMenu />
-                      )}
-                      <Main
-                        dark={history.location.pathname.startsWith('/login')}
-                      >
-                        <TopBar />
-                        <MainContent>
-                          <Switch>
-                            <Routes />
-                          </Switch>
-                          <Toaster
-                            position="top-center"
-                            toastOptions={{
-                              style: {
-                                padding: '20px 25px',
-                              },
-                            }}
-                          />
-                        </MainContent>
-                      </Main>
+                      <Content>
+                        {!history.location.pathname.startsWith('/login') && (
+                          <VerticalMenu />
+                        )}
+                        <Main
+                          dark={history.location.pathname.startsWith('/login')}
+                        >
+                          <TopBar />
+                          <MainContent>
+                            <Switch>
+                              <Routes />
+                            </Switch>
+                            <Toaster
+                              position="top-center"
+                              toastOptions={{
+                                style: {
+                                  padding: '20px 25px',
+                                },
+                              }}
+                            />
+                          </MainContent>
+                        </Main>
+                      </Content>
                     </Layout>
                   </ConfirmDialogProvider>
                 </TemplateMessagesProvider>
