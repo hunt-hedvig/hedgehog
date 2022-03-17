@@ -1,15 +1,12 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import { Flex, Label, Modal, Placeholder } from '@hedvig-ui'
+import { Flex, Modal } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 import { Question, QuestionGroup } from 'types/generated/graphql'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
-import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
-import { TaskChatInput } from 'portals/hope/features/tasks/components/TaskChatInput'
 import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
-import { FilterSelect } from 'portals/hope/features/questions/FilterSelect'
 import {
   doMarketFilter,
   doMemberGroupFilter,
@@ -20,10 +17,9 @@ import {
   getMemberIdColor,
 } from 'portals/hope/features/member/utils'
 import { PickedLocale } from 'portals/hope/features/config/constants'
-import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { ChatFill } from 'react-bootstrap-icons'
-import { MemberTabs } from 'portals/hope/features/member'
+import { MemberContainer } from '../../features/tasks/components/MemberContainer'
+import { TaskChat } from '../../features/tasks/TaskChat'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -212,38 +208,6 @@ const FilterModal = styled(Modal)`
   }
 `
 
-const InChatTopNav = styled.div`
-  display: flex;
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  width: calc(100% - 2rem);
-  z-index: 20;
-
-  padding: 1rem 1.2rem;
-
-  box-shadow: 0 0 1rem 0.15rem rgba(0, 0, 0, 0.1);
-
-  border-radius: 0.5rem;
-
-  background-color: ${({ theme }) => theme.backgroundLight};
-
-  .icon {
-    margin-right: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-
-    background-color: ${({ theme }) => chroma(theme.accent).alpha(0.2).hex()};
-    svg {
-      fill: ${({ theme }) => theme.accent};
-    }
-  }
-`
-
 const getQuestionBody = (question: Question) => {
   try {
     return JSON.parse(question.messageJsonString).body
@@ -252,36 +216,16 @@ const getQuestionBody = (question: Question) => {
   }
 }
 
-const Wrapper = styled.div`
-  padding: 2rem 3rem;
-`
-
-const MemberContainer: React.FC<{ memberId: string }> = ({ memberId }) => {
-  const [tab, setTab] = useState('contracts')
-
-  return (
-    <Wrapper>
-      <MemberTabs
-        memberId={memberId}
-        tab={tab}
-        onChangeTab={(newTab) => setTab(newTab)}
-        chat={false}
-      />
-    </Wrapper>
-  )
-}
-
 const TasksPage: Page = () => {
   const { numberMemberGroups } = useNumberMemberGroups()
-  const { selectedFilters, toggleFilter } = useSelectedFilters()
+  const { selectedFilters } = useSelectedFilters()
+  const [questionGroups] = useQuestionGroups()
 
   const [showFilters, setShowFilters] = useState(false)
 
-  const [isLarge, setIsLarge] = useState(false)
   const [selectedQuestionGroup, setSelectedQuestionGroup] =
     useState<QuestionGroup | null>(null)
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null)
-  const [questionGroups] = useQuestionGroups()
 
   const groups =
     selectedFilters.length > 0
@@ -369,105 +313,28 @@ const TasksPage: Page = () => {
         </TaskNavigationWrapper>
         <TaskChatWrapper>
           {selectedQuestionGroup && (
-            <>
-              <InChatTopNav>
-                <div className="icon">
-                  <ChatFill />
-                </div>
-                <div>
-                  <a
-                    href="#"
-                    onClick={() => {
-                      setSelectedMemberId(selectedQuestionGroup.memberId)
-                    }}
-                  >
-                    {selectedQuestionGroup?.firstName &&
-                    selectedQuestionGroup?.lastName ? (
-                      `${selectedQuestionGroup.firstName} ${selectedQuestionGroup.lastName}`
-                    ) : (
-                      <Placeholder>Name not available</Placeholder>
-                    )}
-                  </a>
-                </div>
-              </InChatTopNav>
-              <div
-                style={{
-                  height: isLarge ? 'calc(100% - 27rem)' : 'calc(100% - 15rem)',
-                  transition: 'height 200ms',
-                }}
-              >
-                <MessagesList
-                  memberId={selectedQuestionGroup.memberId}
-                  style={{
-                    padding: '2rem',
-                    marginBottom: '6rem',
-                    paddingBottom: '0',
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  width: '100%',
-                  minHeight: '10rem',
-                }}
-              >
-                <TaskChatInput
-                  onResize={() => setIsLarge(!isLarge)}
-                  isLarge={isLarge}
-                  memberId={selectedQuestionGroup.memberId}
-                  onBlur={() => void 0}
-                  onFocus={() => void 0}
-                  onResolve={() =>
-                    setSelectedQuestionGroup(
-                      questionGroups.length !== 0 ? questionGroups[0] : null,
-                    )
-                  }
-                />
-              </div>
-            </>
+            <TaskChat
+              memberId={selectedQuestionGroup.memberId}
+              fullName={
+                selectedQuestionGroup.firstName &&
+                selectedQuestionGroup.lastName
+                  ? `${selectedQuestionGroup.firstName} ${selectedQuestionGroup.lastName}`
+                  : undefined
+              }
+              onResolve={() =>
+                setSelectedQuestionGroup(
+                  questionGroups.length !== 0 ? questionGroups[0] : null,
+                )
+              }
+              onSelectMember={() =>
+                setSelectedMemberId(selectedQuestionGroup.memberId)
+              }
+            />
           )}
         </TaskChatWrapper>
       </Container>
-      {showFilters && (
-        <FilterModal onClose={() => setShowFilters(false)}>
-          <Flex
-            style={{ height: '100%', width: '100%' }}
-            direction="column"
-            justify="space-between"
-          >
-            <div>
-              <h4>Select Filters</h4>
 
-              <Flex
-                style={{
-                  flexWrap: 'wrap',
-                  marginTop: '3rem',
-                }}
-                justify="space-between"
-              >
-                <Flex
-                  direction="column"
-                  align="center"
-                  fullWidth
-                  style={{ marginBottom: '2rem' }}
-                >
-                  <Label>Number of member groups</Label>
-                  <NumberMemberGroupsRadioButtons />
-                </Flex>
-                <FilterSelect
-                  filters={selectedFilters}
-                  onToggle={toggleFilter}
-                  animationDelay={0}
-                  animationItemDelay={20}
-                />
-              </Flex>
-            </div>
-          </Flex>
-        </FilterModal>
-      )}
+      {showFilters && <FilterModal onClose={() => setShowFilters(false)} />}
     </>
   )
 }
