@@ -140,10 +140,17 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (isPressing(e, Keys.Up) && target?.neighbors?.up) {
       e.preventDefault()
-      const nextCursor =
+      const nextCursor: string =
         typeof target.neighbors.up === 'function'
           ? target.neighbors.up()
-          : target.neighbors.up
+          : typeof target.neighbors.up === 'object' &&
+            target.neighbors.up.find((item) => registry.current[item])
+          ? (target.neighbors.up.find(
+              (item) => registry.current[item],
+            ) as string)
+          : typeof target.neighbors.up !== 'object'
+          ? target.neighbors.up
+          : ''
 
       if (!validate(nextCursor)) {
         return
@@ -160,10 +167,17 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (isPressing(e, Keys.Down) && target?.neighbors?.down) {
       e.preventDefault()
-      const nextCursor =
+      const nextCursor: string =
         typeof target.neighbors.down === 'function'
           ? target.neighbors.down()
-          : target.neighbors.down
+          : typeof target.neighbors.down === 'object' &&
+            target.neighbors.down.find((item) => registry.current[item])
+          ? (target.neighbors.down.find(
+              (item) => registry.current[item],
+            ) as string)
+          : typeof target.neighbors.down !== 'object'
+          ? target.neighbors.down
+          : ''
 
       if (!validate(nextCursor)) {
         return
@@ -180,10 +194,17 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (isPressing(e, Keys.Left) && target?.neighbors?.left) {
       e.preventDefault()
-      const nextCursor =
+      const nextCursor: string =
         typeof target.neighbors.left === 'function'
           ? target.neighbors.left()
-          : target.neighbors.left
+          : typeof target.neighbors.left === 'object' &&
+            target.neighbors.left.find((item) => registry.current[item])
+          ? (target.neighbors.left.find(
+              (item) => registry.current[item],
+            ) as string)
+          : typeof target.neighbors.left !== 'object'
+          ? target.neighbors.left
+          : ''
 
       if (!validate(nextCursor)) {
         return
@@ -200,10 +221,17 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (isPressing(e, Keys.Right) && target?.neighbors?.right) {
       e.preventDefault()
-      const nextCursor =
+      const nextCursor: string =
         typeof target.neighbors.right === 'function'
           ? target.neighbors.right()
-          : target.neighbors.right
+          : typeof target.neighbors.right === 'object' &&
+            target.neighbors.right.find((item) => registry.current[item])
+          ? (target.neighbors.right.find(
+              (item) => registry.current[item],
+            ) as string)
+          : typeof target.neighbors.right !== 'object'
+          ? target.neighbors.right
+          : ''
 
       if (!validate(nextCursor)) {
         return
@@ -265,10 +293,10 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 }
 
 interface NodeNavigationDirections {
-  up?: string | (() => string)
-  down?: string | (() => string)
-  left?: string | (() => string)
-  right?: string | (() => string)
+  up?: string | string[] | (() => string)
+  down?: string | string[] | (() => string)
+  left?: string | string[] | (() => string)
+  right?: string | string[] | (() => string)
 }
 
 interface UseNavigationRegisterOptions {
