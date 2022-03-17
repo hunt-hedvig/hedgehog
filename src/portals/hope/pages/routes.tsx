@@ -77,8 +77,8 @@ export const Routes: React.FC = () => {
         <Route path="/" exact component={DashboardPage} />
         <Route path="/profile" component={ProfilePage} />
         <Route path="/dashborad" component={DashboardPage} />
-        <Route path="/questions" component={QuestionsPage} />
-        <Route path="/tasks" exact component={TasksPage} />
+        <Route path="/questions" component={TasksPage} />
+        <Route path="/tasks" exact component={QuestionsPage} />
         <Route path="/tasks/check-in" exact component={CheckInPage} />
         <Route path="/notifications" component={NotificationsPage} />
         <Route path="/search/:category" component={SearchPage} />
