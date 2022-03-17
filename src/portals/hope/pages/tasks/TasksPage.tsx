@@ -1,21 +1,27 @@
-import {Page} from 'portals/hope/pages/routes'
+import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
-import React, {useState} from 'react'
-import {Flex, Placeholder} from '@hedvig-ui'
+import React, { useState } from 'react'
+import { Flex, Placeholder } from '@hedvig-ui'
 import chroma from 'chroma-js'
-import {useQuestionGroups} from 'portals/hope/features/questions/hooks/use-question-groups'
-import {Question, QuestionGroup,} from 'types/generated/graphql'
-import {formatDistanceToNowStrict, parseISO} from 'date-fns'
-import {doMarketFilter, doMemberGroupFilter,} from 'portals/hope/features/questions/utils'
-import {useNumberMemberGroups} from 'portals/hope/features/user/hooks/use-number-member-groups'
-import {getMemberFlag, getMemberIdColor,} from 'portals/hope/features/member/utils'
-import {PickedLocale} from 'portals/hope/features/config/constants'
-import {useTitle} from '@hedvig-ui/hooks/use-title'
-import {MemberContainer} from '../../features/tasks/components/MemberContainer'
-import {TaskChat} from '../../features/tasks/TaskChat'
-import {FilterModal} from 'portals/hope/features/tasks/components/FilterModal'
-import {useSelectedFilters} from 'portals/hope/features/questions/hooks/use-selected-filters'
-import {useResolveQuestion} from 'portals/hope/features/questions/hooks/use-resolve-question'
+import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
+import { Question, QuestionGroup } from 'types/generated/graphql'
+import { formatDistanceToNowStrict, parseISO } from 'date-fns'
+import {
+  doMarketFilter,
+  doMemberGroupFilter,
+} from 'portals/hope/features/questions/utils'
+import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
+import {
+  getMemberFlag,
+  getMemberIdColor,
+} from 'portals/hope/features/member/utils'
+import { PickedLocale } from 'portals/hope/features/config/constants'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { MemberContainer } from '../../features/tasks/components/MemberContainer'
+import { TaskChat } from '../../features/tasks/TaskChat'
+import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
+import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
+import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
