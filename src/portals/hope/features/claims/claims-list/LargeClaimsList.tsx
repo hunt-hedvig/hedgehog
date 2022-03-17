@@ -29,7 +29,7 @@ import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-numb
 import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { ClaimState, UserSettingKey } from 'types/generated/graphql'
+import { ClaimState } from 'types/generated/graphql'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;
@@ -95,26 +95,16 @@ export const LargeClaimsList: React.FC<{
   const [{ claims, page: currentPage, totalPages }, listClaims, { loading }] =
     useListClaims()
 
-  const getClaimFilter = (field: UserSettingKey, isClaims = true) =>
-    (settings[field] &&
-      (isClaims ? settings[field].claims : settings[field].value)) ||
-    null
-
   useEffect(() => {
     const settingsFilters = {
       filterCreatedBeforeOrOnDate: date,
-      filterClaimStates: getClaimFilter(UserSettingKey.ClaimStatesFilter),
-      filterComplexities: getClaimFilter(UserSettingKey.ClaimComplexityFilter),
-      filterNumberOfMemberGroups: getClaimFilter(
-        UserSettingKey.NumberOfMemberGroups,
-        false,
-      ),
-      filterSelectedMemberGroups: getClaimFilter(
-        UserSettingKey.MemberGroupsFilter,
-      ),
-      filterMarkets: getClaimFilter(UserSettingKey.MarketFilter),
+      filterClaimStates: settings.claimStatesFilterClaims,
+      filterComplexities: settings.claimComplexityFilterClaims,
+      filterNumberOfMemberGroups: settings.numberOfMemberGroups,
+      filterSelectedMemberGroups: settings.memberGroupsFilterClaims,
+      filterMarkets: settings.marketFilterClaims,
       filterTypesOfContract: null,
-      filterClaimOutcomes: getClaimFilter(UserSettingKey.OutcomeFilter),
+      filterClaimOutcomes: settings.outcomeFilterClaims,
     }
 
     listClaims({

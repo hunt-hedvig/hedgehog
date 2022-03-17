@@ -4,8 +4,8 @@ import {
   GetMeDocument,
   GetMeQuery,
   Me as _Me,
-  UserNotification,
-  UserSettingKey,
+  UserNotification, UserSettingKey,
+  UserSettings,
   useUpdateUserSettingsMutation,
 } from 'types/generated/graphql'
 
@@ -18,8 +18,8 @@ interface PartialMe {
 interface MeContextProps {
   me: PartialMe
   // eslint-disable-next-line
-  settings: Record<string, any>
-  updateSetting: (key: UserSettingKey, value: object) => Promise<FetchResult>
+  settings: UserSettings
+  updateSetting: (key: UserSettingKey, value?: string | string[] | number | number[] | boolean | null) => Promise<FetchResult>
 }
 
 interface MeProviderProps {
@@ -37,17 +37,7 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
     return null
   }
 
-  const settings =
-    // eslint-disable-next-line
-    me.settings.reduce<Record<string, any>>((acc, setting) => {
-      try {
-        acc[setting.key] = JSON.parse(setting.value)
-      } catch (e) {
-        console.error(`User setting with key ${setting.key} is not valid JSON`)
-        console.error(e)
-      }
-      return acc
-    }, {}) ?? {}
+  const settings = me.settings
 
   const partialMe = {
     email: me.user.email,
@@ -57,17 +47,15 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
 
   const updateSetting = (
     key: UserSettingKey,
-    value: object,
+    value?: string | string[] | number | number[] | boolean | null,
   ): Promise<FetchResult> => {
-    const payload = JSON.stringify(value)
-
     return upsertUserSettings({
-      variables: { settings: [{ key, value: payload }] },
+      variables: { settings: [{ key, value: [value] }] },
       optimisticResponse: {
-        upsertUserSettings: [
-          ...me.settings.filter((setting) => setting.key !== key),
-          { __typename: 'UserSetting', key, value: payload },
-        ],
+        upsertUserSettings: {
+          ...me.settings,
+          [key]: [value]
+        },
       },
       update: (
         cache: ApolloCache<NormalizedCacheObject>,

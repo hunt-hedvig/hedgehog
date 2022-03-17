@@ -1,6 +1,18 @@
 mutation UpdateUserSettings($settings: [UpsertUserSettingInput!]!) {
   upsertUserSettings(settings: $settings) {
-    key
-    value
+    darkMode
+    featureFlags
+    numberOfMemberGroups
+    claimComplexityFilterClaims
+    claimStatesFilterClaims
+    claimStatesFilterQuestions
+    memberGroupsFilterClaims
+    memberGroupsFilterQuestions
+    marketFilterClaims
+    marketFilterQuestions
+    numberOfClaimsFilter
+    outcomeFilterClaims
+    focusMarkets
+    languages
   }
 }
