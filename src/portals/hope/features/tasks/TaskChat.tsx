@@ -1,5 +1,5 @@
 import { ChatFill } from 'react-bootstrap-icons'
-import { Placeholder } from '@hedvig-ui'
+import { Button, Flex, Placeholder } from '@hedvig-ui'
 import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
 import { TaskChatInput } from 'portals/hope/features/tasks/components/TaskChatInput'
 import React, { useState } from 'react'
@@ -7,7 +7,11 @@ import styled from '@emotion/styled'
 import chroma from 'chroma-js'
 
 const InChatTopNav = styled.div`
+  cursor: pointer;
   display: flex;
+  align-items: center;
+
+  justify-content: space-between;
   position: absolute;
   top: 1rem;
   left: 1rem;
@@ -22,8 +26,18 @@ const InChatTopNav = styled.div`
 
   background-color: ${({ theme }) => theme.backgroundLight};
 
+  a {
+    cursor: pointer;
+  }
+
+  .subtext {
+    font-size: 0.9rem;
+    color: ${({ theme }) =>
+      chroma(theme.semiStrongForeground).brighten(1).hex()};
+  }
+
   .icon {
-    margin-right: 1rem;
+    margin-right: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -48,15 +62,26 @@ export const TaskChat: React.FC<{
 
   return (
     <>
-      <InChatTopNav>
-        <div className="icon">
-          <ChatFill />
-        </div>
-        <div>
-          <a href="#" onClick={onSelectMember}>
-            {fullName ?? <Placeholder>Name not available</Placeholder>}
-          </a>
-        </div>
+      <InChatTopNav onClick={onSelectMember}>
+        <Flex align="center">
+          <div className="icon">
+            <ChatFill />
+          </div>
+          <div>
+            <a onClick={onSelectMember}>
+              {fullName ?? <Placeholder>Name not available</Placeholder>}
+            </a>
+          </div>
+        </Flex>
+        <Button
+          variant="secondary"
+          onClick={(e) => {
+            e.stopPropagation()
+            onResolve()
+          }}
+        >
+          Mark as resolved
+        </Button>
       </InChatTopNav>
       <div
         style={{

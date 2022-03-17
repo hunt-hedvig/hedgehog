@@ -1,25 +1,21 @@
-import { Page } from 'portals/hope/pages/routes'
+import {Page} from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
-import { Flex, Modal } from '@hedvig-ui'
+import React, {useState} from 'react'
+import {Flex, Placeholder} from '@hedvig-ui'
 import chroma from 'chroma-js'
-import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
-import { Question, QuestionGroup } from 'types/generated/graphql'
-import { formatDistanceToNowStrict, parseISO } from 'date-fns'
-import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
-import {
-  doMarketFilter,
-  doMemberGroupFilter,
-} from 'portals/hope/features/questions/utils'
-import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
-import {
-  getMemberFlag,
-  getMemberIdColor,
-} from 'portals/hope/features/member/utils'
-import { PickedLocale } from 'portals/hope/features/config/constants'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { MemberContainer } from '../../features/tasks/components/MemberContainer'
-import { TaskChat } from '../../features/tasks/TaskChat'
+import {useQuestionGroups} from 'portals/hope/features/questions/hooks/use-question-groups'
+import {Question, QuestionGroup,} from 'types/generated/graphql'
+import {formatDistanceToNowStrict, parseISO} from 'date-fns'
+import {doMarketFilter, doMemberGroupFilter,} from 'portals/hope/features/questions/utils'
+import {useNumberMemberGroups} from 'portals/hope/features/user/hooks/use-number-member-groups'
+import {getMemberFlag, getMemberIdColor,} from 'portals/hope/features/member/utils'
+import {PickedLocale} from 'portals/hope/features/config/constants'
+import {useTitle} from '@hedvig-ui/hooks/use-title'
+import {MemberContainer} from '../../features/tasks/components/MemberContainer'
+import {TaskChat} from '../../features/tasks/TaskChat'
+import {FilterModal} from 'portals/hope/features/tasks/components/FilterModal'
+import {useSelectedFilters} from 'portals/hope/features/questions/hooks/use-selected-filters'
+import {useResolveQuestion} from 'portals/hope/features/questions/hooks/use-resolve-question'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -55,10 +51,13 @@ const TopBar = styled.div`
 `
 
 const TopBarItem = styled.button<{ selected?: boolean }>`
-  background-color: transparent;
+  background-color: ${({ theme, selected }) =>
+    selected
+      ? 'transparent'
+      : chroma(theme.semiStrongForeground).alpha(0.05).hex()};
   border: none;
   cursor: pointer;
-  padding: 1.8rem 2rem;
+  padding: 2rem 2rem;
 
   display: flex;
   align-items: center;
@@ -184,30 +183,6 @@ const Container = styled(Flex)`
   margin-left: -4rem;
 `
 
-const FilterModal = styled(Modal)`
-  width: 60rem;
-
-  padding: 1.5rem 1.5rem 5rem;
-
-  h4 {
-    font-size: 1.4rem;
-  }
-
-  p {
-    font-size: 1rem;
-    color: ${({ theme }) => theme.semiStrongForeground};
-  }
-
-  .tip {
-    margin-top: 0.5rem;
-    margin-bottom: -0.5rem;
-    font-size: 0.8rem;
-    color: ${({ theme }) =>
-      chroma(theme.semiStrongForeground).brighten(1).hex()};
-    text-align: center;
-  }
-`
-
 const getQuestionBody = (question: Question) => {
   try {
     return JSON.parse(question.messageJsonString).body
@@ -216,10 +191,17 @@ const getQuestionBody = (question: Question) => {
   }
 }
 
+const getMemberName = (group: QuestionGroup) => {
+  return group.firstName && group.lastName
+    ? `${group.firstName} ${group.lastName}`
+    : undefined
+}
+
 const TasksPage: Page = () => {
+  const { resolve } = useResolveQuestion()
   const { numberMemberGroups } = useNumberMemberGroups()
-  const { selectedFilters } = useSelectedFilters()
   const [questionGroups] = useQuestionGroups()
+  const { selectedFilters: filters, toggleFilter } = useSelectedFilters()
 
   const [showFilters, setShowFilters] = useState(false)
 
@@ -228,10 +210,10 @@ const TasksPage: Page = () => {
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null)
 
   const groups =
-    selectedFilters.length > 0
+    filters.length > 0
       ? questionGroups
-          .filter(doMemberGroupFilter(numberMemberGroups)(selectedFilters))
-          .filter(doMarketFilter(selectedFilters))
+          .filter(doMemberGroupFilter(numberMemberGroups)(filters))
+          .filter(doMarketFilter(filters))
       : questionGroups
 
   useTitle(`Questions ${groups.length ? '(' + groups.length + ')' : ''}`)
@@ -242,13 +224,20 @@ const TasksPage: Page = () => {
         <TaskNavigationWrapper>
           <>
             <TopBar>
-              <TopBarItem
-                selected={!selectedMemberId}
-                onClick={() => setSelectedMemberId(null)}
-              >
-                Incoming questions
-                <div className="count">{groups.length}</div>
-              </TopBarItem>
+              <Flex>
+                <TopBarItem
+                  selected={!selectedMemberId}
+                  onClick={() => setSelectedMemberId(null)}
+                >
+                  Incoming questions
+                  <div className="count">{groups.length}</div>
+                </TopBarItem>
+                {selectedQuestionGroup && selectedMemberId && (
+                  <TopBarItem selected={true}>
+                    {getMemberName(selectedQuestionGroup) ?? 'Member'}
+                  </TopBarItem>
+                )}
+              </Flex>
               <FilterBarItem onClick={() => setShowFilters(true)}>
                 Filters
               </FilterBarItem>
@@ -291,9 +280,19 @@ const TasksPage: Page = () => {
                       </div>
                       <div className="flag">{flag}</div>
                       <span className="name">
-                        {(group?.firstName ?? '') +
-                          ' ' +
-                          (group?.lastName ?? '')}
+                        {getMemberName(group) ? (
+                          <a
+                            href="#"
+                            onClick={() => {
+                              setSelectedMemberId(group.memberId)
+                              setSelectedQuestionGroup(group)
+                            }}
+                          >
+                            {getMemberName(group)}
+                          </a>
+                        ) : (
+                          <Placeholder>Name not available</Placeholder>
+                        )}
                       </span>
                       <span className="preview">{preview.text}</span>
                       <div className="options">
@@ -315,17 +314,13 @@ const TasksPage: Page = () => {
           {selectedQuestionGroup && (
             <TaskChat
               memberId={selectedQuestionGroup.memberId}
-              fullName={
-                selectedQuestionGroup.firstName &&
-                selectedQuestionGroup.lastName
-                  ? `${selectedQuestionGroup.firstName} ${selectedQuestionGroup.lastName}`
-                  : undefined
-              }
-              onResolve={() =>
+              fullName={getMemberName(selectedQuestionGroup)}
+              onResolve={() => {
+                resolve(selectedQuestionGroup.memberId)
                 setSelectedQuestionGroup(
                   questionGroups.length !== 0 ? questionGroups[0] : null,
                 )
-              }
+              }}
               onSelectMember={() =>
                 setSelectedMemberId(selectedQuestionGroup.memberId)
               }
@@ -334,7 +329,13 @@ const TasksPage: Page = () => {
         </TaskChatWrapper>
       </Container>
 
-      {showFilters && <FilterModal onClose={() => setShowFilters(false)} />}
+      {showFilters && (
+        <FilterModal
+          onClose={() => setShowFilters(false)}
+          filters={filters}
+          onToggle={toggleFilter}
+        />
+      )}
     </>
   )
 }
