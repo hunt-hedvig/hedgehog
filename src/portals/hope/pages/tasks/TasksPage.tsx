@@ -1,7 +1,7 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import { Flex, Label, Modal } from '@hedvig-ui'
+import { Flex, Label, Modal, Placeholder } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 import { Question, QuestionGroup } from 'types/generated/graphql'
@@ -22,6 +22,8 @@ import {
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { ChatFill } from 'react-bootstrap-icons'
+import { MemberTabs } from 'portals/hope/features/member'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -29,7 +31,7 @@ const TaskNavigationWrapper = styled.div`
   clip-path: inset(0px -10rem 0px 0px);
   background-color: white;
 
-  min-width: 60%;
+  min-width: 70%;
 
   margin-left: -4rem;
   overflow-y: hidden;
@@ -38,7 +40,7 @@ const TaskNavigationWrapper = styled.div`
 const TaskChatWrapper = styled.div`
   position: relative;
   height: 100%;
-  min-width: 40%;
+  min-width: 30%;
   width: 100%;
 
   &::-webkit-scrollbar {
@@ -210,6 +212,38 @@ const FilterModal = styled(Modal)`
   }
 `
 
+const InChatTopNav = styled.div`
+  display: flex;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: calc(100% - 2rem);
+  z-index: 20;
+
+  padding: 1rem 1.2rem;
+
+  box-shadow: 0 0 1rem 0.15rem rgba(0, 0, 0, 0.1);
+
+  border-radius: 0.5rem;
+
+  background-color: ${({ theme }) => theme.backgroundLight};
+
+  .icon {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+
+    background-color: ${({ theme }) => chroma(theme.accent).alpha(0.2).hex()};
+    svg {
+      fill: ${({ theme }) => theme.accent};
+    }
+  }
+`
+
 const getQuestionBody = (question: Question) => {
   try {
     return JSON.parse(question.messageJsonString).body
@@ -227,6 +261,7 @@ const TasksPage: Page = () => {
   const [isLarge, setIsLarge] = useState(false)
   const [selectedQuestionGroup, setSelectedQuestionGroup] =
     useState<QuestionGroup | null>(null)
+  const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null)
   const [questionGroups] = useQuestionGroups()
 
   const groups =
@@ -242,70 +277,100 @@ const TasksPage: Page = () => {
     <>
       <Container>
         <TaskNavigationWrapper>
-          <TopBar>
-            <TopBarItem selected={true}>
-              Incoming questions
-              <div className="count">{groups.length}</div>
-            </TopBarItem>
-            <FilterBarItem onClick={() => setShowFilters(true)}>
-              Filters
-            </FilterBarItem>
-          </TopBar>
-          <ListContainer>
-            {groups.map((group) => {
-              const previewQuestion = group?.questions?.slice(-1)[0] ?? ''
-              const preview = getQuestionBody(previewQuestion)
+          <>
+            <TopBar>
+              <TopBarItem
+                selected={!selectedMemberId}
+                onClick={() => setSelectedMemberId(null)}
+              >
+                Incoming questions
+                <div className="count">{groups.length}</div>
+              </TopBarItem>
+              <FilterBarItem onClick={() => setShowFilters(true)}>
+                Filters
+              </FilterBarItem>
+            </TopBar>
+            {selectedMemberId && (
+              <ListContainer>
+                <MemberTabs memberId={selectedMemberId} />
+              </ListContainer>
+            )}
+            {!selectedMemberId && (
+              <ListContainer>
+                {groups.map((group) => {
+                  const previewQuestion = group?.questions?.slice(-1)[0] ?? ''
+                  const preview = getQuestionBody(previewQuestion)
 
-              const orbColor = getMemberIdColor(
-                group.memberId,
-                numberMemberGroups,
-              )
-
-              const flag = group.market
-                ? getMemberFlag(
-                    {
-                      market: group.market ?? '',
-                    },
-                    group.pickedLocale as PickedLocale,
+                  const orbColor = getMemberIdColor(
+                    group.memberId,
+                    numberMemberGroups,
                   )
-                : '🏳'
 
-              return (
-                <ListItem
-                  key={group.id}
-                  onClick={() => setSelectedQuestionGroup(group)}
-                  selected={group.memberId === selectedQuestionGroup?.memberId}
-                >
-                  <div className="orb">
-                    <div style={{ backgroundColor: orbColor }} />
-                  </div>
-                  <div className="flag">{flag}</div>
-                  <span className="name">
-                    <a
-                      href={`/members/${group.memberId}`}
-                      target="_blank"
-                      onClick={(e) => e.stopPropagation()}
+                  const flag = group.market
+                    ? getMemberFlag(
+                        {
+                          market: group.market ?? '',
+                        },
+                        group.pickedLocale as PickedLocale,
+                      )
+                    : '🏳'
+
+                  return (
+                    <ListItem
+                      key={group.id}
+                      onClick={() => setSelectedQuestionGroup(group)}
+                      selected={
+                        group.memberId === selectedQuestionGroup?.memberId
+                      }
                     >
-                      {(group?.firstName ?? '') + ' ' + (group?.lastName ?? '')}
-                    </a>
-                  </span>
-                  <span className="preview">{preview.text}</span>
-                  <div className="options">
-                    {formatDistanceToNowStrict(
-                      parseISO(previewQuestion.timestamp),
-                      {
-                        addSuffix: true,
-                      },
-                    )}
-                  </div>
-                </ListItem>
-              )
-            })}
-          </ListContainer>
+                      <div className="orb">
+                        <div style={{ backgroundColor: orbColor }} />
+                      </div>
+                      <div className="flag">{flag}</div>
+                      <span className="name">
+                        {(group?.firstName ?? '') +
+                          ' ' +
+                          (group?.lastName ?? '')}
+                      </span>
+                      <span className="preview">{preview.text}</span>
+                      <div className="options">
+                        {formatDistanceToNowStrict(
+                          parseISO(previewQuestion.timestamp),
+                          {
+                            addSuffix: true,
+                          },
+                        )}
+                      </div>
+                    </ListItem>
+                  )
+                })}
+              </ListContainer>
+            )}
+          </>
         </TaskNavigationWrapper>
         <TaskChatWrapper>
           {selectedQuestionGroup && (
             <>
+              <InChatTopNav>
+                <div className="icon">
+                  <ChatFill />
+                </div>
+                <div>
+                  <a
+                    href="#"
+                    onClick={() => {
+                      setSelectedMemberId(selectedQuestionGroup.memberId)
+                    }}
+                  >
+                    {selectedQuestionGroup?.firstName &&
+                    selectedQuestionGroup?.lastName ? (
+                      `${selectedQuestionGroup.firstName} ${selectedQuestionGroup.lastName}`
+                    ) : (
+                      <Placeholder>Name not available</Placeholder>
+                    )}
+                  </a>
+                </div>
+              </InChatTopNav>
               <div
                 style={{
                   height: isLarge ? 'calc(100% - 27rem)' : 'calc(100% - 15rem)',

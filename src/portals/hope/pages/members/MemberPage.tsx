@@ -1,25 +1,31 @@
-import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MemberTabs } from 'portals/hope/features/member'
-import { useGetMemberInfo } from 'portals/hope/features/member/tabs/member-tab/hooks/use-get-member-info'
 import React from 'react'
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps, useHistory } from 'react-router'
 import { Page } from 'portals/hope/pages/routes'
+import { ChatPane } from 'portals/hope/features/member/tabs/ChatPane'
 
 const MemberPage: Page<
   RouteComponentProps<{
     memberId: string
+    tab?: string
   }>
-> = (props) => {
-  const memberId = props.match.params.memberId
-  const [member] = useGetMemberInfo(memberId)
+> = ({ match }) => {
+  const history = useHistory()
+  const memberId = match.params.memberId
+  const tab = match.params.tab
 
-  useTitle(member ? `${member?.firstName} ${member?.lastName}` : 'Loading...')
-
-  if (!member) {
-    return null
-  }
-
-  return <MemberTabs {...props} member={member} />
+  return (
+    <>
+      <MemberTabs
+        memberId={memberId}
+        tab={tab ?? 'contracts'}
+        onChangeTab={(newTab) =>
+          history.replace(`/members/${memberId}/${newTab}`)
+        }
+      />
+      <ChatPane memberId={memberId} />
+    </>
+  )
 }
 
 export default MemberPage
