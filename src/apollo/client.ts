@@ -146,14 +146,14 @@ export const client = new ApolloClient({
         window.location.pathname = '/login/logout'
       })
     }),
-    createPersistLink(),
+    renewAccessTokenLink,
     addTimezoneOffsetHeader,
+    createPersistLink(),
     new BatchHttpLink({
       uri: '/api/graphql',
       credentials: 'same-origin',
       batchInterval: 20,
     }),
-    renewAccessTokenLink,
   ]),
   connectToDevTools: Boolean(localStorage.getItem('__debug:apollo')),
   cache,
