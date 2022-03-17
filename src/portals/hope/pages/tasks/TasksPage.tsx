@@ -252,6 +252,25 @@ const getQuestionBody = (question: Question) => {
   }
 }
 
+const Wrapper = styled.div`
+  padding: 2rem 3rem;
+`
+
+const MemberContainer: React.FC<{ memberId: string }> = ({ memberId }) => {
+  const [tab, setTab] = useState('contracts')
+
+  return (
+    <Wrapper>
+      <MemberTabs
+        memberId={memberId}
+        tab={tab}
+        onChangeTab={(newTab) => setTab(newTab)}
+        chat={false}
+      />
+    </Wrapper>
+  )
+}
+
 const TasksPage: Page = () => {
   const { numberMemberGroups } = useNumberMemberGroups()
   const { selectedFilters, toggleFilter } = useSelectedFilters()
@@ -292,7 +311,7 @@ const TasksPage: Page = () => {
             </TopBar>
             {selectedMemberId && (
               <ListContainer>
-                <MemberTabs memberId={selectedMemberId} />
+                <MemberContainer memberId={selectedMemberId} />
               </ListContainer>
             )}
             {!selectedMemberId && (

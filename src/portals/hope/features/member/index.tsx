@@ -16,11 +16,11 @@ import { PickedLocale } from 'portals/hope/features/config/constants'
 import { useGetMemberInfo } from 'portals/hope/features/member/tabs/member-tab/hooks/use-get-member-info'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 
-const MemberPageContainer = styled.div`
+const MemberPageContainer = styled.div<{ chat?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: calc(100% - 400px);
+  width: ${({ chat }) => (chat ? 'calc(100% - 400px)' : '100%')};
   min-width: 700px;
   height: 100%;
   white-space: nowrap;
@@ -46,7 +46,7 @@ const Badge = styled('div')<{ memberId: string; numberMemberGroups: number }>`
   margin-right: 1rem;
 `
 
-const Flag = styled('div')`
+const Flag = styled.div`
   display: inline-flex;
   font-size: 3rem;
   margin-left: 0.5rem;
@@ -56,7 +56,8 @@ export const MemberTabs: React.FC<{
   memberId: string
   tab: string
   onChangeTab: (newTab: string) => void
-}> = ({ memberId, tab, onChangeTab }) => {
+  chat?: boolean
+}> = ({ memberId, tab, onChangeTab, chat }) => {
   const [member] = useGetMemberInfo(memberId)
   const { pushToMemberHistory } = useMemberHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -73,7 +74,7 @@ export const MemberTabs: React.FC<{
 
   return (
     <Flex>
-      <MemberPageContainer>
+      <MemberPageContainer chat={chat}>
         <Header>
           <FraudulentStatus
             stateInfo={{
