@@ -21,6 +21,7 @@ import {
 } from 'portals/hope/features/member/utils'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -31,6 +32,7 @@ const TaskNavigationWrapper = styled.div`
   min-width: 60%;
 
   margin-left: -4rem;
+  overflow-y: hidden;
 `
 
 const TaskChatWrapper = styled.div`
@@ -109,6 +111,8 @@ const FilterBarItem = styled.button`
 
 const ListContainer = styled.div`
   width: 100%;
+  height: 100%;
+  overflow-y: scroll;
 `
 
 const ListItem = styled.div<{ selected?: boolean }>`
@@ -231,6 +235,8 @@ const TasksPage: Page = () => {
           .filter(doMemberGroupFilter(numberMemberGroups)(selectedFilters))
           .filter(doMarketFilter(selectedFilters))
       : questionGroups
+
+  useTitle(`Questions ${groups.length ? '(' + groups.length + ')' : ''}`)
 
   return (
     <>
