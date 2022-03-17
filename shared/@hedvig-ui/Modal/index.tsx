@@ -6,6 +6,7 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
+import { FadeIn, FadeInProps } from '../animations/fade-in'
 
 const getPosition = (
   firstCondition: 'top' | 'bottom' | 'left' | 'right',
@@ -41,7 +42,7 @@ const Wrapper = styled.div<{
   padding: 3rem;
 `
 
-const Container = styled.div`
+const Container = styled(FadeIn)`
   max-width: 90%;
   max-height: 90%;
 
@@ -60,7 +61,9 @@ export interface ModalAdditionalOptions {
   noDimBg?: boolean
 }
 
-export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ModalProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    FadeInProps {
   onClose: () => void
   options?: ModalAdditionalOptions
 }
@@ -82,7 +85,7 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <Portal>
       <Wrapper {...options}>
-        <Container ref={modalRef} {...props}>
+        <Container ref={modalRef} duration={props.duration || 250} {...props}>
           {children}
         </Container>
       </Wrapper>
