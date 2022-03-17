@@ -20,7 +20,7 @@ function setTokenCookies(
     path: '/',
     httpOnly: true,
     secure: config.useSecureCookies,
-    expires: addMinutes(new Date(), 3 * 60),
+    expires: addMinutes(new Date(), 29),
   })
   ctx.cookies.set('_hvg_rt', refreshToken, {
     path: '/',

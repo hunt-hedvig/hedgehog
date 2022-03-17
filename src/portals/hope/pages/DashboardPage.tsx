@@ -17,7 +17,7 @@ import React from 'react'
 import { DashboardNumbers } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
 import gql from 'graphql-tag'
-import { MetricList } from '../../features/dashboard/MetricList'
+import { MetricList } from '../features/dashboard/MetricList'
 
 const Wrapper = styled.div`
   display: flex;

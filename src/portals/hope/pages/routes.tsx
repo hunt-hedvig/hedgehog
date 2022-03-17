@@ -1,44 +1,33 @@
 import { StandaloneMessage } from '@hedvig-ui'
-import React, { lazy, Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import TagManager from 'react-gtm-module'
 import { Redirect, Route, Switch, useLocation } from 'react-router'
 import ImpersonateMemberPage from './tools/ImpersonateMemberPage'
 import { useFeatureFlag } from 'portals/hope/common/hooks/use-feature-flag'
+import QuestionsPage from 'portals/hope/pages/QuestionsPage'
+import DashboardPage from './DashboardPage'
+import ProfilePage from './settings/ProfilePage'
+import TasksPage from 'portals/hope/pages/tasks/TasksPage'
+import CheckInPage from 'portals/hope/pages/tasks/CheckInPage'
+import NotificationsPage from 'portals/hope/pages/NotificationsPage'
+import SearchPage from 'portals/hope/pages/search/SearchPage'
+import ConversationsOnboardingPage from 'portals/hope/pages/conversations/ConversationsOnboardingPage'
+import ConversationsPage from 'portals/hope/pages/conversations/ConversationsPage'
+import ClaimsListPage from 'portals/hope/pages/claims/list/ClaimsListPage'
+import ClaimDetailsPage from 'portals/hope/pages/claims/ClaimDetailsPage'
+import MemberSearchPage from 'portals/hope/pages/members/MemberSearchPage'
+import MemberPage from 'portals/hope/pages/members/MemberPage'
+import ToolsPage from 'portals/hope/pages/tools/ToolsPage'
+import ChargesPage from 'portals/hope/pages/tools/ChargesPage'
+import ClaimTypesPage from 'portals/hope/pages/tools/ClaimTypesPage'
+import SwitcherAutomationPage from 'portals/hope/pages/tools/SwitcherAutomationPage'
+import PerilsEditorPage from 'portals/hope/pages/tools/PerilsEditorPage'
+import EmployeesPage from 'portals/hope/pages/tools/EmployeesPage'
+import CampaignCodesPage from 'portals/hope/pages/tools/CampaignCodesPage'
+import UnsignMemberPage from 'portals/hope/pages/tools/UnsignMemberPage'
+import TemplateMessagesPage from 'portals/hope/pages/tools/TemplateMessagesPage'
 
 export type Page<T = void> = React.FC<T>
-
-const DashboardPage = lazy(() => import('./dashboard/DashboardPage'))
-const SearchPage = lazy(() => import('./search/SearchPage'))
-const ProfilePage = lazy(() => import('./settings/ProfilePage'))
-const QuestionsPage = lazy(() => import('./QuestionsPage'))
-const ConversationsOnboardingPage = lazy(
-  () => import('./conversations/ConversationsOnboardingPage'),
-)
-const ConversationsPage = lazy(
-  () => import('./conversations/ConversationsPage'),
-)
-
-const TasksPage = lazy(() => import('./tasks/TasksPage'))
-const CheckInPage = lazy(() => import('./tasks/CheckInPage'))
-
-const ClaimsListPage = lazy(() => import('./claims/list/ClaimsListPage'))
-const ClaimDetailsPage = lazy(() => import('./claims/ClaimDetailsPage'))
-const MemberSearchPage = lazy(() => import('./members/MemberSearchPage'))
-const MemberPage = lazy(() => import('./members/MemberPage'))
-const ToolsPage = lazy(() => import('./tools/ToolsPage'))
-const ChargesPage = lazy(() => import('./tools/ChargesPage'))
-const ClaimTypesPage = lazy(() => import('./tools/ClaimTypesPage'))
-const SwitcherAutomationPage = lazy(
-  () => import('./tools/SwitcherAutomationPage'),
-)
-const PerilsEditorPage = lazy(() => import('./tools/PerilsEditorPage'))
-
-const EmployeesPage = lazy(() => import('./tools/EmployeesPage'))
-const CampaignCodesPage = lazy(() => import('./tools/CampaignCodesPage'))
-const UnsignMemberPage = lazy(() => import('./tools/UnsignMemberPage'))
-const TemplateMessagesPage = lazy(() => import('./tools/TemplateMessagesPage'))
-
-const NotificationsPage = lazy(() => import('./NotificationsPage'))
 
 // Replace member IDs or UUIDs with {id} to simplify page tracking
 const getCleanPath = (pathname: string) =>
