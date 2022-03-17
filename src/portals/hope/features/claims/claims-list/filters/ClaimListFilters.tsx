@@ -1,20 +1,37 @@
 import styled from '@emotion/styled'
-import {Checkbox, Flex, Label, lightTheme, MultiDropdown, Popover, Radio, TextDatePicker,} from '@hedvig-ui'
-import {Keys} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import {useNavigation} from '@hedvig-ui/hooks/navigation/use-navigation'
+import {
+  Checkbox,
+  Flex,
+  Label,
+  lightTheme,
+  MultiDropdown,
+  Popover,
+  Radio,
+  TextDatePicker,
+} from '@hedvig-ui'
+import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
-import {range} from '@hedvig-ui/utils/range'
-import {convertEnumToTitle} from '@hedvig-ui/utils/text'
-import {ClaimOutcomes} from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
-import {Market, MarketFlags, MemberGroups,} from 'portals/hope/features/config/constants'
-import {MemberGroupColorBadge} from 'portals/hope/features/questions/MemberGroupColorBadge'
-import {numberMemberGroupsOptions} from 'portals/hope/features/questions/number-member-groups-radio-buttons'
-import {useMe} from 'portals/hope/features/user/hooks/use-me'
-import {useNumberMemberGroups} from 'portals/hope/features/user/hooks/use-number-member-groups'
-import React, {useState} from 'react'
-import {InfoCircle} from 'react-bootstrap-icons'
-import {useHistory} from 'react-router'
-import {ClaimComplexity, ClaimState, UserSettingKey} from 'types/generated/graphql'
+import { range } from '@hedvig-ui/utils/range'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { ClaimOutcomes } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
+import {
+  Market,
+  MarketFlags,
+  MemberGroups,
+} from 'portals/hope/features/config/constants'
+import { MemberGroupColorBadge } from 'portals/hope/features/questions/MemberGroupColorBadge'
+import { numberMemberGroupsOptions } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
+import { useMe } from 'portals/hope/features/user/hooks/use-me'
+import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
+import React, { useState } from 'react'
+import { InfoCircle } from 'react-bootstrap-icons'
+import { useHistory } from 'react-router'
+import {
+  ClaimComplexity,
+  ClaimState,
+  UserSettingKey,
+} from 'types/generated/graphql'
 
 export const FilterWrapper = styled.div`
   width: 100%;
@@ -133,21 +150,70 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
     if (page && page !== '1') {
       history.push(`/claims/list/1`)
     }
-    updateSetting(field, value)
+
+    if (!settings[field]) {
+      updateSetting(field, [value])
+    }
+
+    const currentValue = settings[field]
+
+    if (!currentValue || typeof currentValue !== 'object') {
+      return
+    }
+
+    if (currentValue.includes(value)) {
+      updateSetting(
+        field,
+        currentValue.filter((item) => item !== value),
+      )
+
+      return
+    }
+
+    updateSetting(field, [...currentValue, value])
   }
 
   const updateOutcomeFilterHandler = (value: string | null) => {
     const field = UserSettingKey.OutcomeFilterClaims
-    updateSetting(field, value)
+
+    if (!settings[field]) {
+      updateSetting(field, [value])
+    }
+
+    const currentValue = settings[field]
+
+    if (!currentValue || typeof currentValue !== 'object') {
+      return
+    }
+
+    if (!value) {
+      updateSetting(field, [])
+
+      return
+    }
+
+    if (currentValue.includes(value)) {
+      updateSetting(
+        field,
+        currentValue.filter((item) => item !== value),
+      )
+
+      return
+    }
+
+    updateSetting(field, [...currentValue, value])
   }
 
   const updateNumberMemberSetting = (state: number) => {
     if (
-      state === 2 &&
+      state === numberMemberGroups - 1 &&
       settings.memberGroupsFilterClaims &&
-      settings.memberGroupsFilterClaims.includes(2)
+      settings.memberGroupsFilterClaims.includes(numberMemberGroups - 1)
     ) {
-      updateSetting(UserSettingKey.MemberGroupsFilterClaims, state)
+      updateSetting(
+        UserSettingKey.MemberGroupsFilterClaims,
+        settings.memberGroupsFilterClaims.filter((group) => group !== state),
+      )
     }
   }
 
@@ -179,7 +245,10 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 label={stateName}
                 checked={settings.claimStatesFilterClaims?.includes(state)}
                 onChange={() => {
-                  updateFilterHandler(UserSettingKey.ClaimStatesFilterClaims, state)
+                  updateFilterHandler(
+                    UserSettingKey.ClaimStatesFilterClaims,
+                    state,
+                  )
                 }}
               />
               <MemberGroupColorBadge
@@ -231,7 +300,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
             >
               <Checkbox
                 label={complexityName}
-                checked={settings.claimComplexityFilterClaims?.includes(complexity)}
+                checked={settings.claimComplexityFilterClaims?.includes(
+                  complexity,
+                )}
                 onChange={() => {
                   updateFilterHandler(
                     UserSettingKey.ClaimComplexityFilterClaims,
@@ -280,7 +351,10 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 label={option.label}
                 onChange={() => {
                   updateNumberMemberSetting(option.value)
-                  updateSetting(UserSettingKey.NumberOfMemberGroups, option.value)
+                  updateSetting(
+                    UserSettingKey.NumberOfMemberGroups,
+                    option.value,
+                  )
                   setNumberMemberGroups(option.value)
                 }}
                 checked={option.value === numberMemberGroups || false}
@@ -324,7 +398,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 label={Object.keys(MemberGroups).find(
                   (_, index) => index === filterNumber,
                 )}
-                checked={settings.memberGroupsFilterClaims?.includes(filterNumber)}
+                checked={settings.memberGroupsFilterClaims?.includes(
+                  filterNumber,
+                )}
                 onChange={() => {
                   updateFilterHandler(
                     UserSettingKey.MemberGroupsFilterClaims,

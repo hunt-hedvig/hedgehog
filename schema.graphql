@@ -339,20 +339,20 @@ input UserSettingsFilter {
 }
 
 enum UserSettingKey {
-  DarkMode
-  FeatureFlags
-  NumberOfMemberGroups
-  ClaimComplexityFilterClaims
-  ClaimStatesFilterClaims
-  ClaimStatesFilterQuestions
-  MemberGroupsFilterClaims
-  MemberGroupsFilterQuestions
-  MarketFilterClaims
-  MarketFilterQuestions
-  NumberOfClaimsFilter
-  OutcomeFilterClaims
-  FocusMarkets
-  Languages
+  darkMode
+  featureFlags
+  numberOfMemberGroups
+  claimComplexityFilterClaims
+  claimStatesFilterClaims
+  claimStatesFilterQuestions
+  memberGroupsFilterClaims
+  memberGroupsFilterQuestions
+  marketFilterClaims
+  marketFilterQuestions
+  numberOfClaimsFilter
+  outcomeFilterClaims
+  focusMarkets
+  languages
 }
 
 type User {

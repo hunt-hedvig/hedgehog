@@ -4,7 +4,8 @@ import {
   GetMeDocument,
   GetMeQuery,
   Me as _Me,
-  UserNotification, UserSettingKey,
+  UserNotification,
+  UserSettingKey,
   UserSettings,
   useUpdateUserSettingsMutation,
 } from 'types/generated/graphql'
@@ -19,7 +20,7 @@ interface MeContextProps {
   me: PartialMe
   // eslint-disable-next-line
   settings: UserSettings
-  updateSetting: (key: UserSettingKey, value?: string | string[] | number | number[] | boolean | null) => Promise<FetchResult>
+  updateSetting: (key: UserSettingKey, value?: any) => Promise<FetchResult>
 }
 
 interface MeProviderProps {
@@ -47,14 +48,14 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
 
   const updateSetting = (
     key: UserSettingKey,
-    value?: string | string[] | number | number[] | boolean | null,
+    value?: any,
   ): Promise<FetchResult> => {
     return upsertUserSettings({
-      variables: { settings: [{ key, value: [value] }] },
+      variables: { settings: [{ key, value: value }] },
       optimisticResponse: {
         upsertUserSettings: {
           ...me.settings,
-          [key]: [value]
+          [key]: value,
         },
       },
       update: (
