@@ -276,6 +276,13 @@ export const VerticalMenu: React.FC = () => {
         return true
       }
 
+      if (
+        history.location.pathname.includes('/claims') &&
+        route === routes.claims
+      ) {
+        return true
+      }
+
       return route ? history.location.pathname.includes(route) : false
     },
   })
@@ -324,8 +331,16 @@ export const VerticalMenu: React.FC = () => {
                       if (
                         location.pathname.startsWith('/questions') &&
                         item.route === '/tasks/check-in'
-                      )
+                      ) {
                         return true
+                      }
+
+                      if (
+                        location.pathname.startsWith('/claims') &&
+                        item.route === '/claims/list/1'
+                      ) {
+                        return true
+                      }
 
                       return location.pathname.startsWith(item.route)
                     }}
