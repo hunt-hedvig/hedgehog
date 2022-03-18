@@ -15,7 +15,6 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React from 'react'
-import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
 import { useGetMemberClaims } from 'portals/hope/features/member/tabs/claims-tab/hooks/use-get-member-claims'
 
@@ -44,7 +43,6 @@ const FlexVertically = styled.div`
 export const MemberClaimsList: React.FC<{ memberId: string }> = ({
   memberId,
 }) => {
-  const history = useHistory()
   const [memberClaims, { loading }] = useGetMemberClaims(memberId)
 
   const claims = memberClaims ?? []
@@ -84,7 +82,7 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
             return (
               <TableRow
                 key={claim.id}
-                onClick={() => history.push(`/claims/${claim.id}`)}
+                onClick={() => window.open(`/claims/${claim.id}`, '_blank')}
               >
                 <TableColumn>
                   <FlexVertically>
