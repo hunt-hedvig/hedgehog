@@ -58,7 +58,7 @@ export const MemberTabs: React.FC<{
   onChangeTab: (newTab: string) => void
   chat?: boolean
   title?: string
-}> = ({ memberId, tab, onChangeTab, chat, title }) => {
+}> = ({ memberId, tab, onChangeTab, chat = true, title }) => {
   const [member] = useGetMemberInfo(memberId)
   const { pushToMemberHistory } = useMemberHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
