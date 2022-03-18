@@ -326,9 +326,7 @@ const TasksPage: Page = () => {
               fullName={getMemberName(selectedQuestionGroup)}
               onResolve={() => {
                 resolve(selectedQuestionGroup.memberId)
-                setSelectedQuestionGroup(
-                  questionGroups.length !== 0 ? questionGroups[0] : null,
-                )
+                setSelectedQuestionGroup(groups.length !== 0 ? groups[0] : null)
               }}
               onSelectMember={() =>
                 setSelectedMemberId(selectedQuestionGroup.memberId)
