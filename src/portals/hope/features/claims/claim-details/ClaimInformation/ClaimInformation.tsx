@@ -306,55 +306,20 @@ export const ClaimInformation: React.FC<{
           <Label>Status</Label>
           <ClaimStatusDropdown
             claimId={claimId}
-            {...register('Claim Status', {
-              parent: 'Claim Card #2',
-              neighbors: {
-                down: 'Claim Outcome',
-              },
-            })}
+            {...register('Claim Status', {})}
           />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Claim outcome</Label>
-          <ClaimOutcomeDropdown
-            claimId={claimId}
-            {...register('Claim Outcome', {
-              parent: 'Claim Card #2',
-              neighbors: {
-                up: 'Claim Status',
-                down: 'Date of Occurrence',
-              },
-            })}
-          />
+          <ClaimOutcomeDropdown claimId={claimId} />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Date of Occurrence</Label>
-          <ClaimDatePicker
-            claimId={claimId}
-            {...register('Date of Occurrence', {
-              parent: 'Claim Card #2',
-              neighbors: {
-                up: 'Claim Outcome',
-                down: 'Contract for Claim',
-              },
-            })}
-          />
+          <ClaimDatePicker claimId={claimId} />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Contract for Claim</Label>
-          <ClaimContractDropdown
-            claimId={claimId}
-            {...register('Contract for Claim', {
-              parent: 'Claim Card #2',
-              neighbors: {
-                up: 'Date of Occurrence',
-                down:
-                  agreement && agreement.termsAndConditions?.url
-                    ? 'Terms And Conditions'
-                    : 'Employee Claim',
-              },
-            })}
-          />
+          <ClaimContractDropdown claimId={claimId} />
         </SelectWrapper>
 
         {agreement ? (
@@ -363,22 +328,6 @@ export const ClaimInformation: React.FC<{
               href={agreement.termsAndConditions?.url}
               target="_blank"
               rel="noopener noreferrer"
-              {...register(
-                'Terms and Conditions',
-                {
-                  parent: 'Claim Card #2',
-                  neighbors: {
-                    up: 'Contract for Claim',
-                    down: 'Employee Claim',
-                  },
-                },
-                {
-                  fontSize: '0.9rem',
-                },
-                {
-                  fontSize: '0.9rem',
-                },
-              )}
             >
               Terms and Conditions
             </a>
@@ -390,32 +339,11 @@ export const ClaimInformation: React.FC<{
         )}
         <SelectWrapper>
           <Label>Employee Claim</Label>
-          <ClaimEmployeeDropdown
-            claimId={claimId}
-            {...register('Employee Claim', {
-              parent: 'Claim Card #2',
-              neighbors: {
-                up:
-                  agreement && agreement.termsAndConditions?.url
-                    ? 'Terms And Conditions'
-                    : 'Contract for Claim',
-                down: 'Co-insured Claim',
-              },
-            })}
-          />
+          <ClaimEmployeeDropdown claimId={claimId} />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Co-insured Claim</Label>
-          <Dropdown
-            style={
-              register('Co-insured Claim', {
-                parent: 'Claim Card #2',
-                neighbors: {
-                  up: 'Employee Claim',
-                },
-              }).style
-            }
-          >
+          <Dropdown>
             {coInsuredClaimOptions.map((opt) => (
               <DropdownOption
                 key={opt.key}

@@ -72,7 +72,10 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
         <Group>
           <SearchInputGroup>
             <Input
-              {...register('Member Search Form', { autoFocus: true })}
+              {...register('Member Search Form', {
+                autoFocus: true,
+                withFocus: true,
+              })}
               onChange={({ target: { value } }) => {
                 if (shouldIgnoreInput(value)) {
                   return
@@ -81,7 +84,7 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
               }}
               icon={<SearchIcon muted={!query} />}
               placeholder="Looking for someone...?"
-              id="query"
+              // id="query"
               value={query}
               loading={loading}
               size="large"
@@ -97,18 +100,6 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
               }}
               onBlur={() => setTextFieldFocused(false)}
               onKeyDown={(e) => {
-                // if (isPressing(e, Keys.Escape)) {
-                //   focus('Search')
-                // }
-
-                // if (isPressing(e, Keys.Down)) {
-                //   if (membersLength) {
-                //     focus('Table Row 0')
-                //   } else if (suggestionsLength) {
-                //     focus('Member Suggestion 1')
-                //   }
-                // }
-
                 if (
                   isMetaKey(e) &&
                   isPressing(e, Keys.Enter) &&

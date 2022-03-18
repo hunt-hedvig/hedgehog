@@ -262,12 +262,7 @@ export const ClaimPaymentForm: React.FC<{
     <FormProvider {...form}>
       <Form onSubmit={() => setIsConfirming(true)}>
         <FormInput
-          {...register('Claim Payments Payout', {
-            parent: 'Claim Card #6',
-            neighbors: {
-              down: 'Claim Payments Deductible',
-            },
-          })}
+          {...register('Claim Payments Payout', {})}
           placeholder="Payout amount"
           name="amount"
           defaultValue=""
@@ -288,13 +283,6 @@ export const ClaimPaymentForm: React.FC<{
           defaultValue=""
           step="any"
           type="number"
-          {...register('Claim Payments Deductible', {
-            parent: 'Claim Card #6',
-            neighbors: {
-              up: 'Claim Payments Payout',
-              down: 'Claim Payments Note',
-            },
-          })}
         />
         <FormInput
           placeholder="Note"
@@ -303,31 +291,12 @@ export const ClaimPaymentForm: React.FC<{
           rules={{
             required: 'Note is required',
           }}
-          {...register('Claim Payments Note', {
-            parent: 'Claim Card #6',
-            neighbors: {
-              up: 'Claim Payments Deductible',
-              down: 'Claim Payments Ex Gratia',
-            },
-          })}
         />
         <Checkbox
           label="Ex Gratia?"
           name="exGratia"
           checked={isExGratia}
           onChange={() => setIsExGratia((prev) => !prev)}
-          {...register(
-            'Claim Payments Ex Gratia',
-            {
-              parent: 'Claim Card #6',
-              neighbors: {
-                up: 'Claim Payments Note',
-                down: 'Claim Payments Type',
-              },
-            },
-            { width: '8rem', marginBottom: '1.5rem' },
-            { width: '8rem', marginBottom: '1.5rem' },
-          )}
         />
 
         <FormDropdown
@@ -350,13 +319,6 @@ export const ClaimPaymentForm: React.FC<{
           rules={{
             required: 'Category is required',
           }}
-          {...register('Claim Payments Type', {
-            parent: 'Claim Card #6',
-            neighbors: {
-              up: 'Claim Payments Ex Gratia',
-              down: 'Claim Payments Submit',
-            },
-          })}
         />
 
         {isPotentiallySanctioned && (
@@ -401,16 +363,7 @@ export const ClaimPaymentForm: React.FC<{
           )}
 
         <div>
-          <SubmitButton
-            {...register('Claim Payments Submit', {
-              parent: 'Claim Card #6',
-              neighbors: {
-                up: 'Claim Payments Type',
-              },
-            })}
-          >
-            Create payment
-          </SubmitButton>
+          <SubmitButton>Create payment</SubmitButton>
         </div>
 
         {isConfirming && member?.contractMarketInfo && (

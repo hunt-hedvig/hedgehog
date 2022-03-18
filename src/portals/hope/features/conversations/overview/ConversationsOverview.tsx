@@ -108,7 +108,7 @@ export const ConversationsOverview: React.FC<{
             const navigation = register(
               group.memberId,
               {
-                autoFocus: index === 0,
+                autoFocus: group.memberId === currentMemberId,
                 resolve: 'Conversation Chat',
                 neighbors: {
                   up: index ? filteredGroups[index - 1].memberId : undefined,

@@ -14,6 +14,7 @@ import {
 import { FileText } from 'react-bootstrap-icons'
 import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
 import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
+import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 const ConversationContent = styled.div`
   background-color: ${({ theme }) => theme.accentBackground};
@@ -232,6 +233,8 @@ export const ConversationChat: React.FC<{
     }
   }
 
+  const { register } = useNavigation()
+
   return (
     <FadeIn style={{ width: '100%', height: '100%' }}>
       <ConversationContent>
@@ -246,21 +249,7 @@ export const ConversationChat: React.FC<{
           </HintContainer>
 
           <ConversationTextArea
-            // {...register(
-            //   'Conversations Chat',
-            //   {
-            //     focus: Keys.Enter,
-            //     resolve: (ref) => {
-            //       ref.ref.focus()
-            //     },
-            //   },
-            //   {
-            //     border: 'none',
-            //   },
-            //   {
-            //     border: 'none',
-            //   },
-            // )}
+            {...register('Conversation Chat', { withFocus: true })}
             onFocus={() => {
               setInputFocused(true)
             }}

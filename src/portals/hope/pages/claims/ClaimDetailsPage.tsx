@@ -197,13 +197,14 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.One,
                   metaKey: 'ctrlKey',
-                  resolve: '',
+                  withFocus: true,
+                  focusTarget: 'Claim Details - MemberId',
                 },
                 {
-                  border: '5px solid blue',
+                  border: '2px solid blue',
                 },
                 {
-                  border: '5px solid transparent',
+                  border: '2px solid transparent',
                 },
               )}
             >
@@ -217,13 +218,14 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Two,
                   metaKey: 'ctrlKey',
-                  resolve: 'Claim Status',
+                  withFocus: true,
+                  focusTarget: 'Claim Status',
                 },
                 {
-                  border: '5px solid blue',
+                  border: '2px solid blue',
                 },
                 {
-                  border: '5px solid transparent',
+                  border: '2px solid transparent',
                 },
               )}
             >
@@ -237,13 +239,14 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Three,
                   metaKey: 'ctrlKey',
-                  resolve: 'Claim Type',
+                  withFocus: true,
+                  focusTarget: 'Claim Type',
                 },
                 {
-                  border: '5px solid blue',
+                  border: '2px solid blue',
                 },
                 {
-                  border: '5px solid transparent',
+                  border: '2px solid transparent',
                 },
               )}
             >
@@ -265,13 +268,14 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Four,
                   metaKey: 'ctrlKey',
-                  resolve: 'Claim Notes Textarea',
+                  withFocus: true,
+                  focusTarget: 'Claim Notes Textarea',
                 },
                 {
-                  border: '5px solid blue',
+                  border: '2px solid blue',
                 },
                 {
-                  border: '5px solid transparent',
+                  border: '2px solid transparent',
                 },
               )}
             >
@@ -303,13 +307,14 @@ const ClaimDetailsPage: Page<
                   {
                     focus: Keys.Five,
                     metaKey: 'ctrlKey',
-                    resolve: 'Claim Reserve Input',
+                    withFocus: true,
+                    focusTarget: 'Claim Reserve Input',
                   },
                   {
-                    border: '5px solid blue',
+                    border: '2px solid blue',
                   },
                   {
-                    border: '5px solid transparent',
+                    border: '2px solid transparent',
                   },
                 )}
               >
@@ -325,13 +330,14 @@ const ClaimDetailsPage: Page<
                   {
                     focus: Keys.Six,
                     metaKey: 'ctrlKey',
-                    resolve: 'Claim Payments Payout',
+                    withFocus: true,
+                    focusTarget: 'Claim Payments Payout',
                   },
                   {
-                    border: '5px solid blue',
+                    border: '2px solid blue',
                   },
                   {
-                    border: '5px solid transparent',
+                    border: '2px solid transparent',
                   },
                 )}
               >
@@ -350,13 +356,14 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Seven,
                   metaKey: 'ctrlKey',
-                  resolve: 'Claim File Input',
+                  withFocus: true,
+                  focusTarget: 'Claim File Input',
                 },
                 {
-                  border: '5px solid blue',
+                  border: '2px solid blue',
                 },
                 {
-                  border: '5px solid transparent',
+                  border: '2px solid transparent',
                 },
               )}
             >

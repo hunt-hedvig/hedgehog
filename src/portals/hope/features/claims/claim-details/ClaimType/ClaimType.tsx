@@ -135,9 +135,7 @@ export const ClaimType: React.FC<{
                 label: convertEnumToTitle(claimType),
                 searchTerms: claimType,
               }))}
-              {...register('Claim Type', {
-                parent: 'Claim Card #3',
-              })}
+              {...register('Claim Type', {})}
             />
             {!!selectedClaimType && (
               <ClaimPropertyForm

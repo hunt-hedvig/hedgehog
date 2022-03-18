@@ -68,12 +68,7 @@ export const FileUpload: React.FC<{
       <FileUploadContainer>
         <Dropzone onDrop={handleDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => (
-            <Button
-              {...getRootProps()}
-              {...register('Claim File Input', {
-                parent: 'Claim Card #7',
-              })}
-            >
+            <Button {...getRootProps()} {...register('Claim File Input', {})}>
               <div style={{ width: '100%' }}>
                 <div style={{ fontSize: '4.0em' }}>
                   {isDragActive ? <FileEarmarkArrowUpFill /> : <FileEarmark />}

@@ -21,9 +21,7 @@ const ClaimReserveForm: React.FC<{ claimId: string }> = ({ claimId }) => {
       <Input
         placeholder="Reserve amount"
         onChange={(e) => setValue(e.currentTarget.value)}
-        {...register('Claim Reserve Input', {
-          parent: 'Claim Card #5',
-        })}
+        {...register('Claim Reserve Input', {})}
       />
       <Spacing top="small" />
       <Button

@@ -52,7 +52,11 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
       return
     }
 
-    if (e.target?.nodeName === 'INPUT' || e.target?.nodeName === 'TEXTAREA') {
+    if (
+      (e.target?.nodeName === 'INPUT' || e.target?.nodeName === 'TEXTAREA') &&
+      e.code !== 'Escape' &&
+      e.code !== 'Enter'
+    ) {
       return
     }
 
@@ -95,6 +99,14 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     if (isPressing(e, Keys.Escape)) {
+      if (
+        cursorRef.current &&
+        target.withFocus &&
+        'activeElement' in document
+      ) {
+        ;(document.activeElement as HTMLElement)?.blur()
+      }
+
       if (!target?.parent) {
         setCursor(null)
         cursorRef.current = null
@@ -117,6 +129,13 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     if (isPressing(e, Keys.Enter)) {
+      if (cursorRef.current && target.withFocus) {
+        const element = document.getElementById(
+          target.focusTarget || cursorRef.current,
+        )
+        element?.focus()
+      }
+
       if (!target?.resolve) {
         return
       }
@@ -316,6 +335,8 @@ interface UseNavigationRegisterOptions {
   ref?: unknown
   focusCondition?: (item: string) => boolean
   withFocusCondition?: boolean
+  withFocus?: boolean
+  focusTarget?: string
 }
 
 export const useNavigation = () => {
@@ -345,6 +366,7 @@ export const useNavigation = () => {
 
     Object.keys(localItems.current).forEach((name) => {
       if (localItems.current[name].autoFocus) {
+        document.getElementById(name)?.focus()
         setCursor(name)
       }
     })
@@ -377,6 +399,7 @@ export const useNavigation = () => {
           border: '2px solid transparent',
           ...style,
         },
+        id: name,
       }
     }
 
@@ -395,6 +418,7 @@ export const useNavigation = () => {
           behavior: 'smooth',
         })
       },
+      id: name,
     }
   }
 
@@ -406,6 +430,8 @@ export const useNavigation = () => {
     resolve,
     focusCondition,
     withFocusCondition,
+    withFocus,
+    focusTarget,
   }: {
     list: T[]
     name: string
@@ -414,6 +440,8 @@ export const useNavigation = () => {
     resolve?: (item: T) => void
     focusCondition?: (itemName: string) => boolean
     withFocusCondition?: boolean
+    withFocus?: boolean
+    focusTarget?: string
   }) {
     return {
       registerItem: (item: T) => {
@@ -439,6 +467,8 @@ export const useNavigation = () => {
           },
           focusCondition,
           withFocusCondition,
+          withFocus,
+          focusTarget,
         })
       },
     }
