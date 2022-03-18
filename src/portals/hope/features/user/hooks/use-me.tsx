@@ -70,6 +70,10 @@ export const MeProvider: React.FC<MeProviderProps> = ({ me, children }) => {
           query: GetMeDocument,
         }) as GetMeQuery
 
+        if (!cachedData?.me) {
+          return
+        }
+
         cache.writeQuery({
           query: GetMeDocument,
           data: {

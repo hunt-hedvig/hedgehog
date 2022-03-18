@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
-import { Capitalized, Tabs } from '@hedvig-ui'
+import { Capitalized, Flex, Tabs } from '@hedvig-ui'
 import { memberPagePanes } from 'portals/hope/features/member/tabs'
-import { ChatPane } from 'portals/hope/features/member/tabs/ChatPane'
 import { FraudulentStatus } from 'portals/hope/features/member/tabs/member-tab/FraudulentStatus'
 import {
   getMemberFlag,
@@ -10,23 +9,18 @@ import {
   MemberAge,
 } from 'portals/hope/features/member/utils'
 import React, { useEffect } from 'react'
-import { Route, RouteComponentProps, useHistory } from 'react-router'
-import { Member } from 'types/generated/graphql'
 import { MemberDetails } from './MemberDetails'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
 import { PickedLocale } from 'portals/hope/features/config/constants'
+import { useGetMemberInfo } from 'portals/hope/features/member/tabs/member-tab/hooks/use-get-member-info'
+import { useTitle } from '@hedvig-ui/hooks/use-title'
 
-const MemberPageWrapper = styled('div')({
-  display: 'flex',
-  flexDirection: 'row',
-})
-
-const MemberPageContainer = styled('div')`
+const MemberPageContainer = styled.div<{ chat?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: calc(100% - 400px);
+  width: ${({ chat }) => (chat ? 'calc(100% - 400px)' : '100%')};
   min-width: 700px;
   height: 100%;
   white-space: nowrap;
@@ -52,43 +46,35 @@ const Badge = styled('div')<{ memberId: string; numberMemberGroups: number }>`
   margin-right: 1rem;
 `
 
-const Flag = styled('div')`
+const Flag = styled.div`
   display: inline-flex;
   font-size: 3rem;
   margin-left: 0.5rem;
 `
 
-export const MemberTabs: React.FC<
-  RouteComponentProps<{
-    memberId: string
-  }> & {
-    member: Member
-  }
-> = ({ match, member }) => {
-  const history = useHistory()
-  const pathname = history.location.pathname.split('/')
-  const path =
-    pathname.length === 4 ? pathname[pathname.length - 1] : 'contracts'
-
-  const memberId = match.params.memberId
-
+export const MemberTabs: React.FC<{
+  memberId: string
+  tab: string
+  onChangeTab: (newTab: string) => void
+  chat?: boolean
+}> = ({ memberId, tab, onChangeTab, chat }) => {
+  const [member] = useGetMemberInfo(memberId)
+  const { pushToMemberHistory } = useMemberHistory()
+  const { numberMemberGroups } = useNumberMemberGroups()
   const panes = memberPagePanes(memberId)
 
-  const navigateToTab = (tabName: string) =>
-    history.replace(`/members/${memberId}/${tabName}`)
+  useTitle(member ? `${member?.firstName} ${member?.lastName}` : 'Loading...')
+  useEffect(() => pushToMemberHistory(memberId), [])
 
-  const { pushToMemberHistory } = useMemberHistory()
+  if (!member) {
+    return null
+  }
 
-  useEffect(() => {
-    pushToMemberHistory(memberId)
-    navigateToTab(path)
-  }, [])
-
-  const { numberMemberGroups } = useNumberMemberGroups()
+  const Pane = panes.find((pane) => pane.tabName === tab)?.component()
 
   return (
-    <MemberPageWrapper>
-      <MemberPageContainer>
+    <Flex>
+      <MemberPageContainer chat={chat}>
         <Header>
           <FraudulentStatus
             stateInfo={{
@@ -124,22 +110,13 @@ export const MemberTabs: React.FC<
         <Tabs
           list={panes.map((pane) => ({
             title: pane.tabTitle,
-            active: path === pane.tabName,
-            action: () => navigateToTab(pane.tabName),
+            active: tab === pane.tabName,
+            action: () => onChangeTab(pane.tabName),
             hotkey: pane.hotkey,
           }))}
         />
-        <div style={{ marginTop: '4rem' }}>
-          {panes.map((pane, id) => (
-            <Route
-              key={`${pane.tabName}-${id}`}
-              path={`${match.path}/${pane.tabName}`}
-              component={pane.component}
-            />
-          ))}
-        </div>
+        <div style={{ marginTop: '4rem' }}>{Pane}</div>
       </MemberPageContainer>
-      <ChatPane memberId={memberId} />
-    </MemberPageWrapper>
+    </Flex>
   )
 }

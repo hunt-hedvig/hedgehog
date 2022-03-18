@@ -95,7 +95,7 @@ if (currentVersion === SCHEMA_VERSION) {
 }
 
 const storeTokenRenewalDate = () => {
-  const RENEW_TOKEN_MINUTES = 20
+  const RENEW_TOKEN_MINUTES = 10
   const date = addMinutes(new Date(), RENEW_TOKEN_MINUTES)
   localStorage.setItem('_tk_r', date.toISOString())
 }

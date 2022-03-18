@@ -1,15 +1,11 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import { Flex, Label, Modal } from '@hedvig-ui'
+import { Flex, Placeholder } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 import { Question, QuestionGroup } from 'types/generated/graphql'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
-import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
-import { TaskChatInput } from 'portals/hope/features/tasks/components/TaskChatInput'
-import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
-import { FilterSelect } from 'portals/hope/features/questions/FilterSelect'
 import {
   doMarketFilter,
   doMemberGroupFilter,
@@ -20,8 +16,12 @@ import {
   getMemberIdColor,
 } from 'portals/hope/features/member/utils'
 import { PickedLocale } from 'portals/hope/features/config/constants'
-import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { MemberContainer } from '../../features/tasks/components/MemberContainer'
+import { TaskChat } from '../../features/tasks/TaskChat'
+import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
+import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
+import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -29,7 +29,7 @@ const TaskNavigationWrapper = styled.div`
   clip-path: inset(0px -10rem 0px 0px);
   background-color: white;
 
-  min-width: 60%;
+  min-width: 70%;
 
   margin-left: -4rem;
   overflow-y: hidden;
@@ -38,7 +38,7 @@ const TaskNavigationWrapper = styled.div`
 const TaskChatWrapper = styled.div`
   position: relative;
   height: 100%;
-  min-width: 40%;
+  min-width: 30%;
   width: 100%;
 
   &::-webkit-scrollbar {
@@ -57,10 +57,13 @@ const TopBar = styled.div`
 `
 
 const TopBarItem = styled.button<{ selected?: boolean }>`
-  background-color: transparent;
+  background-color: ${({ theme, selected }) =>
+    selected
+      ? 'transparent'
+      : chroma(theme.semiStrongForeground).alpha(0.05).hex()};
   border: none;
   cursor: pointer;
-  padding: 1.8rem 2rem;
+  padding: 2rem 2rem;
 
   display: flex;
   align-items: center;
@@ -113,6 +116,9 @@ const ListContainer = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: scroll;
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
 `
 
 const ListItem = styled.div<{ selected?: boolean }>`
@@ -186,30 +192,6 @@ const Container = styled(Flex)`
   margin-left: -4rem;
 `
 
-const FilterModal = styled(Modal)`
-  width: 60rem;
-
-  padding: 1.5rem 1.5rem 5rem;
-
-  h4 {
-    font-size: 1.4rem;
-  }
-
-  p {
-    font-size: 1rem;
-    color: ${({ theme }) => theme.semiStrongForeground};
-  }
-
-  .tip {
-    margin-top: 0.5rem;
-    margin-bottom: -0.5rem;
-    font-size: 0.8rem;
-    color: ${({ theme }) =>
-      chroma(theme.semiStrongForeground).brighten(1).hex()};
-    text-align: center;
-  }
-`
-
 const getQuestionBody = (question: Question) => {
   try {
     return JSON.parse(question.messageJsonString).body
@@ -218,22 +200,29 @@ const getQuestionBody = (question: Question) => {
   }
 }
 
+const getMemberName = (group: QuestionGroup) => {
+  return group.firstName && group.lastName
+    ? `${group.firstName} ${group.lastName}`
+    : undefined
+}
+
 const TasksPage: Page = () => {
+  const { resolve } = useResolveQuestion()
   const { numberMemberGroups } = useNumberMemberGroups()
-  const { selectedFilters, toggleFilter } = useSelectedFilters()
+  const [questionGroups] = useQuestionGroups()
+  const { selectedFilters: filters, toggleFilter } = useSelectedFilters()
 
   const [showFilters, setShowFilters] = useState(false)
 
-  const [isLarge, setIsLarge] = useState(false)
   const [selectedQuestionGroup, setSelectedQuestionGroup] =
     useState<QuestionGroup | null>(null)
-  const [questionGroups] = useQuestionGroups()
+  const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null)
 
   const groups =
-    selectedFilters.length > 0
+    filters.length > 0
       ? questionGroups
-          .filter(doMemberGroupFilter(numberMemberGroups)(selectedFilters))
-          .filter(doMarketFilter(selectedFilters))
+          .filter(doMemberGroupFilter(numberMemberGroups)(filters))
+          .filter(doMarketFilter(filters))
       : questionGroups
 
   useTitle(`Questions ${groups.length ? '(' + groups.length + ')' : ''}`)
@@ -242,147 +231,117 @@ const TasksPage: Page = () => {
     <>
       <Container>
         <TaskNavigationWrapper>
-          <TopBar>
-            <TopBarItem selected={true}>
-              Incoming questions
-              <div className="count">{groups.length}</div>
-            </TopBarItem>
-            <FilterBarItem onClick={() => setShowFilters(true)}>
-              Filters
-            </FilterBarItem>
-          </TopBar>
-          <ListContainer>
-            {groups.map((group) => {
-              const previewQuestion = group?.questions?.slice(-1)[0] ?? ''
-              const preview = getQuestionBody(previewQuestion)
-
-              const orbColor = getMemberIdColor(
-                group.memberId,
-                numberMemberGroups,
-              )
-
-              const flag = group.market
-                ? getMemberFlag(
-                    {
-                      market: group.market ?? '',
-                    },
-                    group.pickedLocale as PickedLocale,
-                  )
-                : '🏳'
-
-              return (
-                <ListItem
-                  key={group.id}
-                  onClick={() => setSelectedQuestionGroup(group)}
-                  selected={group.memberId === selectedQuestionGroup?.memberId}
+          <>
+            <TopBar>
+              <Flex>
+                <TopBarItem
+                  selected={!selectedMemberId}
+                  onClick={() => setSelectedMemberId(null)}
                 >
-                  <div className="orb">
-                    <div style={{ backgroundColor: orbColor }} />
-                  </div>
-                  <div className="flag">{flag}</div>
-                  <span className="name">
-                    <a
-                      href={`/members/${group.memberId}`}
-                      target="_blank"
-                      onClick={(e) => e.stopPropagation()}
+                  Incoming questions
+                  <div className="count">{groups.length}</div>
+                </TopBarItem>
+                {selectedQuestionGroup && selectedMemberId && (
+                  <TopBarItem selected={true}>
+                    {getMemberName(selectedQuestionGroup) ?? 'Member'}
+                  </TopBarItem>
+                )}
+              </Flex>
+              <FilterBarItem onClick={() => setShowFilters(true)}>
+                Filters
+              </FilterBarItem>
+            </TopBar>
+            {selectedMemberId && (
+              <ListContainer>
+                <MemberContainer memberId={selectedMemberId} />
+              </ListContainer>
+            )}
+            {!selectedMemberId && (
+              <ListContainer>
+                {groups.map((group) => {
+                  const previewQuestion = group?.questions?.slice(-1)[0] ?? ''
+                  const preview = getQuestionBody(previewQuestion)
+
+                  const orbColor = getMemberIdColor(
+                    group.memberId,
+                    numberMemberGroups,
+                  )
+
+                  const flag = group.market
+                    ? getMemberFlag(
+                        {
+                          market: group.market ?? '',
+                        },
+                        group.pickedLocale as PickedLocale,
+                      )
+                    : '🏳'
+
+                  return (
+                    <ListItem
+                      key={group.id}
+                      onClick={() => setSelectedQuestionGroup(group)}
+                      selected={
+                        group.memberId === selectedQuestionGroup?.memberId
+                      }
                     >
-                      {(group?.firstName ?? '') + ' ' + (group?.lastName ?? '')}
-                    </a>
-                  </span>
-                  <span className="preview">{preview.text}</span>
-                  <div className="options">
-                    {formatDistanceToNowStrict(
-                      parseISO(previewQuestion.timestamp),
-                      {
-                        addSuffix: true,
-                      },
-                    )}
-                  </div>
-                </ListItem>
-              )
-            })}
-          </ListContainer>
+                      <div className="orb">
+                        <div style={{ backgroundColor: orbColor }} />
+                      </div>
+                      <div className="flag">{flag}</div>
+                      <span className="name">
+                        {getMemberName(group) ? (
+                          <a
+                            href="#"
+                            onClick={() => {
+                              setSelectedMemberId(group.memberId)
+                              setSelectedQuestionGroup(group)
+                            }}
+                          >
+                            {getMemberName(group)}
+                          </a>
+                        ) : (
+                          <Placeholder>Name not available</Placeholder>
+                        )}
+                      </span>
+                      <span className="preview">{preview.text}</span>
+                      <div className="options">
+                        {formatDistanceToNowStrict(
+                          parseISO(previewQuestion.timestamp),
+                          {
+                            addSuffix: true,
+                          },
+                        )}
+                      </div>
+                    </ListItem>
+                  )
+                })}
+              </ListContainer>
+            )}
+          </>
         </TaskNavigationWrapper>
         <TaskChatWrapper>
           {selectedQuestionGroup && (
-            <>
-              <div
-                style={{
-                  height: isLarge ? 'calc(100% - 27rem)' : 'calc(100% - 15rem)',
-                  transition: 'height 200ms',
-                }}
-              >
-                <MessagesList
-                  memberId={selectedQuestionGroup.memberId}
-                  style={{
-                    padding: '2rem',
-                    marginBottom: '6rem',
-                    paddingBottom: '0',
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  width: '100%',
-                  minHeight: '10rem',
-                }}
-              >
-                <TaskChatInput
-                  onResize={() => setIsLarge(!isLarge)}
-                  isLarge={isLarge}
-                  memberId={selectedQuestionGroup.memberId}
-                  onBlur={() => void 0}
-                  onFocus={() => void 0}
-                  onResolve={() =>
-                    setSelectedQuestionGroup(
-                      questionGroups.length !== 0 ? questionGroups[0] : null,
-                    )
-                  }
-                />
-              </div>
-            </>
+            <TaskChat
+              memberId={selectedQuestionGroup.memberId}
+              fullName={getMemberName(selectedQuestionGroup)}
+              onResolve={() => {
+                resolve(selectedQuestionGroup.memberId)
+                setSelectedQuestionGroup(groups.length !== 0 ? groups[0] : null)
+              }}
+              onSelectMember={() =>
+                setSelectedMemberId(selectedQuestionGroup.memberId)
+              }
+            />
           )}
         </TaskChatWrapper>
       </Container>
-      {showFilters && (
-        <FilterModal onClose={() => setShowFilters(false)}>
-          <Flex
-            style={{ height: '100%', width: '100%' }}
-            direction="column"
-            justify="space-between"
-          >
-            <div>
-              <h4>Select Filters</h4>
 
-              <Flex
-                style={{
-                  flexWrap: 'wrap',
-                  marginTop: '3rem',
-                }}
-                justify="space-between"
-              >
-                <Flex
-                  direction="column"
-                  align="center"
-                  fullWidth
-                  style={{ marginBottom: '2rem' }}
-                >
-                  <Label>Number of member groups</Label>
-                  <NumberMemberGroupsRadioButtons />
-                </Flex>
-                <FilterSelect
-                  filters={selectedFilters}
-                  onToggle={toggleFilter}
-                  animationDelay={0}
-                  animationItemDelay={20}
-                />
-              </Flex>
-            </div>
-          </Flex>
-        </FilterModal>
+      {showFilters && (
+        <FilterModal
+          onClose={() => setShowFilters(false)}
+          filters={filters}
+          onToggle={toggleFilter}
+        />
       )}
     </>
   )
