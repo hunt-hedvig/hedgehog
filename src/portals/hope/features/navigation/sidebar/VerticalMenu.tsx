@@ -272,6 +272,10 @@ export const VerticalMenu: React.FC = () => {
         (menuItem) => menuItem.title === itemTitle,
       )?.route
 
+      if (history.location.pathname === '/' && route === routes.dashborad) {
+        return true
+      }
+
       return route ? history.location.pathname.includes(route) : false
     },
   })
@@ -306,6 +310,13 @@ export const VerticalMenu: React.FC = () => {
                       if (
                         location.pathname.startsWith('/search') &&
                         item.route === '/members'
+                      ) {
+                        return true
+                      }
+
+                      if (
+                        location.pathname === '/' &&
+                        item.route === routes.dashborad
                       ) {
                         return true
                       }
