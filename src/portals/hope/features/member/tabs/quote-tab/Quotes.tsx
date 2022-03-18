@@ -80,6 +80,7 @@ export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
               )
             : []
         }
+        withMetaKey
       />
       {!!quotes.length && activeTab && (
         <QuotesSubSection
