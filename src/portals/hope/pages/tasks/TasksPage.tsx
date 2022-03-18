@@ -1,6 +1,6 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Flex, Placeholder } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
@@ -22,6 +22,7 @@ import { TaskChat } from '../../features/tasks/TaskChat'
 import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
 import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
 import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
+import { RouteComponentProps, useHistory } from 'react-router'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -163,6 +164,15 @@ const ListItem = styled.div<{ selected?: boolean }>`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    div {
+      color: ${({ theme }) => theme.accent};
+      transition: color 200ms;
+
+      :hover {
+        color: ${({ theme }) => theme.accentLight};
+      }
+    }
   }
 
   .preview {
@@ -206,7 +216,16 @@ const getMemberName = (group: QuestionGroup) => {
     : undefined
 }
 
-const TasksPage: Page = () => {
+const TasksPage: Page<
+  RouteComponentProps<{
+    memberId?: string
+    tab?: string
+  }>
+> = ({ match }) => {
+  const history = useHistory()
+  const memberId = match.params.memberId
+  const tab = match.params.tab
+
   const { resolve } = useResolveQuestion()
   const { numberMemberGroups } = useNumberMemberGroups()
   const [questionGroups] = useQuestionGroups()
@@ -225,6 +244,20 @@ const TasksPage: Page = () => {
           .filter(doMarketFilter(filters))
       : questionGroups
 
+  const groupByRoute = groups.find((group) => group.memberId === memberId)
+
+  useEffect(() => {
+    if (groupByRoute) {
+      setSelectedMemberId(groupByRoute.memberId)
+      setSelectedQuestionGroup(groupByRoute)
+      return
+    }
+
+    history.replace('/questions')
+    setSelectedQuestionGroup(null)
+    setSelectedMemberId(null)
+  }, [memberId, groupByRoute])
+
   useTitle(`Questions ${groups.length ? '(' + groups.length + ')' : ''}`)
 
   return (
@@ -236,7 +269,7 @@ const TasksPage: Page = () => {
               <Flex>
                 <TopBarItem
                   selected={!selectedMemberId}
-                  onClick={() => setSelectedMemberId(null)}
+                  onClick={() => history.replace(`/questions`)}
                 >
                   Incoming questions
                   <div className="count">{groups.length}</div>
@@ -253,7 +286,13 @@ const TasksPage: Page = () => {
             </TopBar>
             {selectedMemberId && (
               <ListContainer>
-                <MemberContainer memberId={selectedMemberId} />
+                <MemberContainer
+                  memberId={selectedMemberId}
+                  tab={tab ?? 'contracts'}
+                  onChangeTab={(newTab) =>
+                    history.replace(`/questions/${selectedMemberId}/${newTab}`)
+                  }
+                />
               </ListContainer>
             )}
             {!selectedMemberId && (
@@ -290,15 +329,14 @@ const TasksPage: Page = () => {
                       <div className="flag">{flag}</div>
                       <span className="name">
                         {getMemberName(group) ? (
-                          <a
-                            href="#"
+                          <div
                             onClick={() => {
-                              setSelectedMemberId(group.memberId)
+                              history.replace(`/questions/${group.memberId}`)
                               setSelectedQuestionGroup(group)
                             }}
                           >
                             {getMemberName(group)}
-                          </a>
+                          </div>
                         ) : (
                           <Placeholder>Name not available</Placeholder>
                         )}
@@ -326,19 +364,11 @@ const TasksPage: Page = () => {
               fullName={getMemberName(selectedQuestionGroup)}
               onResolve={() => {
                 resolve(selectedQuestionGroup.memberId)
-
-                const filteredGroups = groups.filter(
-                  (group) => group.memberId !== selectedQuestionGroup.memberId,
-                )
-                const nextGroup =
-                  filteredGroups.length !== 0 ? filteredGroups[0] : null
-
-                setSelectedQuestionGroup(nextGroup)
-                setSelectedMemberId(nextGroup?.memberId ?? null)
+                history.replace(`/questions`)
               }}
-              onSelectMember={() =>
-                setSelectedMemberId(selectedQuestionGroup.memberId)
-              }
+              onSelectMember={() => {
+                history.replace(`/questions/${selectedQuestionGroup.memberId}`)
+              }}
             />
           )}
         </TaskChatWrapper>
