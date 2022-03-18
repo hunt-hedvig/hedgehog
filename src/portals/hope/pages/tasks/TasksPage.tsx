@@ -120,6 +120,8 @@ const ListContainer = styled.div`
   ::-webkit-scrollbar-track {
     background: transparent;
   }
+
+  padding-bottom: 10rem;
 `
 
 const ListItem = styled.div<{ selected?: boolean }>`
