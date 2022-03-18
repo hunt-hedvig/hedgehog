@@ -154,7 +154,7 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
       )}
       <Popover contents="Click to copy member link">
         <MemberDetailLink
-          href={`${window.location.protocol}//${window.location.host}${history.location.pathname}`}
+          href={`${window.location.protocol}//${window.location.host}/members/${member.memberId}`}
           onClick={(e) => {
             e.preventDefault()
             const tabMaybe = history.location.pathname.includes(member.memberId)
