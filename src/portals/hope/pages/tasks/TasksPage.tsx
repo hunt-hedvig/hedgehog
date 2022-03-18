@@ -126,12 +126,12 @@ const ListContainer = styled.div`
 
 const ListItem = styled.div<{ selected?: boolean }>`
   display: flex;
-  font-size: 1rem;
-  padding: 1.2rem 2.05rem;
+  font-size: 1.1rem;
+  padding: 1.75rem 2.05rem;
   cursor: pointer;
 
   transition: background-color 200ms;
-
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
   :hover {
     background-color: ${({ theme }) =>
       chroma(theme.accent).alpha(0.2).brighten(2).hex()};
