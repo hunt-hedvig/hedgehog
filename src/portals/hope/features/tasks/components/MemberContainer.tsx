@@ -10,7 +10,8 @@ export const MemberContainer: React.FC<{
   memberId: string
   tab: string
   onChangeTab: (newTab: string) => void
-}> = ({ memberId, tab, onChangeTab }) => {
+  title?: string
+}> = ({ memberId, tab, onChangeTab, title }) => {
   return (
     <Wrapper>
       <MemberTabs
@@ -18,6 +19,7 @@ export const MemberContainer: React.FC<{
         tab={tab}
         onChangeTab={onChangeTab}
         chat={false}
+        title={title}
       />
     </Wrapper>
   )

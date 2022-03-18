@@ -260,7 +260,9 @@ const TasksPage: Page<
     setSelectedMemberId(null)
   }, [memberId, groupByRoute])
 
-  useTitle(`Questions ${groups.length ? '(' + groups.length + ')' : ''}`)
+  const title = `Questions ${groups.length ? '(' + groups.length + ')' : ''}`
+
+  useTitle(title)
 
   return (
     <>
@@ -291,6 +293,7 @@ const TasksPage: Page<
                 <MemberContainer
                   memberId={selectedMemberId}
                   tab={tab ?? 'contracts'}
+                  title={title}
                   onChangeTab={(newTab) =>
                     history.replace(`/questions/${selectedMemberId}/${newTab}`)
                   }
