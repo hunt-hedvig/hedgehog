@@ -157,8 +157,12 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
           href={`${window.location.protocol}//${window.location.host}${history.location.pathname}`}
           onClick={(e) => {
             e.preventDefault()
+            const tabMaybe = history.location.pathname.includes(member.memberId)
+              ? history.location.pathname.split(member.memberId)[1]
+              : ''
+
             copy(
-              `${window.location.protocol}//${window.location.host}${history.location.pathname}`,
+              `${window.location.protocol}//${window.location.host}/members/${member.memberId}${tabMaybe}`,
               {
                 format: 'text/plain',
               },

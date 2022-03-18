@@ -9,7 +9,6 @@ import { persistenceMapper } from 'apollo/persistence/mapper'
 import { createPersistLink } from 'apollo/persistence/link'
 import gql from 'graphql-tag'
 import { BatchHttpLink } from '@apollo/client/link/batch-http'
-import { addMinutes, parseISO } from 'date-fns'
 
 gql`
   # Declare custom directive for IDE completion; don't want this to actually be resolved server-side
@@ -94,6 +93,7 @@ if (currentVersion === SCHEMA_VERSION) {
   localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION)
 }
 
+/*
 const storeTokenRenewalDate = () => {
   const RENEW_TOKEN_MINUTES = 10
   const date = addMinutes(new Date(), RENEW_TOKEN_MINUTES)
@@ -127,6 +127,7 @@ const renewAccessTokenLink = new ApolloLink((operation, forward) => {
 
   return forward(operation)
 })
+*/
 
 export const client = new ApolloClient({
   link: ApolloLink.from([
@@ -146,7 +147,7 @@ export const client = new ApolloClient({
         window.location.pathname = '/login/logout'
       })
     }),
-    renewAccessTokenLink,
+    // renewAccessTokenLink, FIXME: Logs out the user if multiple tabs open when RT expires
     addTimezoneOffsetHeader,
     createPersistLink(),
     new BatchHttpLink({
