@@ -182,14 +182,16 @@ export const TopBar = () => {
             PushUserAction('user_panel', 'open', null, null)
             setShowUsers(true)
           }}
-          {...register('UsersOnlineButton', {
-            resolve: () => {
-              setShowUsers(true)
-            },
-            neighbors: {
-              left: 'NotificationsButton',
-            },
-          })}
+          style={
+            register('UsersOnlineButton', {
+              resolve: () => {
+                setShowUsers(true)
+              },
+              neighbors: {
+                left: 'NotificationsButton',
+              },
+            }).style
+          }
         >
           <PeopleFill />
         </CircleButton>

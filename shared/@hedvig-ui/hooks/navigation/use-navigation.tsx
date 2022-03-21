@@ -366,7 +366,6 @@ export const useNavigation = () => {
 
     Object.keys(localItems.current).forEach((name) => {
       if (localItems.current[name].autoFocus) {
-        document.getElementById(name)?.focus()
         setCursor(name)
       }
     })
