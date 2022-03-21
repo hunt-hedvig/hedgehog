@@ -1,34 +1,23 @@
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { Button, FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { usePlatform } from '@hedvig-ui/hooks/use-platform'
-import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
-import React, { useEffect, useState } from 'react'
-import { toast } from 'react-hot-toast'
 import { useDraft } from '@hedvig-ui/hooks/use-draft'
 import {
   GetQuestionsGroupsDocument,
   useMarkQuestionAsResolvedMutation,
   useSendMessageMutation,
 } from 'types/generated/graphql'
-import { FileText } from 'react-bootstrap-icons'
-import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
+import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
+import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { toast } from 'react-hot-toast'
+import { FileText, TextareaResize } from 'react-bootstrap-icons'
+import chroma from 'chroma-js'
 
-const ConversationContent = styled.div`
-  background-color: ${({ theme }) => theme.accentBackground};
+const Container = styled.div`
   width: 100%;
-  height: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  max-height: 70vh;
-  border-radius: 8px;
-`
-
-const ConversationFooter = styled.div`
-  width: 100%;
-  padding: 1em;
+  padding: 1rem;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -36,7 +25,7 @@ const ConversationFooter = styled.div`
   position: relative;
 `
 
-const ConversationTextArea = styled(TextArea)`
+const TaskTextArea = styled(TextArea)`
   &&&& {
     position: relative;
     z-index: 1;
@@ -45,6 +34,7 @@ const ConversationTextArea = styled(TextArea)`
     border: none;
     border-radius: 8px 8px 0 0;
     min-height: 100px;
+    transition: height 200ms;
   }
 `
 
@@ -135,12 +125,34 @@ const HintText = styled.span`
   }
 `
 
-export const ConversationChat: React.FC<{
+const ResizeButton = styled(TextareaResize)`
+  position: absolute;
+  right: 1.75rem;
+  top: 1.75rem;
+
+  z-index: 100;
+
+  fill: ${({ theme }) => chroma(theme.semiStrongForeground).alpha(0.75).hex()};
+
+  transition: fill 200ms;
+  :hover {
+    fill: ${({ theme }) => chroma(theme.semiStrongForeground).alpha(1).hex()};
+  }
+
+  width: 1.1rem;
+  height: 1.1rem;
+
+  cursor: pointer;
+`
+
+export const TaskChatInput: React.FC<{
   memberId: string
   onFocus: () => void
   onBlur: () => void
   onResolve: () => void
-}> = ({ memberId, onFocus, onBlur, onResolve }) => {
+  onResize: () => void
+  isLarge: boolean
+}> = ({ memberId, onFocus, onBlur, onResolve, isLarge, onResize }) => {
   const [message, setMessage] = useDraft(memberId)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()
@@ -231,49 +243,50 @@ export const ConversationChat: React.FC<{
   }
 
   return (
-    <FadeIn style={{ width: '100%', height: '100%' }}>
-      <ConversationContent>
-        <MessagesList memberId={memberId} />
-        <ConversationFooter>
-          <HintContainer>
-            {hinting && (
-              <HintText>
-                {templateHint?.title ? `/${templateHint?.title}` : message}
-              </HintText>
-            )}
-          </HintContainer>
+    <>
+      <Container>
+        <ResizeButton onClick={onResize} />
+        <HintContainer>
+          {hinting && (
+            <HintText>
+              {templateHint?.title ? `/${templateHint?.title}` : message}
+            </HintText>
+          )}
+        </HintContainer>
 
-          <ConversationTextArea
-            onFocus={() => {
-              setInputFocused(true)
-              onFocus()
-            }}
-            onBlur={() => {
-              setInputFocused(false)
-              onBlur()
-            }}
-            placeholder={
-              !hinting ? `Message goes here or type '/' for templates` : ''
+        <TaskTextArea
+          style={{ height: isLarge ? '20rem' : '8rem' }}
+          onFocus={() => {
+            setInputFocused(true)
+            onFocus()
+          }}
+          onBlur={() => {
+            setInputFocused(false)
+            onBlur()
+          }}
+          placeholder={!hinting ? `Message goes here` : ''}
+          value={message}
+          onChange={onChangeHandler}
+          onKeyDown={(e) => handleOnKeyDown(e)}
+        />
+        <TextAreaFooter onClick={show}>
+          <div className="divider" />
+          <TemplatesButton
+            size="small"
+            variant="tertiary"
+            icon={
+              <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
             }
-            value={message}
-            onChange={onChangeHandler}
-            onKeyDown={(e) => handleOnKeyDown(e)}
-          />
-          <TextAreaFooter onClick={show}>
-            <div className="divider" />
-            <TemplatesButton
-              size="small"
-              variant="tertiary"
-              icon={
-                <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
-              }
-            >
-              templates
-            </TemplatesButton>
-          </TextAreaFooter>
-        </ConversationFooter>
-      </ConversationContent>
-      <Flex fullWidth justify={'space-between'} style={{ marginTop: '1.0em' }}>
+          >
+            templates
+          </TemplatesButton>
+        </TextAreaFooter>
+      </Container>
+      <Flex
+        fullWidth
+        justify={'space-between'}
+        style={{ padding: '0 1.25rem', marginBottom: '2rem' }}
+      >
         <FadeIn duration={200}>
           <Tip>
             <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
@@ -289,6 +302,6 @@ export const ConversationChat: React.FC<{
           </FadeIn>
         )}
       </Flex>
-    </FadeIn>
+    </>
   )
 }
