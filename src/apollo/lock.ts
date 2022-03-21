@@ -19,18 +19,27 @@ import { v4 as uuidV4 } from 'uuid'
  *
  */
 
-const LOCAL_STORAGE_KEY = '_window_lead_id'
-const SESSION_STORAGE_KEY = '_window_id'
+const LOCAL_STORAGE_LEAD_WINDOW_ID_KEY = '_window_lead_id'
+const SESSION_STORAGE_WINDOW_ID_KEY = '_window_id'
 
 export const RenewTokenLock: React.FC = () => {
   useEffect(() => {
-    const id = sessionStorage.getItem(SESSION_STORAGE_KEY)
+    const oldSessionIdMaybe = sessionStorage.getItem(
+      SESSION_STORAGE_WINDOW_ID_KEY,
+    )
 
-    if (!id) {
-      const newId = uuidV4()
+    if (!oldSessionIdMaybe) {
+      const sessionId = uuidV4()
 
-      sessionStorage.setItem(SESSION_STORAGE_KEY, newId)
-      localStorage.setItem(LOCAL_STORAGE_KEY, newId)
+      sessionStorage.setItem(SESSION_STORAGE_WINDOW_ID_KEY, sessionId)
+      localStorage.setItem(LOCAL_STORAGE_LEAD_WINDOW_ID_KEY, sessionId)
+
+      return () => {
+        const leadId = localStorage.getItem(LOCAL_STORAGE_LEAD_WINDOW_ID_KEY)
+        if (leadId === sessionId) {
+          localStorage.removeItem(LOCAL_STORAGE_LEAD_WINDOW_ID_KEY)
+        }
+      }
     }
   }, [])
 
@@ -38,11 +47,21 @@ export const RenewTokenLock: React.FC = () => {
 }
 
 export const canRenewToken = () => {
-  const windowId = sessionStorage.getItem(SESSION_STORAGE_KEY)
-  const leadWindowId = localStorage.getItem(LOCAL_STORAGE_KEY)
+  const windowId = sessionStorage.getItem(SESSION_STORAGE_WINDOW_ID_KEY)
+  const leadWindowId = localStorage.getItem(LOCAL_STORAGE_LEAD_WINDOW_ID_KEY)
+
+  if (windowId && !leadWindowId) {
+    localStorage.setItem(LOCAL_STORAGE_LEAD_WINDOW_ID_KEY, windowId)
+    return true
+  }
 
   if (!windowId || !leadWindowId) {
-    return false
+    const sessionId = uuidV4()
+
+    sessionStorage.setItem(SESSION_STORAGE_WINDOW_ID_KEY, sessionId)
+    localStorage.setItem(LOCAL_STORAGE_LEAD_WINDOW_ID_KEY, sessionId)
+
+    return true
   }
 
   return windowId === leadWindowId
