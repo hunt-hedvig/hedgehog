@@ -50,7 +50,7 @@ export const canRenewToken = () => {
 
   if (windowId && !leadWindowId) {
     localStorage.setItem(LOCAL_STORAGE_LEAD_WINDOW_ID_KEY, windowId)
-    return true
+    return false // Return false to ensure lead is kept
   }
 
   if (!windowId || !leadWindowId) {
