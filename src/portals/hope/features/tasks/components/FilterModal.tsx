@@ -35,7 +35,7 @@ const Container = styled(Modal)`
 
 export const FilterModal: React.FC<{
   onClose: () => void
-  onToggle: (filter: FilterStateType, settingField?: UserSettingKey) => void
+  onToggle: (filter: FilterStateType, settingField: UserSettingKey) => void
   filters: number[]
 }> = ({ onClose, onToggle, filters }) => {
   return (

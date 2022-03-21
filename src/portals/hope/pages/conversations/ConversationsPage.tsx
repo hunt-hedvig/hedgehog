@@ -13,19 +13,17 @@ import {
 import { ConversationChat } from 'portals/hope/features/conversations/chat/ConversationChat'
 import { MemberSummary } from 'portals/hope/features/conversations/member/MemberSummary'
 import { ConversationsOverview } from 'portals/hope/features/conversations/overview/ConversationsOverview'
-import { FilterStateType } from 'portals/hope/features/questions/FilterSelect'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 import {
   doMarketFilter,
   doMemberGroupFilter,
 } from 'portals/hope/features/questions/utils'
-import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React, { useEffect, useMemo, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router'
-import { UserSettingKey } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useSelectedFilters } from '../../features/questions/hooks/use-selected-filters'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -55,37 +53,9 @@ const ConversationsPage: Page<
   const [questionGroups] = useQuestionGroups(3000)
   const [chatFocused, setChatFocused] = useState(false)
   const { fade, props: fadeProps } = useFadeAnimation({ duration: 300 })
-  const { settings, updateSetting } = useMe()
 
-  const [filters, setFilters] = useState<number[]>([
-    ...(settings.claimStatesFilterQuestions || []),
-    ...(settings.memberGroupsFilterQuestions || []),
-    ...(settings.marketFilterQuestions || []),
-  ])
-
-  const toggleFilterHandler = (
-    filter: FilterStateType,
-    settingField: UserSettingKey,
-  ) => {
-    const currentValue = settings[settingField]
-
-    if (typeof currentValue !== 'object') {
-      return
-    }
-
-    updateSetting(
-      settingField,
-      currentValue?.includes(filter)
-        ? currentValue?.filter((item: string | number) => item !== filter)
-        : [...(currentValue || []), filter],
-    )
-
-    if (filters.includes(filter)) {
-      setFilters(filters.filter((prevFilter) => filter !== prevFilter))
-    } else {
-      setFilters([...filters, filter])
-    }
-  }
+  const { selectedFilters: filters, toggleFilter: toggleFilterHandler } =
+    useSelectedFilters()
 
   const isUpKeyPressed = useKeyIsPressed(Keys.Up)
   const isDownKeyPressed = useKeyIsPressed(Keys.Down)

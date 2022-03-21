@@ -8,15 +8,13 @@ import {
   Paragraph,
   useFadeAnimation,
 } from '@hedvig-ui'
-import {
-  FilterSelect,
-  FilterStateType,
-} from 'portals/hope/features/questions/FilterSelect'
+import { FilterSelect } from 'portals/hope/features/questions/FilterSelect'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import { UserSettingKey } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
+import { useSelectedFilters } from '../../features/questions/hooks/use-selected-filters'
 
 const Subtext = styled.span`
   font-size: 0.8em;
@@ -28,13 +26,10 @@ const ConversationsOnboardingPage: Page = () => {
   const [onboardingStep, setOnboardingStep] = useState(0)
   const { settings, updateSetting } = useMe()
 
-  const history = useHistory()
+  const { selectedFilters, toggleFilter: toggleFilterHandler } =
+    useSelectedFilters()
 
-  const [selectedFilters, setSelectedFilters] = useState<number[]>([
-    ...(settings.claimStatesFilterQuestions || []),
-    ...(settings.memberGroupsFilterQuestions || []),
-    ...(settings.marketFilterQuestions || []),
-  ])
+  const history = useHistory()
 
   useEffect(() => {
     if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
@@ -55,32 +50,6 @@ const ConversationsOnboardingPage: Page = () => {
 
   if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
     return null
-  }
-
-  const toggleFilterHandler = (
-    filter: FilterStateType,
-    settingField: UserSettingKey,
-  ) => {
-    const currentValue = settings[settingField]
-
-    if (typeof currentValue !== 'object') {
-      return
-    }
-
-    updateSetting(
-      settingField,
-      currentValue?.includes(filter)
-        ? currentValue?.filter((item: string | number) => item !== filter)
-        : [...(currentValue || []), filter],
-    )
-
-    if (selectedFilters.includes(filter)) {
-      setSelectedFilters(
-        selectedFilters.filter((prevFilter) => filter !== prevFilter),
-      )
-    } else {
-      setSelectedFilters([...selectedFilters, filter])
-    }
   }
 
   if (onboardingStep === 0) {
