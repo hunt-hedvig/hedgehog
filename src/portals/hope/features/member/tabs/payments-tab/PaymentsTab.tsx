@@ -203,6 +203,7 @@ export const PaymentsTab: React.FC<{
     refetch,
   } = useGetMemberTransactionsQuery({
     variables: { id: memberId },
+    fetchPolicy: 'no-cache',
   })
 
   const [manualAmount, setManualAmount] = useState('0')
@@ -211,6 +212,7 @@ export const PaymentsTab: React.FC<{
     variables: {
       memberId,
     },
+    fetchPolicy: 'no-cache',
   })
 
   const [chargeMemberMutation] = useMutation(CHARGE_MEMBER_MUTATION)

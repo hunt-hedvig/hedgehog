@@ -154,11 +154,15 @@ export const MemberDetails: React.FC<MemberDetailsProps> = ({
       )}
       <Popover contents="Click to copy member link">
         <MemberDetailLink
-          href={`${window.location.protocol}//${window.location.host}${history.location.pathname}`}
+          href={`${window.location.protocol}//${window.location.host}/members/${member.memberId}`}
           onClick={(e) => {
             e.preventDefault()
+            const tabMaybe = history.location.pathname.includes(member.memberId)
+              ? history.location.pathname.split(member.memberId)[1]
+              : ''
+
             copy(
-              `${window.location.protocol}//${window.location.host}${history.location.pathname}`,
+              `${window.location.protocol}//${window.location.host}/members/${member.memberId}${tabMaybe}`,
               {
                 format: 'text/plain',
               },

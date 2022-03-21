@@ -1,6 +1,6 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Flex, Placeholder } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
@@ -22,6 +22,7 @@ import { TaskChat } from '../../features/tasks/TaskChat'
 import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
 import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
 import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
+import { RouteComponentProps, useHistory } from 'react-router'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -119,16 +120,18 @@ const ListContainer = styled.div`
   ::-webkit-scrollbar-track {
     background: transparent;
   }
+
+  padding-bottom: 10rem;
 `
 
 const ListItem = styled.div<{ selected?: boolean }>`
   display: flex;
-  font-size: 1rem;
-  padding: 1.2rem 2.05rem;
+  font-size: 1.1rem;
+  padding: 1.75rem 2.05rem;
   cursor: pointer;
 
   transition: background-color 200ms;
-
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
   :hover {
     background-color: ${({ theme }) =>
       chroma(theme.accent).alpha(0.2).brighten(2).hex()};
@@ -163,6 +166,15 @@ const ListItem = styled.div<{ selected?: boolean }>`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    div {
+      color: ${({ theme }) => theme.accent};
+      transition: color 200ms;
+
+      :hover {
+        color: ${({ theme }) => theme.accentLight};
+      }
+    }
   }
 
   .preview {
@@ -206,7 +218,16 @@ const getMemberName = (group: QuestionGroup) => {
     : undefined
 }
 
-const TasksPage: Page = () => {
+const TasksPage: Page<
+  RouteComponentProps<{
+    memberId?: string
+    tab?: string
+  }>
+> = ({ match }) => {
+  const history = useHistory()
+  const memberId = match.params.memberId
+  const tab = match.params.tab
+
   const { resolve } = useResolveQuestion()
   const { numberMemberGroups } = useNumberMemberGroups()
   const [questionGroups] = useQuestionGroups()
@@ -225,7 +246,23 @@ const TasksPage: Page = () => {
           .filter(doMarketFilter(filters))
       : questionGroups
 
-  useTitle(`Questions ${groups.length ? '(' + groups.length + ')' : ''}`)
+  const groupByRoute = groups.find((group) => group.memberId === memberId)
+
+  useEffect(() => {
+    if (groupByRoute) {
+      setSelectedMemberId(groupByRoute.memberId)
+      setSelectedQuestionGroup(groupByRoute)
+      return
+    }
+
+    history.replace('/questions')
+    setSelectedQuestionGroup(null)
+    setSelectedMemberId(null)
+  }, [memberId, groupByRoute])
+
+  const title = `Questions ${groups.length ? '(' + groups.length + ')' : ''}`
+
+  useTitle(title)
 
   return (
     <>
@@ -236,7 +273,7 @@ const TasksPage: Page = () => {
               <Flex>
                 <TopBarItem
                   selected={!selectedMemberId}
-                  onClick={() => setSelectedMemberId(null)}
+                  onClick={() => history.replace(`/questions`)}
                 >
                   Incoming questions
                   <div className="count">{groups.length}</div>
@@ -253,7 +290,14 @@ const TasksPage: Page = () => {
             </TopBar>
             {selectedMemberId && (
               <ListContainer>
-                <MemberContainer memberId={selectedMemberId} />
+                <MemberContainer
+                  memberId={selectedMemberId}
+                  tab={tab ?? 'contracts'}
+                  title={title}
+                  onChangeTab={(newTab) =>
+                    history.replace(`/questions/${selectedMemberId}/${newTab}`)
+                  }
+                />
               </ListContainer>
             )}
             {!selectedMemberId && (
@@ -290,15 +334,14 @@ const TasksPage: Page = () => {
                       <div className="flag">{flag}</div>
                       <span className="name">
                         {getMemberName(group) ? (
-                          <a
-                            href="#"
+                          <div
                             onClick={() => {
-                              setSelectedMemberId(group.memberId)
+                              history.replace(`/questions/${group.memberId}`)
                               setSelectedQuestionGroup(group)
                             }}
                           >
                             {getMemberName(group)}
-                          </a>
+                          </div>
                         ) : (
                           <Placeholder>Name not available</Placeholder>
                         )}
@@ -326,11 +369,11 @@ const TasksPage: Page = () => {
               fullName={getMemberName(selectedQuestionGroup)}
               onResolve={() => {
                 resolve(selectedQuestionGroup.memberId)
-                setSelectedQuestionGroup(groups.length !== 0 ? groups[0] : null)
+                history.replace(`/questions`)
               }}
-              onSelectMember={() =>
-                setSelectedMemberId(selectedQuestionGroup.memberId)
-              }
+              onSelectMember={() => {
+                history.replace(`/questions/${selectedQuestionGroup.memberId}`)
+              }}
             />
           )}
         </TaskChatWrapper>

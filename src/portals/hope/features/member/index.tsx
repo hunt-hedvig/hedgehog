@@ -57,13 +57,17 @@ export const MemberTabs: React.FC<{
   tab: string
   onChangeTab: (newTab: string) => void
   chat?: boolean
-}> = ({ memberId, tab, onChangeTab, chat }) => {
+  title?: string
+}> = ({ memberId, tab, onChangeTab, chat = true, title }) => {
   const [member] = useGetMemberInfo(memberId)
   const { pushToMemberHistory } = useMemberHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const panes = memberPagePanes(memberId)
 
-  useTitle(member ? `${member?.firstName} ${member?.lastName}` : 'Loading...')
+  useTitle(
+    title ??
+      (member ? `${member?.firstName} ${member?.lastName}` : 'Loading...'),
+  )
   useEffect(() => pushToMemberHistory(memberId), [])
 
   if (!member) {

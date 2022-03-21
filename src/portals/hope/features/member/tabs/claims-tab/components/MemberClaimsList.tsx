@@ -15,9 +15,9 @@ import { convertEnumToTitle } from '@hedvig-ui/utils/text'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React from 'react'
-import { useHistory } from 'react-router'
 import { ClaimState } from 'types/generated/graphql'
 import { useGetMemberClaims } from 'portals/hope/features/member/tabs/claims-tab/hooks/use-get-member-claims'
+import { useHistory } from 'react-router'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;
