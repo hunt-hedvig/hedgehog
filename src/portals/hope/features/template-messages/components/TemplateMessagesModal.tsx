@@ -408,6 +408,8 @@ const TemplateActions = styled.div`
   align-items: center;
   justify-content: space-between;
 
+  z-index: 1;
+
   & * {
     transition: none !important;
   }
@@ -459,39 +461,40 @@ const TemplateItem = ({
 
   return (
     <TemplateContainer
-      onClick={() => onSelect(id)}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
       <TemplateTop>
-        <TemplateTitle>
+        <TemplateTitle onClick={() => onSelect(id)}>
           {pinned && <PinAngleFill onClick={() => onPin(id)} />}
           <h3>{name}</h3>
         </TemplateTitle>
-        {isHover && (
-          <TemplateActions>
-            <EditIcon onClick={() => onEdit(id)} />
-            {pinned ? (
-              <PinAngleFill onClick={() => onPin(id)} />
-            ) : (
-              <PinAngle onClick={() => onPin(id)} />
-            )}
-            <Trash
-              onClick={() => {
-                // Don't work useConfirmDialog in some reason
-                if (
-                  confirm(
-                    'Are you sure you want to delete this message template?',
-                  )
-                ) {
-                  onDelete(id)
-                }
-              }}
-            />
-          </TemplateActions>
-        )}
+        <TemplateActions>
+          {isHover && (
+            <>
+              <EditIcon onClick={() => onEdit(id)} />
+              {pinned ? (
+                <PinAngleFill onClick={() => onPin(id)} />
+              ) : (
+                <PinAngle onClick={() => onPin(id)} />
+              )}
+              <Trash
+                onClick={() => {
+                  // Don't work useConfirmDialog in some reason
+                  if (
+                    confirm(
+                      'Are you sure you want to delete this message template?',
+                    )
+                  ) {
+                    onDelete(id)
+                  }
+                }}
+              />
+            </>
+          )}
+        </TemplateActions>
       </TemplateTop>
-      <TemplateContent>
+      <TemplateContent onClick={() => onSelect(id)}>
         {text || (
           <EmptyContainer style={{ textAlign: 'start', fontSize: '1rem' }}>
             (no one has written for this language yet..)
