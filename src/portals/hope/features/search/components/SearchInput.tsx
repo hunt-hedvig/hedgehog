@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { SearchIcon } from 'portals/hope/features/members-search/styles'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import styled from '@emotion/styled'
 import { Input } from '@hedvig-ui'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { SearchIcon } from 'portals/hope/features/members-search/styles'
+import React, { useState } from 'react'
 
 const StyledInput = styled(Input)`
   max-width: 50rem;
