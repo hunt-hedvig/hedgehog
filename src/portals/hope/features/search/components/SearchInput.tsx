@@ -16,7 +16,6 @@ const SuggestionText = styled.div`
   font-size: 18px;
   opacity: 0.25;
   pointer-events: none;
-  margin-bottom: -2.86rem;
 `
 
 export const SearchInput: React.FC<{
