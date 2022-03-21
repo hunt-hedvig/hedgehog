@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
-import { SearchIcon } from 'portals/hope/features/members-search/styles'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import styled from '@emotion/styled'
-import { Flex, Input } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { useFeatureFlag } from 'portals/hope/common/hooks/use-feature-flag'
+import { Input } from '@hedvig-ui'
+import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { SearchIcon } from 'portals/hope/features/members-search/styles'
+import React, { useState } from 'react'
 
 const StyledInput = styled(Input)`
   max-width: 50rem;
@@ -28,8 +26,6 @@ export const SearchInput: React.FC<{
   suggestion?: string
   defaultValue?: string
 }> = ({ onSearch, onChange, loading, suggestion = '', defaultValue = '' }) => {
-  const { confirm } = useConfirmDialog()
-  const { disable } = useFeatureFlag('SEARCH_EVERYTHING')
   const [value, setValue] = useState(defaultValue)
 
   return (
@@ -64,26 +60,6 @@ export const SearchInput: React.FC<{
         />
 
         <SuggestionText>{suggestion || '\u00a0'}</SuggestionText>
-      </div>{' '}
-      <div
-        style={{ width: '50rem', marginTop: '1.5rem', marginBottom: '-1rem' }}
-      >
-        <Flex justify="flex-end">
-          <a
-            style={{ fontSize: '0.85rem' }}
-            href="#"
-            onClick={() =>
-              confirm('Are you sure you want to use the old search?').then(
-                () => {
-                  disable()
-                  window.location.reload()
-                },
-              )
-            }
-          >
-            use old search
-          </a>
-        </Flex>
       </div>
     </form>
   )
