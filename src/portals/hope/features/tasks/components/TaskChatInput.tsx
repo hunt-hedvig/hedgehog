@@ -17,12 +17,16 @@ import chroma from 'chroma-js'
 
 const Container = styled.div`
   width: 100%;
-  padding: 1rem;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
 
+  height: fit-content;
+  background: ${({ theme }) => theme.accentContrast};
+
   position: relative;
+
+  overflow-y: hidden;
 `
 
 const TaskTextArea = styled(TextArea)`
@@ -88,18 +92,18 @@ const TemplatesButton = styled(Button)`
 
 const HintContainer = styled.div`
   position: absolute;
-  top: calc(1.2rem - 1px);
-  left: calc(1.2rem - 0.7px);
+  top: 0;
+  left: 0;
   border-radius: 8px 8px 0 0;
 
-  width: calc(100% - 2.4rem + 1.5px);
-  height: calc(100% - 4.5rem + 2.4px);
+  width: 100%;
+  height: 80%;
 
   background: ${({ theme }) => theme.backgroundLight};
 
   word-wrap: break-word;
 
-  padding: 11.2px 14px 10.8px 13.8px;
+  padding: 11px 14px;
 
   z-index: 0;
 
@@ -108,27 +112,22 @@ const HintContainer = styled.div`
 
 const HintText = styled.span`
   position: absolute;
-  top: 8px;
+  top: 5px;
   left: 9px;
 
   font-size: 14px;
   font-family: sans-serif;
-  line-height: 1.15;
 
   padding: 4px 5px;
   border-radius: 4px;
 
   background: ${({ theme }) => theme.accentBackground};
-
-  @media only screen and (max-width: 1900px) {
-    top: 7px;
-  }
 `
 
 const ResizeButton = styled(TextareaResize)`
   position: absolute;
-  right: 1.75rem;
-  top: 1.75rem;
+  right: 0.5rem;
+  top: 0.5rem;
 
   z-index: 100;
 
@@ -165,15 +164,13 @@ export const TaskChatInput: React.FC<{
     ],
   })
 
-  const { hinting, templateHint, onChange, onKeyDown } = useTemplatesHinting(
-    message,
-    setMessage,
-    isMetaKey,
-  )
+  const { hinting, templateHint, onChange, onKeyDown, clearHinting } =
+    useTemplatesHinting(message, setMessage, isMetaKey)
   const { show, selected } = useTemplateMessages()
 
   useEffect(() => {
     if (selected) {
+      clearHinting()
       setMessage(selected)
     }
   }, [selected])
@@ -246,7 +243,7 @@ export const TaskChatInput: React.FC<{
     <>
       <Container>
         <ResizeButton onClick={onResize} />
-        <HintContainer>
+        <HintContainer id="hint-container">
           {hinting && (
             <HintText>
               {templateHint?.title ? `/${templateHint?.title}` : message}
@@ -264,7 +261,9 @@ export const TaskChatInput: React.FC<{
             setInputFocused(false)
             onBlur()
           }}
-          placeholder={!hinting ? `Message goes here` : ''}
+          placeholder={
+            !hinting ? `Message goes here or type '/' for templates` : ''
+          }
           value={message}
           onChange={onChangeHandler}
           onKeyDown={(e) => handleOnKeyDown(e)}
@@ -285,7 +284,7 @@ export const TaskChatInput: React.FC<{
       <Flex
         fullWidth
         justify={'space-between'}
-        style={{ padding: '0 1.25rem', marginBottom: '2rem' }}
+        style={{ padding: '0 1.25rem', marginTop: '1rem' }}
       >
         <FadeIn duration={200}>
           <Tip>
