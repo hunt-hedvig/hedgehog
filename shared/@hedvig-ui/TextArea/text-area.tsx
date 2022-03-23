@@ -48,7 +48,7 @@ export interface TextAreaProps
 }
 
 export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ autoResize, value, onChange, ...props }, forwardRef) => {
+  ({ autoResize, onChange, ...props }, forwardRef) => {
     const defaultRef = useRef<HTMLTextAreaElement>(null)
 
     const ref = (forwardRef ??
@@ -57,7 +57,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
     return autoResize ? (
       <TextareaAutosizeStyled
         ref={ref}
-        value={value || ''}
+        value={props.value || ''}
         maxHeight={props.maxHeight}
         onChange={onChange}
         placeholder={props.placeholder}
@@ -76,7 +76,6 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
       <TextAreaStyled
         ref={ref}
         onChange={onChange}
-        value={value || ''}
         onKeyDown={(e) => {
           if (isPressing(e, Keys.Escape)) {
             ref?.current?.blur()

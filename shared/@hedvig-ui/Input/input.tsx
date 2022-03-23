@@ -159,6 +159,15 @@ const Affix = styled.div<{ size?: InputSize }>`
   width: 50px;
 `
 
+const ErrorText = styled.span`
+  position: absolute;
+  bottom: -1.4rem;
+  left: 1rem;
+
+  font-size: 12px;
+  color: ${({ theme }) => theme.danger};
+`
+
 interface AffixType {
   content: string
 }
@@ -174,6 +183,7 @@ export interface InputProps
   loading?: boolean
   icon?: React.ReactNode
   affix?: AffixType
+  errorText?: string
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -188,6 +198,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       size,
       affix,
       style,
+      errorText,
       ...props
     },
     forwardRef,
@@ -226,6 +237,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {loading && <Loading affix={isAffix ? 1 : 0} size={size} />}
         {isSuccess && <SuccessIcon affix={isAffix ? 1 : 0} size={size} />}
         {isError && <ErrorIcon affix={isAffix ? 1 : 0} size={size} />}
+        {isError && errorText && <ErrorText>{errorText}</ErrorText>}
       </InputWrapper>
     )
   },

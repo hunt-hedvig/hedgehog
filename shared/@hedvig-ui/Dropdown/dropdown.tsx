@@ -290,3 +290,27 @@ export const Option: React.FC<OptionProps> = ({
     {children}
   </OptionStyled>
 )
+
+// TODO: More semantic way?
+
+// interface SelectDropdownProps extends HTMLAttributes<HTMLSelectElement> {
+//   options: Array<{
+//     text: string
+//     value: string
+//   }>
+// }
+
+// export const SelectDropdown: React.FC<SelectDropdownProps> = ({
+//   options,
+//   ...props
+// }) => {
+//   return (
+//     <select {...props}>
+//       {options.map((option) => (
+//         <option key={option.value} value={option.value}>
+//           {option.text}
+//         </option>
+//       ))}
+//     </select>
+//   )
+// }

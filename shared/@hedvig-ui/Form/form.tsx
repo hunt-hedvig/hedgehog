@@ -10,9 +10,14 @@ import {
   TextArea,
   TextAreaProps,
 } from '@hedvig-ui'
-import { ErrorMessage } from '@hookform/error-message'
+// import { ErrorMessage } from '@hookform/error-message'
 import React, { HTMLAttributes } from 'react'
-import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
+import {
+  Control,
+  Controller,
+  RegisterOptions,
+  useFormContext,
+} from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
 
 const StyledForm = styled.form`
@@ -36,13 +41,13 @@ const FieldStyled = styled.div`
   position: relative;
 `
 
-const ErrorMessageWrapper = styled('div')`
-  color: ${({ theme }) => theme.danger};
-  margin: 0;
-  position: absolute;
-  bottom: -20px;
-  font-size: 12px;
-`
+// const ErrorMessageWrapper = styled('div')`
+//   color: ${({ theme }) => theme.danger};
+//   margin: 0;
+//   position: absolute;
+//   bottom: -20px;
+//   font-size: 12px;
+// `
 
 interface FormProps extends Omit<HTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   onSubmit: (data: FieldValues) => void
@@ -53,6 +58,7 @@ interface FormFieldProps {
   name: string
   defaultValue: unknown
   rules?: RegisterOptions
+  control?: Control
   className?: string
 }
 
@@ -80,20 +86,20 @@ const FormLabel: React.FC<
   </Label>
 )
 
-const FormError: React.FC<{
-  name: string
-}> = ({ name }) => (
-  <ErrorMessage
-    name={name}
-    render={({ message }) => {
-      return (
-        <ErrorMessageWrapper className="form__error">
-          {message}
-        </ErrorMessageWrapper>
-      )
-    }}
-  />
-)
+// const FormError: React.FC<{
+//   name: string
+// }> = ({ name }) => (
+//   <ErrorMessage
+//     name={name}
+//     render={({ message }) => {
+//       return (
+//         <ErrorMessageWrapper className="form__error">
+//           {message}
+//         </ErrorMessageWrapper>
+//       )
+//     }}
+//   />
+// )
 
 const FieldComponent: React.FC<FieldProps> = ({ className, children }) => (
   <FieldStyled className={`form__field ${className ?? ''}`}>
@@ -111,7 +117,8 @@ const FormField: React.FC<FormFieldProps> = ({
   <FieldComponent className={className} required={Boolean(rules?.required)}>
     {label && <FormLabel name={name}>{label}</FormLabel>}
     {children}
-    <FormError name={name} />
+    {/* This one is throw an Exception
+    <FormError name={name} /> */}
   </FieldComponent>
 )
 
@@ -119,23 +126,32 @@ export const FormInputComponent: React.FC<InputProps & FormFieldProps> = ({
   name,
   rules,
   defaultValue,
+  control,
+  errorText,
   ...props
-}) => {
-  const { errors } = useFormContext()
-  return (
-    <Controller
-      name={name}
-      rules={rules}
-      defaultValue={defaultValue}
-      as={
-        <Input
-          error={errors ? Boolean(errors[name.split('.')[0]]) : undefined}
-          {...props}
-        />
-      }
-    />
-  )
-}
+}) => (
+  <Controller
+    render={({
+      field: { onChange, onBlur, value, name, ref },
+      // formState: { errors },
+    }) => (
+      <Input
+        onBlur={onBlur} // notify when input is touched
+        onChange={onChange} // send value to hook form
+        checked={value}
+        name={name}
+        // error={errors?.amount?.type === 'required'}
+        errorText={errorText}
+        ref={ref}
+        {...props}
+      />
+    )}
+    control={control}
+    name={name}
+    rules={rules}
+    defaultValue={defaultValue}
+  />
+)
 
 export const FormInput: React.FC<InputProps & FormFieldProps> = ({
   ...props
@@ -149,21 +165,24 @@ const FormTextAreaComponent: React.FC<TextAreaProps & FormFieldProps> = ({
   name,
   rules,
   defaultValue,
+  control,
   ...props
 }) => (
   <Controller
-    name={name}
-    rules={rules}
-    defaultValue={defaultValue}
-    render={({ onBlur, onChange, value }) => (
+    render={({ field: { onChange, onBlur, value, name, ref } }) => (
       <TextArea
         name={name}
         onBlur={onBlur}
         onChange={onChange}
         value={value}
+        ref={ref}
         {...props}
       />
     )}
+    control={control}
+    name={name}
+    rules={rules}
+    defaultValue={defaultValue}
   />
 )
 
@@ -175,7 +194,7 @@ export const FormTextArea: React.FC<TextAreaProps & FormFieldProps> = ({
   </FormField>
 )
 
-interface FormDropdownProps {
+interface FormDropdownProps extends React.HTMLAttributes<HTMLDivElement> {
   options: { key: number; value: string | number; text: string | number }[]
   placeholder?: string
 }
@@ -186,13 +205,12 @@ const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
   defaultValue,
   options,
   placeholder,
+  control,
+  ...props
 }) => (
   <Controller
-    name={name}
-    rules={rules}
-    defaultValue={defaultValue}
-    render={({ onChange, value, onBlur }) => (
-      <Dropdown onBlur={onBlur} placeholder={placeholder}>
+    render={({ field: { onChange, onBlur, value, ref } }) => (
+      <Dropdown onBlur={onBlur} placeholder={placeholder} ref={ref} {...props}>
         {options.map((opt) => (
           <DropdownOption
             style={{ fontSize: 14 }}
@@ -205,6 +223,10 @@ const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
         ))}
       </Dropdown>
     )}
+    control={control}
+    name={name}
+    rules={rules}
+    defaultValue={defaultValue}
   />
 )
 
