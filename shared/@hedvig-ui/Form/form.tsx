@@ -133,14 +133,14 @@ export const FormInputComponent: React.FC<InputProps & FormFieldProps> = ({
   <Controller
     render={({
       field: { onChange, onBlur, value, name, ref },
-      // formState: { errors },
+      formState: { errors },
     }) => (
       <Input
-        onBlur={onBlur} // notify when input is touched
-        onChange={onChange} // send value to hook form
+        onBlur={onBlur}
+        onChange={onChange}
         checked={value}
         name={name}
-        // error={errors?.amount?.type === 'required'}
+        error={errors?.amount?.type === 'required'}
         errorText={errorText}
         ref={ref}
         {...props}
