@@ -1,23 +1,18 @@
 import {
   Checkbox,
-  Form,
-  FormDropdown,
-  FormInput,
-  SubmitButton,
   TextDatePicker,
+  Button,
+  Input,
+  FormDropdown,
 } from '@hedvig-ui'
 import { Market } from 'portals/hope/features/config/constants'
 import React, { useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
+import { SubmitHandler, useForm, FieldValues } from 'react-hook-form'
 import {
-  ClaimPaymentInput,
   ClaimPaymentType,
-  ClaimSwishPaymentInput,
   SanctionStatus,
-  useCreateClaimPaymentMutation,
-  useCreateSwishClaimPaymentMutation,
   useMemberPaymentInformationQuery,
+  Claim,
 } from 'types/generated/graphql'
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 import gql from 'graphql-tag'
@@ -113,15 +108,23 @@ export const ClaimPaymentForm: React.FC<{
     variables: { claimId },
   })
 
-  const [createPayment, { loading }] = useCreateClaimPaymentMutation()
-  const [createSwishPayment] = useCreateSwishClaimPaymentMutation()
-
-  const [isConfirming, setIsConfirming] = useState(false)
-  const [isExGratia, setIsExGratia] = useState(false)
+  const [exGratia, setExGratia] = useState(false)
   const [isOverridden, setIsOverridden] = useState(false)
   const [date, setDate] = useState<string | null>(null)
+  const [confirmationData, setConfirmationData] = useState<FieldValues | null>(
+    null,
+  )
 
-  const form = useForm()
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+    watch,
+    reset,
+    control,
+  } = useForm<FieldValues>()
 
   const claim = data?.claim
   const member = data?.claim?.member
@@ -131,17 +134,10 @@ export const ClaimPaymentForm: React.FC<{
     !!member?.payoutMethodStatus?.activated
 
   useEffect(() => {
-    if (isExGratia && form.getValues().type === ClaimPaymentType.Automatic) {
-      form.setValue('type', undefined)
+    if (exGratia && getValues().type === ClaimPaymentType.Automatic) {
+      setValue('type', ClaimPaymentType.Expense)
     }
-    if (
-      !isExGratia &&
-      form.getValues().type === undefined &&
-      isPaymentActivated
-    ) {
-      form.setValue('type', ClaimPaymentType.Automatic)
-    }
-  }, [isExGratia, loading])
+  }, [exGratia])
 
   if (
     !data?.claim?.contract &&
@@ -158,9 +154,7 @@ export const ClaimPaymentForm: React.FC<{
       text: paymentType,
       disabled:
         paymentType === ClaimPaymentType.Manual ||
-        (paymentType === ClaimPaymentType.Automatic &&
-          !loading &&
-          !isPaymentActivated),
+        (paymentType === ClaimPaymentType.Automatic && !isPaymentActivated),
     })),
     {
       key: 5,
@@ -170,135 +164,75 @@ export const ClaimPaymentForm: React.FC<{
   ]
 
   const clearFormHandler = () => {
-    form.setValue('amount', '')
-    form.setValue('deductible', '')
-    form.setValue('note', '')
-    setIsExGratia(false)
+    setExGratia(false)
     setDate(null)
-    form.setValue('type', ClaimPaymentType.Automatic)
-    form.reset()
+    setConfirmationData(null)
+    reset()
+    setValue('type', ClaimPaymentType.Automatic)
   }
 
   const isPotentiallySanctioned =
     member?.sanctionStatus === SanctionStatus.Undetermined ||
     member?.sanctionStatus === SanctionStatus.PartialHit
 
-  const createPaymentHandler = async () => {
-    const paymentInput: Partial<ClaimPaymentInput | ClaimSwishPaymentInput> = {
-      amount: {
-        amount: +form.getValues().amount,
-        currency: 'SEK',
-      },
-      deductible: {
-        amount: +form.getValues().deductible,
-        currency: 'SEK',
-      },
-      sanctionListSkipped: Boolean(isOverridden),
-      note: form.getValues().note,
-      exGratia: isExGratia,
-      carrier: claim?.agreement?.carrier ?? 'HEDVIG',
-      paidAt:
-        form.getValues().type !== ClaimPaymentType.Automatic && date
-          ? `${date}T00:00:00.000Z`
-          : null,
-    }
+  const submitHandler: SubmitHandler<FieldValues> = async (
+    values: FieldValues,
+  ) => {
+    setConfirmationData(values)
+  }
 
-    if (form.getValues().type === 'AutomaticSwish') {
-      await toast.promise(
-        createSwishPayment({
-          variables: {
-            id: claimId,
-            payment: {
-              ...(paymentInput as ClaimSwishPaymentInput),
-              phoneNumber: form.getValues().phoneNumber,
-              message: form.getValues().message,
-            },
-          },
-        }),
-        {
-          loading: 'Creating Swish payment',
-          success: () => {
-            form.reset()
-            setIsConfirming(false)
-            setIsExGratia(false)
-            return 'Claim Swish payment done'
-          },
-          error: 'Could not make Swish payment',
-        },
-      )
-    } else {
-      await toast.promise(
-        createPayment({
-          variables: {
-            id: claimId,
-            payment: {
-              ...(paymentInput as ClaimPaymentInput),
-              type: form.getValues().type,
-            },
-          },
-        }),
-        {
-          loading: 'Creating payment',
-          success: () => {
-            PushUserAction('claim', 'create', 'payment', null)
-            form.reset()
-            setIsConfirming(false)
-            setIsExGratia(false)
-            return 'Claim payment done'
-          },
-          error: (e) => {
-            console.error(e)
-            return 'Could not make payment'
-          },
-        },
-      )
-    }
+  const confirmSuccess = () => {
+    PushUserAction('claim', 'create', 'payment', null)
+    clearFormHandler()
   }
 
   return (
-    <FormProvider {...form}>
-      <Form onSubmit={() => setIsConfirming(true)}>
-        <FormInput
-          placeholder="Payout amount"
-          name="amount"
-          defaultValue=""
-          type="number"
-          step="any"
-          affix={{ content: 'SEK' }}
-          rules={{
-            required: 'Amount is required',
-            pattern: {
-              value: /[^0]/,
-              message: 'Amount cannot be zero',
-            },
-          }}
-        />
-        <FormInput
-          placeholder="Deductible"
-          name="deductible"
-          defaultValue=""
-          step="any"
-          type="number"
-        />
-        <FormInput
-          placeholder="Note"
-          name="note"
-          defaultValue=""
-          rules={{
-            required: 'Note is required',
-          }}
-        />
-        <Checkbox
-          label="Ex Gratia?"
-          name="exGratia"
-          style={{ width: '8rem', marginBottom: '1.5rem' }}
-          checked={isExGratia}
-          onChange={() => setIsExGratia((prev) => !prev)}
-        />
+    <form onSubmit={handleSubmit(submitHandler)}>
+      <Input
+        {...register('amount', { required: true })}
+        placeholder="Payout amount"
+        type="number"
+        step="any"
+        affix={{ content: 'SEK' }}
+        error={errors.amount?.type === 'required'}
+        errorText="First name is required"
+        style={{ marginBottom: '1.5rem' }}
+      />
+      <Input
+        {...register('deductible')}
+        placeholder="Deductible"
+        step="any"
+        type="number"
+        style={{ marginBottom: '1.5rem' }}
+      />
+      <Input
+        {...register('note', { required: true })}
+        placeholder="Note"
+        error={errors.note?.type === 'required'}
+        errorText="Note is required"
+        style={{ marginBottom: '1.5rem' }}
+      />
+      <Checkbox
+        label="Ex Gratia?"
+        name="exGratia"
+        style={{ width: '8rem', marginBottom: '1.5rem' }}
+        checked={exGratia}
+        onChange={() => setExGratia((prev) => !prev)}
+      />
 
-        <FormDropdown
-          placeholder="Type"
-          options={categoryOptions.filter((opt) => {
+      {/* In that case, we need to use Controller,
+          because Dropdown is an unusual field. */}
+      <FormDropdown
+        name="type"
+        placeholder="Type"
+        rules={{
+          required: true,
+        }}
+        style={{ marginBottom: '1.5rem' }}
+        defaultValue={ClaimPaymentType.Automatic}
+        control={control}
+        options={categoryOptions
+          .filter((opt) => {
             if (opt.disabled) {
               return false
             }
@@ -306,76 +240,70 @@ export const ClaimPaymentForm: React.FC<{
               return (
                 areSwishPayoutsEnabled() &&
                 member?.contractMarketInfo?.market === Market.Sweden &&
-                !isExGratia
+                !exGratia
               )
             }
-            return isExGratia ? opt.value !== ClaimPaymentType.Automatic : true
-          })}
-          name="type"
-          defaultValue={ClaimPaymentType.Automatic}
-          rules={{
-            required: 'Category is required',
-          }}
+            return exGratia ? opt.value !== ClaimPaymentType.Automatic : true
+          })
+          .map((opt) => ({ value: opt.value, text: opt.text, key: opt.key }))}
+      />
+
+      {isPotentiallySanctioned && (
+        <Checkbox
+          style={{ width: '40rem', marginBottom: '1.5rem' }}
+          label="Override sanction list result (I promise that I have manually checked the list)"
+          name="overriden"
+          checked={isOverridden}
+          onChange={() => setIsOverridden((prev) => !prev)}
         />
+      )}
 
-        {isPotentiallySanctioned && (
-          <Checkbox
-            style={{ width: '40rem', marginBottom: '1.5rem' }}
-            label="Override sanction list result (I promise that I have manually checked the list)"
-            name="overriden"
-            checked={isOverridden}
-            onChange={() => setIsOverridden((prev) => !prev)}
+      {watch('type') === 'AutomaticSwish' && !exGratia && (
+        <>
+          <Input
+            {...register('phoneNumber', { required: true })}
+            placeholder="Phone number (467XXXXXXXX)"
+            error={errors.phoneNumber?.type === 'required'}
+            errorText="Phone number is required"
           />
-        )}
-
-        {form.watch('type') === 'AutomaticSwish' && !isExGratia && (
-          <>
-            <FormInput
-              defaultValue=""
-              placeholder="Phone number (467XXXXXXXX)"
-              name="phoneNumber"
-              rules={{
-                required: 'Phone number is required',
-              }}
-            />
-            <FormInput
-              defaultValue=""
-              placeholder="Swish notification message"
-              name="message"
-              rules={{
-                required: 'Notification message is required',
-              }}
-            />
-          </>
-        )}
-
-        {form.watch('type') !== ClaimPaymentType.Automatic &&
-          form.watch('type') !== undefined && (
-            <TextDatePicker
-              style={{ marginBottom: '2rem' }}
-              placeholder="Payment performed"
-              value={date}
-              onChange={setDate}
-            />
-          )}
-
-        <div>
-          <SubmitButton>Create payment</SubmitButton>
-        </div>
-
-        {isConfirming && member?.contractMarketInfo && (
-          <PaymentConfirmationModal
-            onClose={() => {
-              setIsConfirming(false)
-              clearFormHandler()
-            }}
-            onSubmit={createPaymentHandler}
-            amount={form.getValues().amount}
-            identified={!!member.identity}
-            market={member.contractMarketInfo.market}
+          <Input
+            {...register('message', { required: true })}
+            placeholder="Swish notification message"
+            error={errors.message?.type === 'required'}
+            errorText="Phone number is required"
           />
-        )}
-      </Form>
-    </FormProvider>
+        </>
+      )}
+
+      {watch('type') !== ClaimPaymentType.Automatic && (
+        <TextDatePicker
+          style={{ marginBottom: '2rem' }}
+          placeholder="Payment performed"
+          value={date}
+          onChange={setDate}
+        />
+      )}
+
+      <div>
+        <Button type="submit">Create payment</Button>
+      </div>
+
+      {!!confirmationData && member?.contractMarketInfo && (
+        <PaymentConfirmationModal
+          onClose={() => {
+            setConfirmationData(null)
+            clearFormHandler()
+          }}
+          identified={!!member.identity}
+          market={member.contractMarketInfo.market}
+          values={{ ...confirmationData, exGratia }}
+          claim={claim as Claim}
+          isOverridden={isOverridden}
+          date={date}
+          claimId={claimId}
+          confirmSuccess={confirmSuccess}
+        />
+      )}
+    </form>
   )
 }
