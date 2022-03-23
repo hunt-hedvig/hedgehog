@@ -21,11 +21,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  height: fit-content;
   background: ${({ theme }) => theme.accentContrast};
-
   position: relative;
-
   overflow-y: hidden;
 `
 
@@ -243,7 +240,7 @@ export const TaskChatInput: React.FC<{
     <>
       <Container>
         <ResizeButton onClick={onResize} />
-        <HintContainer id="hint-container">
+        <HintContainer>
           {hinting && (
             <HintText>
               {templateHint?.title ? `/${templateHint?.title}` : message}
