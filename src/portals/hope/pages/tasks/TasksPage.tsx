@@ -23,7 +23,6 @@ import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
 import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
 import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
 import { RouteComponentProps, useHistory } from 'react-router'
-import { motion } from 'framer-motion'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -90,7 +89,7 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
   }
 `
 
-const FilterBarItem = styled(motion.button)`
+const FilterBarItem = styled.button`
   background-color: transparent;
   transition: background-color 200ms;
   :hover {
@@ -114,7 +113,7 @@ const FilterBarItem = styled(motion.button)`
   }
 `
 
-const ListContainer = styled(motion.ul)`
+const ListContainer = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: scroll;
@@ -123,14 +122,9 @@ const ListContainer = styled(motion.ul)`
   }
 
   padding-bottom: 10rem;
-
-  & {
-    margin: 0;
-    padding: 0;
-  }
 `
 
-const ListItem = styled(motion.li)<{ selected?: boolean }>`
+const ListItem = styled.div<{ selected?: boolean }>`
   display: flex;
   font-size: 1.1rem;
   padding: 1.75rem 2.05rem;
@@ -290,11 +284,7 @@ const TasksPage: Page<
                   </TopBarItem>
                 )}
               </Flex>
-              <FilterBarItem
-                onClick={() => setShowFilters(true)}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <FilterBarItem onClick={() => setShowFilters(true)}>
                 Filters
               </FilterBarItem>
             </TopBar>
@@ -332,8 +322,6 @@ const TasksPage: Page<
 
                   return (
                     <ListItem
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
                       key={group.id}
                       onClick={() => setSelectedQuestionGroup(group)}
                       selected={

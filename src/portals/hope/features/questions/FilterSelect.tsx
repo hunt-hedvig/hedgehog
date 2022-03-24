@@ -21,7 +21,6 @@ import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
-import { motion } from 'framer-motion'
 
 export const FilterState: Record<string, number> = {
   ...Object.keys(MemberGroups).reduce<Record<string, number>>(
@@ -44,17 +43,14 @@ export const FilterState: Record<string, number> = {
 
 export type FilterStateType = number
 
-const FilterButton = styled(motion.button)<{
-  selected: boolean
-  small?: boolean
-}>`
+const FilterButton = styled.button<{ selected: boolean; small?: boolean }>`
   border: none;
   display: inline-flex;
   background-color: ${({ theme, selected }) =>
     selected ? theme.accent : theme.backgroundTransparent};
   padding: ${({ small }) => (!small ? '0.4em 0.7em' : '0.3em 0.6em')};
   border-radius: 6px;
-  transition: all 50ms;
+  transition: all 200ms;
   cursor: pointer;
   align-items: center;
   color: ${({ theme, selected }) =>
@@ -156,8 +152,6 @@ export const FilterSelect: React.FC<{
               {...navigation}
             >
               <FilterButton
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 small={small}
                 onClick={() =>
                   onToggle(memberGroup, UserSettingKey.MemberGroupsFilter)
@@ -202,8 +196,6 @@ export const FilterSelect: React.FC<{
                 key={market}
               >
                 <FilterButton
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                   small={small}
                   selected={filters.includes(FilterState[market])}
                   onClick={() =>
@@ -248,8 +240,6 @@ export const FilterSelect: React.FC<{
           })}
         >
           <FilterButton
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
             small={small}
             selected={filters.includes(FilterState.HasOpenClaim)}
             onClick={() =>
@@ -288,8 +278,6 @@ export const FilterSelect: React.FC<{
           })}
         >
           <FilterButton
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
             small={small}
             selected={filters.includes(FilterState.NoOpenClaim)}
             onClick={() =>

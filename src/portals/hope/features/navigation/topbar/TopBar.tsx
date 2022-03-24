@@ -16,7 +16,6 @@ import { BellFill, PeopleFill } from 'react-bootstrap-icons'
 import UserMenu from './UserMenu'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
-import { motion, HTMLMotionProps } from 'framer-motion'
 
 const Wrapper = styled.div`
   z-index: 1000;
@@ -31,7 +30,7 @@ const Wrapper = styled.div`
   padding: 1rem 2rem;
 `
 
-export const CircleButtonStyles = styled(motion.button)`
+export const CircleButton = styled.button`
   width: 2.5rem;
   height: 2.5rem;
 
@@ -56,19 +55,6 @@ export const CircleButtonStyles = styled(motion.button)`
 
   border: none;
 `
-
-export const CircleButton: React.FC<HTMLMotionProps<'button'>> = ({
-  children,
-  ...props
-}) => (
-  <CircleButtonStyles
-    whileHover={{ scale: 1.1 }}
-    whileTap={{ scale: 0.95 }}
-    {...props}
-  >
-    {children}
-  </CircleButtonStyles>
-)
 
 const TopBarContainer = styled(Flex)<{ pushLeft: boolean }>`
   transition: margin-right 400ms;
