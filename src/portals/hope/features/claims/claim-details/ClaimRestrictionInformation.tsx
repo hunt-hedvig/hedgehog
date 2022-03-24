@@ -26,11 +26,12 @@ export const ClaimRestrictionInformation: React.FC<{
 
   return (
     <>
-      <ResourceAccessOverview
-        visible={showModal}
-        onClose={() => setShowModal(false)}
-        resourceId={claimId}
-      />
+      {showModal && (
+        <ResourceAccessOverview
+          onClose={() => setShowModal(false)}
+          resourceId={claimId}
+        />
+      )}
       <Flex direction="row" align="center">
         <Flex
           style={{ fontSize: '1.5rem' }}

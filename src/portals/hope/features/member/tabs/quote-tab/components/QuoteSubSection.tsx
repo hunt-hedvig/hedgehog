@@ -38,14 +38,9 @@ const CreateQuoteModal: React.FC<{
   onClose: () => void
   memberId: string
   insuranceType: InsuranceType
-  visible: boolean
-}> = ({ onClose, memberId, insuranceType, visible }) => {
+}> = ({ onClose, memberId, insuranceType }) => {
   return (
-    <Modal
-      onClose={onClose}
-      style={{ width: '50rem', padding: '1rem' }}
-      visible={visible}
-    >
+    <Modal onClose={onClose} style={{ width: '50rem', padding: '1rem' }}>
       <CreateQuoteWrapper>
         <CreateQuoteForm
           memberId={memberId}
@@ -110,14 +105,15 @@ export const QuotesSubSection: React.FC<{
           </MutedInfo>
         </div>
       </Flex>
-      <CreateQuoteModal
-        insuranceType={insuranceType}
-        memberId={memberId}
-        onClose={() => {
-          setIsWip(false)
-        }}
-        visible={isWip}
-      />
+      {isWip && (
+        <CreateQuoteModal
+          insuranceType={insuranceType}
+          memberId={memberId}
+          onClose={() => {
+            setIsWip(false)
+          }}
+        />
+      )}
       {!activeQuotes.length ? (
         <StandaloneMessage paddingTop="7rem" paddingBottom="5rem">
           <div style={{ textAlign: 'center', fontSize: '1.4rem' }}>

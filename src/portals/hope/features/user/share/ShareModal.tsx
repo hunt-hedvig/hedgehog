@@ -58,8 +58,7 @@ const SharedLabel = styled.div`
 
 export const ShareModal: React.FC<{
   onClose: () => void
-  visible: boolean
-}> = ({ onClose, visible }) => {
+}> = ({ onClose }) => {
   const { me } = useMe()
   const [filter, setFilter] = useState('')
   const { data } = useUsersQuery()
@@ -97,11 +96,7 @@ export const ShareModal: React.FC<{
   }
 
   return (
-    <Modal
-      onClose={onClose}
-      style={{ padding: '1.5rem', width: 500 }}
-      visible={visible}
-    >
+    <Modal onClose={onClose} style={{ padding: '1.5rem', width: 500 }}>
       <div>
         <ThirdLevelHeadline>Share page</ThirdLevelHeadline>
       </div>

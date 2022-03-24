@@ -34,12 +34,11 @@ const StyledModal = styled(Modal)`
 export const UpdateUserMarketModal: React.FC<{
   onClose: () => void
   onSubmit: () => void
-  visible: boolean
-}> = ({ onClose, onSubmit, visible }) => {
+}> = ({ onClose, onSubmit }) => {
   const { markets: userMarkets, removeMarket, addMarket } = useMyMarkets()
 
   return (
-    <StyledModal onClose={onClose} visible={visible}>
+    <StyledModal onClose={onClose}>
       <Flex
         style={{ height: '100%', width: '100%' }}
         direction="column"

@@ -125,17 +125,17 @@ export const TopBar = () => {
   return (
     <Wrapper>
       <VerboseNotificationListener />
-      <NotificationsModal
-        visible={showUserNotifications}
-        onClose={() => {
-          setShowUserNotifications(false)
-        }}
-      />
+      {showUserNotifications && (
+        <NotificationsModal
+          onClose={() => {
+            setShowUserNotifications(false)
+          }}
+        />
+      )}
 
-      <ShareModal
-        onClose={() => setShowShareModal(false)}
-        visible={showShareModal}
-      />
+      {showShareModal && (
+        <ShareModal onClose={() => setShowShareModal(false)} />
+      )}
 
       {showUsers && (
         <UserPanel closing={closingUsers} onClickOutside={closeUsersHandler} />
