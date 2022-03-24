@@ -19,7 +19,7 @@ const getPosition = (
     ? 'flex-end'
     : 'center'
 
-const Wrapper = styled(motion.div)<{
+const Wrapper = styled.div<{
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
   noDimBg?: boolean
@@ -86,12 +86,7 @@ export const Modal: React.FC<ModalProps> = ({
     <Portal>
       <AnimatePresence>
         {visible && (
-          <Wrapper
-            key="modal-wrapper"
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            {...options}
-          >
+          <Wrapper {...options}>
             <Container
               ref={modalRef}
               key="modal"
