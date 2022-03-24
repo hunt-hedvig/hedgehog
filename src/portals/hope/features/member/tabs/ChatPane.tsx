@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
-import { motion } from 'framer-motion'
 import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
 import { ChatPanel } from 'portals/hope/features/member/chat/ChatPanel'
 import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
@@ -14,7 +13,7 @@ const ChevronDoubleIcon = styled(ChevronDoubleDown)<{ visible: number }>`
   transform: scaleY(${({ visible }) => visible});
 `
 
-const ChatContainer = styled(motion.div)`
+const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -25,6 +24,16 @@ const ChatContainer = styled(motion.div)`
   border-radius: 8px;
   z-index: 999;
   overflow: hidden;
+`
+
+const OpenChatContainer = styled(ChatContainer)`
+  width: 400px;
+  height: 80vh;
+`
+
+const ClosedChatContainer = styled(ChatContainer)`
+  width: 200px;
+  height: 40px;
 `
 
 const ChatHeaderStyle = styled.div`
@@ -43,11 +52,6 @@ const ChatHeaderStyle = styled.div`
 const MessageListWithBackground = styled(MessagesList)`
   background-color: ${({ theme }) => theme.backgroundLight};
 `
-
-const variants = {
-  open: { width: '400px', height: '80vh' },
-  closed: { width: '200px', height: '40px' },
-}
 
 export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
   const manualChange = useRef(false)
@@ -89,26 +93,24 @@ export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
     manualChange.current = true
   }
 
-  return (
-    <ChatContainer animate={isVisible ? 'open' : 'closed'} variants={variants}>
-      {isVisible ? (
-        <>
-          <ChatHeader
-            visible={isVisible}
-            onResizeClick={onResizeClick}
-            isHinting={isHintingOption}
-          />
-          <MessageListWithBackground memberId={memberId} />
-          <ChatPanel memberId={memberId} />
-        </>
-      ) : (
-        <ChatHeader
-          visible={isVisible}
-          onResizeClick={onResizeClick}
-          isHinting={isHintingOption}
-        />
-      )}
-    </ChatContainer>
+  return isVisible ? (
+    <OpenChatContainer>
+      <ChatHeader
+        visible={isVisible}
+        onResizeClick={onResizeClick}
+        isHinting={isHintingOption}
+      />
+      <MessageListWithBackground memberId={memberId} />
+      <ChatPanel memberId={memberId} />
+    </OpenChatContainer>
+  ) : (
+    <ClosedChatContainer>
+      <ChatHeader
+        visible={isVisible}
+        onResizeClick={onResizeClick}
+        isHinting={isHintingOption}
+      />
+    </ClosedChatContainer>
   )
 }
 
