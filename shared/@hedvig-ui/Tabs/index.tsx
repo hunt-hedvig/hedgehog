@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { HotkeyStyled } from '@hedvig-ui'
+import { motion, HTMLMotionProps } from 'framer-motion'
 import React, { useEffect } from 'react'
 import {
   isPressing,
@@ -9,8 +10,7 @@ import {
 } from '../hooks/keyboard/use-key-is-pressed'
 import { useNavigation } from '../hooks/navigation/use-navigation'
 
-const TabStyled = styled.li<{ active?: boolean }>`
-  transition: all 0.3s;
+const TabStyled = styled(motion.li)<{ active?: boolean }>`
   position: relative;
 
   width: 100%;
@@ -65,7 +65,7 @@ const Hotkey = styled(HotkeyStyled)`
   position: static;
 `
 
-export interface TabProps extends React.HTMLAttributes<HTMLLIElement> {
+export interface TabProps extends HTMLMotionProps<'li'> {
   active?: boolean
   action: () => void
   title: string
@@ -95,6 +95,8 @@ export const Tab: React.FC<TabProps> = ({
     <TabStyled
       active={active}
       tabIndex={0}
+      whileHover={{ fontSize: '16px', padding: '3px 0' }}
+      whileTap={{ fontSize: '12px' }}
       onClick={action}
       onKeyDown={(e) => isPressing(e, Keys.Enter) && action()}
       {...props}
