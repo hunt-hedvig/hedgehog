@@ -58,6 +58,7 @@ export const MemberFile: React.FC<{
 }> = ({ memberId }) => {
   const { data, loading, error } = useFileUploadsQueryQuery({
     variables: { memberId },
+    fetchPolicy: 'no-cache',
   })
 
   if (error) {

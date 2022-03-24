@@ -12,6 +12,7 @@ import { useAuthenticate } from 'auth/use-authenticate'
 import { Route, Router, Switch } from 'react-router'
 import { PortalsPage } from 'auth/PortalsPage'
 import { Spinner, StandaloneMessage } from '@hedvig-ui'
+import { RenewTokenLock } from 'apollo/lock'
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
@@ -41,6 +42,7 @@ const App: React.FC = () => {
 ReactDOM.render(
   <CookiesProvider>
     <Router history={history}>
+      <RenewTokenLock />
       <ApolloProvider client={client}>
         <DarkmodeProvider>
           <Global styles={GlobalStyles} />
