@@ -326,12 +326,11 @@ const DashboardPage: Page = () => {
           })}
         </ChangeLogWrapper>
       </Spacing>
-      {createFilter && (
-        <CreateFilterModal
-          onClose={() => setCreateFilter(false)}
-          onSave={createTemplate}
-        />
-      )}
+      <CreateFilterModal
+        onClose={() => setCreateFilter(false)}
+        onSave={createTemplate}
+        visible={createFilter}
+      />
     </Wrapper>
   )
 }

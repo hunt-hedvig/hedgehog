@@ -379,13 +379,12 @@ const TasksPage: Page<
         </TaskChatWrapper>
       </Container>
 
-      {showFilters && (
-        <FilterModal
-          onClose={() => setShowFilters(false)}
-          filters={filters}
-          onToggle={toggleFilter}
-        />
-      )}
+      <FilterModal
+        visible={showFilters}
+        onClose={() => setShowFilters(false)}
+        filters={filters}
+        onToggle={toggleFilter}
+      />
     </>
   )
 }

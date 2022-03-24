@@ -37,7 +37,8 @@ const NotificationContainer = styled(Flex)`
 
 export const NotificationsModal: React.FC<{
   onClose: () => void
-}> = ({ onClose }) => {
+  visible: boolean
+}> = ({ onClose, visible }) => {
   const { me } = useMe()
   const [markAllNotificationsAsRead] = useMarkAllNotificationsAsReadMutation()
   const history = useHistory()
@@ -50,6 +51,7 @@ export const NotificationsModal: React.FC<{
 
   return (
     <Modal
+      visible={visible}
       onClose={onClose}
       options={{
         side: 'right',
