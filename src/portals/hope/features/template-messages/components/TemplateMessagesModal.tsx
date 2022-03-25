@@ -4,7 +4,7 @@ import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
 import { keyframes } from '@emotion/react'
 import { TemplateForm } from './TemplateForm'
 import { SearchIcon } from '../../members-search/styles'
-import { Input, Tabs, Button, SecondLevelHeadline } from '@hedvig-ui'
+import { Input, Button, SecondLevelHeadline } from '@hedvig-ui'
 import {
   Pen as EditIcon,
   PinAngle,
@@ -64,16 +64,8 @@ const Header = styled.div`
   background-color: ${({ theme }) => theme.background};
 `
 
-const HeaderBottom = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  margin-top: 1rem;
-`
-
 const Content = styled.div`
-  padding: 15px;
+  padding: 20px 15px;
   margin-bottom: 6rem;
   overflow-y: auto;
   flex: 1;
@@ -106,6 +98,11 @@ export const EmptyContainer = styled.div`
   font-size: 12px;
 `
 
+const TemplatesListTitle = styled.div`
+  margin-bottom: 0.5em;
+  font-size: 14px;
+`
+
 export const TemplateMessagesModal: React.FC<{
   hide: () => void
 }> = ({ hide }) => {
@@ -113,7 +110,6 @@ export const TemplateMessagesModal: React.FC<{
   const [editingTemplate, setEditingTemplate] = useState<Template | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
-  const [isPinnedTab, setIsPinnedTab] = useState(false)
 
   const {
     select,
@@ -155,6 +151,8 @@ export const TemplateMessagesModal: React.FC<{
         )?.message || '',
       )
 
+      hide()
+
       return
     }
 
@@ -163,6 +161,8 @@ export const TemplateMessagesModal: React.FC<{
         (message) => message.language === formatLocale(currentLocale),
       )?.message || '',
     )
+
+    hide()
   }
 
   const deleteHandler = (id: string) => {
@@ -196,14 +196,14 @@ export const TemplateMessagesModal: React.FC<{
     }
   }
 
-  const getFilteredTemplates = () =>
+  const getFilteredTemplates = (pinned?: boolean) =>
     templates
       .filter((template) =>
         query
           ? template.title.toLowerCase().includes(query.toLowerCase())
           : true,
       )
-      .filter((template) => (isPinnedTab ? template.pinned : true))
+      .filter((template) => (pinned ? template.pinned : !template.pinned))
 
   if (isCreating) {
     return (
@@ -272,61 +272,75 @@ export const TemplateMessagesModal: React.FC<{
           type="search"
           autoFocus
         />
-        <HeaderBottom>
-          <Tabs
-            style={{ width: '50%' }}
-            list={[
-              {
-                active: !isPinnedTab,
-                title: 'All Templates',
-                action: () => {
-                  setIsPinnedTab(false)
-                },
-              },
-              {
-                active: isPinnedTab,
-                title: `${
-                  templates.filter((template) => template.pinned).length
-                } Pinned`,
-                action: () => {
-                  setIsPinnedTab(true)
-                },
-              },
-            ]}
-          />
-          <Button
-            variant="tertiary"
-            size="small"
-            onClick={() => setIsCreating(true)}
-          >
-            + new template
-          </Button>
-        </HeaderBottom>
+        <Button
+          variant="tertiary"
+          size="small"
+          onClick={() => setIsCreating(true)}
+          style={{ margin: '0.5rem 0' }}
+        >
+          + new template
+        </Button>
       </Header>
       <Content>
-        {getFilteredTemplates()?.length ? (
-          getFilteredTemplates().map((template) => (
-            <TemplateItem
-              key={template.id}
-              id={template.id}
-              name={template.title}
-              text={
-                currentLocaleDisplayed?.isEnglishLocale
-                  ? template.messages.find(
-                      (msg) =>
-                        msg.language === formatLocale(PickedLocale.EnSe, true),
-                    )?.message || ''
-                  : template.messages.find(
-                      (msg) => msg.language === formatLocale(currentLocale),
-                    )?.message || ''
-              }
-              pinned={template.pinned || false}
-              onSelect={selectHandler}
-              onDelete={deleteHandler}
-              onEdit={editHandler}
-              onPin={pinHandler}
-            />
-          ))
+        {getFilteredTemplates(true)?.length ? (
+          <div style={{ marginBottom: '1.5rem' }}>
+            <TemplatesListTitle>
+              {getFilteredTemplates(true)?.length} Pinned
+            </TemplatesListTitle>
+            {getFilteredTemplates(true).map((template) => (
+              <TemplateItem
+                key={template.id}
+                id={template.id}
+                name={template.title}
+                text={
+                  currentLocaleDisplayed?.isEnglishLocale
+                    ? template.messages.find(
+                        (msg) =>
+                          msg.language ===
+                          formatLocale(PickedLocale.EnSe, true),
+                      )?.message || ''
+                    : template.messages.find(
+                        (msg) => msg.language === formatLocale(currentLocale),
+                      )?.message || ''
+                }
+                pinned={template.pinned || false}
+                onSelect={selectHandler}
+                onDelete={deleteHandler}
+                onEdit={editHandler}
+                onPin={pinHandler}
+              />
+            ))}
+          </div>
+        ) : null}
+        {getFilteredTemplates(false)?.length ? (
+          <div>
+            <TemplatesListTitle>
+              {getFilteredTemplates(false)?.length} Templates
+            </TemplatesListTitle>
+            {getFilteredTemplates(false).map((template) => (
+              <TemplateItem
+                key={template.id}
+                id={template.id}
+                name={template.title}
+                text={
+                  currentLocaleDisplayed?.isEnglishLocale
+                    ? template.messages.find(
+                        (msg) =>
+                          msg.language ===
+                          formatLocale(PickedLocale.EnSe, true),
+                      )?.message || ''
+                    : template.messages.find(
+                        (msg) => msg.language === formatLocale(currentLocale),
+                      )?.message || ''
+                }
+                pinned={template.pinned || false}
+                onSelect={selectHandler}
+                onDelete={deleteHandler}
+                onEdit={editHandler}
+                onPin={pinHandler}
+              />
+            ))}
+          </div>
         ) : (
           <EmptyContainer>No records found</EmptyContainer>
         )}
@@ -394,6 +408,8 @@ const TemplateActions = styled.div`
   align-items: center;
   justify-content: space-between;
 
+  z-index: 1;
+
   & * {
     transition: none !important;
   }
@@ -401,6 +417,22 @@ const TemplateActions = styled.div`
   & svg:hover {
     cursor: pointer;
     color: ${({ theme }) => theme.placeholderColor};
+  }
+`
+
+const TemplateTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  width: 100%;
+
+  overflow: hidden;
+
+  & h3 {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 `
 
@@ -429,36 +461,40 @@ const TemplateItem = ({
 
   return (
     <TemplateContainer
-      onClick={() => onSelect(id)}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
       <TemplateTop>
-        <h3>{name}</h3>
-        {isHover && (
-          <TemplateActions>
-            <EditIcon onClick={() => onEdit(id)} />
-            {pinned ? (
-              <PinAngleFill onClick={() => onPin(id)} />
-            ) : (
-              <PinAngle onClick={() => onPin(id)} />
-            )}
-            <Trash
-              onClick={() => {
-                // Don't work useConfirmDialog in some reason
-                if (
-                  confirm(
-                    'Are you sure you want to delete this message template?',
-                  )
-                ) {
-                  onDelete(id)
-                }
-              }}
-            />
-          </TemplateActions>
-        )}
+        <TemplateTitle onClick={() => onSelect(id)}>
+          {pinned && <PinAngleFill onClick={() => onPin(id)} />}
+          <h3>{name}</h3>
+        </TemplateTitle>
+        <TemplateActions>
+          {isHover && (
+            <>
+              <EditIcon onClick={() => onEdit(id)} />
+              {pinned ? (
+                <PinAngleFill onClick={() => onPin(id)} />
+              ) : (
+                <PinAngle onClick={() => onPin(id)} />
+              )}
+              <Trash
+                onClick={() => {
+                  // Don't work useConfirmDialog in some reason
+                  if (
+                    confirm(
+                      'Are you sure you want to delete this message template?',
+                    )
+                  ) {
+                    onDelete(id)
+                  }
+                }}
+              />
+            </>
+          )}
+        </TemplateActions>
       </TemplateTop>
-      <TemplateContent>
+      <TemplateContent onClick={() => onSelect(id)}>
         {text || (
           <EmptyContainer style={{ textAlign: 'start', fontSize: '1rem' }}>
             (no one has written for this language yet..)
