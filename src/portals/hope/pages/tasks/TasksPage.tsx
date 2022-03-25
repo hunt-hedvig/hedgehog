@@ -23,6 +23,10 @@ import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
 import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
 import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
 import { RouteComponentProps, useHistory } from 'react-router'
+import {
+  formatLocale,
+  useTemplateMessages,
+} from '../../features/template-messages/use-template-messages'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -199,7 +203,7 @@ const ListItem = styled.div<{ selected?: boolean }>`
 const Container = styled(Flex)`
   margin-top: -4rem;
   padding-left: 4rem;
-  overflow-y: auto;
+  overflow-y: hidden;
   width: calc(100% + 4rem);
   margin-left: -4rem;
 `
@@ -239,6 +243,9 @@ const TasksPage: Page<
     useState<QuestionGroup | null>(null)
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null)
 
+  const { setLocale, setMemberId, changeLocaleDisplayed } =
+    useTemplateMessages()
+
   const groups =
     filters.length > 0
       ? questionGroups
@@ -252,6 +259,7 @@ const TasksPage: Page<
     if (groupByRoute) {
       setSelectedMemberId(groupByRoute.memberId)
       setSelectedQuestionGroup(groupByRoute)
+
       return
     }
 
@@ -259,6 +267,26 @@ const TasksPage: Page<
     setSelectedQuestionGroup(null)
     setSelectedMemberId(null)
   }, [memberId, groupByRoute])
+
+  const selectQuestionGroupHandler = (group: QuestionGroup | null) => {
+    setSelectedQuestionGroup(group)
+
+    if (!group) {
+      return
+    }
+
+    setMemberId(group.memberId)
+
+    if (
+      group.pickedLocale &&
+      formatLocale(group.pickedLocale as PickedLocale, true) ===
+        formatLocale(PickedLocale.EnSe, true)
+    ) {
+      changeLocaleDisplayed(group.memberId, true)
+    }
+
+    setLocale((group.pickedLocale || PickedLocale.SvSe) as PickedLocale)
+  }
 
   const title = `Questions ${groups.length ? '(' + groups.length + ')' : ''}`
 
@@ -323,7 +351,7 @@ const TasksPage: Page<
                   return (
                     <ListItem
                       key={group.id}
-                      onClick={() => setSelectedQuestionGroup(group)}
+                      onClick={() => selectQuestionGroupHandler(group)}
                       selected={
                         group.memberId === selectedQuestionGroup?.memberId
                       }
