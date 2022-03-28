@@ -22,29 +22,6 @@ const StyledForm = styled.form`
   gap: 25px;
 `
 
-const Select = styled.select`
-  // A reset of styles, including removing the default dropdown arrow
-  appearance: none;
-  // Additional resets for further consistency
-  margin: 0;
-  width: 100%;
-  font-family: inherit;
-  font-size: inherit;
-  cursor: pointer;
-  outline: none;
-
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 0.25em;
-  padding: 10px 15px;
-  font-size: 14px;
-  line-height: 1.1;
-  background-color: #fff;
-
-  &::-ms-expand {
-    display: none;
-  }
-`
-
 const ErrorMessageWrapper = styled('div')`
   color: ${({ theme }) => theme.danger};
   margin: 0;
@@ -63,7 +40,7 @@ export type FieldError = {
 export type FieldErrors<TFieldValues extends FieldValues = FieldValues> =
   DeepMap<TFieldValues, FieldError>
 
-interface IFormProps<T> {
+interface FormProps<T> {
   defaultValues?: UseFormProps<T>
   onSubmit: SubmitHandler<T>
 }
@@ -71,7 +48,7 @@ interface IFormProps<T> {
 export function Form<T>({
   children,
   onSubmit,
-}: IFormProps<T> & {
+}: FormProps<T> & {
   children: React.ReactElement | Array<React.ReactElement | null> | null
 }) {
   const {
@@ -98,24 +75,23 @@ export function Form<T>({
   )
 }
 
-interface IFormLabelProps
-  extends Omit<React.HTMLProps<HTMLLabelElement>, 'as'> {
+interface FormLabelProps extends Omit<React.HTMLProps<HTMLLabelElement>, 'as'> {
   name: string
 }
 
-const FormLabel: React.FC<IFormLabelProps> = ({ name, children, ...props }) => (
+const FormLabel: React.FC<FormLabelProps> = ({ name, children, ...props }) => (
   <Label htmlFor={name} {...props}>
     {children}
   </Label>
 )
 
-interface IFormFieldProps {
+interface FormFieldProps {
   label?: React.ReactNode
   name: string
   errors?: FieldErrors
 }
 
-const FormField: React.FC<IFormFieldProps> = ({
+const FormField: React.FC<FormFieldProps> = ({
   label,
   name,
   children,
@@ -132,14 +108,14 @@ const FormField: React.FC<IFormFieldProps> = ({
   )
 }
 
-interface IFormInputProps {
+interface FormInputProps {
   name: string
   label?: string
   register?: UseFormRegister<FieldValues>
   errors?: FieldErrors
 }
 
-export const FormInput: React.FC<IFormInputProps & InputProps> = ({
+export const FormInput: React.FC<FormInputProps & InputProps> = ({
   register,
   name,
   errors,
@@ -151,7 +127,7 @@ export const FormInput: React.FC<IFormInputProps & InputProps> = ({
   </FormField>
 )
 
-interface IFormSelectProps extends React.HTMLAttributes<HTMLSelectElement> {
+interface FormSelectProps extends React.HTMLAttributes<HTMLSelectElement> {
   register?: UseFormRegister<FieldValues>
   name: string
   options: Array<{
@@ -160,7 +136,28 @@ interface IFormSelectProps extends React.HTMLAttributes<HTMLSelectElement> {
   }>
 }
 
-export const FormSelect: React.FC<IFormSelectProps> = ({
+const Select = styled.select`
+  appearance: none;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  outline: none;
+
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 0.25em;
+  padding: 10px 15px;
+  font-size: 14px;
+  line-height: 1.1;
+  background-color: #fff;
+
+  &::-ms-expand {
+    display: none;
+  }
+`
+
+export const FormSelect: React.FC<FormSelectProps> = ({
   register,
   options,
   name,
