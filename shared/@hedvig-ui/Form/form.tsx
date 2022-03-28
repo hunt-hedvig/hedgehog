@@ -127,7 +127,6 @@ export const FormInputComponent: React.FC<InputProps & FormFieldProps> = ({
   rules,
   defaultValue,
   control,
-  errorText,
   ...props
 }) => (
   <Controller
@@ -141,7 +140,6 @@ export const FormInputComponent: React.FC<InputProps & FormFieldProps> = ({
         checked={value}
         name={name}
         error={errors?.amount?.type === 'required'}
-        errorText={errorText}
         ref={ref}
         {...props}
       />

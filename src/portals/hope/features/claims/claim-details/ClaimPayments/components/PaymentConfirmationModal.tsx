@@ -31,6 +31,7 @@ interface PaymentConfirmationModalProps {
   date: string | null
   claimId: string
   confirmSuccess: () => void
+  clearForm: () => void
 }
 
 export const PaymentConfirmationModal: React.FC<
@@ -43,6 +44,7 @@ export const PaymentConfirmationModal: React.FC<
   isOverridden,
   claim,
   date,
+  clearForm,
   claimId,
   confirmSuccess,
 }) => {
@@ -129,7 +131,13 @@ export const PaymentConfirmationModal: React.FC<
   }
 
   return (
-    <Modal style={{ padding: '1rem', width: 500 }} onClose={onClose}>
+    <Modal
+      style={{ padding: '1rem', width: 500 }}
+      onClose={() => {
+        onClose()
+        clearForm()
+      }}
+    >
       {!identified && market === Market.Norway && (
         <Explanation>
           ⚠️ Please note that this member is not identified
@@ -145,7 +153,6 @@ export const PaymentConfirmationModal: React.FC<
           name="confirmation"
           placeholder="Amount"
           error={errors.confirmation?.type === 'required'}
-          errorText="Confirmation is required"
         />
         <ButtonsGroup style={{ marginTop: '1em' }}>
           <Button disabled={watch('confirmation') !== amount} type="submit">
