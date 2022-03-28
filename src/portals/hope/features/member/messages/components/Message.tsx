@@ -22,7 +22,7 @@ const MessageRow = styled.div<
 `
 
 const MessageBox = styled.div`
-  max-width: 400px;
+  max-width: 100%;
 `
 
 interface WithLeft {
