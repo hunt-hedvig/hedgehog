@@ -290,9 +290,15 @@ const TasksPage: Page<
     setLocale((group.pickedLocale || PickedLocale.SvSe) as PickedLocale)
   }
 
-  const title = `Questions ${groups.length ? '(' + groups.length + ')' : ''}`
+  const fullName = selectedQuestionGroup
+    ? `${selectedQuestionGroup.firstName} ${selectedQuestionGroup.lastName}`
+    : ''
 
-  useTitle(title)
+  const title = memberId
+    ? `Questions | ${fullName}`
+    : `Questions ${groups.length ? '(' + groups.length + ')' : ''}`
+
+  useTitle(title, [fullName])
 
   return (
     <>
