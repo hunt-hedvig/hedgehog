@@ -234,7 +234,7 @@ const TasksPage: Page<
 
   const { resolve } = useResolveQuestion()
   const { numberMemberGroups } = useNumberMemberGroups()
-  const [questionGroups] = useQuestionGroups()
+  const [questionGroups, { loading }] = useQuestionGroups()
   const { selectedFilters: filters, toggleFilter } = useSelectedFilters()
 
   const [showFilters, setShowFilters] = useState(false)
@@ -256,6 +256,8 @@ const TasksPage: Page<
   const groupByRoute = groups.find((group) => group.memberId === memberId)
 
   useEffect(() => {
+    if (loading) return
+
     if (groupByRoute) {
       setSelectedMemberId(groupByRoute.memberId)
       setSelectedQuestionGroup(groupByRoute)
@@ -266,7 +268,7 @@ const TasksPage: Page<
     history.replace('/questions')
     setSelectedQuestionGroup(null)
     setSelectedMemberId(null)
-  }, [memberId, groupByRoute])
+  }, [groupByRoute])
 
   const selectQuestionGroupHandler = (group: QuestionGroup | null) => {
     setSelectedQuestionGroup(group)
