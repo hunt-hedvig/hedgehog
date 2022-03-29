@@ -12,7 +12,6 @@ import { FilterSelect } from 'portals/hope/features/questions/FilterSelect'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
-import { UserSettingKey } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
 import { useSelectedFilters } from '../../features/questions/hooks/use-selected-filters'
 
@@ -32,9 +31,9 @@ const ConversationsOnboardingPage: Page = () => {
   const history = useHistory()
 
   useEffect(() => {
-    if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
-      updateSetting(UserSettingKey.FeatureFlags, {
-        ...settings[UserSettingKey.FeatureFlags],
+    if (!settings.featureFlags?.conversations) {
+      updateSetting('featureFlags', {
+        ...settings.featureFlags,
         conversations: true,
       })
 
@@ -48,7 +47,7 @@ const ConversationsOnboardingPage: Page = () => {
     })
   }, [])
 
-  if (!settings[UserSettingKey.FeatureFlags]?.conversations) {
+  if (!settings.featureFlags?.conversations) {
     return null
   }
 

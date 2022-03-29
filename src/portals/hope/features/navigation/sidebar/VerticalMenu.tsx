@@ -21,7 +21,6 @@ import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
-import { UserSettingKey } from 'types/generated/graphql'
 import { CheckedInCard } from 'portals/hope/features/navigation/sidebar/CheckedInCard'
 
 const Wrapper = styled.div<{ collapsed: boolean }>`
@@ -153,7 +152,7 @@ export const VerticalMenu: React.FC = () => {
   )
   const [locations, setLocations] = useState<string[]>([])
   const [conversationsEnabled] = useState<boolean>(
-    settings[UserSettingKey.FeatureFlags]?.conversations,
+    settings.featureFlags?.conversations,
   )
 
   const { register } = useNavigation()

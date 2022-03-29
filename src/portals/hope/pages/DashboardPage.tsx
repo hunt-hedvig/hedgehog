@@ -16,7 +16,7 @@ import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'portals/hope/features/dashboard/Greeting'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React, { useState } from 'react'
-import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
+import { DashboardNumbers } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
 import gql from 'graphql-tag'
 import { Link } from 'react-router-dom'
@@ -174,7 +174,7 @@ const DashboardPage: Page = () => {
                 history.push('/claims/list/1')
               },
               neighbors: {
-                right: settings[UserSettingKey.FeatureFlags]?.conversations
+                right: settings.featureFlags?.conversations
                   ? 'ConversationsMetric'
                   : 'QuestionsMetric',
               },
@@ -183,7 +183,7 @@ const DashboardPage: Page = () => {
             <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
             <MetricName>claims</MetricName>
           </Metric>
-          {settings[UserSettingKey.FeatureFlags]?.conversations ? (
+          {settings.featureFlags?.conversations ? (
             <Metric
               to="/conversations"
               {...register('ConversationsMetric', {
@@ -233,7 +233,7 @@ const DashboardPage: Page = () => {
               neighbors: {
                 left: index
                   ? templateFilters[index - 1].name
-                  : settings[UserSettingKey.FeatureFlags]?.conversations
+                  : settings.featureFlags?.conversations
                   ? 'ConversationsMetric'
                   : 'QuestionsMetric',
                 right:
@@ -265,7 +265,7 @@ const DashboardPage: Page = () => {
               neighbors: {
                 left: templateFilters.length
                   ? templateFilters[templateFilters.length - 1].name
-                  : settings[UserSettingKey.FeatureFlags]?.conversations
+                  : settings.featureFlags?.conversations
                   ? 'ConversationsMetric'
                   : 'QuestionsMetric',
               },

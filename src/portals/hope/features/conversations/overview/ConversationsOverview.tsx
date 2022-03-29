@@ -11,7 +11,7 @@ import {
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
+import { QuestionGroup, UserSettings } from 'types/generated/graphql'
 import { ConversationItem } from './ConversationItem'
 
 const ConversationWrapper = styled.div`
@@ -30,7 +30,10 @@ export const ConversationsOverview: React.FC<{
   currentMemberId?: string
   currentQuestionOrder: number
   filters: ReadonlyArray<FilterStateType>
-  setFilters: (filter: FilterStateType, settingField: UserSettingKey) => void
+  setFilters: (
+    filter: FilterStateType,
+    settingField: keyof UserSettings,
+  ) => void
 }> = ({ filteredGroups, currentMemberId, filters, setFilters }) => {
   const { settings, updateSetting } = useMe()
   const history = useHistory()
@@ -46,7 +49,7 @@ export const ConversationsOverview: React.FC<{
   )
   useEffect(() => {
     if (!settings.featureFlags?.conversations) {
-      updateSetting(UserSettingKey.FeatureFlags, {
+      updateSetting('featureFlags', {
         ...settings.featureFlags,
         conversations: true,
       })
@@ -81,7 +84,7 @@ export const ConversationsOverview: React.FC<{
             onClick={() =>
               confirm('Do you want to go back to the questions tab?').then(
                 () => {
-                  updateSetting(UserSettingKey.FeatureFlags, {
+                  updateSetting('featureFlags', {
                     ...settings.featureFlags,
                     conversations: false,
                   }).then(() => {

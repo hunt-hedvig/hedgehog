@@ -7,7 +7,7 @@ import {
 } from 'portals/hope/features/questions/FilterSelect'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
-import { UserSettingKey } from 'types/generated/graphql'
+import { UserSettings } from 'src/types/generated/graphql'
 
 const Container = styled(Modal)`
   width: 60rem;
@@ -35,7 +35,7 @@ const Container = styled(Modal)`
 
 export const FilterModal: React.FC<{
   onClose: () => void
-  onToggle: (filter: FilterStateType, settingField: UserSettingKey) => void
+  onToggle: (filter: FilterStateType, settingField: keyof UserSettings) => void
   filters: number[]
 }> = ({ onClose, onToggle, filters }) => {
   return (

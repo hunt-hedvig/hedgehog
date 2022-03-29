@@ -32,7 +32,7 @@ import { useHistory } from 'react-router'
 import {
   ClaimComplexity,
   ClaimState,
-  UserSettingKey,
+  UserSettings,
 } from 'types/generated/graphql'
 
 export const FilterWrapper = styled.div`
@@ -146,7 +146,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   const [outcomeOpen, setOutcomeOpen] = useState(false)
 
   const updateFilterHandler = (
-    field: UserSettingKey,
+    field: keyof UserSettings,
     value: string | number,
   ) => {
     if (page && page !== '1') {
@@ -176,34 +176,32 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   }
 
   const updateOutcomeFilterHandler = (value: string | null) => {
-    const field = UserSettingKey.OutcomeFilterClaims
-
-    if (!settings[field]) {
-      updateSetting(field, [value])
+    if (!settings.outcomeFilterClaims) {
+      updateSetting('outcomeFilterClaims', [value])
     }
 
-    const currentValue = settings[field]
+    const currentValue = settings.outcomeFilterClaims
 
     if (!currentValue || typeof currentValue !== 'object') {
       return
     }
 
     if (!value) {
-      updateSetting(field, [])
+      updateSetting('outcomeFilterClaims', [])
 
       return
     }
 
     if (currentValue.includes(value)) {
       updateSetting(
-        field,
+        'outcomeFilterClaims',
         currentValue.filter((item) => item !== value),
       )
 
       return
     }
 
-    updateSetting(field, [...currentValue, value])
+    updateSetting('outcomeFilterClaims', [...currentValue, value])
   }
 
   const updateNumberMemberSetting = (state: number) => {
@@ -213,7 +211,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       settings.memberGroupsFilterClaims.includes(numberMemberGroups - 1)
     ) {
       updateSetting(
-        UserSettingKey.MemberGroupsFilterClaims,
+        'memberGroupsFilterClaims',
         settings.memberGroupsFilterClaims.filter((group) => group !== state),
       )
     }
@@ -232,7 +230,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           const navigation = register(stateName, {
             focus: index === 0 ? Keys.F : undefined,
             resolve: () => {
-              updateFilterHandler(UserSettingKey.ClaimStatesFilterClaims, state)
+              updateFilterHandler('claimStatesFilterClaims', state)
             },
             neighbors: {
               up: index ? states[index - 1] : undefined,
@@ -247,10 +245,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 label={stateName}
                 checked={settings.claimStatesFilterClaims?.includes(state)}
                 onChange={() => {
-                  updateFilterHandler(
-                    UserSettingKey.ClaimStatesFilterClaims,
-                    state,
-                  )
+                  updateFilterHandler('claimStatesFilterClaims', state)
                 }}
               />
               <MemberGroupColorBadge
@@ -276,10 +271,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
 
           const navigation = register(complexityName, {
             resolve: () => {
-              updateFilterHandler(
-                UserSettingKey.ClaimComplexityFilterClaims,
-                complexity,
-              )
+              updateFilterHandler('claimComplexityFilterClaims', complexity)
             },
             neighbors: {
               left: Object.keys(ClaimState)[0],
@@ -305,10 +297,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                   complexity,
                 )}
                 onChange={() => {
-                  updateFilterHandler(
-                    UserSettingKey.ClaimComplexityFilterClaims,
-                    complexity,
-                  )
+                  updateFilterHandler('claimComplexityFilterClaims', complexity)
                 }}
               />
               <span style={{ marginLeft: '0.5rem' }}>
@@ -325,7 +314,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           const navigation = register(`Member Groups ${option.label}`, {
             resolve: () => {
               updateNumberMemberSetting(option.value)
-              updateSetting(UserSettingKey.NumberOfMemberGroups, option.value)
+              updateSetting('numberOfMemberGroups', option.value)
               setNumberMemberGroups(option.value)
             },
             neighbors: {
@@ -352,10 +341,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 label={option.label}
                 onChange={() => {
                   updateNumberMemberSetting(option.value)
-                  updateSetting(
-                    UserSettingKey.NumberOfMemberGroups,
-                    option.value,
-                  )
+                  updateSetting('numberOfMemberGroups', option.value)
                   setNumberMemberGroups(option.value)
                 }}
                 checked={option.value === numberMemberGroups || false}
@@ -370,10 +356,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         {range(numberMemberGroups).map((filterNumber, index) => {
           const navigation = register(`Member Number ${filterNumber}`, {
             resolve: () => {
-              updateFilterHandler(
-                UserSettingKey.MemberGroupsFilterClaims,
-                filterNumber,
-              )
+              updateFilterHandler('memberGroupsFilterClaims', filterNumber)
             },
             neighbors: {
               left: `Member Groups ${numberMemberGroupsOptions[0].label}`,
@@ -403,10 +386,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                   filterNumber,
                 )}
                 onChange={() => {
-                  updateFilterHandler(
-                    UserSettingKey.MemberGroupsFilterClaims,
-                    filterNumber,
-                  )
+                  updateFilterHandler('memberGroupsFilterClaims', filterNumber)
                 }}
               />
               <MemberGroupColorBadge
@@ -426,7 +406,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
 
           const navigation = register(marketName, {
             resolve: () => {
-              updateFilterHandler(UserSettingKey.MarketFilterClaims, market)
+              updateFilterHandler('marketFilterClaims', market)
             },
             neighbors: {
               left: `Member Number ${range(numberMemberGroups)[0]}`,
@@ -442,7 +422,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 label={marketName}
                 checked={settings.marketFilterClaims?.includes(market)}
                 onChange={() => {
-                  updateFilterHandler(UserSettingKey.MarketFilterClaims, market)
+                  updateFilterHandler('marketFilterClaims', market)
                 }}
               />
               <span style={{ marginLeft: '0.5rem' }}>

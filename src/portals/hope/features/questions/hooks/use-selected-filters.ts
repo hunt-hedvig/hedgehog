@@ -1,6 +1,6 @@
 import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
-import { UserSettingKey } from 'types/generated/graphql'
+import { UserSettings } from 'types/generated/graphql'
 import { useState } from 'react'
 import { Market } from 'portals/hope/features/config/constants'
 import { FilterStateType } from 'portals/hope/features/questions/FilterSelect'
@@ -23,7 +23,7 @@ export const useSelectedFilters = () => {
 
   const toggleFilterHandler = (
     filter: FilterStateType,
-    settingField: UserSettingKey,
+    settingField: keyof UserSettings,
   ) => {
     const currentValue = settings[settingField]
 

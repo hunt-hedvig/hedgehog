@@ -18,7 +18,7 @@ import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-numb
 import React from 'react'
 import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
-import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
+import { QuestionGroup, UserSettings } from 'types/generated/graphql'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 
@@ -93,7 +93,7 @@ const CountBadge = styled.div<{ selected: boolean }>`
 
 export const FilterSelect: React.FC<{
   filters: ReadonlyArray<FilterStateType>
-  onToggle: (filter: FilterStateType, settingField: UserSettingKey) => void
+  onToggle: (filter: FilterStateType, settingField: keyof UserSettings) => void
   animationDelay?: number
   animationItemDelay?: number
   push?: 'left' | 'right'
@@ -129,7 +129,7 @@ export const FilterSelect: React.FC<{
           const navigation = register(`Member Group ${memberGroup} Filter`, {
             focus: index === 0 ? Keys.F : undefined,
             resolve: () => {
-              onToggle(memberGroup, UserSettingKey.MemberGroupsFilterQuestions)
+              onToggle(memberGroup, 'memberGroupsFilterQuestions')
             },
             neighbors: {
               left: index
@@ -154,10 +154,7 @@ export const FilterSelect: React.FC<{
               <FilterButton
                 small={small}
                 onClick={() =>
-                  onToggle(
-                    memberGroup,
-                    UserSettingKey.MemberGroupsFilterQuestions,
-                  )
+                  onToggle(memberGroup, 'memberGroupsFilterQuestions')
                 }
                 selected={filters.includes(memberGroup)}
               >
@@ -202,10 +199,7 @@ export const FilterSelect: React.FC<{
                   small={small}
                   selected={filters.includes(FilterState[market])}
                   onClick={() =>
-                    onToggle(
-                      FilterState[market],
-                      UserSettingKey.MarketFilterQuestions,
-                    )
+                    onToggle(FilterState[market], 'marketFilterQuestions')
                   }
                 >
                   {convertEnumToTitle(market)}{' '}
@@ -234,10 +228,7 @@ export const FilterSelect: React.FC<{
           }ms`}
           {...register('Open Claims Filter', {
             resolve: () => {
-              onToggle(
-                FilterState.HasOpenClaim,
-                UserSettingKey.ClaimStatesFilterQuestions,
-              )
+              onToggle(FilterState.HasOpenClaim, 'claimStatesFilterQuestions')
             },
             neighbors: {
               up: `Market ${Object.keys(Market)[0]} Filter`,
@@ -249,10 +240,7 @@ export const FilterSelect: React.FC<{
             small={small}
             selected={filters.includes(FilterState.HasOpenClaim)}
             onClick={() =>
-              onToggle(
-                FilterState.HasOpenClaim,
-                UserSettingKey.ClaimStatesFilterQuestions,
-              )
+              onToggle(FilterState.HasOpenClaim, 'claimStatesFilterQuestions')
             }
           >
             Open claims{' '}
@@ -270,10 +258,7 @@ export const FilterSelect: React.FC<{
           }ms`}
           {...register('No Claims Filter', {
             resolve: () => {
-              onToggle(
-                FilterState.NoOpenClaim,
-                UserSettingKey.ClaimStatesFilterQuestions,
-              )
+              onToggle(FilterState.NoOpenClaim, 'claimStatesFilterQuestions')
             },
             neighbors: {
               up: `Market ${
@@ -287,10 +272,7 @@ export const FilterSelect: React.FC<{
             small={small}
             selected={filters.includes(FilterState.NoOpenClaim)}
             onClick={() =>
-              onToggle(
-                FilterState.NoOpenClaim,
-                UserSettingKey.ClaimStatesFilterQuestions,
-              )
+              onToggle(FilterState.NoOpenClaim, 'claimStatesFilterQuestions')
             }
           >
             No claims{' '}
