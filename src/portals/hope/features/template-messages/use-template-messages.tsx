@@ -16,6 +16,10 @@ import {
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import {
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 
 gql`
   query GetTemplates($locales: [String!]!) {
@@ -129,6 +133,15 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [locale, setLocale] = useState<PickedLocale>(PickedLocale.SvSe)
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
+
+  const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isWPressed = useKeyIsPressed(Keys.W)
+
+  useEffect(() => {
+    if (isOptionPressed && isWPressed && !showTemplateMessages) {
+      setShowTemplateMessages(true)
+    }
+  }, [isOptionPressed, isWPressed])
 
   const [localesDisplayed, setLocalesDisplayed] = useInsecurePersistentState<
     LocaleDisplayed[]
