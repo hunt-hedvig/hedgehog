@@ -9,6 +9,7 @@ import { persistenceMapper } from 'apollo/persistence/mapper'
 import { createPersistLink } from 'apollo/persistence/link'
 import gql from 'graphql-tag'
 import { BatchHttpLink } from '@apollo/client/link/batch-http'
+import { canRenewToken } from 'apollo/lock'
 
 gql`
   # Declare custom directive for IDE completion; don't want this to actually be resolved server-side
@@ -93,47 +94,11 @@ if (currentVersion === SCHEMA_VERSION) {
   localStorage.setItem(SCHEMA_VERSION_KEY, SCHEMA_VERSION)
 }
 
-/*
-const storeTokenRenewalDate = () => {
-  const RENEW_TOKEN_MINUTES = 10
-  const date = addMinutes(new Date(), RENEW_TOKEN_MINUTES)
-  localStorage.setItem('_tk_r', date.toISOString())
-}
-
-const renewAccessTokenLink = new ApolloLink((operation, forward) => {
-  const nextRefetch = localStorage.getItem('_tk_r')
-
-  if (!nextRefetch) {
-    storeTokenRenewalDate()
-
-    refreshAccessToken().catch((e) => {
-      console.error('Failed to refresh access token', e)
-      toast.loading('Authentication failed')
-      window.location.pathname = '/login/logout'
-    })
-    return forward(operation)
-  }
-
-  const parsedNextRefetch = parseISO(nextRefetch)
-
-  if (parsedNextRefetch < new Date()) {
-    storeTokenRenewalDate()
-    refreshAccessToken().catch((e) => {
-      console.error('Failed to refresh access token', e)
-      toast.loading('Authentication failed')
-      window.location.pathname = '/login/logout'
-    })
-  }
-
-  return forward(operation)
-})
-*/
-
 export const client = new ApolloClient({
   link: ApolloLink.from([
     onError((error) => {
       if (
-        document.hidden ||
+        !canRenewToken() ||
         ![401, 403].includes(
           (error?.networkError as ServerError)?.response?.status,
         )
@@ -147,7 +112,6 @@ export const client = new ApolloClient({
         window.location.pathname = '/login/logout'
       })
     }),
-    // renewAccessTokenLink, FIXME: Logs out the user if multiple tabs open when RT expires
     addTimezoneOffsetHeader,
     createPersistLink(),
     new BatchHttpLink({

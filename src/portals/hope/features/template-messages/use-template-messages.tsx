@@ -405,12 +405,61 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
               pinned: !changedTemplate.pinned,
             },
           },
+          update: (
+            cache: ApolloCache<NormalizedCacheObject>,
+            { data: response },
+          ) => {
+            if (!response?.togglePinStatus) {
+              return
+            }
+
+            changedTemplate.messages
+              .filter(
+                (message) =>
+                  message.language !== formatLocale(PickedLocale.EnSe, true),
+              )
+              .map((message) => message.language)
+              .forEach((language) => {
+                const cachedData = cache.readQuery({
+                  query: GetTemplatesDocument,
+                  variables: {
+                    locales: [language],
+                  },
+                }) as GetTemplatesQuery
+
+                const cachedTemplates =
+                  (cachedData as GetTemplatesQuery)?.templates ?? []
+
+                cache.writeQuery({
+                  query: GetTemplatesDocument,
+                  data: {
+                    templates: [
+                      ...cachedTemplates.filter(
+                        (temp) => temp.id !== changedTemplate.id,
+                      ),
+                      {
+                        ...changedTemplate,
+                        pinned: !changedTemplate.pinned,
+                      },
+                    ],
+                  },
+                  variables: {
+                    locales: [language],
+                  },
+                })
+              })
+          },
         }),
         {
           loading: 'Pinning template',
-          success: () => {
+          success: (response) => {
             PushUserAction('template', 'pinned', null, null)
-            return 'Template pinned'
+
+            const status = response.data?.togglePinStatus.pinned
+              ? 'pinned'
+              : 'unpinned'
+
+            return 'Template ' + status
           },
           error: 'Could not pin template',
         },

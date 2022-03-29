@@ -100,11 +100,8 @@ export const TaskChat: React.FC<{
       </div>
       <div
         style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: '100%',
-          minHeight: '10rem',
+          padding: '1rem',
+          overflow: 'hidden',
         }}
       >
         <TaskChatInput

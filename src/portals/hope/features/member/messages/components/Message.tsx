@@ -22,7 +22,7 @@ const MessageRow = styled.div<
 `
 
 const MessageBox = styled.div`
-  max-width: 400px;
+  max-width: 100%;
 `
 
 interface WithLeft {
@@ -155,8 +155,17 @@ export const Message = React.forwardRef<
       <MessageBox>
         <MessageBody left={left}>
           {isImage(content.text) && <Image src={content.text} />}
-          {!isImage(content.text) && <Linkify>{content.text}</Linkify>}
-          <br />
+          {!isImage(content.text) && (
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a target="_blank" href={decoratedHref} key={key}>
+                  {decoratedText}
+                </a>
+              )}
+            >
+              {content.text}
+            </Linkify>
+          )}
           <MessageContent content={content} />
         </MessageBody>
         <MessageInfo left={left}>
