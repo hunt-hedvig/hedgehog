@@ -29,7 +29,7 @@ import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-numb
 import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { ClaimState, ClaimComplexity } from 'types/generated/graphql'
+import { ClaimState } from 'types/generated/graphql'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;
@@ -98,9 +98,8 @@ export const LargeClaimsList: React.FC<{
   useEffect(() => {
     const settingsFilters = {
       filterCreatedBeforeOrOnDate: date,
-      filterClaimStates: settings.claimStatesFilterClaims as ClaimState[],
-      filterComplexities:
-        settings.claimComplexityFilterClaims as ClaimComplexity[],
+      filterClaimStates: settings.claimStatesFilterClaims,
+      filterComplexities: settings.claimComplexityFilterClaims,
       filterNumberOfMemberGroups: settings.numberOfMemberGroups,
       filterSelectedMemberGroups: settings.memberGroupsFilterClaims,
       filterMarkets: settings.marketFilterClaims,

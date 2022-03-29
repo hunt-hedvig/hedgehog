@@ -379,8 +379,8 @@ type UserSettings {
     darkMode: Boolean
     featureFlags: JSON
     numberOfMemberGroups: Int
-    claimComplexityFilterClaims: [String!]
-    claimStatesFilterClaims: [String!]
+    claimComplexityFilterClaims: [ClaimComplexity!]
+    claimStatesFilterClaims: [ClaimState!]
     claimStatesFilterQuestions: [Int!]
     memberGroupsFilterClaims: [Int!]
     memberGroupsFilterQuestions: [Int!]
