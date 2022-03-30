@@ -121,10 +121,11 @@ export const TemplateMessagesModal: React.FC<{
 
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
   const isOptionPressed = useKeyIsPressed(Keys.Option)
-  const isShiftPressed = useKeyIsPressed(Keys.Shift)
-  const isAPressed = useKeyIsPressed(Keys.A)
   const isWPressed = useKeyIsPressed(Keys.W)
+  const isDPressed = useKeyIsPressed(Keys.D)
   const isPPressed = useKeyIsPressed(Keys.P)
+  const isEPressed = useKeyIsPressed(Keys.E)
+  const isNPressed = useKeyIsPressed(Keys.N)
 
   const {
     select,
@@ -164,10 +165,11 @@ export const TemplateMessagesModal: React.FC<{
   }, [isOptionPressed, isWPressed])
 
   useEffect(() => {
-    if (isOptionPressed && isShiftPressed && isAPressed) {
+    if (isNPressed) {
+      focus('')
       setIsCreating(true)
     }
-  }, [isOptionPressed, isShiftPressed, isAPressed])
+  }, [isNPressed])
 
   const { focus, register, cursor } = useNavigation()
 
@@ -246,23 +248,58 @@ export const TemplateMessagesModal: React.FC<{
       )
       .filter((template) => (pinned ? template.pinned : !template.pinned))
 
-  useEffect(() => {
-    if (isPPressed && document.activeElement !== searchRef.current) {
-      const currentTemplateIndex = cursor?.split(' ')[2]
+  const getFocusedTemplate = () => {
+    const currentTemplateIndex = cursor?.split(' ')[2]
 
-      if (!currentTemplateIndex) {
+    if (!currentTemplateIndex) {
+      return
+    }
+
+    const focusedTemplate =
+      getFilteredTemplates(true)[+currentTemplateIndex] ||
+      getFilteredTemplates(false)[
+        +currentTemplateIndex - getFilteredTemplates(true).length
+      ]
+
+    return focusedTemplate
+  }
+
+  useEffect(() => {
+    if (isPPressed) {
+      const focusedTemplate = getFocusedTemplate()
+
+      if (!focusedTemplate) {
         return
       }
 
-      const selectedTemplate =
-        getFilteredTemplates(true)[+currentTemplateIndex] ||
-        getFilteredTemplates(false)[
-          +currentTemplateIndex - getFilteredTemplates(true).length
-        ]
-
-      pinHandler(selectedTemplate.id)
+      pinHandler(focusedTemplate.id)
     }
   }, [isPPressed])
+
+  useEffect(() => {
+    if (isDPressed) {
+      const focusedTemplate = getFocusedTemplate()
+
+      if (!focusedTemplate) {
+        return
+      }
+
+      deleteHandler(focusedTemplate.id)
+    }
+  }, [isDPressed])
+
+  useEffect(() => {
+    if (isEPressed) {
+      const focusedTemplate = getFocusedTemplate()
+
+      if (!focusedTemplate) {
+        return
+      }
+
+      focus('')
+      setEditingTemplate(focusedTemplate)
+    }
+  }, [isEPressed])
 
   if (isCreating) {
     return (
@@ -277,7 +314,9 @@ export const TemplateMessagesModal: React.FC<{
           isModal
           isCreating
           onCreate={(newTemplate: UpsertTemplateInput) => {
-            createTemplate(newTemplate, () => setIsCreating(false))
+            createTemplate(newTemplate)
+            setIsCreating(false)
+            setEditingTemplate(null)
           }}
           onClose={() => {
             setIsCreating(false)
