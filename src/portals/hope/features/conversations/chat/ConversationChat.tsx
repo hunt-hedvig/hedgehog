@@ -153,15 +153,13 @@ export const ConversationChat: React.FC<{
     ],
   })
 
-  const { hinting, templateHint, onChange, onKeyDown } = useTemplatesHinting(
-    message,
-    setMessage,
-    isMetaKey,
-  )
+  const { hinting, templateHint, onChange, onKeyDown, clearHinting } =
+    useTemplatesHinting(message, setMessage, isMetaKey)
   const { show, selected } = useTemplateMessages()
 
   useEffect(() => {
     if (selected) {
+      clearHinting()
       setMessage(selected)
     }
   }, [selected])

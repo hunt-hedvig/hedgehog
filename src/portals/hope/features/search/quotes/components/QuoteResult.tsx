@@ -108,7 +108,9 @@ const BreachedGuidelineTag = styled.div`
   text-align: center;
 `
 
-export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
+export const QuoteResult: React.FC<{
+  quote: QuoteSearchHit
+}> = ({ quote }) => {
   const { data, loading } = useQuoteSearchQuoteQuery({
     variables: { id: quote.id ?? '' },
   })
@@ -135,6 +137,7 @@ export const QuoteResult: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
           ) : (
             <div className="type-placeholder">No product type</div>
           )}
+
           {quote?.fullName && quote?.fullName !== ' ' ? (
             <div className="name">{quote?.fullName}</div>
           ) : (

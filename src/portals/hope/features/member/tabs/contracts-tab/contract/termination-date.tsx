@@ -48,6 +48,7 @@ export enum TerminationReason {
   Unknown = 'UNKNOWN',
   RenewalPrice = 'RENEWAL_PRICE',
   NoFeedback = 'NO_FEEDBACK',
+  Switcher = 'SWITCHER',
 }
 
 const initialTerminationDate = (contract: Contract): string =>

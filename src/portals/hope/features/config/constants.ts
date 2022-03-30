@@ -60,6 +60,7 @@ export enum InsuranceType {
   NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
   NorwegianTravel = 'NORWEGIAN_TRAVEL',
   NorwegianAccident = 'NORWEGIAN_ACCIDENT',
+  NorwegianHouse = 'NORWEGIAN_HOUSE',
   DanishHomeContent = 'DANISH_HOME_CONTENT',
   DanishTravel = 'DANISH_TRAVEL',
   DanishAccident = 'DANISH_ACCIDENT',
@@ -88,7 +89,10 @@ export const QuoteProductTypeContractMap: Record<
     InsuranceType.SwedishAccident,
     InsuranceType.NorwegianAccident,
   ],
-  [QuoteProductType.House]: [InsuranceType.SwedishHouse],
+  [QuoteProductType.House]: [
+    InsuranceType.SwedishHouse,
+    InsuranceType.NorwegianHouse,
+  ],
   [QuoteProductType.Object]: [],
   [QuoteProductType.Travel]: [
     InsuranceType.NorwegianTravel,
@@ -106,6 +110,7 @@ export const ContractMarketTypes: Record<Market, InsuranceType[]> = {
     InsuranceType.NorwegianHomeContent,
     InsuranceType.NorwegianTravel,
     InsuranceType.NorwegianAccident,
+    InsuranceType.NorwegianHouse,
   ],
   DENMARK: [
     InsuranceType.DanishHomeContent,
@@ -129,6 +134,7 @@ export enum TypeOfContract {
   NoTravel = 'NO_TRAVEL',
   NoTravelYouth = 'NO_TRAVEL_YOUTH',
   NoAccident = 'NO_ACCIDENT',
+  NoHouse = 'NO_HOUSE',
   DkHomeContentOwn = 'DK_HOME_CONTENT_OWN',
   DkHomeContentRent = 'DK_HOME_CONTENT_RENT',
   DkHomeContentStudentOwn = 'DK_HOME_CONTENT_STUDENT_OWN',
@@ -154,6 +160,7 @@ export const TypeOfContractType: Record<TypeOfContract, InsuranceType> = {
   [TypeOfContract.NoTravel]: InsuranceType.NorwegianTravel,
   [TypeOfContract.NoTravelYouth]: InsuranceType.NorwegianTravel,
   [TypeOfContract.NoAccident]: InsuranceType.NorwegianAccident,
+  [TypeOfContract.NoHouse]: InsuranceType.NorwegianHouse,
   [TypeOfContract.DkHomeContentOwn]: InsuranceType.DanishHomeContent,
   [TypeOfContract.DkHomeContentRent]: InsuranceType.DanishHomeContent,
   [TypeOfContract.DkHomeContentStudentOwn]: InsuranceType.DanishHomeContent,
