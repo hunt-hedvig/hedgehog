@@ -57,15 +57,14 @@ const CheckInPage: Page = () => {
 
   return (
     <>
-      {showModal && (
-        <UpdateUserMarketModal
-          onClose={() => setShowModal(false)}
-          onSubmit={() => {
-            toast.success('You are now checked-in')
-            checkIn()
-          }}
-        />
-      )}
+      <UpdateUserMarketModal
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={() => {
+          toast.success('You are now checked-in')
+          checkIn()
+        }}
+      />
       <FadeIn>
         <MessageCard>
           <SecondLevelHeadline>

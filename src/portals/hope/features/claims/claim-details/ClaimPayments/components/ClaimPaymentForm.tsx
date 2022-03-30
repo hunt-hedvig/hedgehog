@@ -372,8 +372,9 @@ export const ClaimPaymentForm: React.FC<{
           <SubmitButton>Create payment</SubmitButton>
         </div>
 
-        {isConfirming && member?.contractMarketInfo && (
+        {member?.contractMarketInfo && (
           <PaymentConfirmationModal
+            visible={isConfirming}
             onClose={() => {
               setIsConfirming(false)
               clearFormHandler()

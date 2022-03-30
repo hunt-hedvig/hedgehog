@@ -144,12 +144,11 @@ export const ClaimsTemplates: React.FC<ClaimsTemplatesProps> = ({
         </AddTemplateCard>
       </List>
 
-      {createFilter && (
-        <CreateFilterModal
-          onClose={() => setCreateFilter(false)}
-          onSave={onCreate}
-        />
-      )}
+      <CreateFilterModal
+        visible={createFilter}
+        onClose={() => setCreateFilter(false)}
+        onSave={onCreate}
+      />
     </Wrapper>
   )
 }

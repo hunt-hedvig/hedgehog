@@ -21,11 +21,20 @@ interface PaymentConfirmationModalProps {
   identified: boolean
   market?: string | null
   isClaimClosed: boolean
+  visible: boolean
 }
 
 export const PaymentConfirmationModal: React.FC<
   PaymentConfirmationModalProps
-> = ({ onClose, onSubmit, amount, identified, market, isClaimClosed }) => {
+> = ({
+  onClose,
+  onSubmit,
+  amount,
+  identified,
+  market,
+  visible,
+  isClaimClosed,
+}) => {
   const [closeClaim, setCloseClaim] = useState(false)
   const [confirmAmount, setConfirmAmount] = useState('')
 
@@ -36,7 +45,11 @@ export const PaymentConfirmationModal: React.FC<
   }
 
   return (
-    <Modal style={{ padding: '1rem', width: 500 }} onClose={onClose}>
+    <Modal
+      style={{ padding: '1rem', width: 500 }}
+      onClose={onClose}
+      visible={visible}
+    >
       {!identified && market === Market.Norway && (
         <Explanation>
           ⚠️ Please note that this member is not identified
