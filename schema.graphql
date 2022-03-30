@@ -284,12 +284,21 @@ type QuoteSearchHit {
   city: String
 }
 
+type QuoteCartSearchHit {
+  id: ID!
+  quotes: [QuoteSearchHit!]!
+}
+
 type SearchResultHighlight {
   field: String!
   values: [String!]!
 }
 
-union SearchHit = MemberSearchHit | NoteSearchHit | QuoteSearchHit
+union SearchHit =
+    MemberSearchHit
+  | NoteSearchHit
+  | QuoteSearchHit
+  | QuoteCartSearchHit
 
 type SearchResult {
   hit: SearchHit!
