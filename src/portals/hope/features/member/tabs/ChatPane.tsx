@@ -95,22 +95,16 @@ export const ChatPane: React.FC<{ memberId: string }> = ({ memberId }) => {
       variants={variants}
       transition={{ bounce: 0 }}
     >
-      {isVisible ? (
+      <ChatHeader
+        visible={isVisible}
+        onResizeClick={onResizeClick}
+        isHinting={isHintingOption}
+      />
+      {isVisible && (
         <>
-          <ChatHeader
-            visible={isVisible}
-            onResizeClick={onResizeClick}
-            isHinting={isHintingOption}
-          />
           <MessageListWithBackground memberId={memberId} />
           <ChatPanel memberId={memberId} />
         </>
-      ) : (
-        <ChatHeader
-          visible={isVisible}
-          onResizeClick={onResizeClick}
-          isHinting={isHintingOption}
-        />
       )}
     </ChatContainer>
   )
