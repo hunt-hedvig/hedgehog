@@ -15,6 +15,7 @@ export const useTemplatesHinting = (
 ): {
   hinting: boolean
   templateHint: Template | null
+  clearHinting: () => void
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void
 } => {
@@ -67,18 +68,18 @@ export const useTemplatesHinting = (
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (
-      isPressing(e, Keys.Slash) &&
-      !hinting &&
-      !loading &&
-      !e.currentTarget.value
-    ) {
+    if (e.key === '/' && !hinting && !loading && !e.currentTarget.value) {
       e.preventDefault()
 
       setTemplateHint(searchTemplate(''))
       setMessage('/')
       setHinting(true)
       PushUserAction('template', 'hinting', null, null)
+    }
+
+    if (isPressing(e, Keys.Right) && hinting && templateHint && !loading) {
+      e.preventDefault()
+      setMessage('/' + templateHint.title)
     }
 
     if (
@@ -153,9 +154,15 @@ export const useTemplatesHinting = (
     }
   }
 
+  const clearHinting = () => {
+    setTemplateHint(null)
+    setHinting(false)
+  }
+
   return {
     hinting,
     templateHint,
+    clearHinting,
     onChange,
     onKeyDown,
   }

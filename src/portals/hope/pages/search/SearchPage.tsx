@@ -4,6 +4,7 @@ import { MemberSearch } from 'portals/hope/features/search/members/MemberSearch'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { SearchCategory } from 'portals/hope/features/search/components/SearchCategoryButtons'
 import { QuoteSearch } from 'portals/hope/features/search/quotes/QuoteSearch'
+import { QuoteCartSearch } from 'portals/hope/features/search/carts/QuoteCartSearch'
 
 const useQueryParams = () => {
   const { search } = useLocation()
@@ -19,11 +20,15 @@ const SearchPage: Page<
   const category = match?.params?.category ?? 'members'
   const queryParams = useQueryParams()
 
+  const query = queryParams.get('query') ?? ''
+
   switch (category) {
     case 'quotes':
-      return <QuoteSearch query={queryParams.get('query') ?? ''} />
+      return <QuoteSearch query={query} />
     case 'members':
-      return <MemberSearch query={queryParams.get('query') ?? ''} />
+      return <MemberSearch query={query} />
+    case 'carts':
+      return <QuoteCartSearch query={query} />
   }
 }
 

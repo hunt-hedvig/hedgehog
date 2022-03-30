@@ -21,7 +21,7 @@ const SearchCategoryButton = styled.button<{ selected?: boolean }>`
   cursor: pointer;
 `
 
-const searchCategories = ['members', 'quotes'] as const
+const searchCategories = ['members', 'quotes', 'carts'] as const
 export type SearchCategory = typeof searchCategories[number]
 
 export const SearchCategoryButtons: React.FC<{
