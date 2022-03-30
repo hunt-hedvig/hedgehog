@@ -124,6 +124,7 @@ export const TemplateMessagesModal: React.FC<{
   const isShiftPressed = useKeyIsPressed(Keys.Shift)
   const isAPressed = useKeyIsPressed(Keys.A)
   const isWPressed = useKeyIsPressed(Keys.W)
+  const isPPressed = useKeyIsPressed(Keys.P)
 
   const {
     select,
@@ -244,6 +245,24 @@ export const TemplateMessagesModal: React.FC<{
           : true,
       )
       .filter((template) => (pinned ? template.pinned : !template.pinned))
+
+  useEffect(() => {
+    if (isPPressed && document.activeElement !== searchRef.current) {
+      const currentTemplateIndex = cursor?.split(' ')[2]
+
+      if (!currentTemplateIndex) {
+        return
+      }
+
+      const selectedTemplate =
+        getFilteredTemplates(true)[+currentTemplateIndex] ||
+        getFilteredTemplates(false)[
+          +currentTemplateIndex - getFilteredTemplates(true).length
+        ]
+
+      pinHandler(selectedTemplate.id)
+    }
+  }, [isPPressed])
 
   if (isCreating) {
     return (
