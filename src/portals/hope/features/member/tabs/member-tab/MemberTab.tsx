@@ -256,47 +256,41 @@ export const MemberTab: React.FC<{
           </div>
         </Button>
       </ButtonWrapper>
-      {modalOpen && (
-        <EditMemberModal onClose={handleClose}>
-          <FormProvider {...form}>
-            <Form
-              onSubmit={handleSubmit}
-              onChange={(e) => {
-                const event = e as unknown as ChangeEvent<HTMLInputElement>
-                handleChange(event.target.name, event.target.value)
-              }}
-            >
-              <>
-                {Object.keys(memberInfoWithoutSsn).map((field) => (
-                  <React.Fragment key={field}>
-                    <Label>{getFieldName(field)}</Label>
-                    <FormInput
-                      name={field}
-                      key={field}
-                      disabled={isDisabled(field)}
-                      defaultValue={getFieldValue(
-                        member[
-                          field as keyof EditMemberInformationQuery['member']
-                        ],
-                      )}
-                    />
-                  </React.Fragment>
-                ))}
-              </>
-              <ButtonsGroup style={{ justifyContent: 'flex-end' }}>
-                <Button
-                  variant="secondary"
-                  type="button"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </Button>
-                <SubmitButton>Submit</SubmitButton>
-              </ButtonsGroup>
-            </Form>
-          </FormProvider>
-        </EditMemberModal>
-      )}
+      <EditMemberModal onClose={handleClose} visible={modalOpen}>
+        <FormProvider {...form}>
+          <Form
+            onSubmit={handleSubmit}
+            onChange={(e) => {
+              const event = e as unknown as ChangeEvent<HTMLInputElement>
+              handleChange(event.target.name, event.target.value)
+            }}
+          >
+            <>
+              {Object.keys(memberInfoWithoutSsn).map((field) => (
+                <React.Fragment key={field}>
+                  <Label>{getFieldName(field)}</Label>
+                  <FormInput
+                    name={field}
+                    key={field}
+                    disabled={isDisabled(field)}
+                    defaultValue={getFieldValue(
+                      member[
+                        field as keyof EditMemberInformationQuery['member']
+                      ],
+                    )}
+                  />
+                </React.Fragment>
+              ))}
+            </>
+            <ButtonsGroup style={{ justifyContent: 'flex-end' }}>
+              <Button variant="secondary" type="button" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <SubmitButton>Submit</SubmitButton>
+            </ButtonsGroup>
+          </Form>
+        </FormProvider>
+      </EditMemberModal>
     </FadeIn>
   ) : (
     <h1>No member info</h1>
