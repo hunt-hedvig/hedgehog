@@ -91,11 +91,11 @@ const SearchHitTag: React.FC<{
 export const MemberHitRow: React.FC<{
   result: ArrayElement<SearchQuery['search']>
 }> = ({ result }) => {
-  const { member, loading, groupBy, contracts } = useMemberSearchContracts(
-    result.hit.memberId ?? '',
-  )
-
   const hit = result.hit as MemberSearchHit
+
+  const { member, loading, groupBy, contracts } = useMemberSearchContracts(
+    hit.memberId ?? '',
+  )
 
   const contractsByStatus = groupBy('status')
 
@@ -106,7 +106,9 @@ export const MemberHitRow: React.FC<{
   return (
     <TableRow
       tabIndex={0}
-      onClick={() => window.open(`/members/${result.hit.memberId}/contracts`)}
+      onClick={() =>
+        hit.memberId && window.open(`/members/${hit.memberId}/contracts`)
+      }
     >
       <TableColumn style={{ verticalAlign: 'top' }}>
         <Flex direction="column">

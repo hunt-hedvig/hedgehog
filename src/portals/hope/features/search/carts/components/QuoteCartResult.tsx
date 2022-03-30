@@ -12,6 +12,7 @@ import {
   convertEnumOrSentenceToTitle,
   convertEnumToTitle,
 } from '@hedvig-ui/utils/text'
+import formatDate from 'date-fns/format'
 
 const Wrapper = styled.div`
   margin-bottom: 1rem;
@@ -93,6 +94,7 @@ gql`
 const QuoteResultRow: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
   const { data, loading } = useQuoteSearchQuoteQuery({
     variables: { id: quote.id ?? '' },
+    fetchPolicy: 'cache-first',
   })
 
   const price = data?.quote?.price
@@ -150,7 +152,20 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
 
     return quotes[0]
   }
+
+  const { data } = useQuoteSearchQuoteQuery({
+    variables: { id: firstQuote()?.id ?? '' },
+  })
+
   const fullName = firstQuote()?.fullName
+  const createdAt = data?.quote?.createdAt
+  const state = data?.quote?.state
+
+  const geoInfo = [
+    firstQuote()?.street,
+    firstQuote()?.city,
+    firstQuote()?.postalCode,
+  ].filter((q) => !!q)
 
   return (
     <Wrapper>
@@ -169,6 +184,37 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
         {quotes.map((quote) => (
           <QuoteResultRow quote={quote} />
         ))}
+      </Flex>
+      <Flex
+        style={{ marginTop: '1rem', padding: '0 0.75rem' }}
+        justify="space-between"
+      >
+        <div style={{ minWidth: '50%' }}>
+          <SmallLabel>Address</SmallLabel>
+          {geoInfo.length !== 0 ? (
+            <div>{geoInfo.join(', ')}</div>
+          ) : (
+            <Placeholder>Not available</Placeholder>
+          )}
+        </div>
+        <Flex justify="flex-end">
+          <div style={{ marginLeft: '2rem', marginRight: '2rem' }}>
+            <SmallLabel>Created at</SmallLabel>
+            {createdAt ? (
+              <div>{formatDate(new Date(createdAt), 'yyyy-MM-dd')}</div>
+            ) : (
+              <Placeholder>Not available</Placeholder>
+            )}
+          </div>
+          <Flex direction="column" align="flex-end">
+            <SmallLabel>State</SmallLabel>
+            {state ? (
+              <div>{convertEnumOrSentenceToTitle(state)}</div>
+            ) : (
+              <Placeholder>Not available</Placeholder>
+            )}
+          </Flex>
+        </Flex>
       </Flex>
     </Wrapper>
   )
