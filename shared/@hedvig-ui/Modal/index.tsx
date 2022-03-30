@@ -6,7 +6,7 @@ import {
   useKeyIsPressed,
 } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
-import { FadeIn, FadeInProps } from '../animations/fade-in'
+import { motion, HTMLMotionProps, AnimatePresence } from 'framer-motion'
 
 const getPosition = (
   firstCondition: 'top' | 'bottom' | 'left' | 'right',
@@ -19,7 +19,7 @@ const getPosition = (
     ? 'flex-end'
     : 'center'
 
-const Wrapper = styled.div<{
+const Wrapper = styled(motion.div)<{
   position?: 'top' | 'center' | 'bottom'
   side?: 'left' | 'center' | 'right'
   noDimBg?: boolean
@@ -42,7 +42,7 @@ const Wrapper = styled.div<{
   padding: 3rem;
 `
 
-const Container = styled(FadeIn)`
+const Container = styled(motion.div)`
   max-width: 90%;
   max-height: 90%;
 
@@ -61,17 +61,17 @@ export interface ModalAdditionalOptions {
   noDimBg?: boolean
 }
 
-export interface ModalProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    FadeInProps {
+export interface ModalProps extends HTMLMotionProps<'div'> {
   onClose: () => void
   options?: ModalAdditionalOptions
+  visible: boolean
 }
 
 export const Modal: React.FC<ModalProps> = ({
   onClose,
   children,
   options,
+  visible,
   ...props
 }) => {
   const modalRef = useRef<HTMLDivElement>(null)
@@ -84,11 +84,27 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <Portal>
-      <Wrapper {...options}>
-        <Container ref={modalRef} duration={props.duration || 250} {...props}>
-          {children}
-        </Container>
-      </Wrapper>
+      <AnimatePresence>
+        {visible && (
+          <Wrapper
+            key="modal-wrapper"
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            {...options}
+          >
+            <Container
+              ref={modalRef}
+              key="modal"
+              initial={{ opacity: 0, y: '-10%' }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: '-10%' }}
+              {...props}
+            >
+              {children}
+            </Container>
+          </Wrapper>
+        )}
+      </AnimatePresence>
     </Portal>
   )
 }

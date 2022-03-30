@@ -120,13 +120,12 @@ export const FilteredMetric: React.FC<FilteredMetricProps> = ({
           </Icon>
         </IconsWrapper>
       )}
-      {edit && (
-        <CreateFilterModal
-          onClose={() => setEdit(false)}
-          editableTemplate={template}
-          onSave={onEdit}
-        />
-      )}
+      <CreateFilterModal
+        visible={edit}
+        onClose={() => setEdit(false)}
+        editableTemplate={template}
+        onSave={onEdit}
+      />
     </Metric>
   )
 }
