@@ -40,6 +40,18 @@ gql`
           postalCode
           city
         }
+        ... on QuoteCartSearchHit {
+          id
+          quotes {
+            id
+            memberId
+            ssn
+            fullName
+            street
+            postalCode
+            city
+          }
+        }
       }
     }
   }
