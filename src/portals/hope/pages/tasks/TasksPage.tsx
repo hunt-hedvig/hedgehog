@@ -23,6 +23,7 @@ import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
 import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
 import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
 import { RouteComponentProps, useHistory } from 'react-router'
+import { motion } from 'framer-motion'
 import {
   formatLocale,
   useTemplateMessages,
@@ -93,7 +94,7 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
   }
 `
 
-const FilterBarItem = styled.button`
+const FilterBarItem = styled(motion.button)`
   background-color: transparent;
   transition: background-color 200ms;
   :hover {
@@ -117,7 +118,7 @@ const FilterBarItem = styled.button`
   }
 `
 
-const ListContainer = styled.div`
+const ListContainer = styled(motion.ul)`
   width: 100%;
   height: 100%;
   overflow-y: scroll;
@@ -126,9 +127,14 @@ const ListContainer = styled.div`
   }
 
   padding-bottom: 10rem;
+
+  & {
+    margin: 0;
+    padding: 0;
+  }
 `
 
-const ListItem = styled.div<{ selected?: boolean }>`
+const ListItem = styled(motion.li)<{ selected?: boolean }>`
   display: flex;
   font-size: 1.1rem;
   padding: 1.75rem 2.05rem;
@@ -320,7 +326,11 @@ const TasksPage: Page<
                   </TopBarItem>
                 )}
               </Flex>
-              <FilterBarItem onClick={() => setShowFilters(true)}>
+              <FilterBarItem
+                onClick={() => setShowFilters(true)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 Filters
               </FilterBarItem>
             </TopBar>
@@ -358,6 +368,8 @@ const TasksPage: Page<
 
                   return (
                     <ListItem
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       key={group.id}
                       onClick={() => selectQuestionGroupHandler(group)}
                       selected={
@@ -415,13 +427,12 @@ const TasksPage: Page<
         </TaskChatWrapper>
       </Container>
 
-      {showFilters && (
-        <FilterModal
-          onClose={() => setShowFilters(false)}
-          filters={filters}
-          onToggle={toggleFilter}
-        />
-      )}
+      <FilterModal
+        visible={showFilters}
+        onClose={() => setShowFilters(false)}
+        filters={filters}
+        onToggle={toggleFilter}
+      />
     </>
   )
 }
