@@ -120,6 +120,7 @@ export const TemplateMessagesModal: React.FC<{
   const searchRef = useRef<HTMLInputElement>(null)
 
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
   const isOptionPressed = useKeyIsPressed(Keys.Option)
   const isWPressed = useKeyIsPressed(Keys.W)
   const isDPressed = useKeyIsPressed(Keys.D)
@@ -165,7 +166,7 @@ export const TemplateMessagesModal: React.FC<{
   }, [isOptionPressed, isWPressed])
 
   useEffect(() => {
-    if (isNPressed) {
+    if (isNPressed && document.activeElement !== searchRef.current) {
       focus('')
       setIsCreating(true)
     }
@@ -301,6 +302,19 @@ export const TemplateMessagesModal: React.FC<{
     }
   }, [isEPressed])
 
+  useEffect(() => {
+    if (isEnterPressed) {
+      const focusedTemplate = getFocusedTemplate()
+
+      if (!focusedTemplate) {
+        return
+      }
+
+      focus('')
+      selectHandler(focusedTemplate.id)
+    }
+  }, [isEnterPressed])
+
   if (isCreating) {
     return (
       <Container
@@ -402,9 +416,6 @@ export const TemplateMessagesModal: React.FC<{
             </TemplatesListTitle>
             {getFilteredTemplates(true).map((template, index) => {
               const navigation = register(`Template Message ${index}`, {
-                resolve: () => {
-                  selectHandler(template.id)
-                },
                 neighbors: {
                   up: index
                     ? `Template Message ${index - 1}`
@@ -453,9 +464,6 @@ export const TemplateMessagesModal: React.FC<{
               const index = getFilteredTemplates(true).length + idx
 
               const navigation = register(`Template Message ${index}`, {
-                resolve: () => {
-                  selectHandler(template.id)
-                },
                 neighbors: {
                   up: index
                     ? `Template Message ${index - 1}`
