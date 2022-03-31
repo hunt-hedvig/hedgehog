@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Button, ButtonsGroup, Input, Modal } from '@hedvig-ui'
+import { Button, ButtonsGroup, Checkbox, Input, Modal } from '@hedvig-ui'
 import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { Market } from 'portals/hope/features/config/constants'
 import React, { useState } from 'react'
@@ -10,27 +10,46 @@ const Explanation = styled.p`
   color: ${({ theme }) => theme.semiStrongForeground};
 `
 
+const CloseClaimCheckbox = styled(Checkbox)`
+  margin-left: auto;
+`
+
 interface PaymentConfirmationModalProps {
   onClose: () => void
-  onSubmit: () => void
+  onSubmit: (closeClaim: boolean) => void
   amount: string
   identified: boolean
   market?: string | null
+  isClaimClosed: boolean
+  visible: boolean
 }
 
 export const PaymentConfirmationModal: React.FC<
   PaymentConfirmationModalProps
-> = ({ onClose, onSubmit, amount, identified, market }) => {
+> = ({
+  onClose,
+  onSubmit,
+  amount,
+  identified,
+  market,
+  visible,
+  isClaimClosed,
+}) => {
+  const [closeClaim, setCloseClaim] = useState(false)
   const [confirmAmount, setConfirmAmount] = useState('')
 
   const confirmHandler = () => {
-    onSubmit()
+    onSubmit(closeClaim)
     setConfirmAmount('')
     onClose()
   }
 
   return (
-    <Modal style={{ padding: '1rem', width: 500 }} onClose={onClose}>
+    <Modal
+      style={{ padding: '1rem', width: 500 }}
+      onClose={onClose}
+      visible={visible}
+    >
       {!identified && market === Market.Norway && (
         <Explanation>
           ⚠️ Please note that this member is not identified
@@ -69,6 +88,13 @@ export const PaymentConfirmationModal: React.FC<
         >
           Cancel
         </Button>
+        {!isClaimClosed && (
+          <CloseClaimCheckbox
+            label="Also close the claim"
+            checked={closeClaim}
+            onChange={() => setCloseClaim((prev) => !prev)}
+          />
+        )}
       </ButtonsGroup>
     </Modal>
   )

@@ -25,12 +25,14 @@ interface CreateFilterProps {
   onClose: () => void
   editableTemplate?: ClaimFilterTemplate
   onSave: (filters: ClaimFilterTemplate) => void
+  visible: boolean
 }
 
 export const CreateFilterModal: React.FC<CreateFilterProps> = ({
   editableTemplate,
   onSave,
   onClose,
+  visible,
 }) => {
   const [name, setName] = useState<string>(
     (editableTemplate && editableTemplate.name) || '',
@@ -66,7 +68,11 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
   }, [])
 
   return (
-    <Modal onClose={onClose} style={{ padding: '1.5rem', width: 700 }}>
+    <Modal
+      onClose={onClose}
+      style={{ padding: '1.5rem', width: 700 }}
+      visible={visible}
+    >
       <ThirdLevelHeadline>Create claim filter</ThirdLevelHeadline>
       <Body>
         <Input

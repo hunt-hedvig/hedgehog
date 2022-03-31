@@ -31,12 +31,24 @@ gql`
   }
 `
 
+const successMessages = {
+  [ClaimState.Open]: 'Claim successfully opened',
+  [ClaimState.Closed]: 'Claim successfully closed',
+  [ClaimState.Reopened]: 'Claim successfully reopened',
+}
+
+const errorMessages = {
+  [ClaimState.Open]: 'Error while opening claim',
+  [ClaimState.Closed]: 'Error while closing claim',
+  [ClaimState.Reopened]: 'Error while reopening claim',
+}
+
 interface UseClamStatusResult {
   status: string | null
   setStatus: (status: ClaimState) => void
 }
 
-const useClaimStatus = (claimId: string): UseClamStatusResult => {
+export const useClaimStatus = (claimId: string): UseClamStatusResult => {
   const [setClaimStatus] = useSetClaimStatusMutation()
   const { data } = useClaimStatusQuery({ variables: { claimId } })
 
@@ -78,16 +90,23 @@ const useClaimStatus = (claimId: string): UseClamStatusResult => {
 
     PushUserAction('claim', 'set', 'status', newStatus)
 
-    setClaimStatus({
-      variables: { claimId, status: newStatus },
-      optimisticResponse: {
-        updateClaimState: {
-          id: claimId,
-          __typename: 'Claim',
-          state: newStatus,
+    toast.promise(
+      setClaimStatus({
+        variables: { claimId, status: newStatus },
+        optimisticResponse: {
+          updateClaimState: {
+            id: claimId,
+            __typename: 'Claim',
+            state: newStatus,
+          },
         },
+      }),
+      {
+        loading: 'Changing claim status',
+        success: successMessages[newStatus],
+        error: errorMessages[newStatus],
       },
-    })
+    )
   }
 
   return {

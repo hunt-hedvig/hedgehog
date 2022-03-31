@@ -269,12 +269,11 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
           <span>Filtered Claim Template</span>
         </AddMetricCard>
       </MetricsWrapper>
-      {createFilter && (
-        <CreateFilterModal
-          onClose={() => setCreateFilter(false)}
-          onSave={createTemplate}
-        />
-      )}
+      <CreateFilterModal
+        onClose={() => setCreateFilter(false)}
+        onSave={createTemplate}
+        visible={createFilter}
+      />
     </>
   )
 }
