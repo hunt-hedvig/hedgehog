@@ -82,7 +82,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
           onChange={(e) => {
             setName(e.currentTarget.value)
           }}
-          {...register('CreateFilterModal', {})}
+          {...register('CreateFilterModal')}
         />
 
         <ClaimFilters template={template} editTemplate={setTemplate} />

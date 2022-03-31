@@ -17,7 +17,10 @@ interface NavigationContextProps {
   cursor: string | null
   setCursor: (focus: string | null) => void
   registry: Record<string, UseNavigationRegisterOptions>
-  setRegistryItem: (name: string, options: UseNavigationRegisterOptions) => void
+  setRegistryItem: (
+    name: string,
+    options?: UseNavigationRegisterOptions,
+  ) => void
   assignRef: (name: string, ref: unknown) => void
   removeRegistryItem: (name: string) => void
 }
@@ -283,9 +286,11 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleSetRegistryItem = (
     name: string,
-    options: UseNavigationRegisterOptions,
+    options?: UseNavigationRegisterOptions,
   ) => {
-    registry.current[name] = options
+    if (options && Object.keys(options).length !== 0) {
+      registry.current[name] = options
+    }
   }
 
   const removeRegistryItem = (name: string) => {
@@ -353,10 +358,13 @@ export const useNavigation = () => {
 
   const registerItem = (
     name: string,
-    options: UseNavigationRegisterOptions,
+    options?: UseNavigationRegisterOptions,
   ) => {
     setRegistryItem(name, options)
-    localItems.current[name] = options
+
+    if (options && Object.keys(options).length !== 0) {
+      localItems.current[name] = options
+    }
   }
 
   useEffect(() => {
@@ -384,7 +392,7 @@ export const useNavigation = () => {
 
   const register = (
     name: string,
-    options: UseNavigationRegisterOptions,
+    options?: UseNavigationRegisterOptions,
     activeStyle?: React.CSSProperties,
     style?: React.CSSProperties,
   ) => {
@@ -421,7 +429,7 @@ export const useNavigation = () => {
     }
   }
 
-  function registerList<T>({
+  const registerList = <T,>({
     list,
     name,
     nameField,
@@ -441,7 +449,7 @@ export const useNavigation = () => {
     withFocusCondition?: boolean
     withFocus?: boolean
     focusTarget?: string
-  }) {
+  }) => {
     return {
       registerItem: (item: T) => {
         const listName = `${name} - ${item[nameField]}`

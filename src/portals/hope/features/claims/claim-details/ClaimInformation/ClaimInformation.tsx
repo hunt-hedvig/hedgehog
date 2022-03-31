@@ -306,7 +306,7 @@ export const ClaimInformation: React.FC<{
           <Label>Status</Label>
           <ClaimStatusDropdown
             claimId={claimId}
-            {...register('Claim Status', {})}
+            {...register('Claim Status')}
           />
         </SelectWrapper>
         <SelectWrapper>

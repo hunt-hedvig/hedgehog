@@ -271,7 +271,7 @@ export const ClaimPaymentForm: React.FC<{
     <FormProvider {...form}>
       <Form onSubmit={() => setIsConfirming(true)}>
         <FormInput
-          {...register('Claim Payments Payout', {})}
+          {...register('Claim Payments Payout')}
           placeholder="Payout amount"
           name="amount"
           defaultValue=""

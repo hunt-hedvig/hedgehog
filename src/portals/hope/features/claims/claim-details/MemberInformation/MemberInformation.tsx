@@ -103,7 +103,7 @@ export const MemberInformation: React.FC<{
               {(member?.firstName ?? '') + ' ' + (member?.lastName ?? '')}
             </h3>
             <Link
-              {...register('Claim Details - MemberId', {})}
+              {...register('Claim Details - MemberId')}
               to={`/members/${memberId}`}
             >
               {memberId}

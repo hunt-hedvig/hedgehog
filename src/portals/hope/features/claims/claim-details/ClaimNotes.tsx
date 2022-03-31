@@ -181,7 +181,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
             setNote('')
           }
         }}
-        {...register('Claim Notes Textarea', {})}
+        {...register('Claim Notes Textarea')}
       />
       <Spacing top="small" />
       <SubNoteWrapper>
