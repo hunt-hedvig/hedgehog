@@ -25,7 +25,6 @@ gql`
 
 export const ClaimEmployeeDropdown: React.FC<{ claimId: string }> = ({
   claimId,
-  ...props
 }) => {
   const [setCoveringEmployee] = useSetCoveringEmployeeMutation()
   const { data } = useClaimEmployeeCoverageQuery({ variables: { claimId } })
@@ -61,7 +60,7 @@ export const ClaimEmployeeDropdown: React.FC<{ claimId: string }> = ({
   }
 
   return (
-    <Dropdown {...props}>
+    <Dropdown>
       {options.map((option) => (
         <DropdownOption
           key={option.key}
