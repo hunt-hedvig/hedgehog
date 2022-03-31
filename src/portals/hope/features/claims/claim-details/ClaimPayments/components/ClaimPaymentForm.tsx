@@ -13,6 +13,7 @@ import { toast } from 'react-hot-toast'
 import {
   ClaimPaymentInput,
   ClaimPaymentType,
+  ClaimState,
   ClaimSwishPaymentInput,
   SanctionStatus,
   useCreateClaimPaymentMutation,
@@ -22,6 +23,7 @@ import {
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 import gql from 'graphql-tag'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useClaimStatus } from '../../ClaimInformation/components/ClaimStatusDropdown'
 
 const areSwishPayoutsEnabled = () => {
   return (
@@ -126,6 +128,9 @@ export const ClaimPaymentForm: React.FC<{
   const claim = data?.claim
   const member = data?.claim?.member
 
+  const { status: claimStatus, setStatus: changeClaimStatus } =
+    useClaimStatus(claimId)
+
   const isPaymentActivated =
     !!member?.directDebitStatus?.activated ||
     !!member?.payoutMethodStatus?.activated
@@ -183,7 +188,7 @@ export const ClaimPaymentForm: React.FC<{
     member?.sanctionStatus === SanctionStatus.Undetermined ||
     member?.sanctionStatus === SanctionStatus.PartialHit
 
-  const createPaymentHandler = async () => {
+  const createPaymentHandler = async (closeClaim: boolean) => {
     const paymentInput: Partial<ClaimPaymentInput | ClaimSwishPaymentInput> = {
       amount: {
         amount: +form.getValues().amount,
@@ -252,6 +257,10 @@ export const ClaimPaymentForm: React.FC<{
           },
         },
       )
+    }
+
+    if (closeClaim) {
+      changeClaimStatus(ClaimState.Closed)
     }
   }
 
@@ -370,6 +379,7 @@ export const ClaimPaymentForm: React.FC<{
               setIsConfirming(false)
               clearFormHandler()
             }}
+            isClaimClosed={claimStatus === ClaimState.Closed}
             onSubmit={createPaymentHandler}
             amount={form.getValues().amount}
             identified={!!member.identity}

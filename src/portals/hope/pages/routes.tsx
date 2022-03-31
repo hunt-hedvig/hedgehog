@@ -11,8 +11,6 @@ import TasksPage from 'portals/hope/pages/tasks/TasksPage'
 import CheckInPage from 'portals/hope/pages/tasks/CheckInPage'
 import NotificationsPage from 'portals/hope/pages/NotificationsPage'
 import SearchPage from 'portals/hope/pages/search/SearchPage'
-import ConversationsOnboardingPage from 'portals/hope/pages/conversations/ConversationsOnboardingPage'
-import ConversationsPage from 'portals/hope/pages/conversations/ConversationsPage'
 import ClaimsListPage from 'portals/hope/pages/claims/list/ClaimsListPage'
 import ClaimDetailsPage from 'portals/hope/pages/claims/ClaimDetailsPage'
 import MemberSearchPage from 'portals/hope/pages/members/MemberSearchPage'
@@ -82,11 +80,6 @@ export const Routes: React.FC = () => {
         <Route path="/tasks/check-in" exact component={CheckInPage} />
         <Route path="/notifications" component={NotificationsPage} />
         <Route path="/search/:category" component={SearchPage} />
-        <Route
-          path="/conversations/onboarding"
-          component={ConversationsOnboardingPage}
-        />
-        <Route path="/conversations/:memberId?" component={ConversationsPage} />
         <Route path="/claims/list/:page?" exact component={ClaimsListPage} />
         <Route path="/claims/:claimId" exact component={ClaimDetailsPage} />
         <Redirect
