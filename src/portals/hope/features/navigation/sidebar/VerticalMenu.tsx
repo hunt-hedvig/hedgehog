@@ -272,7 +272,6 @@ export const VerticalMenu: React.FC = () => {
 
       return route ? history.location.pathname.includes(route) : false
     },
-    withFocusCondition: true,
   })
 
   return (

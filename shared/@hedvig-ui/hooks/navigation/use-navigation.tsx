@@ -83,7 +83,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (
         isPressing(e, options.focus) &&
-        (options.withFocusCondition ? options.focusCondition?.(name) : true)
+        (options.focusCondition ? options.focusCondition(name) : true)
       ) {
         setCursor(name)
         cursorRef.current = name
@@ -339,7 +339,6 @@ interface UseNavigationRegisterOptions {
   neighbors?: NodeNavigationDirections
   ref?: unknown
   focusCondition?: (item: string) => boolean
-  withFocusCondition?: boolean
   withFocus?: boolean
   focusTarget?: string
 }
@@ -436,7 +435,6 @@ export const useNavigation = () => {
     focus,
     resolve,
     focusCondition,
-    withFocusCondition,
     withFocus,
     focusTarget,
   }: {
@@ -446,7 +444,6 @@ export const useNavigation = () => {
     focus: Key
     resolve?: (item: T) => void
     focusCondition?: (itemName: string) => boolean
-    withFocusCondition?: boolean
     withFocus?: boolean
     focusTarget?: string
   }) => {
@@ -473,7 +470,6 @@ export const useNavigation = () => {
                 : undefined,
           },
           focusCondition,
-          withFocusCondition,
           withFocus,
           focusTarget,
         })
