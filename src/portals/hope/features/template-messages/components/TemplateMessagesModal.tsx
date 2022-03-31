@@ -166,11 +166,11 @@ export const TemplateMessagesModal: React.FC<{
   }, [isOptionPressed, isWPressed])
 
   useEffect(() => {
-    if (isNPressed && document.activeElement !== searchRef.current) {
+    if (isNPressed && isOptionPressed) {
       focus('')
       setIsCreating(true)
     }
-  }, [isNPressed])
+  }, [isNPressed, isOptionPressed])
 
   const { focus, register, cursor } = useNavigation()
 
@@ -391,6 +391,11 @@ export const TemplateMessagesModal: React.FC<{
           type="search"
           ref={searchRef}
           onKeyDown={(e) => {
+            if (isOptionPressed && isPressing(e, Keys.W)) {
+              e.preventDefault()
+              return
+            }
+
             if (isPressing(e, Keys.Down)) {
               e.preventDefault()
               focus('Template Message 0')

@@ -10,7 +10,11 @@ import {
 import { usePlatform } from '@hedvig-ui/hooks/use-platform'
 import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
 import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import {
+  isPressing,
+  Keys,
+  useKeyIsPressed,
+} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import { toast } from 'react-hot-toast'
 import { FileText, TextareaResize } from 'react-bootstrap-icons'
 import chroma from 'chroma-js'
@@ -165,6 +169,8 @@ export const TaskChatInput: React.FC<{
     useTemplatesHinting(message, setMessage, isMetaKey)
   const { show, selected } = useTemplateMessages()
 
+  const isOptionPressed = useKeyIsPressed(Keys.Option)
+
   useEffect(() => {
     if (selected) {
       clearHinting()
@@ -263,7 +269,16 @@ export const TaskChatInput: React.FC<{
           }
           value={message}
           onChange={onChangeHandler}
-          onKeyDown={(e) => handleOnKeyDown(e)}
+          autoFocus
+          onKeyDown={(e) => {
+            if (isOptionPressed && isPressing(e, Keys.W)) {
+              e.preventDefault()
+              e.currentTarget.blur()
+              return
+            }
+
+            handleOnKeyDown(e)
+          }}
         />
         <TextAreaFooter onClick={show}>
           <div className="divider" />
