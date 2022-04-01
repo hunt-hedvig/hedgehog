@@ -13,6 +13,7 @@ import { Route, Router, Switch } from 'react-router'
 import { PortalsPage } from 'auth/PortalsPage'
 import { Spinner, StandaloneMessage } from '@hedvig-ui'
 import { RenewTokenLock } from 'apollo/lock'
+import { TriagingPage } from 'demo/TriagingPage'
 
 export const history =
   typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
@@ -47,6 +48,7 @@ ReactDOM.render(
         <DarkmodeProvider>
           <Global styles={GlobalStyles} />
           <Switch>
+            <Route exact path="/demo/triaging" component={TriagingPage} />
             <Route exact path="/portals" component={PortalsPage} />
             <Route
               exact
