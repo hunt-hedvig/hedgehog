@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   ChevronRight,
   Search as SearchIcon,
@@ -8,6 +8,13 @@ import styled from '@emotion/styled'
 import { Input } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { motion } from 'framer-motion'
+import gql from 'graphql-tag'
+import {
+  SearchClaimTypeQuery,
+  useSearchClaimTypeLazyQuery,
+} from 'types/generated/graphql'
+import { useDebounce } from 'portals/hope/common/hooks/use-debounce'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
 
 const StyledInput = styled(Input)`
   border: none;
@@ -54,13 +61,58 @@ const SearchHitRow = styled(motion.div)`
   user-select: none;
 `
 
-const data = ['Accidental Damage', 'Theft', 'Water Damage', 'Fire Damage']
+gql`
+  query SearchClaimType($query: String!) {
+    searchClaimType(query: $query) {
+      claimType
+      score
+    }
+  }
+`
+
+type SearchHit = SearchClaimTypeQuery['searchClaimType'][0]
+
+const useSearchClaimType = (query: string) => {
+  const [result, setResult] = useState<SearchHit[]>([])
+  const [search, { refetch, data }] = useSearchClaimTypeLazyQuery()
+
+  useEffect(() => {
+    if (!query) setResult([])
+  }, [query])
+
+  const searchHandler = () => {
+    if (result.length === 0) {
+      // Lovely bug, need to refetch after first search
+      search({
+        variables: {
+          query,
+        },
+      })
+      return
+    }
+
+    refetch({
+      query,
+    })
+  }
+
+  useEffect(() => {
+    if (data?.searchClaimType) setResult(data.searchClaimType as SearchHit[])
+  }, [data])
+
+  return { search: searchHandler, hits: result }
+}
 
 export const TriagingSearchPage: React.FC<{
   onSelect: (option: string) => void
 }> = ({ onSelect }) => {
   const [query, setQuery] = useState('')
+  const { search, hits } = useSearchClaimType(query)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const debouncedValue = useDebounce(query, 100)
+
+  useEffect(() => search(), [debouncedValue])
 
   return (
     <div style={{ padding: '0 1.25rem' }}>
@@ -83,13 +135,13 @@ export const TriagingSearchPage: React.FC<{
         )}
       </InputContainer>
       <ResultContainer>
-        {data.map((hit) => (
+        {hits.map(({ claimType }) => (
           <SearchHitRow
-            key={hit}
+            key={claimType}
             whileTap={{ scale: 0.96 }}
-            onClick={() => onSelect(hit)}
+            onClick={() => onSelect(convertEnumOrSentenceToTitle(claimType))}
           >
-            <div>{hit}</div>
+            <div>{convertEnumOrSentenceToTitle(claimType)}</div>
             <ChevronRight />
           </SearchHitRow>
         ))}
