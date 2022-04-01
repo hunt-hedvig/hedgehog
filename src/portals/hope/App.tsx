@@ -20,6 +20,7 @@ import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Switch } from 'react-router'
 import { NavigationProvider } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { ActionsHistoryProvider } from 'portals/hope/features/history/use-actions-history'
 
 const Layout = styled(BaseStyle)`
   display: flex;
@@ -91,38 +92,42 @@ const App: React.FC = () => {
         <MemberHistoryProvider>
           <NumberMemberGroupsProvider>
             <MeProvider me={me}>
-              <CommandLineProvider>
-                <TemplateMessagesProvider>
-                  <ConfirmDialogProvider>
-                    <Layout>
-                      <Tracker />
-                      <Content>
-                        {!history.location.pathname.startsWith('/login') && (
-                          <VerticalMenu />
-                        )}
-                        <Main
-                          dark={history.location.pathname.startsWith('/login')}
-                        >
-                          <TopBar />
-                          <MainContent>
-                            <Switch>
-                              <Routes />
-                            </Switch>
-                            <Toaster
-                              position="top-center"
-                              toastOptions={{
-                                style: {
-                                  padding: '20px 25px',
-                                },
-                              }}
-                            />
-                          </MainContent>
-                        </Main>
-                      </Content>
-                    </Layout>
-                  </ConfirmDialogProvider>
-                </TemplateMessagesProvider>
-              </CommandLineProvider>
+              <ActionsHistoryProvider>
+                <CommandLineProvider>
+                  <TemplateMessagesProvider>
+                    <ConfirmDialogProvider>
+                      <Layout>
+                        <Tracker />
+                        <Content>
+                          {!history.location.pathname.startsWith('/login') && (
+                            <VerticalMenu />
+                          )}
+                          <Main
+                            dark={history.location.pathname.startsWith(
+                              '/login',
+                            )}
+                          >
+                            <TopBar />
+                            <MainContent>
+                              <Switch>
+                                <Routes />
+                              </Switch>
+                              <Toaster
+                                position="top-center"
+                                toastOptions={{
+                                  style: {
+                                    padding: '20px 25px',
+                                  },
+                                }}
+                              />
+                            </MainContent>
+                          </Main>
+                        </Content>
+                      </Layout>
+                    </ConfirmDialogProvider>
+                  </TemplateMessagesProvider>
+                </CommandLineProvider>
+              </ActionsHistoryProvider>
             </MeProvider>
           </NumberMemberGroupsProvider>
         </MemberHistoryProvider>

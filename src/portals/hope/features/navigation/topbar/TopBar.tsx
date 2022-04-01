@@ -12,11 +12,12 @@ import { ShareModal } from 'portals/hope/features/user/share/ShareModal'
 import { VerboseNotificationListener } from 'portals/hope/features/user/share/VerboseNotificationListener'
 import { UserPanel } from 'portals/hope/features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
-import { BellFill, PeopleFill } from 'react-bootstrap-icons'
+import { BellFill, PeopleFill, ClockHistory } from 'react-bootstrap-icons'
 import UserMenu from './UserMenu'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 import { motion, HTMLMotionProps } from 'framer-motion'
+import { useActionsHistory } from '../../history/use-actions-history'
 
 const Wrapper = styled.div`
   z-index: 1000;
@@ -120,6 +121,8 @@ export const TopBar = () => {
   const [showShareModal, setShowShareModal] = useState(false)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
+  const { showHistory } = useActionsHistory()
+
   const { register } = useNavigation()
 
   useEffect(() => {
@@ -172,12 +175,28 @@ export const TopBar = () => {
               setShowShareModal(true)
             },
             neighbors: {
-              right: 'NotificationsButton',
+              right: 'HistoryButton',
               left: 'UserMenuButton',
             },
           })}
         >
           <ShareIcon />
+        </CircleButton>
+
+        <CircleButton
+          style={{ marginLeft: '1rem' }}
+          onClick={() => showHistory()}
+          {...register('HistoryButton', {
+            resolve: () => {
+              showHistory()
+            },
+            neighbors: {
+              right: 'SharePageButton',
+              left: 'UsersOnlineButton',
+            },
+          })}
+        >
+          <ClockHistory />
         </CircleButton>
 
         <div style={{ marginLeft: '1rem' }} />
@@ -200,7 +219,7 @@ export const TopBar = () => {
               setShowUsers(true)
             },
             neighbors: {
-              left: 'NotificationsButton',
+              left: 'HistoryButton',
             },
           })}
         >
