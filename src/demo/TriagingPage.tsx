@@ -9,6 +9,13 @@ import { Flex, Spinner, StandaloneMessage } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useAuthenticate } from 'auth/use-authenticate'
 
+const Wrapper = styled.div`
+  @media (min-width: 680px) {
+    max-width: 480px;
+    margin: 1rem auto 0;
+  }
+`
+
 export const Container = styled.div`
   display: flex;
 
@@ -92,45 +99,49 @@ export const TriagingPage: React.FC = () => {
   }
 
   return (
-    <Container>
-      <TopMenuContainer>
-        <div
-          style={{ visibility: settings[slide].back ? 'visible' : 'hidden' }}
-        >
-          <BackButton onClick={goBack} />
-        </div>
-        <div
-          style={{ visibility: settings[slide].step ? 'visible' : 'hidden' }}
-        >
-          <Flex align="center" justify="center">
-            <StepLine active={slide > 0} />
-            <StepLine active={slide > 1} />
-            <StepLine active={false} />
-          </Flex>
-        </div>
-        <div
-          style={{ visibility: settings[slide].info ? 'visible' : 'hidden' }}
-        >
-          <InfoButton onClick={() => window.alert('Not much going on here')} />
-        </div>
-      </TopMenuContainer>
-      <SwipeableViews
-        disabled={!option}
-        index={slide}
-        onChangeIndex={(nextIndex) => setSlide(nextIndex)}
-        onTransitionEnd={() => {
-          if (slide !== 2) setOption(null)
-        }}
-      >
-        <TriagingStartPage onStartClaim={() => setSlide(1)} />
-        <TriagingSearchPage
-          onSelect={(newOption) => {
-            setOption(newOption)
-            setSlide(2)
+    <Wrapper>
+      <Container>
+        <TopMenuContainer>
+          <div
+            style={{ visibility: settings[slide].back ? 'visible' : 'hidden' }}
+          >
+            <BackButton onClick={goBack} />
+          </div>
+          <div
+            style={{ visibility: settings[slide].step ? 'visible' : 'hidden' }}
+          >
+            <Flex align="center" justify="center">
+              <StepLine active={slide > 0} />
+              <StepLine active={slide > 1} />
+              <StepLine active={false} />
+            </Flex>
+          </div>
+          <div
+            style={{ visibility: settings[slide].info ? 'visible' : 'hidden' }}
+          >
+            <InfoButton
+              onClick={() => window.alert('Not much going on here')}
+            />
+          </div>
+        </TopMenuContainer>
+        <SwipeableViews
+          disabled={!option}
+          index={slide}
+          onChangeIndex={(nextIndex) => setSlide(nextIndex)}
+          onTransitionEnd={() => {
+            if (slide !== 2) setOption(null)
           }}
-        />
-        <TriagingFormPage option={option ?? ''} />
-      </SwipeableViews>
-    </Container>
+        >
+          <TriagingStartPage onStartClaim={() => setSlide(1)} />
+          <TriagingSearchPage
+            onSelect={(newOption) => {
+              setOption(newOption)
+              setSlide(2)
+            }}
+          />
+          <TriagingFormPage option={option ?? ''} />
+        </SwipeableViews>
+      </Container>
+    </Wrapper>
   )
 }
