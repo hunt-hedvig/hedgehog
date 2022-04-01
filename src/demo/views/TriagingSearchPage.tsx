@@ -145,7 +145,7 @@ export const TriagingSearchPage: React.FC<{
             <ChevronRight />
           </SearchHitRow>
         ))}
-        {hits.length >= 1 && (
+        {query && (
           <SearchHitRow
             whileTap={{ scale: 0.96 }}
             onClick={() => onSelect('Other')}
