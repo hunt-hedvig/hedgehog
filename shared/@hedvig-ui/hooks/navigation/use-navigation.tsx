@@ -104,7 +104,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
     if (isPressing(e, Keys.Escape)) {
       if (
         cursorRef.current &&
-        target.withFocus &&
+        (target.withFocus || target.focusTarget) &&
         'activeElement' in document
       ) {
         ;(document.activeElement as HTMLElement)?.blur()
@@ -132,7 +132,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     if (isPressing(e, Keys.Enter)) {
-      if (cursorRef.current && target.withFocus) {
+      if (cursorRef.current && (target.withFocus || target.focusTarget)) {
         const element = document.getElementById(
           target.focusTarget || cursorRef.current,
         )

@@ -197,7 +197,6 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.One,
                   metaKey: 'ctrlKey',
-                  withFocus: true,
                   focusTarget: 'Claim Details - MemberId',
                 },
                 {
@@ -218,7 +217,6 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Two,
                   metaKey: 'ctrlKey',
-                  withFocus: true,
                   focusTarget: 'Claim Status',
                 },
                 {
@@ -239,7 +237,6 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Three,
                   metaKey: 'ctrlKey',
-                  withFocus: true,
                   focusTarget: 'Claim Type',
                 },
                 {
@@ -268,7 +265,6 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Four,
                   metaKey: 'ctrlKey',
-                  withFocus: true,
                   focusTarget: 'Claim Notes Textarea',
                 },
                 {
@@ -307,7 +303,7 @@ const ClaimDetailsPage: Page<
                   {
                     focus: Keys.Five,
                     metaKey: 'ctrlKey',
-                    withFocus: true,
+
                     focusTarget: 'Claim Reserve Input',
                   },
                   {
@@ -330,7 +326,7 @@ const ClaimDetailsPage: Page<
                   {
                     focus: Keys.Six,
                     metaKey: 'ctrlKey',
-                    withFocus: true,
+
                     focusTarget: 'Claim Payments Payout',
                   },
                   {
@@ -356,7 +352,6 @@ const ClaimDetailsPage: Page<
                 {
                   focus: Keys.Seven,
                   metaKey: 'ctrlKey',
-                  withFocus: true,
                   focusTarget: 'Claim File Input',
                 },
                 {
