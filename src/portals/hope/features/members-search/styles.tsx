@@ -45,7 +45,8 @@ export const SearchInputGroup = styled('div')({
   fontSize: '1rem',
   maxWidth: '50rem',
 })
-export const SearchIcon = styled(SearchBootstrapIcon)<{ muted: boolean }>(
+
+export const SearchIcon = styled(SearchBootstrapIcon)<{ muted?: boolean }>(
   ({ muted, theme }) => ({
     transform: 'translateY(-1.5px)',
     zIndex: 1,
