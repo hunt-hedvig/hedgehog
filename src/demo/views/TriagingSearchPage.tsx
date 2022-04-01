@@ -145,6 +145,15 @@ export const TriagingSearchPage: React.FC<{
             <ChevronRight />
           </SearchHitRow>
         ))}
+        {hits.length >= 1 && (
+          <SearchHitRow
+            whileTap={{ scale: 0.96 }}
+            onClick={() => onSelect('Other')}
+          >
+            <div>Other</div>
+            <ChevronRight />
+          </SearchHitRow>
+        )}
       </ResultContainer>
     </div>
   )
