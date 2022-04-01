@@ -15,6 +15,7 @@ import {
 } from 'types/generated/graphql'
 import { useDebounce } from 'portals/hope/common/hooks/use-debounce'
 import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const StyledInput = styled(Input)`
   border: none;
@@ -112,7 +113,10 @@ export const TriagingSearchPage: React.FC<{
 
   const debouncedValue = useDebounce(query, 100)
 
-  useEffect(() => search(), [debouncedValue])
+  useEffect(() => {
+    search()
+    PushUserAction('triaging', 'search', 'query', query)
+  }, [debouncedValue])
 
   return (
     <div style={{ padding: '0 1.25rem' }}>
