@@ -437,15 +437,17 @@ export const useNavigation = () => {
     focusCondition,
     withFocus,
     focusTarget,
+    autoFocus,
   }: {
     list: T[]
     name: string
     nameField: keyof T
-    focus: Key
+    focus?: Key
     resolve?: (item: T) => void
     focusCondition?: (itemName: string) => boolean
     withFocus?: boolean
     focusTarget?: string
+    autoFocus?: boolean
   }) => {
     return {
       registerItem: (item: T) => {
@@ -472,6 +474,7 @@ export const useNavigation = () => {
           focusCondition,
           withFocus,
           focusTarget,
+          autoFocus: autoFocus ? list.indexOf(item) === 0 : false,
         })
       },
     }

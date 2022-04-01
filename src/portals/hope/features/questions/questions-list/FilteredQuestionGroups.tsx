@@ -14,7 +14,18 @@ export const FilteredQuestionGroups: React.FC<{
 }> = ({ filterQuestionGroups }) => {
   const [focusedItem, setFocusedItem] = useState<string | null>(null)
 
-  const { register } = useNavigation()
+  const { registerList } = useNavigation()
+
+  const { registerItem } = registerList({
+    list: [...filterQuestionGroups],
+    name: 'Question',
+    nameField: 'memberId',
+    resolve: (item) => {
+      setFocusedItem(item.memberId)
+      return `Question-${item.memberId}`
+    },
+    autoFocus: true,
+  })
 
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
@@ -37,35 +48,15 @@ export const FilteredQuestionGroups: React.FC<{
     <div>
       {filterQuestionGroups.length ? (
         <>
-          {filterQuestionGroups.map((questionGroup, index) => {
-            const navigation = register(`Question-${questionGroup.memberId}`, {
-              autoFocus: index === 0,
-              resolve: () => {
-                setFocusedItem(questionGroup.memberId)
-                return `Question-${questionGroup.memberId}`
-              },
-              neighbors: {
-                up:
-                  index && !focusedItem
-                    ? `Question-${filterQuestionGroups[index - 1].memberId}`
-                    : undefined,
-                down:
-                  index < filterQuestionGroups.length - 1 && !focusedItem
-                    ? `Question-${filterQuestionGroups[index + 1].memberId}`
-                    : undefined,
-              },
-            })
-
-            return (
-              <QuestionGroupItem
-                delay={`${index * 100}ms`}
-                key={questionGroup.id}
-                isFocused={questionGroup.memberId === focusedItem || false}
-                questionGroup={questionGroup}
-                {...navigation}
-              />
-            )
-          })}
+          {filterQuestionGroups.map((questionGroup, index) => (
+            <QuestionGroupItem
+              delay={`${index * 100}ms`}
+              key={questionGroup.id}
+              isFocused={questionGroup.memberId === focusedItem || false}
+              questionGroup={questionGroup}
+              {...registerItem(questionGroup)}
+            />
+          ))}
         </>
       ) : (
         <StandaloneMessage paddingTop="25vh">List is empty</StandaloneMessage>
