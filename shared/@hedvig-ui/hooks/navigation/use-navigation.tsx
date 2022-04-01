@@ -483,6 +483,5 @@ export const useNavigation = () => {
   return {
     register,
     registerList,
-    focus: (name: string | null) => setCursor(name),
   }
 }

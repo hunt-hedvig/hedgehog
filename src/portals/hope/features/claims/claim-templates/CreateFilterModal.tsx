@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Button, Input, Modal, ThirdLevelHeadline } from '@hedvig-ui'
 import { ClaimFilterTemplate } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
 import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { ClaimTemplateFilters } from 'portals/hope/features/claims/claim-templates/components/ClaimTemplateFilters'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
@@ -59,13 +59,7 @@ export const CreateFilterModal: React.FC<CreateFilterProps> = ({
     onClose()
   }
 
-  const { register, focus } = useNavigation()
-
-  useEffect(() => {
-    focus('CreateFilterModal')
-
-    return () => focus('Add Template')
-  }, [])
+  const { register } = useNavigation()
 
   return (
     <Modal

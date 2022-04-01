@@ -7,7 +7,6 @@ import {
 } from '@hedvig-ui'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { useMarkAllNotificationsAsReadMutation } from 'types/generated/graphql'
 import { useMe } from '../hooks/use-me'
 import { NotificationItem } from './components/NotificationItem'
@@ -42,19 +41,12 @@ export const NotificationsModal: React.FC<{
 }> = ({ onClose, visible }) => {
   const { me } = useMe()
   const [markAllNotificationsAsRead] = useMarkAllNotificationsAsReadMutation()
-  const { focus } = useNavigation()
   const history = useHistory()
 
   useEffect(() => {
-    focus('NotificationsModal')
-
     markAllNotificationsAsRead({
       refetchQueries: ['GetMe'],
     })
-
-    return () => {
-      focus('NotificationsButton')
-    }
   }, [])
 
   return (
