@@ -143,7 +143,15 @@ export const TriagingSearchPage: React.FC<{
           <SearchHitRow
             key={claimType}
             whileTap={{ scale: 0.96 }}
-            onClick={() => onSelect(convertEnumOrSentenceToTitle(claimType))}
+            onClick={() => {
+              onSelect(convertEnumOrSentenceToTitle(claimType))
+              PushUserAction(
+                'triaging',
+                'select',
+                'option',
+                convertEnumOrSentenceToTitle(claimType),
+              )
+            }}
           >
             <div>{convertEnumOrSentenceToTitle(claimType)}</div>
             <ChevronRight />
