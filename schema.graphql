@@ -154,6 +154,7 @@ type MutationType {
   ): Quote!
   signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
   overrideQuotePrice(input: OverrideQuotePriceInput!): Quote!
+  bypassUnderwritingGuidelines(quoteIds: [ID!]!): [Quote!]!
 
   createCampaignPartner(partnerId: ID!, partnerName: String!): Boolean!
   assignCampaignToPartnerPercentageDiscount(
@@ -301,11 +302,7 @@ type SearchResultHighlight {
   values: [String!]!
 }
 
-union SearchHit =
-    MemberSearchHit
-  | NoteSearchHit
-  | QuoteSearchHit
-  | QuoteCartSearchHit
+union SearchHit = MemberSearchHit | NoteSearchHit | QuoteSearchHit | QuoteCartSearchHit
 
 type SearchResult {
   hit: SearchHit!
@@ -759,7 +756,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -937,6 +934,7 @@ enum Gender {
 type Quote {
   id: ID!
   createdAt: Instant
+  market: String!
   price: Float
   currency: String
   productType: String
@@ -948,6 +946,7 @@ type Quote {
   validity: Int
   memberId: ID
   breachedUnderwritingGuidelines: [String!]
+  underwritingGuidelinesBypassed: Boolean!
   isComplete: Boolean
   schema: JSON
   schemaData: JSON
