@@ -4,6 +4,7 @@ import chroma from 'chroma-js'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useMarkNotificationAsReadMutation } from 'types/generated/graphql'
+import { useNotifications } from 'portals/hope/features/user/notifications/hooks/use-notifications'
 
 const UserCircle = styled.div`
   display: flex;
@@ -50,20 +51,7 @@ export const VerboseNotification: React.FC<{
   message: string
   signature: string
 }> = ({ toastId, notificationId, path, message, signature }) => {
-  const [markNotificationAsRead] = useMarkNotificationAsReadMutation()
-
-  const readNotification = () => {
-    markNotificationAsRead({
-      variables: { notificationId },
-      optimisticResponse: {
-        markNotificationAsRead: {
-          __typename: 'UserNotification',
-          id: notificationId,
-          read: true,
-        },
-      },
-    })
-  }
+  const { read } = useNotifications()
 
   return (
     <FadeIn duration={400} translateTo="translateY(20%)">
@@ -95,7 +83,7 @@ export const VerboseNotification: React.FC<{
                 textAlign: 'center',
               }}
               onClick={() => {
-                readNotification()
+                read(notificationId)
                 toast.remove(toastId)
                 window.open(path)
               }}

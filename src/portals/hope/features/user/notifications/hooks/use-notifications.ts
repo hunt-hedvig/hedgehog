@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 import {
-  useUserNotificationsQuery,
   useMarkAllNotificationsAsReadMutation,
   useMarkNotificationAsReadMutation,
+  useUserNotificationsQuery,
 } from 'types/generated/graphql'
 
 gql`
