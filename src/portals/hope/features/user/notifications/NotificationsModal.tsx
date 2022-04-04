@@ -40,7 +40,9 @@ export const NotificationsModal: React.FC<{
   const history = useHistory()
   const { notifications, readAll } = useNotifications()
 
-  useEffect(() => readAll(), [])
+  useEffect(() => {
+    readAll()
+  }, [])
 
   return (
     <Modal

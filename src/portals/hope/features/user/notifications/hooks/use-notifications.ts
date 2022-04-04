@@ -1,9 +1,13 @@
 import gql from 'graphql-tag'
 import {
+  MarkAllNotificationsAsReadMutation,
+  MarkNotificationAsReadMutation,
   useMarkAllNotificationsAsReadMutation,
   useMarkNotificationAsReadMutation,
+  UserNotificationsQuery,
   useUserNotificationsQuery,
 } from 'types/generated/graphql'
+import { FetchResult } from '@apollo/client'
 
 gql`
   query UserNotifications {
@@ -42,7 +46,15 @@ gql`
   }
 `
 
-export const useNotifications = () => {
+interface UseNotificationsResult {
+  notifications: UserNotificationsQuery['me']['user']['notifications']
+  read: (
+    notificationId: string,
+  ) => Promise<FetchResult<MarkNotificationAsReadMutation>>
+  readAll: () => Promise<FetchResult<MarkAllNotificationsAsReadMutation>>
+}
+
+export const useNotifications = (): UseNotificationsResult => {
   const { data } = useUserNotificationsQuery()
   const [markNotificationAsRead] = useMarkNotificationAsReadMutation()
   const [markAllNotificationsAsRead] = useMarkAllNotificationsAsReadMutation()

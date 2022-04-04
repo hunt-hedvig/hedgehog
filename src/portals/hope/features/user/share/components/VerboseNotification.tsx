@@ -3,7 +3,6 @@ import { Button, FadeIn, Flex } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { useMarkNotificationAsReadMutation } from 'types/generated/graphql'
 import { useNotifications } from 'portals/hope/features/user/notifications/hooks/use-notifications'
 
 const UserCircle = styled.div`
@@ -64,7 +63,7 @@ export const VerboseNotification: React.FC<{
           <Flex justify="center" style={{ marginTop: '2rem' }}>
             <Button
               onClick={() => {
-                readNotification()
+                read(notificationId)
                 toast.remove(toastId)
               }}
               style={{

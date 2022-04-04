@@ -13,7 +13,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 import { useClaimNotes } from 'portals/hope/features/claims/claim-details/ClaimNotes'
-import {useClaimReserve} from "portals/hope/common/hooks/use-claim-reserve";
+import { useClaimReserve } from 'portals/hope/common/hooks/use-claim-reserve'
 
 const ReservesTag = styled(InfoTag)`
   font-weight: bold;
