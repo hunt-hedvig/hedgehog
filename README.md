@@ -8,6 +8,7 @@
   - https://github.com/nvm-sh/nvm#installing-and-updating
 - Node:
   - `nvm install node`
+  - Make sure to use Node v16.13.0 (using newer versions will result in a blank screen and 504s)
 - Yarn:
   - `npm install --global yarn`
 
