@@ -237,7 +237,7 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
       </Flex>
       <Flex className="quotes" direction="column" fullWidth>
         {data?.quotes.map((quote) => (
-          <QuoteResultRow quote={quote} />
+          <QuoteResultRow key={quote.id} quote={quote} />
         ))}
       </Flex>
       <Flex
