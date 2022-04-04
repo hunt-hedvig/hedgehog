@@ -36,7 +36,7 @@ import {
   Transaction,
   useCreatePaymentCompletionLinkMutation,
   useGetMemberTransactionsQuery,
-  useGetQuotesQuery,
+  useMemberQuotesQuery,
 } from 'types/generated/graphql'
 import { PayoutDetails } from './PayoutDetails'
 
@@ -208,7 +208,7 @@ export const PaymentsTab: React.FC<{
 
   const [manualAmount, setManualAmount] = useState('0')
 
-  const { data: quotesData } = useGetQuotesQuery({
+  const { data: quotesData } = useMemberQuotesQuery({
     variables: {
       memberId,
     },
