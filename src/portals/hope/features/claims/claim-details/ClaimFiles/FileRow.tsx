@@ -8,6 +8,7 @@ import {
   useSetClaimFileCategoryMutation,
 } from 'types/generated/graphql'
 import { DeleteButton } from './DeleteClaimFileButton'
+import gql from 'graphql-tag'
 
 const Image = styled.img`
   width: 450px;
@@ -45,6 +46,23 @@ const fileUploadOptions = [
     value: 'Other',
   },
 ]
+
+gql`
+  mutation SetClaimFileCategory(
+    $claimId: ID!
+    $claimFileId: ID!
+    $category: String
+  ) {
+    setClaimFileCategory(
+      claimId: $claimId
+      claimFileId: $claimFileId
+      category: $category
+    ) {
+      claimId
+      claimFileId
+    }
+  }
+`
 
 export const FileRow: React.FC<{
   claimId: string

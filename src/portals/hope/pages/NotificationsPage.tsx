@@ -1,19 +1,19 @@
 import { Flex, Input, MainHeadline, Spacing } from '@hedvig-ui'
-import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { NotificationItem } from 'portals/hope/features/user/notifications/components/NotificationItem'
 import React, { useMemo, useState } from 'react'
 import { Page } from 'portals/hope/pages/routes'
+import { useNotifications } from 'portals/hope/features/user/notifications/hooks/use-notifications'
 
 const NotificationsPage: Page = () => {
   const [filter, setFilter] = useState('')
-  const { me } = useMe()
+  const { notifications } = useNotifications()
 
-  const notifications = useMemo(
+  const filteredNotifications = useMemo(
     () =>
-      me.notifications.filter(({ message }) =>
+      notifications.filter(({ message }) =>
         message.toLowerCase().includes(filter.toLowerCase()),
       ),
-    [me.notifications, filter],
+    [notifications, filter],
   )
 
   return (
@@ -32,7 +32,7 @@ const NotificationsPage: Page = () => {
           placeholder="Your filter goes here..."
         />
         <Spacing top="small" />
-        {notifications.map((notification) => (
+        {filteredNotifications.map((notification) => (
           <div key={notification.id} style={{ width: '100%' }}>
             <NotificationItem notification={notification} />
           </div>

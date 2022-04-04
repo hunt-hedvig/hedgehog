@@ -1,3 +1,0 @@
-query GetSchemaForInsuranceType($insuranceType: String!) {
-  quoteSchemaForInsuranceType(insuranceType: $insuranceType)
-}

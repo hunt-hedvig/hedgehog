@@ -1,6 +1,0 @@
-mutation MarkAllNotificationsAsRead {
-  markAllNotificationsAsRead {
-    id
-    read
-  }
-}
