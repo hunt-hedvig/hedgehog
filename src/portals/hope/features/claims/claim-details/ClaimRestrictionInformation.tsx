@@ -13,6 +13,8 @@ const Subtext = styled.span`
   color: ${({ theme }) => chroma(theme.foreground).alpha(0.7).hex()};
 `
 
+const isStringNumber = (s: string) => /^-?\d+$/.test(s) || /^\d+\.\d+$/.test(s)
+
 export const ClaimRestrictionInformation: React.FC<{
   claimId: string
 }> = ({ claimId }) => {

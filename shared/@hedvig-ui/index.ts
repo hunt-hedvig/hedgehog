@@ -119,3 +119,5 @@ export { Tabs, Tab } from './Tabs'
 export type TabsProps = _TabsProps
 
 export { TextDatePicker } from './TextDatePicker'
+
+export { isStringNumber } from './utils/text'
