@@ -9,7 +9,7 @@ import chroma from 'chroma-js'
 import copy from 'copy-to-clipboard'
 import formatDate from 'date-fns/format'
 import gql from 'graphql-tag'
-import { MarketLanguage } from 'portals/hope/features/config/constants'
+import { Market, MarketLanguage } from 'portals/hope/features/config/constants'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -195,11 +195,12 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
           </div>
         </Flex>
         <Button
+          disabled={!firstQuote}
           onClick={() => {
-            if (hasBypassedUwgl) {
+            if (hasBypassedUwgl && firstQuote) {
               copy(
                 `${process.env.HEDVIG_ONBOARDING_URL}/${
-                  MarketLanguage[firstQuote.market]
+                  MarketLanguage[firstQuote.market as Market]
                 }/new-member/offer/${id}`,
               )
               toast.success('Copied offer page link')
