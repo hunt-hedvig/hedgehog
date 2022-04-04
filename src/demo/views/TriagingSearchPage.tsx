@@ -13,7 +13,7 @@ import {
   SearchClaimTypeQuery,
   useSearchClaimTypeLazyQuery,
 } from 'types/generated/graphql'
-import { useDebounce } from 'portals/hope/common/hooks/use-debounce'
+import { useDebounce } from '@hedvig-ui/hooks/use-debounce'
 import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 

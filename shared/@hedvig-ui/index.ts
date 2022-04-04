@@ -121,3 +121,5 @@ export type TabsProps = _TabsProps
 export { TextDatePicker } from './TextDatePicker'
 
 export { isStringNumber } from './utils/text'
+
+export { useDebounce } from './hooks/use-debounce'

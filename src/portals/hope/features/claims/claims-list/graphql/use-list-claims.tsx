@@ -4,12 +4,36 @@ import {
   ListClaimsResult,
   useListClaimsLazyQuery,
 } from 'types/generated/graphql'
+import gql from 'graphql-tag'
 
 type ListClaimsReturnTuple = [
   ListClaimsResult,
   (options?: ListClaimsOptions) => void,
   ListClaimsLazyQueryHookResult[1],
 ]
+
+gql`
+  query ListClaims($options: ListClaimsOptions!) {
+    listClaims(options: $options) {
+      claims {
+        id
+        member {
+          memberId
+          firstName
+          lastName
+        }
+        registrationDate
+        claimType
+        outcome
+        state
+        reserves
+      }
+      page
+      totalPages
+      totalClaims
+    }
+  }
+`
 
 export const useListClaims = (): ListClaimsReturnTuple => {
   const [listClaimsQuery, queryResult] = useListClaimsLazyQuery()
