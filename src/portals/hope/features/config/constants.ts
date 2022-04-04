@@ -39,10 +39,10 @@ export const PickedLocaleMarket: Record<PickedLocale, Market> = {
   [PickedLocale.SvSe]: Market.Sweden,
 }
 
-export const MarketLanguage: Record<Market, String> = {
+export const MarketLanguage: Record<Market, string> = {
   [Market.Sweden]: 'se',
   [Market.Norway]: 'no',
-  [Market.Denmark]: 'da',
+  [Market.Denmark]: 'dk',
 }
 
 export const MemberGroups: Record<string, number> = {
