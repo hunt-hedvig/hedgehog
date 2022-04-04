@@ -55,6 +55,8 @@ type QueryType {
 
     quotes(ids: [String!]!): [Quote!]!
     quote(id: String!): Quote!
+
+    searchClaimType(query: String!): [ClaimTypeSearchResponse!]!
 }
 
 type MutationType {
@@ -230,6 +232,11 @@ type MutationType {
     upsertTemplate(input: UpsertTemplateInput!): Template!
     removeTemplate(id: ID!): Boolean!
     togglePinStatus(id: ID!): Template!
+}
+
+type ClaimTypeSearchResponse {
+  claimType: String!
+  score: String!
 }
 
 type Template {

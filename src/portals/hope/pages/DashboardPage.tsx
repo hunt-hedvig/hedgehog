@@ -141,7 +141,7 @@ const DashboardPage: Page = () => {
   })
   const [createFilter, setCreateFilter] = useState(false)
 
-  const { settings, me } = useMe()
+  const { me } = useMe()
 
   const dashboardNumbers = dashboardData?.dashboardNumbers as
     | DashboardNumbers
@@ -174,36 +174,14 @@ const DashboardPage: Page = () => {
                 history.push('/claims/list/1')
               },
               neighbors: {
-                right: settings.featureFlags?.conversations
-                  ? 'ConversationsMetric'
-                  : 'QuestionsMetric',
+                right: 'QuestionsMetric',
               },
             })}
           >
             <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
             <MetricName>claims</MetricName>
           </Metric>
-          {settings.featureFlags?.conversations ? (
-            <Metric
-              to="/conversations"
-              {...register('ConversationsMetric', {
-                resolve: () => {
-                  history.push('/conversations')
-                },
-                neighbors: {
-                  left: 'ClaimsMetric',
-                  right: templateFilters.length
-                    ? templateFilters[0].name
-                    : 'Add Template',
-                },
-              })}
-            >
-              <MetricNumber>
-                {dashboardNumbers?.numberOfQuestions || 0}
-              </MetricNumber>
-              <MetricName>conversations</MetricName>
-            </Metric>
-          ) : (
+          {
             <Metric
               to="/questions"
               {...register('QuestionsMetric', {
@@ -223,7 +201,7 @@ const DashboardPage: Page = () => {
               </MetricNumber>
               <MetricName>questions</MetricName>
             </Metric>
-          )}
+          }
 
           {templateFilters.map((template, index) => {
             const registeredTemplate = register(template.name, {
@@ -233,8 +211,6 @@ const DashboardPage: Page = () => {
               neighbors: {
                 left: index
                   ? templateFilters[index - 1].name
-                  : settings.featureFlags?.conversations
-                  ? 'ConversationsMetric'
                   : 'QuestionsMetric',
                 right:
                   index < templateFilters.length - 1
@@ -265,8 +241,6 @@ const DashboardPage: Page = () => {
               neighbors: {
                 left: templateFilters.length
                   ? templateFilters[templateFilters.length - 1].name
-                  : settings.featureFlags?.conversations
-                  ? 'ConversationsMetric'
                   : 'QuestionsMetric',
               },
             })}

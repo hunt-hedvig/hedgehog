@@ -1,9 +1,7 @@
 import styled from '@emotion/styled'
 import { colorsV3 } from '@hedviginsurance/brand'
-import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React, { useEffect, useState } from 'react'
 import {
-  Chat,
   ChevronLeft,
   CreditCard,
   CreditCard2Front,
@@ -134,7 +132,6 @@ const routes = {
   dashborad: '/dashborad',
   claims: '/claims/list/1',
   questions: '/tasks/check-in',
-  conversations: '/conversations',
   search: '/members',
   tools: '/tools',
   trustly: 'https://backoffice.trustly.com/?Locale=en_GB#/tab_orders',
@@ -145,15 +142,11 @@ const routes = {
 
 export const VerticalMenu: React.FC = () => {
   const history = useHistory()
-  const { settings } = useMe()
   const { pathname } = useLocation()
   const [isCollapsed, setCollapsed] = useState(
     () => localStorage.getItem('hedvig:menu:collapse') === 'true',
   )
   const [locations, setLocations] = useState<string[]>([])
-  const [conversationsEnabled] = useState<boolean>(
-    settings.featureFlags?.conversations,
-  )
 
   const { register } = useNavigation()
 
@@ -189,16 +182,13 @@ export const VerticalMenu: React.FC = () => {
       hotkeyHandler: () => history.push(routes.search),
     },
     {
-      route: conversationsEnabled ? routes.conversations : routes.questions,
-      icon: conversationsEnabled ? Chat : Inbox,
+      route: routes.questions,
+      icon: Inbox,
       hotkey: 'Q',
-      title: conversationsEnabled ? 'Conversations' : 'Questions',
+      title: 'Questions',
       single: false,
       external: false,
-      hotkeyHandler: () =>
-        history.push(
-          conversationsEnabled ? routes.conversations : routes.questions,
-        ),
+      hotkeyHandler: () => history.push(routes.questions),
     },
     {
       route: routes.claims,
