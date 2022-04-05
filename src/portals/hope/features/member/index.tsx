@@ -8,13 +8,13 @@ import {
   getMemberIdColor,
   MemberAge,
 } from 'portals/hope/features/member/utils'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { MemberDetails } from './MemberDetails'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
-import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { useGetMemberInfo } from 'portals/hope/features/member/tabs/member-tab/hooks/use-get-member-info'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { usePushMemberHistory } from 'portals/hope/common/hooks/use-push-member-history'
 
 const MemberPageContainer = styled.div<{ chat?: boolean }>`
   display: flex;
@@ -59,8 +59,8 @@ export const MemberTabs: React.FC<{
   chat?: boolean
   title?: string
 }> = ({ memberId, tab, onChangeTab, chat = true, title }) => {
+  usePushMemberHistory(memberId)
   const [member] = useGetMemberInfo(memberId)
-  const { pushToMemberHistory } = useMemberHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const panes = memberPagePanes(memberId)
 
@@ -68,7 +68,6 @@ export const MemberTabs: React.FC<{
     title ??
       (member ? `${member?.firstName} ${member?.lastName}` : 'Loading...'),
   )
-  useEffect(() => pushToMemberHistory(memberId), [])
 
   if (!member) {
     return null
