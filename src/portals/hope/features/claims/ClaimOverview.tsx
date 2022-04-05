@@ -35,8 +35,9 @@ import styled from '@emotion/styled'
 import { ShieldLockFill } from 'react-bootstrap-icons'
 import { usePushMemberHistory } from 'portals/hope/common/hooks/use-push-member-history'
 
-const ChatPaneAdjustedContainer = styled.div`
-  width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
+const Container = styled.div<{ chat?: boolean }>`
+  width: ${({ chat }) =>
+    chat ? 'clamp(1000px, calc(100% - 400px), calc(100% - 400px)' : '100%'};
 `
 
 const ShowEventButtonWrapper = styled.div`
@@ -105,7 +106,10 @@ gql`
   }
 `
 
-export const ClaimOverview: React.FC<{ claimId: string }> = ({ claimId }) => {
+export const ClaimOverview: React.FC<{
+  claimId: string
+  standalone?: boolean
+}> = ({ claimId, standalone = false }) => {
   const { restriction } = useRestrictClaim(claimId)
   const [showEvents, setShowEvents] = useState(false)
   const { data, error } = useClaimDetailsQuery({
@@ -140,13 +144,15 @@ export const ClaimOverview: React.FC<{ claimId: string }> = ({ claimId }) => {
 
   return (
     <>
-      <Prompt
-        when={claim.state !== ClaimState.Closed && !claim.reserves}
-        message="This claim has no reserves, do you want leave without it?"
-      />
-      <ChatPane memberId={memberId} />
+      {!standalone && (
+        <Prompt
+          when={claim.state !== ClaimState.Closed && !claim.reserves}
+          message="This claim has no reserves, do you want leave without it?"
+        />
+      )}
+      {!standalone && <ChatPane memberId={memberId} />}
       <FadeIn>
-        <ChatPaneAdjustedContainer>
+        <Container chat={!standalone}>
           {restriction && (
             <CardsWrapper>
               <Card>
@@ -156,7 +162,11 @@ export const ClaimOverview: React.FC<{ claimId: string }> = ({ claimId }) => {
           )}
           <CardsWrapper contentWrap="noWrap">
             <Card span={3}>
-              <MemberInformation claimId={claimId} memberId={memberId} />
+              <MemberInformation
+                claimId={claimId}
+                memberId={memberId}
+                slim={standalone}
+              />
             </Card>
             <Card span={3}>
               <ClaimInformation claimId={claimId} />
@@ -226,7 +236,7 @@ export const ClaimOverview: React.FC<{ claimId: string }> = ({ claimId }) => {
               </Button>
             </ShowEventButtonWrapper>
           )}
-        </ChatPaneAdjustedContainer>
+        </Container>
       </FadeIn>
     </>
   )

@@ -4,7 +4,11 @@ import React, { useEffect, useState } from 'react'
 import { Flex, Placeholder, useQueryParams } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
-import { Question, QuestionGroup } from 'types/generated/graphql'
+import {
+  Question,
+  QuestionGroup,
+  useClaimRegistrationDateQuery,
+} from 'types/generated/graphql'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import {
   doMarketFilter,
@@ -28,6 +32,9 @@ import {
   formatLocale,
   useTemplateMessages,
 } from '../../features/template-messages/use-template-messages'
+import gql from 'graphql-tag'
+import formatDate from 'date-fns/format'
+import { ClaimContainer } from 'portals/hope/features/tasks/components/ClaimContainer'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -230,17 +237,38 @@ const getMemberName = (group: QuestionGroup) => {
     : undefined
 }
 
+gql`
+  query ClaimRegistrationDate($claimId: ID!) {
+    claim(id: $claimId) {
+      id
+      registrationDate
+    }
+  }
+`
+
+const useClaimRegistrationDate = (claimId: string) => {
+  const { data } = useClaimRegistrationDateQuery({
+    variables: { claimId },
+    fetchPolicy: 'cache-first',
+  })
+
+  return data?.claim?.registrationDate
+}
+
 const TasksPage: Page = () => {
   const history = useHistory()
   const queryParams = useQueryParams()
 
   const memberId = queryParams.get('memberId')
   const tab = queryParams.get('tab')
+  const claimId = queryParams.get('claimId')
 
   const { resolve } = useResolveQuestion()
   const { numberMemberGroups } = useNumberMemberGroups()
   const [questionGroups, { loading }] = useQuestionGroups()
   const { selectedFilters: filters, toggleFilter } = useSelectedFilters()
+
+  const claimRegistrationDate = useClaimRegistrationDate(claimId ?? '')
 
   const [showFilters, setShowFilters] = useState(false)
 
@@ -320,8 +348,25 @@ const TasksPage: Page = () => {
                   <div className="count">{groups.length}</div>
                 </TopBarItem>
                 {selectedQuestionGroup && selectedMemberId && (
-                  <TopBarItem selected={true}>
+                  <TopBarItem
+                    selected={!claimId}
+                    onClick={() =>
+                      history.replace(
+                        `/questions?memberId=${memberId}&tab=${tab}`,
+                      )
+                    }
+                  >
                     {getMemberName(selectedQuestionGroup) ?? 'Member'}
+                  </TopBarItem>
+                )}
+                {selectedQuestionGroup && selectedMemberId && claimId && (
+                  <TopBarItem selected={true}>
+                    Claim{' '}
+                    {claimRegistrationDate &&
+                      formatDate(
+                        parseISO(claimRegistrationDate),
+                        'dd MMMM, yyyy',
+                      )}
                   </TopBarItem>
                 )}
               </Flex>
@@ -333,7 +378,7 @@ const TasksPage: Page = () => {
                 Filters
               </FilterBarItem>
             </TopBar>
-            {selectedMemberId && (
+            {selectedMemberId && !claimId && (
               <ListContainer>
                 <MemberContainer
                   memberId={selectedMemberId}
@@ -350,6 +395,11 @@ const TasksPage: Page = () => {
                     )
                   }
                 />
+              </ListContainer>
+            )}
+            {claimId && (
+              <ListContainer>
+                <ClaimContainer claimId={claimId} />
               </ListContainer>
             )}
             {!selectedMemberId && (
