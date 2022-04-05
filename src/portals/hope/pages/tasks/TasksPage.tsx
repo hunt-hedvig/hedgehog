@@ -313,22 +313,29 @@ const TasksPage: Page = () => {
               memberId={selectedQuestionGroup?.memberId ?? memberId ?? ''}
               fullName={fullName}
               onResolve={() => {
-                if (!selectedQuestionGroup) return
+                if (!(selectedQuestionGroup || groupByRoute)) return
 
-                resolve(selectedQuestionGroup.memberId)
+                resolve(
+                  selectedQuestionGroup?.memberId ??
+                    groupByRoute?.memberId ??
+                    '',
+                )
                 history.replace(`/questions`)
               }}
               onSelectMember={(openClaimId) => {
-                if (!claimId) return
-                if (!selectedQuestionGroup) return
+                if (!(selectedQuestionGroup || groupByRoute)) return
 
                 if (!openClaimId) {
                   history.push(
-                    `/questions?memberId=${selectedQuestionGroup.memberId}`,
+                    `/questions?memberId=${
+                      selectedQuestionGroup?.memberId ?? groupByRoute?.memberId
+                    }`,
                   )
                 } else {
                   history.push(
-                    `/questions?memberId=${selectedQuestionGroup.memberId}&tab=claims&claimId=${openClaimId}`,
+                    `/questions?memberId=${
+                      selectedQuestionGroup?.memberId ?? groupByRoute?.memberId
+                    }&tab=claims&claimId=${openClaimId}`,
                   )
                 }
               }}
