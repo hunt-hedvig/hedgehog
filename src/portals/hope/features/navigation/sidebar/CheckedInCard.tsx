@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
 import { Button, Flex } from '@hedvig-ui'
 import toast from 'react-hot-toast'
 import { useCheckInOut } from 'portals/hope/features/tasks/hooks/use-check-in-out'
-import { useHistory, useLocation } from 'react-router'
 
 const CheckedInWrapper = styled.div`
   padding: 1.2rem;
@@ -57,14 +56,6 @@ const CheckedInWrapper = styled.div`
 
 export const CheckedInCard: React.FC = () => {
   const { checkOut, checkedIn } = useCheckInOut()
-  const location = useLocation()
-  const history = useHistory()
-
-  useEffect(() => {
-    if (location.pathname === '/questions' && !checkedIn) {
-      history.push('/tasks/check-in')
-    }
-  }, [checkedIn])
 
   if (!checkedIn) return null
 
