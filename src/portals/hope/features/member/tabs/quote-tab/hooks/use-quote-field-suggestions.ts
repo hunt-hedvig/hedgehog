@@ -1,5 +1,5 @@
 import { JSONSchema7 } from 'json-schema'
-import { useGetQuotesQuery } from 'types/generated/graphql'
+import { useMemberQuotesQuery } from 'types/generated/graphql'
 
 interface UseQuoteFieldSuggestionsResult {
   suggestions: Record<string, JSONSchema7 | boolean>
@@ -8,7 +8,7 @@ interface UseQuoteFieldSuggestionsResult {
 export const useQuoteFieldSuggestions = (
   memberId: string,
 ): UseQuoteFieldSuggestionsResult => {
-  const { data } = useGetQuotesQuery({
+  const { data } = useMemberQuotesQuery({
     variables: {
       memberId,
     },

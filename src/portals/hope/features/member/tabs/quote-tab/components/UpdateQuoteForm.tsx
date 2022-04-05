@@ -2,7 +2,7 @@ import { Checkbox, JsonSchemaForm } from '@hedvig-ui'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
-  GetQuotesDocument,
+  MemberQuotesDocument,
   Quote,
   useUpdateQuoteBySchemaMutation,
 } from 'types/generated/graphql'
@@ -27,7 +27,7 @@ export const UpdateQuoteForm: React.FC<{
       },
       refetchQueries: () => [
         {
-          query: GetQuotesDocument,
+          query: MemberQuotesDocument,
           variables: { memberId: quote.memberId },
         },
       ],

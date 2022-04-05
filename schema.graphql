@@ -1,237 +1,238 @@
 schema {
-    query: QueryType
-    mutation: MutationType
+  query: QueryType
+  mutation: MutationType
 }
 
 type QueryType {
-    search(query: String!, type: String!, from: Int, size: Int): [SearchResult!]!
-    member(id: ID!): Member
-    claim(id: ID!): Claim
-    paymentSchedule(status: ChargeStatus!): [SchedulerState]
-    me: Me!
-    switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
-    ediSwitchers: [EdiSwitcher!]!
-    messageHistory(memberId: ID!): [ChatMessage!]!
-    questionGroups: [QuestionGroup!]!
-    findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
-    getPartnerCampaignOwners: [CampaignOwnerPartner!]!
-    availableCampaignCodeTypes: [String!]!
-    dashboardNumbers: DashboardNumbers
-    quoteSchemaForInsuranceType(insuranceType: String!): JSON
-    memberSearch(
-        query: String!
-        options: MemberSearchOptions!
-    ): MemberSearchResult!
-    listClaims(options: ListClaimsOptions!): ListClaimsResult!
-    employees: [Employee!]!
-    availableEmployeeRoles: [String!]!
+  search(query: String!, type: String!, from: Int, size: Int): [SearchResult!]!
+  member(id: ID!): Member
+  claim(id: ID!): Claim
+  paymentSchedule(status: ChargeStatus!): [SchedulerState]
+  me: Me!
+  switchableSwitcherEmails: [SwitchableSwitcherEmail!]!
+  ediSwitchers: [EdiSwitcher!]!
+  messageHistory(memberId: ID!): [ChatMessage!]!
+  questionGroups: [QuestionGroup!]!
+  findPartnerCampaigns(input: CampaignFilter!): [VoucherCampaign!]!
+  getPartnerCampaignOwners: [CampaignOwnerPartner!]!
+  availableCampaignCodeTypes: [String!]!
+  dashboardNumbers: DashboardNumbers
+  quoteSchemaForInsuranceType(insuranceType: String!): JSON
+  memberSearch(
+    query: String!
+    options: MemberSearchOptions!
+  ): MemberSearchResult!
+  listClaims(options: ListClaimsOptions!): ListClaimsResult!
+  employees: [Employee!]!
+  availableEmployeeRoles: [String!]!
 
-    termsAndConditions(
-        contractType: String!
-        locale: String!
-        date: LocalDate
-        partner: String
-        carrier: String!
-    ): TermsAndConditions
+  termsAndConditions(
+    contractType: String!
+    locale: String!
+    date: LocalDate
+    partner: String
+    carrier: String!
+  ): TermsAndConditions
 
-    claimTypes: [String!]!
-    claimTypeTemplates: [ClaimTypeTemplate!]!
-    claimTypeTemplate(claimType: String!): ClaimTypeTemplate
-    claimTypeRelations: [ClaimTypeRelation!]!
-    claimProperties: [ClaimProperty!]!
-    claimProperty(id: ID!): ClaimProperty!
-    claimPropertyOptions: [ClaimPropertyOption!]!
-    claimPropertyOption(id: ID!): ClaimPropertyOption!
+  claimTypes: [String!]!
+  claimTypeTemplates: [ClaimTypeTemplate!]!
+  claimTypeTemplate(claimType: String!): ClaimTypeTemplate
+  claimTypeRelations: [ClaimTypeRelation!]!
+  claimProperties: [ClaimProperty!]!
+  claimProperty(id: ID!): ClaimProperty!
+  claimPropertyOptions: [ClaimPropertyOption!]!
+  claimPropertyOption(id: ID!): ClaimPropertyOption!
 
-    user(email: String!): User
-    users: [User!]!
-    usersOnPath(path: String!): [User!]!
-    resourceAccess(resourceId: String!): ResourceAccessInformation
+  user(email: String!): User
+  users: [User!]!
+  usersOnPath(path: String!): [User!]!
+  resourceAccess(resourceId: String!): ResourceAccessInformation
 
-    simpleMemberLookup(ssn: String!): SimpleMemberLookupResult!
+  simpleMemberLookup(ssn: String!): SimpleMemberLookupResult!
 
-    templates(locales: [String!]!): [Template!]!
-    template(id: ID!): Template!
+  templates(locales: [String!]!): [Template!]!
+  template(id: ID!): Template!
 
-    quotes(ids: [String!]!): [Quote!]!
-    quote(id: String!): Quote!
+  quotes(ids: [String!]!): [Quote!]!
+  quote(id: String!): Quote!
 
-    searchClaimType(query: String!): [ClaimTypeSearchResponse!]!
+  searchClaimType(query: String!): [ClaimTypeSearchResponse!]!
 }
 
 type MutationType {
-    chargeMember(
-        id: ID!
-        amount: MonetaryAmount!
-        allowManualCharge: Boolean
-    ): Member
-    addAccountEntryToMember(
-        memberId: ID!
-        accountEntry: AccountEntryInput!
-    ): Member!
-    addMonthlyEntryToMember(
-        memberId: ID!
-        monthlyEntry: MonthlyEntryInput!
-    ): Member!
-    removeMonthlyEntry(id: ID!): Boolean
-    approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
-    createPaymentCompletionLink(memberId: ID!): PaymentCompletionResponse!
-    updateClaimState(id: ID!, state: ClaimState!): Claim
-    createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): Claim
-    addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
-    createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
-    createClaimSwishPayment(id: ID!, payment: ClaimSwishPaymentInput!): Claim
-    setClaimType(id: ID!, type: String): Claim
-    setClaimOutcome(id: ID!, outcome: String): Claim
-    setClaimPropertySelection(
-        id: ID!
-        claimType: String!
-        propertyId: ID!
-        optionIds: [ID!]!
-    ): Claim
-    setDateOfOccurrence(id: ID!, date: LocalDate!): Claim
-    updateReserve(id: ID!, amount: MonetaryAmount!): Claim
-    setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
-    whitelistMember(memberId: ID!): Member!
-    markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
-    backfillSubscriptions(memberId: ID!): Member!
-    setClaimFileCategory(
-        claimId: ID!
-        claimFileId: ID!
-        category: String
-    ): ClaimFileUpload
+  chargeMember(
+    id: ID!
+    amount: MonetaryAmount!
+    allowManualCharge: Boolean
+  ): Member
+  addAccountEntryToMember(
+    memberId: ID!
+    accountEntry: AccountEntryInput!
+  ): Member!
+  addMonthlyEntryToMember(
+    memberId: ID!
+    monthlyEntry: MonthlyEntryInput!
+  ): Member!
+  removeMonthlyEntry(id: ID!): Boolean
+  approveMemberCharge(approvals: [MemberChargeApproval!]!): Boolean
+  createPaymentCompletionLink(memberId: ID!): PaymentCompletionResponse!
+  updateClaimState(id: ID!, state: ClaimState!): Claim
+  createClaim(memberId: ID!, date: LocalDateTime!, source: ClaimSource!): Claim
+  addClaimNote(id: ID!, note: ClaimNoteInput!): Claim
+  createClaimPayment(id: ID!, payment: ClaimPaymentInput!): Claim
+  createClaimSwishPayment(id: ID!, payment: ClaimSwishPaymentInput!): Claim
+  setClaimType(id: ID!, type: String): Claim
+  setClaimOutcome(id: ID!, outcome: String): Claim
+  setClaimPropertySelection(
+    id: ID!
+    claimType: String!
+    propertyId: ID!
+    optionIds: [ID!]!
+  ): Claim
+  setDateOfOccurrence(id: ID!, date: LocalDate!): Claim
+  updateReserve(id: ID!, amount: MonetaryAmount!): Claim
+  setCoveringEmployee(id: ID!, coveringEmployee: Boolean!): Claim
+  whitelistMember(memberId: ID!): Member!
+  markClaimFileAsDeleted(claimId: ID!, claimFileId: ID!): Boolean
+  backfillSubscriptions(memberId: ID!): Member!
+  setClaimFileCategory(
+    claimId: ID!
+    claimFileId: ID!
+    category: String
+  ): ClaimFileUpload
 
-    addAgreementFromQuote(
-        id: ID!
-        contractId: ID!
-        activeFrom: LocalDate
-        activeTo: LocalDate
-        previousAgreementActiveTo: LocalDate
-    ): Quote!
+  addAgreementFromQuote(
+    id: ID!
+    contractId: ID!
+    activeFrom: LocalDate
+    activeTo: LocalDate
+    previousAgreementActiveTo: LocalDate
+  ): Quote!
 
-    createQuoteFromAgreement(agreementId: ID!, memberId: ID!): Quote!
-    markSwitchableSwitcherEmailAsReminded(id: ID!): SwitchableSwitcherEmail!
+  createQuoteFromAgreement(agreementId: ID!, memberId: ID!): Quote!
+  markSwitchableSwitcherEmailAsReminded(id: ID!): SwitchableSwitcherEmail!
 
-    updateSwitcherEmailInfo(
-        id: ID!
-        request: UpdateSwitcherNoteInput
-    ): SwitchableSwitcherEmail!
-    updateEdiSwitcherNote(
-        id: ID!
-        request: UpdateSwitcherNoteInput!
-    ): EdiSwitcher!
+  updateSwitcherEmailInfo(
+    id: ID!
+    request: UpdateSwitcherNoteInput
+  ): SwitchableSwitcherEmail!
+  updateEdiSwitcherNote(
+    id: ID!
+    request: UpdateSwitcherNoteInput!
+  ): EdiSwitcher!
 
-    terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
-    activatePendingAgreement(
-        contractId: ID!
-        request: ActivatePendingAgreementInput
-    ): Contract!
-    changeTerminationDate(
-        contractId: ID!
-        request: ChangeTerminationDateInput!
-    ): Contract!
-    revertTermination(contractId: ID!): Contract!
-    createNorwegianGripenPriceEngine(
-        request: CreateNorwegianGripenInput
-    ): Boolean!
-    addNorwegianPostalCodes(postalCodesString: String): Boolean!
-    changeToDate(agreementId: ID!, request: ChangeToDateInput): Contract!
-    changeFromDate(agreementId: ID!, request: ChangeFromDateInput): Contract!
-    safelyEdit(agreementId: ID!, request: SafelyEditAgreementInput): Contract!
-    regenerateCertificate(agreementId: ID!): Contract!
-    sendMessage(input: SendMessageInput!): SendMessageResponse!
-    markQuestionAsResolved(memberId: ID!): Boolean!
-    answerQuestion(memberId: ID!, answer: String!): Boolean!
-    updateQuoteBySchema(
-        quoteId: ID!
-        schemaData: JSON!
-        bypassUnderwritingGuidelines: Boolean!
-    ): Quote!
-    createQuoteForMemberBySchema(
-        memberId: ID!
-        schemaData: JSON!
-        bypassUnderwritingGuidelines: Boolean!
-    ): Quote!
-    signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
-    overrideQuotePrice(input: OverrideQuotePriceInput!): Quote!
+  terminateContract(contractId: ID!, request: TerminateContractInput): Contract!
+  activatePendingAgreement(
+    contractId: ID!
+    request: ActivatePendingAgreementInput
+  ): Contract!
+  changeTerminationDate(
+    contractId: ID!
+    request: ChangeTerminationDateInput!
+  ): Contract!
+  revertTermination(contractId: ID!): Contract!
+  createNorwegianGripenPriceEngine(
+    request: CreateNorwegianGripenInput
+  ): Boolean!
+  addNorwegianPostalCodes(postalCodesString: String): Boolean!
+  changeToDate(agreementId: ID!, request: ChangeToDateInput): Contract!
+  changeFromDate(agreementId: ID!, request: ChangeFromDateInput): Contract!
+  safelyEdit(agreementId: ID!, request: SafelyEditAgreementInput): Contract!
+  regenerateCertificate(agreementId: ID!): Contract!
+  sendMessage(input: SendMessageInput!): SendMessageResponse!
+  markQuestionAsResolved(memberId: ID!): Boolean!
+  answerQuestion(memberId: ID!, answer: String!): Boolean!
+  updateQuoteBySchema(
+    quoteId: ID!
+    schemaData: JSON!
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
+  createQuoteForMemberBySchema(
+    memberId: ID!
+    schemaData: JSON!
+    bypassUnderwritingGuidelines: Boolean!
+  ): Quote!
+  signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
+  overrideQuotePrice(input: OverrideQuotePriceInput!): Quote!
+  bypassUnderwritingGuidelines(quoteIds: [ID!]!): [Quote!]!
 
-    createCampaignPartner(partnerId: ID!, partnerName: String!): Boolean!
-    assignCampaignToPartnerPercentageDiscount(
-        request: AssignVoucherPercentageDiscount
-    ): Boolean!
-    assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
-    assignCampaignToPartnerNoDiscount(request: AssignVoucherNoDiscount): Boolean!
-    assignCampaignToPartnerVisibleNoDiscount(
-        request: AssignVoucherVisibleNoDiscount
-    ): Boolean!
-    setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign!
-    setCampaignOwner(id: ID!, partnerId: String!): VoucherCampaign!
-    setCampaignValidFrom(id: ID!, validFrom: Instant): VoucherCampaign!
-    setCampaignValidUntil(id: ID!, validUntil: Instant): VoucherCampaign!
+  createCampaignPartner(partnerId: ID!, partnerName: String!): Boolean!
+  assignCampaignToPartnerPercentageDiscount(
+    request: AssignVoucherPercentageDiscount
+  ): Boolean!
+  assignCampaignToPartnerFreeMonths(request: AssignVoucherFreeMonths): Boolean!
+  assignCampaignToPartnerNoDiscount(request: AssignVoucherNoDiscount): Boolean!
+  assignCampaignToPartnerVisibleNoDiscount(
+    request: AssignVoucherVisibleNoDiscount
+  ): Boolean!
+  setCampaignCodeType(id: ID!, codeType: String!): VoucherCampaign!
+  setCampaignOwner(id: ID!, partnerId: String!): VoucherCampaign!
+  setCampaignValidFrom(id: ID!, validFrom: Instant): VoucherCampaign!
+  setCampaignValidUntil(id: ID!, validUntil: Instant): VoucherCampaign!
 
-    setContractForClaim(claimId: ID!, contractId: ID!): Claim!
-    setTrialForClaim(claimId: ID!, trialId: ID!): Claim!
+  setContractForClaim(claimId: ID!, contractId: ID!): Claim!
+  setTrialForClaim(claimId: ID!, trialId: ID!): Claim!
 
-    manualRedeemCampaign(
-        memberId: ID!
-        request: ManualRedeemCampaignInput!
-    ): Member!
-    manualUnRedeemCampaign(
-        memberId: ID!
-        request: ManualUnRedeemCampaignInput!
-    ): Member!
-    unsignMember(ssn: String, email: String): Boolean!
-    terminateContracts(ssn: String, email: String): Boolean!
-    editMemberInfo(request: EditMemberInfoInput!): Member!
-    setFraudulentStatus(
-        memberId: ID!
-        request: MemberFraudulentStatusInput!
-    ): Member!
-    createEmployee(email: String!, role: String!): Employee!
-    updateEmployeeRole(id: ID!, role: String!): Employee!
-    removeEmployee(id: ID!): Boolean!
-    payoutMember(memberId: ID!, request: PayoutMemberInput!): Transaction
+  manualRedeemCampaign(
+    memberId: ID!
+    request: ManualRedeemCampaignInput!
+  ): Member!
+  manualUnRedeemCampaign(
+    memberId: ID!
+    request: ManualUnRedeemCampaignInput!
+  ): Member!
+  unsignMember(ssn: String, email: String): Boolean!
+  terminateContracts(ssn: String, email: String): Boolean!
+  editMemberInfo(request: EditMemberInfoInput!): Member!
+  setFraudulentStatus(
+    memberId: ID!
+    request: MemberFraudulentStatusInput!
+  ): Member!
+  createEmployee(email: String!, role: String!): Employee!
+  updateEmployeeRole(id: ID!, role: String!): Employee!
+  removeEmployee(id: ID!): Boolean!
+  payoutMember(memberId: ID!, request: PayoutMemberInput!): Transaction
 
-    createClaimTypeRelation(
-        request: CreateClaimTypeRelationInput
-    ): ClaimTypeRelation!
-    deleteClaimTypeRelation(id: ID!): Boolean!
-    updateClaimProperty(id: ID!, name: String!): ClaimProperty!
-    deprecateClaimProperty(id: ID!): Boolean!
-    createClaimProperty(name: String!): ClaimProperty!
-    updateClaimPropertyOption(id: ID!, name: String!): ClaimPropertyOption!
-    deprecateClaimPropertyOption(id: ID!): Boolean!
-    createClaimPropertyOption(name: String): ClaimPropertyOption!
+  createClaimTypeRelation(
+    request: CreateClaimTypeRelationInput
+  ): ClaimTypeRelation!
+  deleteClaimTypeRelation(id: ID!): Boolean!
+  updateClaimProperty(id: ID!, name: String!): ClaimProperty!
+  deprecateClaimProperty(id: ID!): Boolean!
+  createClaimProperty(name: String!): ClaimProperty!
+  updateClaimPropertyOption(id: ID!, name: String!): ClaimPropertyOption!
+  deprecateClaimPropertyOption(id: ID!): Boolean!
+  createClaimPropertyOption(name: String): ClaimPropertyOption!
 
-    upsertCoInsured(claimId: ID!, request: UpsertCoInsuredInput!): Claim!
-    deleteCoInsured(claimId: ID!): Boolean!
+  upsertCoInsured(claimId: ID!, request: UpsertCoInsuredInput!): Claim!
+  deleteCoInsured(claimId: ID!): Boolean!
 
-    updateUser(input: UpdateUserInput!): User!
-    upsertUserSettings(settings: [UpsertUserSettingInput!]!): UserSettings!
+  updateUser(input: UpdateUserInput!): User!
+  upsertUserSettings(settings: [UpsertUserSettingInput!]!): UserSettings!
 
-    restrictResourceAccess(resourceId: ID!): ResourceAccessInformation!
-    releaseResourceAccess(resourceId: ID!): Boolean!
-    grantResourceAccess(
-        resourceId: ID!
-        grantHolder: String!
-        grantHolderType: GrantHolderType!
-    ): ResourceAccessInformation!
+  restrictResourceAccess(resourceId: ID!): ResourceAccessInformation!
+  releaseResourceAccess(resourceId: ID!): Boolean!
+  grantResourceAccess(
+    resourceId: ID!
+    grantHolder: String!
+    grantHolderType: GrantHolderType!
+  ): ResourceAccessInformation!
 
-    markNotificationAsRead(notificationId: ID!): UserNotification!
-    markAllNotificationsAsRead: [UserNotification!]!
+  markNotificationAsRead(notificationId: ID!): UserNotification!
+  markAllNotificationsAsRead: [UserNotification!]!
 
-    sharePath(path: String!, userId: ID!): Boolean!
+  sharePath(path: String!, userId: ID!): Boolean!
 
-    setPortal(portal: String!): User!
+  setPortal(portal: String!): User!
 
-    userCheckIn: User!
-    userCheckOut: User!
+  userCheckIn: User!
+  userCheckOut: User!
 
-    userSetMarket(market: String!, value: Boolean): User!
+  userSetMarket(market: String!, value: Boolean): User!
 
-    upsertTemplate(input: UpsertTemplateInput!): Template!
-    removeTemplate(id: ID!): Boolean!
-    togglePinStatus(id: ID!): Template!
+  upsertTemplate(input: UpsertTemplateInput!): Template!
+  removeTemplate(id: ID!): Boolean!
+  togglePinStatus(id: ID!): Template!
 }
 
 type ClaimTypeSearchResponse {
@@ -240,55 +241,55 @@ type ClaimTypeSearchResponse {
 }
 
 type Template {
-    id: ID!
-    title: String!
-    messages: [TemplateMessage!]!
-    expirationDate: LocalDate
-    pinned: Boolean!
+  id: ID!
+  title: String!
+  messages: [TemplateMessage!]!
+  expirationDate: LocalDate
+  pinned: Boolean!
 }
 
 type TemplateMessage {
-    language: String!
-    message: String!
+  language: String!
+  message: String!
 }
 
 input UpsertTemplateInput {
-    id: ID
-    title: String!
-    expirationDate: LocalDate
-    messages: [UpsertTemplateMessageInput!]!
+  id: ID
+  title: String!
+  expirationDate: LocalDate
+  messages: [UpsertTemplateMessageInput!]!
 }
 
 input UpsertTemplateMessageInput {
-    language: String!
-    message: String!
+  language: String!
+  message: String!
 }
 
 type MemberSearchHit {
-    id: ID!
-    memberId: String
-    firstName: String
-    lastName: String
+  id: ID!
+  memberId: String
+  firstName: String
+  lastName: String
 }
 
 type NoteSearchHit {
-    id: ID!
-    memberId: String
-    firstName: String
-    lastName: String
-    claimId: String
-    text: String
-    author: String
+  id: ID!
+  memberId: String
+  firstName: String
+  lastName: String
+  claimId: String
+  text: String
+  author: String
 }
 
 type QuoteSearchHit {
-    id: ID!
-    memberId: String
-    ssn: String
-    fullName: String
-    street: String
-    postalCode: String
-    city: String
+  id: ID!
+  memberId: String
+  ssn: String
+  fullName: String
+  street: String
+  postalCode: String
+  city: String
 }
 
 type QuoteCartSearchHit {
@@ -297,98 +298,94 @@ type QuoteCartSearchHit {
 }
 
 type SearchResultHighlight {
-    field: String!
-    values: [String!]!
+  field: String!
+  values: [String!]!
 }
 
-union SearchHit =
-    MemberSearchHit
-  | NoteSearchHit
-  | QuoteSearchHit
-  | QuoteCartSearchHit
+union SearchHit = MemberSearchHit | NoteSearchHit | QuoteSearchHit | QuoteCartSearchHit
 
 type SearchResult {
-    hit: SearchHit!
-    highlights: [SearchResultHighlight!]!
+  hit: SearchHit!
+  highlights: [SearchResultHighlight!]!
 }
 
 type SimpleMemberLookupResult {
-    memberId: ID!
-    firstName: String!
-    lastName: String!
-    email: String!
-    phoneNumber: String!
-    market: String!
-    contracts: [SimpleMemberLookupContract!]!
+  memberId: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String!
+  market: String!
+  contracts: [SimpleMemberLookupContract!]!
 }
 
 type SimpleMemberLookupContract {
-    contractId: ID!
-    typeOfContract: String!
-    masterInception: LocalDate
-    terminationDate: LocalDate
-    numberCoInsured: Int!
-    address: Address
+  contractId: ID!
+  typeOfContract: String!
+  masterInception: LocalDate
+  terminationDate: LocalDate
+  numberCoInsured: Int!
+  address: Address
 }
 
 type ResourceAccessInformation {
-    resourceId: ID!
-    restrictedBy: User!
-    restrictedByMe: Boolean!
+  resourceId: ID!
+  restrictedBy: User!
+  restrictedByMe: Boolean!
 
-    usersGranted: [User!]!
-    usersRestricted: [User!]!
+  usersGranted: [User!]!
+  usersRestricted: [User!]!
 
-    rolesGranted: [String!]!
-    rolesRestricted: [String!]!
+  rolesGranted: [String!]!
+  rolesRestricted: [String!]!
 }
 
 type Me {
-    scopes: [String!]!
-    role: String!
-    user: User!
-    settings: UserSettings!
-    portal: String!
-    availablePortals: [String!]!
+  scopes: [String!]!
+  role: String!
+  user: User!
+  settings: UserSettings!
+  portal: String!
+  availablePortals: [String!]!
 }
 
 type User {
-    id: ID!
-    email: String!
-    role: String
-    fullName: String!
-    signature: String!
-    phoneNumber: String
-    latestPresence: Instant
-    latestLocation: String
-    notifications(filters: UserNotificationsFilter): [UserNotification!]!
-    checkedIn: Boolean!
-    markets: [String!]!
-    tasks(type: String): [Task!]!
+  id: ID!
+  email: String!
+  role: String
+  fullName: String!
+  signature: String!
+  phoneNumber: String
+  latestPresence: Instant
+  latestLocation: String
+  notifications(filters: UserNotificationsFilter): [UserNotification!]!
+  checkedIn: Boolean!
+  markets: [String!]!
+  tasks(type: String): [Task!]!
 }
 
 union TaskResource = QuestionGroup | Claim
 
 type Task {
-    id: ID!
-    resource: TaskResource
-    createdAt: Instant!
+  id: ID!
+  resource: TaskResource
+  createdAt: Instant!
 }
 
 input UserNotificationsFilter {
-    before: Instant
-    after: Instant
+  before: Instant
+  after: Instant
 }
 
 type UserNotification {
-    id: ID!
-    message: String!
-    createdAt: Instant!
-    url: String!
-    read: Boolean!
-    user: User!
-    from: User
-    verbose: Boolean!
+  id: ID!
+  message: String!
+  createdAt: Instant!
+  url: String!
+  read: Boolean!
+  user: User!
+  from: User
+  verbose: Boolean!
 }
 
 type UserSettings {
@@ -409,948 +406,950 @@ type UserSettings {
 }
 
 enum GrantHolderType {
-    USER
-    ROLE
+  USER
+  ROLE
 }
 
 input UpsertCoInsuredInput {
-    fullName: String!
-    personalNumber: String!
-    email: String
-    phoneNumber: String
+  fullName: String!
+  personalNumber: String!
+  email: String
+  phoneNumber: String
 }
 
 input UpdateUserInput {
-    fullName: String
-    phoneNumber: String
+  fullName: String
+  phoneNumber: String
 }
 
 input UpsertUserSettingInput {
-    key: String!
-    value: JSON
+  key: String!
+  value: JSON
 }
 
 type ClaimTypeTemplate {
-    claimType: String!
-    properties: [ClaimPropertyTemplate!]!
+  claimType: String!
+  properties: [ClaimPropertyTemplate!]!
 }
 
 type ClaimPropertyTemplate {
-    propertyId: ID!
-    name: String!
-    options: [ClaimPropertyOption!]!
+  propertyId: ID!
+  name: String!
+  options: [ClaimPropertyOption!]!
 }
 
 type ClaimTypeRelation {
-    id: ID!
-    claimType: String!
-    property: ClaimProperty!
-    propertyOption: ClaimPropertyOption!
+  id: ID!
+  claimType: String!
+  property: ClaimProperty!
+  propertyOption: ClaimPropertyOption!
 }
 
 type ClaimProperty {
-    id: ID!
-    name: String!
+  id: ID!
+  name: String!
 }
 
 type ClaimPropertyOption {
-    id: ID!
-    name: String!
+  id: ID!
+  name: String!
 }
 
 input CreateClaimTypeRelationInput {
-    claimType: String!
-    propertyId: ID!
-    propertyOptionId: ID!
+  claimType: String!
+  propertyId: ID!
+  propertyOptionId: ID!
 }
 
 enum PayoutCategory {
-    MARKETING
-    REFERRAL
-    REFUND
+  MARKETING
+  REFERRAL
+  REFUND
 }
 
 input SelectedPayoutDetails {
-    type: String!
-    phoneNumber: String
-    ssn: String
-    message: String
+  type: String!
+  phoneNumber: String
+  ssn: String
+  message: String
 }
 
 input PayoutMemberInput {
-    amount: MonetaryAmount!
-    sanctionBypassed: Boolean
-    category: PayoutCategory
-    referenceId: String
-    note: String
-    carrier: String
-    payoutDetails: SelectedPayoutDetails
+  amount: MonetaryAmount!
+  sanctionBypassed: Boolean
+  category: PayoutCategory
+  referenceId: String
+  note: String
+  carrier: String
+  payoutDetails: SelectedPayoutDetails
 }
 
 type ListClaimsResult {
-    claims: [Claim!]!
-    totalPages: Int!
-    page: Int!
-    totalClaims: Int!
+  claims: [Claim!]!
+  totalPages: Int!
+  page: Int!
+  totalClaims: Int!
 }
 
 input ListClaimsOptions {
-    includeAll: Boolean
-    page: Int
-    pageSize: Int
-    sortBy: String
-    sortDirection: String
-    filterClaimStates: [ClaimState!]
-    filterCreatedBeforeOrOnDate: LocalDate
-    filterComplexities: [ClaimComplexity!]
-    filterNumberOfMemberGroups: Int
-    filterSelectedMemberGroups: [Int!]
-    filterMarkets: [String!]
-    filterTypesOfContract: [String!]
-    filterReserveAmount: BigDecimal
-    filterClaimTypes: [String!]
-    filterClaimOutcomes: [String!]
+  includeAll: Boolean
+  page: Int
+  pageSize: Int
+  sortBy: String
+  sortDirection: String
+  filterClaimStates: [ClaimState!]
+  filterCreatedBeforeOrOnDate: LocalDate
+  filterComplexities: [ClaimComplexity!]
+  filterNumberOfMemberGroups: Int
+  filterSelectedMemberGroups: [Int!]
+  filterMarkets: [String!]
+  filterTypesOfContract: [String!]
+  filterReserveAmount: BigDecimal
+  filterClaimTypes: [String!]
+  filterClaimOutcomes: [String!]
 }
 
 type MemberSearchResult {
-    members: [Member!]!
-    totalPages: Int!
-    page: Int!
+  members: [Member!]!
+  totalPages: Int!
+  page: Int!
 }
 
 input MemberSearchOptions {
-    includeAll: Boolean
-    page: Int
-    pageSize: Int
-    sortBy: String
-    sortDirection: String
+  includeAll: Boolean
+  page: Int
+  pageSize: Int
+  sortBy: String
+  sortDirection: String
 }
 
 type DashboardNumbers {
-    numberOfClaims: Int!
-    numberOfQuestions: Int!
+  numberOfClaims: Int!
+  numberOfQuestions: Int!
 }
 
 input MemberFraudulentStatusInput {
-    fraudulentStatus: String!
-    fraudulentStatusDescription: String
+  fraudulentStatus: String!
+  fraudulentStatusDescription: String
 }
 
 input EditMemberInfoInput {
-    memberId: String!
-    firstName: String
-    lastName: String
-    email: String
-    phoneNumber: String
-    birthDate: LocalDate
+  memberId: String!
+  firstName: String
+  lastName: String
+  email: String
+  phoneNumber: String
+  birthDate: LocalDate
 }
 
 input OverrideQuotePriceInput {
-    quoteId: ID!
-    price: BigDecimal!
+  quoteId: ID!
+  price: BigDecimal!
 }
 
 type Contract {
-    id: ID!
-    holderMember: Member!
-    switchedFrom: String
-    masterInception: LocalDate
-    status: ContractStatus!
-    typeOfContract: String!
-    isTerminated: Boolean!
-    terminationDate: LocalDate
-    currentAgreementId: ID!
-    currentAgreement: GenericAgreement!
-    hasPendingAgreement: Boolean!
-    genericAgreements: [GenericAgreement!]!
-    hasQueuedRenewal: Boolean!
-    renewal: Renewal
-    preferredCurrency: String!
-    market: String!
-    signSource: String
-    contractTypeName: String!
-    createdAt: Instant!
-    isLocked: Boolean!
-    selfChangeBlockers: [String!]!
+  id: ID!
+  holderMember: Member!
+  switchedFrom: String
+  masterInception: LocalDate
+  status: ContractStatus!
+  typeOfContract: String!
+  isTerminated: Boolean!
+  terminationDate: LocalDate
+  currentAgreementId: ID!
+  currentAgreement: GenericAgreement!
+  hasPendingAgreement: Boolean!
+  genericAgreements: [GenericAgreement!]!
+  hasQueuedRenewal: Boolean!
+  renewal: Renewal
+  preferredCurrency: String!
+  market: String!
+  signSource: String
+  contractTypeName: String!
+  createdAt: Instant!
+  isLocked: Boolean!
+  selfChangeBlockers: [String!]!
 }
 
 enum ContractStatus {
-    PENDING
-    ACTIVE_IN_FUTURE
-    ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE
-    ACTIVE
-    TERMINATED_TODAY
-    TERMINATED_IN_FUTURE
-    TERMINATED
+  PENDING
+  ACTIVE_IN_FUTURE
+  ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE
+  ACTIVE
+  TERMINATED_TODAY
+  TERMINATED_IN_FUTURE
+  TERMINATED
 }
 
 type TermsAndConditions {
-    commencementDate: LocalDate!
-    displayName: String!
-    url: String!
+  commencementDate: LocalDate!
+  displayName: String!
+  url: String!
 }
 
 type Employee {
-    id: ID!
-    email: String!
-    role: String!
-    firstGrantedAt: Instant!
+  id: ID!
+  email: String!
+  role: String!
+  firstGrantedAt: Instant!
 }
 
 type GenericAgreement {
-    id: ID!
-    fromDate: LocalDate
-    toDate: LocalDate
-    premium: MonetaryAmountV2!
-    certificateUrl: String
-    status: AgreementStatus!
-    typeOfContract: String!
-    address: Address
-    numberCoInsured: Int
-    squareMeters: Int
-    ancillaryArea: Int
-    yearOfConstruction: Int
-    numberOfBathrooms: Int
-    extraBuildings: [ExtraBuilding!]
-    isSubleted: Boolean
-    lineOfBusinessName: String!
-    carrier: String!
-    partner: String
-    createdAt: Instant!
-    termsAndConditions: TermsAndConditions
+  id: ID!
+  fromDate: LocalDate
+  toDate: LocalDate
+  premium: MonetaryAmountV2!
+  certificateUrl: String
+  status: AgreementStatus!
+  typeOfContract: String!
+  address: Address
+  numberCoInsured: Int
+  squareMeters: Int
+  ancillaryArea: Int
+  yearOfConstruction: Int
+  numberOfBathrooms: Int
+  extraBuildings: [ExtraBuilding!]
+  isSubleted: Boolean
+  lineOfBusinessName: String!
+  carrier: String!
+  partner: String
+  createdAt: Instant!
+  termsAndConditions: TermsAndConditions
 }
 
 enum AgreementStatus {
-    PENDING
-    ACTIVE_IN_FUTURE
-    ACTIVE
-    ACTIVE_IN_PAST
-    TERMINATED
+  PENDING
+  ACTIVE_IN_FUTURE
+  ACTIVE
+  ACTIVE_IN_PAST
+  TERMINATED
 }
 
 type Address {
-    street: String!
-    postalCode: String!
-    city: String
+  street: String!
+  postalCode: String!
+  city: String
 }
 
 type Renewal {
-    renewalDate: LocalDate!
-    draftCertificateUrl: String
-    draftOfAgreementId: ID
+  renewalDate: LocalDate!
+  draftCertificateUrl: String
+  draftOfAgreementId: ID
 }
 
 input SetContractForClaim {
-    claimId: String!
-    memberId: String!
-    contractId: String!
+  claimId: String!
+  memberId: String!
+  contractId: String!
 }
 
 input TerminateContractInput {
-    terminationDate: LocalDate!
-    terminationReason: String!
-    comment: String
+  terminationDate: LocalDate!
+  terminationReason: String!
+  comment: String
 }
 
 input ChangeTerminationDateInput {
-    newTerminationDate: LocalDate!
+  newTerminationDate: LocalDate!
 }
 
 input ActivatePendingAgreementInput {
-    pendingAgreementId: ID!
-    fromDate: LocalDate!
+  pendingAgreementId: ID!
+  fromDate: LocalDate!
 }
 
 input ChangeToDateInput {
-    newToDate: LocalDate!
+  newToDate: LocalDate!
 }
 
 input ChangeFromDateInput {
-    newFromDate: LocalDate!
+  newFromDate: LocalDate!
 }
 
 input SafelyEditAgreementInput {
-    newStreet: String
+  newStreet: String
 }
 
 input AssignVoucherPercentageDiscount {
-    partnerId: String!
-    numberOfMonths: Int!
-    percentageDiscount: Float!
-    code: String!
-    validFrom: Instant
-    validUntil: Instant
-    codeType: String
+  partnerId: String!
+  numberOfMonths: Int!
+  percentageDiscount: Float!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+  codeType: String
 }
 
 input AssignVoucherFreeMonths {
-    partnerId: String!
-    numberOfFreeMonths: Int!
-    code: String!
-    validFrom: Instant
-    validUntil: Instant
-    codeType: String
+  partnerId: String!
+  numberOfFreeMonths: Int!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+  codeType: String
 }
 
 input AssignVoucherNoDiscount {
-    partnerId: String!
-    code: String!
-    validFrom: Instant
-    validUntil: Instant
-    codeType: String
+  partnerId: String!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+  codeType: String
 }
 
 input AssignVoucherVisibleNoDiscount {
-    partnerId: String!
-    code: String!
-    validFrom: Instant
-    validUntil: Instant
-    codeType: String
+  partnerId: String!
+  code: String!
+  validFrom: Instant
+  validUntil: Instant
+  codeType: String
 }
 
 type CampaignOwnerPartner {
-    partnerId: String!
+  partnerId: String!
 }
 
 type VoucherCampaign {
-    id: ID!
-    campaignCode: String!
-    partnerId: String!
-    partnerName: String!
-    validFrom: Instant
-    validTo: Instant
-    incentive: Incentive
-    codeType: String
+  id: ID!
+  campaignCode: String!
+  partnerId: String!
+  partnerName: String!
+  validFrom: Instant
+  validTo: Instant
+  incentive: Incentive
+  codeType: String
 }
 
 type MonthlyPercentageDiscountFixedPeriod {
-    numberOfMonths: Int
-    percentage: Float
+  numberOfMonths: Int
+  percentage: Float
 }
 
 type FreeMonths {
-    numberOfMonths: Int
+  numberOfMonths: Int
 }
 
 type CostDeduction {
-    amount: MonetaryAmount
+  amount: MonetaryAmount
 }
 
 type NoDiscount {
-    _: Boolean
+  _: Boolean
 }
 
 type IndefinitePercentageDiscount {
-    percentageDiscount: Float
+  percentageDiscount: Float
 }
 
 type VisibleNoDiscount {
-    _: Boolean
+  _: Boolean
 }
 
 type UnknownIncentive {
-    _: Boolean
+  _: Boolean
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
-    | FreeMonths
-    | CostDeduction
-    | NoDiscount
-    | IndefinitePercentageDiscount
-    | VisibleNoDiscount
-    | UnknownIncentive
+  MonthlyPercentageDiscountFixedPeriod
+  | FreeMonths
+  | CostDeduction
+  | NoDiscount
+  | IndefinitePercentageDiscount
+  | VisibleNoDiscount
+  | UnknownIncentive
 
 type FileUpload {
-    fileUploadUrl: URL
-    timestamp: Instant
-    mimeType: String
-    memberId: ID
+  fileUploadUrl: URL
+  timestamp: Instant
+  mimeType: String
+  memberId: ID
 }
 
 type ClaimFileUpload {
-    claimFileId: ID
-    fileUploadUrl: URL
-    uploadedAt: Instant
-    claimId: ID
-    category: String
-    contentType: String
+  claimFileId: ID
+  fileUploadUrl: URL
+  uploadedAt: Instant
+  claimId: ID
+  category: String
+  contentType: String
 }
 
 type PaymentDefault {
-    year: Int
-    week: Int
-    paymentDefaultType: String
-    paymentDefaultTypeText: String
-    amount: MonetaryAmount
-    caseId: String
-    claimant: String
+  year: Int
+  week: Int
+  paymentDefaultType: String
+  paymentDefaultTypeText: String
+  amount: MonetaryAmount
+  caseId: String
+  claimant: String
 }
 
 type Debt {
-    paymentDefaults: [PaymentDefault]
-    debtDate: LocalDate
-    totalAmountPublicDebt: MonetaryAmount
-    numberPublicDebts: Int
-    totalAmountPrivateDebt: MonetaryAmount
-    numberPrivateDebts: Int
-    totalAmountDebt: MonetaryAmount
-    checkedAt: Instant
-    fromDateTime: LocalDateTime
+  paymentDefaults: [PaymentDefault]
+  debtDate: LocalDate
+  totalAmountPublicDebt: MonetaryAmount
+  numberPublicDebts: Int
+  totalAmountPrivateDebt: MonetaryAmount
+  numberPrivateDebts: Int
+  totalAmountDebt: MonetaryAmount
+  checkedAt: Instant
+  fromDateTime: LocalDateTime
 }
 
 type Person {
-    debtFlag: Flag
-    debt: Debt
-    whitelisted: Whitelisted
-    status: PersonStatus
+  debtFlag: Flag
+  debt: Debt
+  whitelisted: Whitelisted
+  status: PersonStatus
 }
 
 type PersonStatus {
-    flag: Flag
-    whitelisted: Boolean
+  flag: Flag
+  whitelisted: Boolean
 }
 
 type Whitelisted {
-    whitelistedAt: Instant
-    whitelistedBy: String
+  whitelistedAt: Instant
+  whitelistedBy: String
 }
 
 enum Flag {
-    GREEN
-    AMBER
-    RED
+  GREEN
+  AMBER
+  RED
 }
 
 type MonthlySubscription {
-    amount: MonetaryAmount
-    member: Member
+  amount: MonetaryAmount
+  member: Member
 }
 
 type Member {
-    memberId: ID!
-    email: String
-    phoneNumber: String
-    firstName: String
-    lastName: String
-    personalNumber: String
-    birthDate: LocalDate
-    gender: Gender
-    fraudulentStatus: String
-    fraudulentStatusDescription: String
-    createdOn: Instant
-    signedOn: Instant
-    status: String
-    transactions: [Transaction]
-    adyenShopperReference: String
-    directDebitStatus: DirectDebitStatus
-    payoutMethodStatus: PayoutMethodStatus
-    monthlySubscription(month: YearMonth!): MonthlySubscription
-    sanctionStatus: SanctionStatus
-    account: Account
-    fileUploads: [FileUpload!]!
-    person: Person
-    numberFailedCharges: NumberFailedCharges
-    totalNumberOfClaims: Int!
-    quotes: [Quote!]!
-    contracts: [Contract!]!
-    claims(filterByStates: [ClaimState!]): [Claim!]!
-    contractMarketInfo: ContractMarketInfo
-    pickedLocale: String
-    referralInformation: ReferralInformation
-    identity: Identity
-    trials: [Trial!]!
+  memberId: ID!
+  email: String
+  phoneNumber: String
+  firstName: String
+  lastName: String
+  personalNumber: String
+  birthDate: LocalDate
+  gender: Gender
+  fraudulentStatus: String
+  fraudulentStatusDescription: String
+  createdOn: Instant
+  signedOn: Instant
+  status: String
+  transactions: [Transaction]
+  adyenShopperReference: String
+  directDebitStatus: DirectDebitStatus
+  payoutMethodStatus: PayoutMethodStatus
+  monthlySubscription(month: YearMonth!): MonthlySubscription
+  sanctionStatus: SanctionStatus
+  account: Account
+  fileUploads: [FileUpload!]!
+  person: Person
+  numberFailedCharges: NumberFailedCharges
+  totalNumberOfClaims: Int!
+  quotes: [Quote!]!
+  contracts: [Contract!]!
+  claims(filterByStates: [ClaimState!]): [Claim!]!
+  contractMarketInfo: ContractMarketInfo
+  pickedLocale: String
+  referralInformation: ReferralInformation
+  identity: Identity
+  trials: [Trial!]!
 }
 
 type Identity {
-    nationalIdentification: NationalIdentification!
-    firstName: String
-    lastName: String
+  nationalIdentification: NationalIdentification!
+  firstName: String
+  lastName: String
 }
 
 type NationalIdentification {
-    identification: String!
-    nationality: String!
+  identification: String!
+  nationality: String!
 }
 
 type ReferralInformation {
-    eligible: Boolean!
-    campaign: ReferralCampaign!
-    referredBy: MemberReferral
-    hasReferred: [MemberReferral!]!
-    redeemedCampaigns: [RedeemedCampaign!]!
+  eligible: Boolean!
+  campaign: ReferralCampaign!
+  referredBy: MemberReferral
+  hasReferred: [MemberReferral!]!
+  redeemedCampaigns: [RedeemedCampaign!]!
 }
 
 type RedeemedCampaign {
-    code: String!
-    type: String!
-    incentive: Incentive!
-    redemptionState: RedemptionState!
+  code: String!
+  type: String!
+  incentive: Incentive!
+  redemptionState: RedemptionState!
 }
 
 type RedemptionState {
-    redeemedAt: Instant!
-    activatedAt: Instant
-    activeTo: Instant
-    terminatedAt: Instant
-    unRedeemedAt: Instant
+  redeemedAt: Instant!
+  activatedAt: Instant
+  activeTo: Instant
+  terminatedAt: Instant
+  unRedeemedAt: Instant
 }
 
 type ReferralCampaign {
-    code: String!
-    incentive: Incentive
+  code: String!
+  incentive: Incentive
 }
 
 type MemberReferral {
-    memberId: String!
-    name: String
-    status: String!
-    incentive: Incentive!
+  memberId: String!
+  name: String
+  status: String!
+  incentive: Incentive!
 }
 
 input ManualRedeemCampaignInput {
-    campaignCode: String!
-    activationDate: LocalDate
+  campaignCode: String!
+  activationDate: LocalDate
 }
 
 input ManualUnRedeemCampaignInput {
-    campaignCode: String!
+  campaignCode: String!
 }
 
 type ContractMarketInfo {
-    market: String!
-    preferredCurrency: String!
+  market: String!
+  preferredCurrency: String!
 }
 
 enum Gender {
-    MALE
-    FEMALE
-    OTHER
+  MALE
+  FEMALE
+  OTHER
 }
 
 type Quote {
-    id: ID!
-    createdAt: Instant
-    price: Float
-    currency: String
-    productType: String
-    state: String
-    initiatedFrom: String
-    attributedTo: String
-    currentInsurer: String
-    startDate: String
-    validity: Int
-    memberId: ID
-    breachedUnderwritingGuidelines: [String!]
-    isComplete: Boolean
-    schema: JSON
-    schemaData: JSON
-    signedProductId: ID
-    originatingProductId: ID
-    isReadyToSign: Boolean
-    allowOverrideSignFromHope: Boolean
-    signedAt: Instant
+  id: ID!
+  createdAt: Instant
+  market: String!
+  price: Float
+  currency: String
+  productType: String
+  state: String
+  initiatedFrom: String
+  attributedTo: String
+  currentInsurer: String
+  startDate: String
+  validity: Int
+  memberId: ID
+  breachedUnderwritingGuidelines: [String!]
+  underwritingGuidelinesBypassed: Boolean!
+  isComplete: Boolean
+  schema: JSON
+  schemaData: JSON
+  signedProductId: ID
+  originatingProductId: ID
+  isReadyToSign: Boolean
+  allowOverrideSignFromHope: Boolean
+  signedAt: Instant
 }
 
 input CampaignFilter {
-    code: String
-    partnerId: String
-    activeFrom: LocalDate
-    activeTo: LocalDate
+  code: String
+  partnerId: String
+  activeFrom: LocalDate
+  activeTo: LocalDate
 }
 
 type ExtraBuilding {
-    id: ID
-    type: ExtraBuildingType!
-    area: Int!
-    hasWaterConnected: Boolean!
-    displayName: String
+  id: ID
+  type: ExtraBuildingType!
+  area: Int!
+  hasWaterConnected: Boolean!
+  displayName: String
 }
 
 enum ExtraBuildingType {
-    GARAGE
-    CARPORT
-    SHED
-    STOREHOUSE
-    FRIGGEBOD
-    ATTEFALL
-    OUTHOUSE
-    GUESTHOUSE
-    GAZEBO
-    GREENHOUSE
-    SAUNA
-    BARN
-    BOATHOUSE
-    OTHER
+  GARAGE
+  CARPORT
+  SHED
+  STOREHOUSE
+  FRIGGEBOD
+  ATTEFALL
+  OUTHOUSE
+  GUESTHOUSE
+  GAZEBO
+  GREENHOUSE
+  SAUNA
+  BARN
+  BOATHOUSE
+  OTHER
 }
 
 type PaymentCompletionResponse {
-    url: String!
+  url: String!
 }
 
 type Transaction {
-    id: ID
-    amount: MonetaryAmountV2
-    timestamp: Instant
-    type: String
-    status: String
+  id: ID
+  amount: MonetaryAmountV2
+  timestamp: Instant
+  type: String
+  status: String
 }
 
 type DirectDebitStatus {
-    activated: Boolean
+  activated: Boolean
 }
 
 type PayoutMethodStatus {
-    activated: Boolean
+  activated: Boolean
 }
 
 enum SanctionStatus {
-    Undetermined
-    NoHit
-    PartialHit
-    FullHit
+  Undetermined
+  NoHit
+  PartialHit
+  FullHit
 }
 
 type NumberFailedCharges {
-    numberFailedCharges: Int!
-    lastFailedChargeAt: Instant
+  numberFailedCharges: Int!
+  lastFailedChargeAt: Instant
 }
 
 type Account {
-    id: ID!
-    currentBalance: MonetaryAmountV2!
-    totalBalance: MonetaryAmountV2!
-    chargeEstimation: AccountChargeEstimation!
-    entries: [AccountEntry!]!
-    monthlyEntries: [MonthlyEntry!]!
+  id: ID!
+  currentBalance: MonetaryAmountV2!
+  totalBalance: MonetaryAmountV2!
+  chargeEstimation: AccountChargeEstimation!
+  entries: [AccountEntry!]!
+  monthlyEntries: [MonthlyEntry!]!
 }
 
 type MonthlyEntry {
-    id: ID!
-    externalId: String
-    amount: MonetaryAmountV2!
-    type: String!
-    source: String!
-    addedBy: String!
-    addedAt: Instant!
-    title: String!
-    comment: String!
+  id: ID!
+  externalId: String
+  amount: MonetaryAmountV2!
+  type: String!
+  source: String!
+  addedBy: String!
+  addedAt: Instant!
+  title: String!
+  comment: String!
 }
 
 type AccountChargeEstimation {
-    subscription: MonetaryAmountV2!
-    discount: MonetaryAmountV2!
-    charge: MonetaryAmountV2!
-    discountCodes: [String!]!
+  subscription: MonetaryAmountV2!
+  discount: MonetaryAmountV2!
+  charge: MonetaryAmountV2!
+  discountCodes: [String!]!
 }
 
 type SchedulerState {
-    id: ID!
-    member: Member
-    status: ChargeStatus!
-    changedBy: String!
-    changedAt: Instant!
-    amount: MonetaryAmount
-    transactionId: ID
+  id: ID!
+  member: Member
+  status: ChargeStatus!
+  changedBy: String!
+  changedAt: Instant!
+  amount: MonetaryAmount
+  transactionId: ID
 }
 
 input MemberChargeApproval {
-    memberId: ID!
-    amount: MonetaryAmount!
+  memberId: ID!
+  amount: MonetaryAmount!
 }
 
 input MonthlyEntryInput {
-    externalId: String
-    amount: MonetaryAmount!
-    type: String!
-    source: String!
-    title: String!
-    comment: String!
+  externalId: String
+  amount: MonetaryAmount!
+  type: String!
+  source: String!
+  title: String!
+  comment: String!
 }
 
 input AccountEntryInput {
-    type: String!
-    amount: MonetaryAmount!
-    fromDate: LocalDate!
-    reference: String!
-    source: String!
-    title: String
-    comment: String
+  type: String!
+  amount: MonetaryAmount!
+  fromDate: LocalDate!
+  reference: String!
+  source: String!
+  title: String
+  comment: String
 }
 
 type AccountEntry {
-    id: ID!
-    type: String!
-    amount: MonetaryAmountV2!
-    fromDate: LocalDate!
-    reference: String!
-    source: String!
-    title: String
-    comment: String
-    failedAt: Instant
-    chargedAt: Instant
+  id: ID!
+  type: String!
+  amount: MonetaryAmountV2!
+  fromDate: LocalDate!
+  reference: String!
+  source: String!
+  title: String
+  comment: String
+  failedAt: Instant
+  chargedAt: Instant
 }
 
 enum ClaimSource {
-    APP
-    EMAIL
-    INTERCOM
-    PHONE
-    CHAT
+  APP
+  EMAIL
+  INTERCOM
+  PHONE
+  CHAT
 }
 
 type Claim {
-    id: ID!
-    member: Member!
-    recordingUrl: String
-    state: ClaimState!
-    claimType: String
-    dateOfOccurrence: LocalDate
-    closedAt: Instant
-    outcome: String
-    reserves: MonetaryAmount
-    registrationDate: Instant!
-    notes: [ClaimNote!]!
-    transcriptions: [ClaimTranscription!]!
-    payments: [ClaimPayment!]!
-    events: [ClaimEvent!]!
-    coveringEmployee: Boolean!
-    claimFiles: [ClaimFileUpload!]!
-    contract: Contract
-    trial: Trial
-    agreement: GenericAgreement
-    propertySelections: [ClaimPropertySelection!]!
-    coInsured: CoInsured
-    restriction: ResourceAccessInformation
-    market: String
-    typeOfContract: String
+  id: ID!
+  member: Member!
+  recordingUrl: String
+  state: ClaimState!
+  claimType: String
+  dateOfOccurrence: LocalDate
+  closedAt: Instant
+  outcome: String
+  reserves: MonetaryAmount
+  registrationDate: Instant!
+  notes: [ClaimNote!]!
+  transcriptions: [ClaimTranscription!]!
+  payments: [ClaimPayment!]!
+  events: [ClaimEvent!]!
+  coveringEmployee: Boolean!
+  claimFiles: [ClaimFileUpload!]!
+  contract: Contract
+  trial: Trial
+  agreement: GenericAgreement
+  propertySelections: [ClaimPropertySelection!]!
+  coInsured: CoInsured
+  restriction: ResourceAccessInformation
+  market: String
+  typeOfContract: String
 }
 
 type CoInsured {
-    id: ID!
-    fullName: String!
-    personalNumber: String!
-    email: String
-    phoneNumber: String
+  id: ID!
+  fullName: String!
+  personalNumber: String!
+  email: String
+  phoneNumber: String
 }
 
 type ClaimPropertySelection {
-    claimType: String!
-    property: ClaimProperty!
-    option: ClaimPropertyOption!
+  claimType: String!
+  property: ClaimProperty!
+  option: ClaimPropertyOption!
 }
 
 type ClaimNote {
-    text: String!
-    date: Instant!
-    handlerReference: String
+  text: String!
+  date: Instant!
+  handlerReference: String
 }
 
 type ClaimTranscription {
-    text: String!
-    confidenceScore: Float!
-    languageCode: String!
+  text: String!
+  confidenceScore: Float!
+  languageCode: String!
 }
 
 type ClaimPayment {
-    id: String!
-    amount: MonetaryAmount!
-    deductible: MonetaryAmount!
-    note: String!
-    type: ClaimPaymentType!
-    timestamp: Instant!
-    paidAt: Instant
-    exGratia: Boolean!
-    transaction: Transaction
-    status: ClaimPaymentStatus
+  id: String!
+  amount: MonetaryAmount!
+  deductible: MonetaryAmount!
+  note: String!
+  type: ClaimPaymentType!
+  timestamp: Instant!
+  paidAt: Instant
+  exGratia: Boolean!
+  transaction: Transaction
+  status: ClaimPaymentStatus
 }
 
 enum ClaimPaymentStatus {
-    PREPARED
-    INITIATED
-    SANCTION_LIST_HIT
-    COMPLETED
-    FAILED
+  PREPARED
+  INITIATED
+  SANCTION_LIST_HIT
+  COMPLETED
+  FAILED
 }
 
 input ClaimPaymentInput {
-    amount: MonetaryAmount!
-    deductible: MonetaryAmount!
-    paidAt: Instant
-    note: String!
-    type: ClaimPaymentType!
-    exGratia: Boolean!
-    sanctionListSkipped: Boolean!
-    carrier: String!
+  amount: MonetaryAmount!
+  deductible: MonetaryAmount!
+  paidAt: Instant
+  note: String!
+  type: ClaimPaymentType!
+  exGratia: Boolean!
+  sanctionListSkipped: Boolean!
+  carrier: String!
 }
 
 input ClaimSwishPaymentInput {
-    amount: MonetaryAmount!
-    deductible: MonetaryAmount!
-    paidAt: Instant
-    note: String!
-    exGratia: Boolean!
-    sanctionListSkipped: Boolean!
-    phoneNumber: String!
-    message: String!
-    carrier: String!
+  amount: MonetaryAmount!
+  deductible: MonetaryAmount!
+  paidAt: Instant
+  note: String!
+  exGratia: Boolean!
+  sanctionListSkipped: Boolean!
+  phoneNumber: String!
+  message: String!
+  carrier: String!
 }
 
 input ClaimNoteInput {
-    text: String!
+  text: String!
 }
 
 type ClaimEvent {
-    text: String
-    date: Instant
+  text: String
+  date: Instant
 }
 
 type SwitchableSwitcherEmail {
-    id: ID!
-    member: Member!
-    switcherCompany: String!
-    queuedAt: Instant!
-    contract: Contract
-    sentAt: Instant
-    remindedAt: Instant
-    cancellationDate: LocalDate
-    switcherType: String
-    note: String
+  id: ID!
+  member: Member!
+  switcherCompany: String!
+  queuedAt: Instant!
+  contract: Contract
+  sentAt: Instant
+  remindedAt: Instant
+  cancellationDate: LocalDate
+  switcherType: String
+  note: String
 }
 
 type EdiSwitcher {
-    id: ID!
-    memberId: String!
-    contractId: ID!
-    switcherCompany: String!
-    cancellationRequestedAt: Instant
-    note: String
+  id: ID!
+  memberId: String!
+  contractId: ID!
+  switcherCompany: String!
+  cancellationRequestedAt: Instant
+  note: String
 }
 
 input UpdateSwitcherNoteInput {
-    note: String
+  note: String
 }
 
 enum ClaimState {
-    OPEN
-    CLOSED
-    REOPENED
+  OPEN
+  CLOSED
+  REOPENED
 }
 
 enum ClaimPaymentType {
-    Manual
-    Automatic
-    IndemnityCost
-    Expense
+  Manual
+  Automatic
+  IndemnityCost
+  Expense
 }
 
 enum ChargeStatus {
-    INITIATED
-    WAITING_FOR_SUBSCRIPTION
-    SCHEDULING_SUBSCRIPTION
-    SCHEDULE_SUBSCRIPTION_FAILED
-    SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL
-    APPROVED_FOR_CHARGE
-    SCHEDULING_CHARGE
-    CHARGE_REQUESTING
-    CHARGE_REQUEST_FAILED
-    CHARGE_INITIATED
-    CHARGE_FAILED
-    CHARGE_COMPLETED
+  INITIATED
+  WAITING_FOR_SUBSCRIPTION
+  SCHEDULING_SUBSCRIPTION
+  SCHEDULE_SUBSCRIPTION_FAILED
+  SUBSCRIPTION_SCHEDULED_AND_WAITING_FOR_APPROVAL
+  APPROVED_FOR_CHARGE
+  SCHEDULING_CHARGE
+  CHARGE_REQUESTING
+  CHARGE_REQUEST_FAILED
+  CHARGE_INITIATED
+  CHARGE_FAILED
+  CHARGE_COMPLETED
 }
 
 type QuestionGroup {
-    id: ID!
-    memberId: ID!
-    questions: [Question!]!
+  id: ID!
+  memberId: ID!
+  questions: [Question!]!
 
-    market: String
-    firstName: String
-    lastName: String
-    pickedLocale: String
+  market: String
+  firstName: String
+  lastName: String
+  pickedLocale: String
 }
 
 type Question {
-    id: ID!
-    timestamp: Instant!
-    messageJsonString: String!
+  id: ID!
+  timestamp: Instant!
+  messageJsonString: String!
 }
 
 input CreateNorwegianGripenInput {
-    baseFactorString: String
-    factors: [NorwegianGripenFactorInput!]!
+  baseFactorString: String
+  factors: [NorwegianGripenFactorInput!]!
 }
 
 input NorwegianGripenFactorInput {
-    factorType: NorwegianGripenFactorType!
-    factorString: String!
+  factorType: NorwegianGripenFactorType!
+  factorString: String!
 }
 
 enum NorwegianGripenFactorType {
-    AGE
-    CENTRALITY_GROUP
-    ECONOMY_OF_MUNICIPALITY
-    NUMBER_OF_PEOPLE
-    SQUARE_METERS
-    HOUSEHOLD_TYPE
-    DEDUCTIBLE
+  AGE
+  CENTRALITY_GROUP
+  ECONOMY_OF_MUNICIPALITY
+  NUMBER_OF_PEOPLE
+  SQUARE_METERS
+  HOUSEHOLD_TYPE
+  DEDUCTIBLE
 }
 
 type ChatMessage {
-    globalId: ID!
-    author: String
-    fromId: String!
-    timestamp: Instant
-    messageBodyJsonString: String!
+  globalId: ID!
+  author: String
+  fromId: String!
+  timestamp: Instant
+  messageBodyJsonString: String!
 }
 
 union SendMessageResponse = SendMessageSuccessful | SendMessageFailed
 
 type SendMessageSuccessful {
-    memberId: String!
+  memberId: String!
 }
 
 type SendMessageFailed {
-    memberId: String!
-    errorCode: Int!
-    errorMessage: String!
+  memberId: String!
+  errorCode: Int!
+  errorMessage: String!
 }
 
 input SendMessageInput {
-    memberId: ID!
-    message: String!
-    forceSendMessage: Boolean!
+  memberId: ID!
+  message: String!
+  forceSendMessage: Boolean!
 }
 
 type Trial {
-    id: ID!
-    fromDate: LocalDate!
-    toDate: LocalDate!
-    displayName: String!
-    partner: String!
-    address: TrialAddress!
-    certificateUrl: String
-    status: String!
-    createdAt: Instant!
+  id: ID!
+  fromDate: LocalDate!
+  toDate: LocalDate!
+  displayName: String!
+  partner: String!
+  address: TrialAddress!
+  certificateUrl: String
+  status: String!
+  createdAt: Instant!
 }
 
 type TrialAddress {
-    street: String!
-    city: String!
-    zipCode: String!
-    livingSpace: Int
-    apartmentNo: String
-    floor: Int
+  street: String!
+  city: String!
+  zipCode: String!
+  livingSpace: Int
+  apartmentNo: String
+  floor: Int
 }
 
 type MonetaryAmountV2 {
-    amount: String!
-    currency: String!
+  amount: String!
+  currency: String!
 }
 
 enum ClaimComplexity {
-    SIMPLE
-    COMPLEX
+  SIMPLE
+  COMPLEX
 }
 
 # A String-representation of `java.time.YearMonth`, ex: `"2018-06"`
