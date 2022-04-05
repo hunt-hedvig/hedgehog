@@ -1,3 +1,0 @@
-mutation MarkClaimFileAsDeleted($claimId: ID!, $claimFileId: ID!) {
-  markClaimFileAsDeleted(claimId: $claimId, claimFileId: $claimFileId)
-}

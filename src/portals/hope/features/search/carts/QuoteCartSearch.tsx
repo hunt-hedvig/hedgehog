@@ -53,7 +53,12 @@ export const QuoteCartSearch: React.FC<{ query: string | null }> = ({
 
       <Spacing top="large" />
       {hits.length !== 0 &&
-        hits.map(({ hit }) => <QuoteCartResult key={hit.id} quoteCart={hit} />)}
+        hits.map(
+          ({ hit }) =>
+            hit.quotes.length > 0 && (
+              <QuoteCartResult key={hit.id} quoteCart={hit} />
+            ),
+        )}
 
       {hits.length === 0 && query && hasSearched && (
         <StandaloneMessage>No results</StandaloneMessage>

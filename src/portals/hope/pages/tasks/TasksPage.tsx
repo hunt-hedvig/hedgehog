@@ -38,7 +38,10 @@ const TaskNavigationWrapper = styled.div`
   min-width: 70%;
 
   margin-left: -4rem;
-  overflow-y: hidden;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
 `
 
 const TaskChatWrapper = styled.div`
@@ -119,14 +122,13 @@ const FilterBarItem = styled(motion.button)`
 `
 
 const ListContainer = styled(motion.ul)`
+  flex: 1;
   width: 100%;
-  height: 100%;
   overflow-y: scroll;
+  overflow-x: hidden;
   ::-webkit-scrollbar-track {
     background: transparent;
   }
-
-  padding-bottom: 10rem;
 
   & {
     margin: 0;

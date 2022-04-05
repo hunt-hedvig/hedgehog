@@ -16,6 +16,7 @@ import {
   useUsersQuery,
 } from 'types/generated/graphql'
 import { ArrayElement } from '@hedvig-ui/utils/array-element'
+import gql from 'graphql-tag'
 
 // noinspection CssInvalidPropertyValue
 const UserList = styled.div`
@@ -54,6 +55,12 @@ const UserListItem = styled.div`
 const SharedLabel = styled.div`
   font-size: 0.8rem;
   padding: 0.5rem 0.8rem;
+`
+
+gql`
+  mutation SharePath($path: String!, $userId: ID!) {
+    sharePath(path: $path, userId: $userId)
+  }
 `
 
 export const ShareModal: React.FC<{
