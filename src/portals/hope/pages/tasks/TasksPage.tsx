@@ -232,7 +232,7 @@ const TasksPage: Page = () => {
               <Flex>
                 <TopBarItem
                   selected={!memberId}
-                  onClick={() => history.replace(`/questions`)}
+                  onClick={() => history.push(`/questions`)}
                 >
                   Incoming questions
                   <div className="count">{groups.length}</div>
@@ -241,9 +241,7 @@ const TasksPage: Page = () => {
                   <TopBarItem
                     selected={!claimId}
                     onClick={() =>
-                      history.replace(
-                        `/questions?memberId=${memberId}&tab=${tab}`,
-                      )
+                      history.push(`/questions?memberId=${memberId}&tab=${tab}`)
                     }
                   >
                     {fullName ?? 'Member'}
@@ -280,7 +278,7 @@ const TasksPage: Page = () => {
                     )
                   }
                   onClickClaim={(claimId: string) =>
-                    history.replace(
+                    history.push(
                       `/questions?memberId=${memberId}&tab=${tab}&claimId=${claimId}`,
                     )
                   }
@@ -321,14 +319,15 @@ const TasksPage: Page = () => {
                 history.replace(`/questions`)
               }}
               onSelectMember={(openClaimId) => {
+                if (!claimId) return
                 if (!selectedQuestionGroup) return
 
                 if (!openClaimId) {
-                  history.replace(
+                  history.push(
                     `/questions?memberId=${selectedQuestionGroup.memberId}`,
                   )
                 } else {
-                  history.replace(
+                  history.push(
                     `/questions?memberId=${selectedQuestionGroup.memberId}&tab=claims&claimId=${openClaimId}`,
                   )
                 }
