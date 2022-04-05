@@ -28,6 +28,7 @@ import formatDate from 'date-fns/format'
 import { ClaimContainer } from 'portals/hope/features/tasks/components/ClaimContainer'
 import { useClaimRegistrationDate } from 'portals/hope/common/hooks/use-claim-registration-date'
 import { TaskListItem } from 'portals/hope/features/tasks/components/TaskListItem'
+import { useMemberName } from 'portals/hope/common/hooks/use-member-name'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -144,12 +145,6 @@ const Container = styled(Flex)`
   margin-left: -4rem;
 `
 
-const getMemberName = (group: QuestionGroup) => {
-  return group.firstName && group.lastName
-    ? `${group.firstName} ${group.lastName}`
-    : undefined
-}
-
 const TasksPage: Page = () => {
   const history = useHistory()
   const queryParams = useQueryParams()
@@ -157,6 +152,8 @@ const TasksPage: Page = () => {
   const memberId = queryParams.get('memberId')
   const tab = queryParams.get('tab')
   const claimId = queryParams.get('claimId')
+
+  const { fullName: fullNameByQuery } = useMemberName(memberId ?? '')
 
   const { resolve } = useResolveQuestion()
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -169,7 +166,6 @@ const TasksPage: Page = () => {
 
   const [selectedQuestionGroup, setSelectedQuestionGroup] =
     useState<QuestionGroup | null>(null)
-  const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null)
 
   const { setLocale, setMemberId, changeLocaleDisplayed } =
     useTemplateMessages()
@@ -187,7 +183,6 @@ const TasksPage: Page = () => {
     if (loading) return
 
     if (groupByRoute) {
-      setSelectedMemberId(groupByRoute.memberId)
       setSelectedQuestionGroup(groupByRoute)
 
       return
@@ -195,7 +190,6 @@ const TasksPage: Page = () => {
 
     history.replace('/questions')
     setSelectedQuestionGroup(null)
-    setSelectedMemberId(null)
   }, [groupByRoute])
 
   const selectQuestionGroupHandler = (group: QuestionGroup | null) => {
@@ -218,9 +212,10 @@ const TasksPage: Page = () => {
     setLocale((group.pickedLocale || PickedLocale.SvSe) as PickedLocale)
   }
 
-  const fullName = selectedQuestionGroup
-    ? `${selectedQuestionGroup.firstName} ${selectedQuestionGroup.lastName}`
-    : ''
+  const fullName =
+    selectedQuestionGroup?.firstName && selectedQuestionGroup?.lastName
+      ? `${selectedQuestionGroup.firstName} ${selectedQuestionGroup.lastName}`
+      : fullNameByQuery
 
   const title = memberId
     ? `Questions | ${fullName}`
@@ -236,13 +231,13 @@ const TasksPage: Page = () => {
             <TopBar>
               <Flex>
                 <TopBarItem
-                  selected={!selectedMemberId}
+                  selected={!memberId}
                   onClick={() => history.replace(`/questions`)}
                 >
                   Incoming questions
                   <div className="count">{groups.length}</div>
                 </TopBarItem>
-                {selectedQuestionGroup && selectedMemberId && (
+                {memberId && (
                   <TopBarItem
                     selected={!claimId}
                     onClick={() =>
@@ -251,10 +246,10 @@ const TasksPage: Page = () => {
                       )
                     }
                   >
-                    {getMemberName(selectedQuestionGroup) ?? 'Member'}
+                    {fullName ?? 'Member'}
                   </TopBarItem>
                 )}
-                {selectedQuestionGroup && selectedMemberId && claimId && (
+                {memberId && claimId && (
                   <TopBarItem selected={true}>
                     Claim{' '}
                     {claimRegistrationDate &&
@@ -273,15 +268,15 @@ const TasksPage: Page = () => {
                 Filters
               </FilterBarItem>
             </TopBar>
-            {selectedMemberId && !claimId && (
+            {memberId && !claimId && (
               <ListContainer>
                 <MemberContainer
-                  memberId={selectedMemberId}
+                  memberId={memberId}
                   tab={tab ?? 'contracts'}
                   title={title}
                   onChangeTab={(newTab) =>
                     history.replace(
-                      `/questions?memberId=${selectedMemberId}&tab=${newTab}`,
+                      `/questions?memberId=${memberId}&tab=${newTab}`,
                     )
                   }
                   onClickClaim={(claimId: string) =>
@@ -297,7 +292,7 @@ const TasksPage: Page = () => {
                 <ClaimContainer claimId={claimId} />
               </ListContainer>
             )}
-            {!selectedMemberId && (
+            {!memberId && (
               <ListContainer>
                 {groups.map((group) => (
                   <TaskListItem
@@ -314,15 +309,20 @@ const TasksPage: Page = () => {
           </>
         </TaskNavigationWrapper>
         <TaskChatWrapper>
-          {selectedQuestionGroup && (
+          {(selectedQuestionGroup || memberId) && (
             <TaskChat
-              memberId={selectedQuestionGroup.memberId}
-              fullName={getMemberName(selectedQuestionGroup)}
+              resolvable={!!(selectedQuestionGroup || groupByRoute)}
+              memberId={selectedQuestionGroup?.memberId ?? memberId ?? ''}
+              fullName={fullName}
               onResolve={() => {
+                if (!selectedQuestionGroup) return
+
                 resolve(selectedQuestionGroup.memberId)
                 history.replace(`/questions`)
               }}
               onSelectMember={(openClaimId) => {
+                if (!selectedQuestionGroup) return
+
                 if (!openClaimId) {
                   history.replace(
                     `/questions?memberId=${selectedQuestionGroup.memberId}`,
