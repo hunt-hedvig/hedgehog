@@ -5,6 +5,7 @@ import { TaskChatInput } from 'portals/hope/features/tasks/components/TaskChatIn
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
+import { useMemberHasOpenClaim } from 'portals/hope/common/hooks/use-member-has-open-claim'
 
 const InChatTopNav = styled.div`
   cursor: pointer;
@@ -56,19 +57,20 @@ export const TaskChat: React.FC<{
   memberId: string
   fullName?: string
   onResolve: () => void
-  onSelectMember: () => void
+  onSelectMember: (openClaimId: string | null) => void
 }> = ({ memberId, onResolve, fullName, onSelectMember }) => {
+  const openClaim = useMemberHasOpenClaim(memberId)
   const [isLarge, setIsLarge] = useState(false)
 
   return (
     <>
-      <InChatTopNav onClick={onSelectMember}>
+      <InChatTopNav onClick={() => onSelectMember(openClaim?.id ?? null)}>
         <Flex align="center">
           <div className="icon">
             <ChatFill />
           </div>
           <div>
-            <a onClick={onSelectMember}>
+            <a onClick={() => onSelectMember(openClaim?.id ?? null)}>
               {fullName ?? <Placeholder>Name not available</Placeholder>}
             </a>
           </div>

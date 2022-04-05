@@ -13,7 +13,7 @@ export const useQuestionGroups = (
   pollInterval?: number,
 ): UseQuestionGroupsReturnTuple => {
   const queryResult = useGetQuestionsGroupsQuery({
-    pollInterval: pollInterval ?? 10000,
+    pollInterval: pollInterval ?? 5000,
   })
 
   const questionGroups = (queryResult.data?.questionGroups ??
