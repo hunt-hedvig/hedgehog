@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   Contract,
-  GetQuotesDocument,
+  MemberQuotesDocument,
   Quote,
   useAddAgreementFromQuoteMutation,
 } from 'types/generated/graphql'
@@ -110,7 +110,7 @@ export const QuoteActivation: React.FC<{
             },
             refetchQueries: () => [
               {
-                query: GetQuotesDocument,
+                query: MemberQuotesDocument,
                 variables: { memberId: contract.holderMember.memberId },
               },
             ],

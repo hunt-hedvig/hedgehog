@@ -1,3 +1,0 @@
-mutation SharePath($path: String!, $userId: ID!) {
-  sharePath(path: $path, userId: $userId)
-}

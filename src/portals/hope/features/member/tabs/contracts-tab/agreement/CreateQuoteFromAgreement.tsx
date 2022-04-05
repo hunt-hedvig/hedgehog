@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Button, StandaloneMessage, ThirdLevelHeadline } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { useQuotes } from 'portals/hope/features/member/tabs/quote-tab/hooks/use-get-quotes'
+import { useMemberQuotes } from 'portals/hope/features/member/tabs/quote-tab/hooks/use-member-quotes'
 import { isExpired } from 'portals/hope/features/member/tabs/quote-tab/utils'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -9,7 +9,7 @@ import {
   Contract,
   GenericAgreement,
   GetContractsDocument,
-  GetQuotesDocument,
+  MemberQuotesDocument,
   useCreateQuoteFromAgreementMutation,
 } from 'types/generated/graphql'
 
@@ -22,7 +22,7 @@ export const CreateQuoteFromAgreement: React.FC<{
   contract: Contract
 }> = ({ agreement, contract }) => {
   const [createQuote] = useCreateQuoteFromAgreementMutation()
-  const [{ quotes }, { loading: loadingQuotes }] = useQuotes(
+  const [{ quotes }, { loading: loadingQuotes }] = useMemberQuotes(
     contract.holderMember.memberId,
   )
   const { confirm } = useConfirmDialog()
@@ -55,7 +55,7 @@ export const CreateQuoteFromAgreement: React.FC<{
           },
           refetchQueries: () => [
             {
-              query: GetQuotesDocument,
+              query: MemberQuotesDocument,
               variables: { memberId: contract.holderMember.memberId },
             },
             {

@@ -11,7 +11,7 @@ import {
   TypeOfContract,
   TypeOfContractType,
 } from 'portals/hope/features/config/constants'
-import { useQuotes } from 'portals/hope/features/member/tabs/quote-tab/hooks/use-get-quotes'
+import { useMemberQuotes } from 'portals/hope/features/member/tabs/quote-tab/hooks/use-member-quotes'
 import React, { useEffect, useState } from 'react'
 import { Quote } from 'types/generated/graphql'
 import { QuotesSubSection } from './components/QuoteSubSection'
@@ -20,7 +20,7 @@ import { useContracts } from 'portals/hope/features/member/tabs/contracts-tab/ho
 export const Quotes: React.FC<{ memberId: string }> = ({ memberId }) => {
   const [activeTab, setActiveTab] = useState<null | InsuranceType>(null)
   const [{ quotes, contractMarket, pickedLocale }, { loading }] =
-    useQuotes(memberId)
+    useMemberQuotes(memberId)
 
   const [contracts] = useContracts(memberId)
 
