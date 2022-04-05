@@ -8,7 +8,11 @@ import { ActionsHistoryModal } from './components/ActionsHistoryModal'
 import { v4 as uuidv4 } from 'uuid'
 
 interface ActionsHistoryContextProps {
-  registerAction: (undoAction: () => void, title: string) => void
+  registerAction: (
+    action: () => void,
+    undoAction: () => void,
+    title: string,
+  ) => void
   showHistory: () => void
 }
 
@@ -22,6 +26,7 @@ export const useActionsHistory = () => useContext(ActionsHistoryContext)
 export interface Action {
   id: string
   action: () => void
+  undoAction: () => void
   title: string
   date: Date
 }
@@ -34,13 +39,19 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
   const isCommandPressed = useKeyIsPressed(Keys.Command)
   const isZPressed = useKeyIsPressed(Keys.Z)
 
-  useEffect(() => {
-    if (isCommandPressed && isZPressed && waitUndo) {
-      const lastAction = actionsList[actionsList.length - 1]
-      lastAction.action()
+  let timeoutID: any
+
+  function showAlert() {
+    timeoutID = setTimeout(() => {
       setWaitUndo(false)
-    }
-  }, [isCommandPressed, isZPressed])
+      console.log('ACTION')
+      actionsList[actionsList.length - 1].action()
+    }, 3000)
+  }
+
+  function clearAlert() {
+    clearTimeout(timeoutID)
+  }
 
   useEffect(() => {
     if (waitUndo) {
@@ -48,19 +59,31 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
         duration: 5000,
       })
 
-      setTimeout(() => {
-        setWaitUndo(false)
-      }, 5000)
+      showAlert()
     } else {
       toast.remove()
     }
   }, [waitUndo])
 
-  const registerActionHandler = (action: () => void, title: string) => {
+  useEffect(() => {
+    if (isCommandPressed && isZPressed && waitUndo) {
+      const lastAction = actionsList[actionsList.length - 1]
+      lastAction.undoAction()
+      clearAlert()
+      setWaitUndo(false)
+    }
+  }, [isCommandPressed, isZPressed])
+
+  const registerActionHandler = (
+    action: () => void,
+    undoAction: () => void,
+    title: string,
+  ) => {
     const newAction = {
       id: uuidv4(),
       title,
       action,
+      undoAction,
       date: new Date(),
     }
 

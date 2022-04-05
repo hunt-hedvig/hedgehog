@@ -17,6 +17,7 @@ import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 import { useActionsHistory } from '../history/use-actions-history'
+import { client } from 'apollo/client'
 
 gql`
   query GetTemplates($locales: [String!]!) {
@@ -261,83 +262,135 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       pinned: newTemplate.pinned,
     }
 
-    toast.promise(
-      upsertTemplate({
-        variables: {
-          input: {
-            id: template.id,
-            title: template.title,
-            expirationDate: template.expirationDate,
-            messages: template.messages,
+    template.messages
+      .filter(
+        (message) => message.language !== formatLocale(PickedLocale.EnSe, true),
+      )
+      .map((message) => message.language)
+      .forEach((language) => {
+        const cachedData = client.readQuery({
+          query: GetTemplatesDocument,
+          variables: {
+            locales: [language],
           },
-        },
-        optimisticResponse: {
-          upsertTemplate: { __typename: 'Template', ...template },
-        },
-        update: (
-          cache: ApolloCache<NormalizedCacheObject>,
-          { data: response },
-        ) => {
-          if (!response?.upsertTemplate) {
-            return
-          }
+        }) as GetTemplatesQuery
 
-          template.messages
-            .filter(
-              (message) =>
-                message.language !== formatLocale(PickedLocale.EnSe, true),
-            )
-            .map((message) => message.language)
-            .forEach((language) => {
-              const cachedData = cache.readQuery({
-                query: GetTemplatesDocument,
-                variables: {
-                  locales: [language],
-                },
-              }) as GetTemplatesQuery
+        const cachedTemplates =
+          (cachedData as GetTemplatesQuery)?.templates.filter(
+            (temp) => temp.id !== template.id,
+          ) ?? []
 
-              const cachedTemplates =
-                (cachedData as GetTemplatesQuery)?.templates ?? []
+        client.writeQuery({
+          query: GetTemplatesDocument,
+          data: {
+            templates: [...cachedTemplates, template],
+          },
+          variables: {
+            locales: [language],
+          },
+        })
+      })
 
-              cache.writeQuery({
-                query: GetTemplatesDocument,
-                data: {
-                  templates: [
-                    ...cachedTemplates.filter(
-                      (temp) => temp.id !== template.id,
-                    ),
-                    template,
-                  ],
-                },
-                variables: {
-                  locales: [language],
-                },
-              })
-            })
-        },
-      }),
-      {
-        loading: 'Updating template',
-        success: () => {
-          PushUserAction('template', 'updated', null, null)
-          registerAction(() => {
-            const revertTemplate: Template = {
-              id: oldTemplate.id,
-              title: oldTemplate.title,
-              messages: oldTemplate.messages.map((message) => ({
-                language: message.language,
-                message: message.message,
-              })),
-              pinned: oldTemplate.pinned,
-              expirationDate: oldTemplate.expirationDate,
-            }
+    registerAction(
+      () => {
+        toast.promise(
+          upsertTemplate({
+            variables: {
+              input: {
+                id: template.id,
+                title: template.title,
+                expirationDate: template.expirationDate,
+                messages: template.messages,
+              },
+            },
+            optimisticResponse: {
+              upsertTemplate: { __typename: 'Template', ...template },
+            },
+            update: (
+              cache: ApolloCache<NormalizedCacheObject>,
+              { data: response },
+            ) => {
+              if (!response?.upsertTemplate) {
+                return
+              }
 
-            editHandler(revertTemplate)
-          }, `Update template - ${oldTemplate.title}`)
-          return 'Template updated'
-        },
-        error: 'Could not update template',
+              template.messages
+                .filter(
+                  (message) =>
+                    message.language !== formatLocale(PickedLocale.EnSe, true),
+                )
+                .map((message) => message.language)
+                .forEach((language) => {
+                  const cachedData = cache.readQuery({
+                    query: GetTemplatesDocument,
+                    variables: {
+                      locales: [language],
+                    },
+                  }) as GetTemplatesQuery
+
+                  const cachedTemplates =
+                    (cachedData as GetTemplatesQuery)?.templates ?? []
+
+                  cache.writeQuery({
+                    query: GetTemplatesDocument,
+                    data: {
+                      templates: [
+                        ...cachedTemplates.filter(
+                          (temp) => temp.id !== template.id,
+                        ),
+                        template,
+                      ],
+                    },
+                    variables: {
+                      locales: [language],
+                    },
+                  })
+                })
+            },
+          }),
+          {
+            loading: 'Updating template',
+            success: () => {
+              PushUserAction('template', 'updated', null, null)
+              return 'Template updated'
+            },
+            error: 'Could not update template',
+          },
+        )
       },
+      () => {
+        template.messages
+          .filter(
+            (message) =>
+              message.language !== formatLocale(PickedLocale.EnSe, true),
+          )
+          .map((message) => message.language)
+          .forEach((language) => {
+            const cachedData = client.readQuery({
+              query: GetTemplatesDocument,
+              variables: {
+                locales: [language],
+              },
+            }) as GetTemplatesQuery
+
+            const cachedTemplates =
+              (cachedData as GetTemplatesQuery)?.templates ?? []
+
+            client.writeQuery({
+              query: GetTemplatesDocument,
+              data: {
+                templates: [
+                  ...cachedTemplates.filter((temp) => temp.id !== template.id),
+                  oldTemplate,
+                ],
+              },
+              variables: {
+                locales: [language],
+              },
+            })
+          })
+      },
+      'Edit template',
     )
   }
 
@@ -403,18 +456,18 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         loading: 'Deleting template',
         success: () => {
           PushUserAction('template', 'deleted', null, null)
-          registerAction(() => {
-            const template: UpsertTemplateInput = {
-              id: deletingTemplate.id,
-              title: deletingTemplate.title,
-              messages: deletingTemplate.messages.map((message) => ({
-                language: message.language,
-                message: message.message,
-              })),
-            }
+          // registerAction(() => {
+          //   const template: UpsertTemplateInput = {
+          //     id: deletingTemplate.id,
+          //     title: deletingTemplate.title,
+          //     messages: deletingTemplate.messages.map((message) => ({
+          //       language: message.language,
+          //       message: message.message,
+          //     })),
+          //   }
 
-            createHandler(template)
-          }, `Delete template - ${deletingTemplate.title}`)
+          //   createHandler(template)
+          // }, `Delete template - ${deletingTemplate.title}`)
           return 'Template deleted'
         },
         error: 'Could not delete template',
