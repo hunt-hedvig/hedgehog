@@ -1,24 +1,16 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
-import { Flex, Placeholder, useQueryParams } from '@hedvig-ui'
+import { Flex, useQueryParams } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
-import {
-  Question,
-  QuestionGroup,
-  useClaimRegistrationDateQuery,
-} from 'types/generated/graphql'
-import { formatDistanceToNowStrict, parseISO } from 'date-fns'
+import { QuestionGroup } from 'types/generated/graphql'
+import { parseISO } from 'date-fns'
 import {
   doMarketFilter,
   doMemberGroupFilter,
 } from 'portals/hope/features/questions/utils'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
-import {
-  getMemberFlag,
-  getMemberIdColor,
-} from 'portals/hope/features/member/utils'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { MemberContainer } from '../../features/tasks/components/MemberContainer'
@@ -32,9 +24,10 @@ import {
   formatLocale,
   useTemplateMessages,
 } from '../../features/template-messages/use-template-messages'
-import gql from 'graphql-tag'
 import formatDate from 'date-fns/format'
 import { ClaimContainer } from 'portals/hope/features/tasks/components/ClaimContainer'
+import { useClaimRegistrationDate } from 'portals/hope/common/hooks/use-claim-registration-date'
+import { TaskListItem } from 'portals/hope/features/tasks/components/TaskListItem'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -143,78 +136,6 @@ const ListContainer = styled(motion.ul)`
   }
 `
 
-const ListItem = styled(motion.li)<{ selected?: boolean }>`
-  display: flex;
-  font-size: 1.1rem;
-  padding: 1.75rem 2.05rem;
-  cursor: pointer;
-
-  transition: background-color 200ms;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-  :hover {
-    background-color: ${({ theme }) =>
-      chroma(theme.accent).alpha(0.2).brighten(2).hex()};
-  }
-
-  background-color: ${({ selected, theme }) =>
-    selected ? chroma(theme.accent).alpha(0.2).brighten(1).hex() : undefined};
-
-  .orb {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 3rem;
-
-    div {
-      width: 1rem;
-      height: 1rem;
-      border-radius: 50%;
-
-      background-color: transparent;
-    }
-  }
-
-  .flag {
-    padding: 0 2rem;
-  }
-
-  .name {
-    width: 30%;
-    padding-right: 2rem;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    div {
-      color: ${({ theme }) => theme.accent};
-      transition: color 200ms;
-
-      :hover {
-        color: ${({ theme }) => theme.accentLight};
-      }
-    }
-  }
-
-  .preview {
-    width: 70%;
-    color: ${({ theme }) =>
-      chroma(theme.semiStrongForeground).brighten(1).hex()};
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .options {
-    width: 10rem;
-    color: ${({ theme }) =>
-      chroma(theme.semiStrongForeground).brighten(1).hex()};
-
-    text-align: right;
-  }
-`
-
 const Container = styled(Flex)`
   margin-top: -4rem;
   padding-left: 4rem;
@@ -223,36 +144,10 @@ const Container = styled(Flex)`
   margin-left: -4rem;
 `
 
-const getQuestionBody = (question: Question) => {
-  try {
-    return JSON.parse(question.messageJsonString).body
-  } catch (e) {
-    return ''
-  }
-}
-
 const getMemberName = (group: QuestionGroup) => {
   return group.firstName && group.lastName
     ? `${group.firstName} ${group.lastName}`
     : undefined
-}
-
-gql`
-  query ClaimRegistrationDate($claimId: ID!) {
-    claim(id: $claimId) {
-      id
-      registrationDate
-    }
-  }
-`
-
-const useClaimRegistrationDate = (claimId: string) => {
-  const { data } = useClaimRegistrationDateQuery({
-    variables: { claimId },
-    fetchPolicy: 'cache-first',
-  })
-
-  return data?.claim?.registrationDate
 }
 
 const TasksPage: Page = () => {
@@ -404,66 +299,16 @@ const TasksPage: Page = () => {
             )}
             {!selectedMemberId && (
               <ListContainer>
-                {groups.map((group) => {
-                  const previewQuestion = group?.questions?.slice(-1)[0] ?? ''
-                  const preview = getQuestionBody(previewQuestion)
-
-                  const orbColor = getMemberIdColor(
-                    group.memberId,
-                    numberMemberGroups,
-                  )
-
-                  const flag = group.market
-                    ? getMemberFlag(
-                        {
-                          market: group.market ?? '',
-                        },
-                        group.pickedLocale as PickedLocale,
-                      )
-                    : '🏳'
-
-                  return (
-                    <ListItem
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      key={group.id}
-                      onClick={() => selectQuestionGroupHandler(group)}
-                      selected={
-                        group.memberId === selectedQuestionGroup?.memberId
-                      }
-                    >
-                      <div className="orb">
-                        <div style={{ backgroundColor: orbColor }} />
-                      </div>
-                      <div className="flag">{flag}</div>
-                      <span className="name">
-                        {getMemberName(group) ? (
-                          <div
-                            onClick={() => {
-                              history.replace(
-                                `/questions?memberId=${group.memberId}`,
-                              )
-                              setSelectedQuestionGroup(group)
-                            }}
-                          >
-                            {getMemberName(group)}
-                          </div>
-                        ) : (
-                          <Placeholder>Name not available</Placeholder>
-                        )}
-                      </span>
-                      <span className="preview">{preview.text}</span>
-                      <div className="options">
-                        {formatDistanceToNowStrict(
-                          parseISO(previewQuestion.timestamp),
-                          {
-                            addSuffix: true,
-                          },
-                        )}
-                      </div>
-                    </ListItem>
-                  )
-                })}
+                {groups.map((group) => (
+                  <TaskListItem
+                    key={group.id}
+                    group={group}
+                    onClick={() => selectQuestionGroupHandler(group)}
+                    selected={
+                      group.memberId === selectedQuestionGroup?.memberId
+                    }
+                  />
+                ))}
               </ListContainer>
             )}
           </>
@@ -477,10 +322,16 @@ const TasksPage: Page = () => {
                 resolve(selectedQuestionGroup.memberId)
                 history.replace(`/questions`)
               }}
-              onSelectMember={() => {
-                history.replace(
-                  `/questions?memberId=${selectedQuestionGroup.memberId}`,
-                )
+              onSelectMember={(openClaimId) => {
+                if (!openClaimId) {
+                  history.replace(
+                    `/questions?memberId=${selectedQuestionGroup.memberId}`,
+                  )
+                } else {
+                  history.replace(
+                    `/questions?memberId=${selectedQuestionGroup.memberId}&tab=claims&claimId=${openClaimId}`,
+                  )
+                }
               }}
             />
           )}
