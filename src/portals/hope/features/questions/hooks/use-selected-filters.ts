@@ -27,14 +27,16 @@ export const useSelectedFilters = () => {
   ) => {
     const currentValue = settings[settingField]
 
-    if (typeof currentValue !== 'object') {
+    if (!Array.isArray(currentValue)) {
       return
     }
 
     updateSetting(
       settingField,
-      currentValue?.includes(filter)
-        ? currentValue?.filter((item: string | number) => item !== filter)
+      (currentValue as number[])?.includes(filter)
+        ? (currentValue as number[])?.filter(
+            (item: string | number) => item !== filter,
+          )
         : [...(currentValue || []), filter],
     )
 

@@ -29,11 +29,7 @@ import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-numb
 import React, { useState } from 'react'
 import { InfoCircle } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
-import {
-  ClaimComplexity,
-  ClaimState,
-  UserSettings,
-} from 'types/generated/graphql'
+import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 
 export const FilterWrapper = styled.div`
   width: 100%;
@@ -145,36 +141,6 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
   const [outcomeOpen, setOutcomeOpen] = useState(false)
 
-  const updateFilterHandler = (
-    field: keyof UserSettings,
-    value: string | number,
-  ) => {
-    if (page && page !== '1') {
-      history.push(`/claims/list/1`)
-    }
-
-    if (!settings[field]) {
-      updateSetting(field, [value])
-    }
-
-    const currentValue = settings[field]
-
-    if (!currentValue || typeof currentValue !== 'object') {
-      return
-    }
-
-    if (currentValue.includes(value)) {
-      updateSetting(
-        field,
-        currentValue.filter((item: string | number) => item !== value),
-      )
-
-      return
-    }
-
-    updateSetting(field, [...currentValue, value])
-  }
-
   const updateOutcomeFilterHandler = (value: string | null) => {
     if (!settings.outcomeFilterClaims) {
       updateSetting('outcomeFilterClaims', [value])
@@ -227,10 +193,33 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           const states = Object.keys(ClaimState)
           const stateName = convertEnumOrSentenceToTitle(state)
 
+          const update = () => {
+            if (page && page !== '1') {
+              history.push(`/claims/list/1`)
+            }
+
+            if (settings?.claimStatesFilterClaims) {
+              if (settings?.claimStatesFilterClaims.includes(state)) {
+                updateSetting('claimStatesFilterClaims', [
+                  ...settings?.claimStatesFilterClaims.filter(
+                    (value) => value !== state,
+                  ),
+                ])
+              } else {
+                updateSetting('claimStatesFilterClaims', [
+                  ...settings?.claimStatesFilterClaims,
+                  state,
+                ])
+              }
+            } else {
+              updateSetting('claimStatesFilterClaims', [state])
+            }
+          }
+
           const navigation = register(stateName, {
             focus: index === 0 ? Keys.F : undefined,
             resolve: () => {
-              updateFilterHandler('claimStatesFilterClaims', state)
+              update()
             },
             neighbors: {
               up: index ? states[index - 1] : undefined,
@@ -245,7 +234,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 label={stateName}
                 checked={settings.claimStatesFilterClaims?.includes(state)}
                 onChange={() => {
-                  updateFilterHandler('claimStatesFilterClaims', state)
+                  update()
                 }}
               />
               <MemberGroupColorBadge
@@ -269,9 +258,32 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           const complexities = Object.keys(ClaimComplexity)
           const complexityName = convertEnumOrSentenceToTitle(complexity)
 
+          const update = () => {
+            if (page && page !== '1') {
+              history.push(`/claims/list/1`)
+            }
+
+            if (settings?.claimComplexityFilterClaims) {
+              if (settings?.claimComplexityFilterClaims.includes(complexity)) {
+                updateSetting('claimComplexityFilterClaims', [
+                  ...settings?.claimComplexityFilterClaims.filter(
+                    (value) => value !== complexity,
+                  ),
+                ])
+              } else {
+                updateSetting('claimComplexityFilterClaims', [
+                  ...settings?.claimComplexityFilterClaims,
+                  complexity,
+                ])
+              }
+            } else {
+              updateSetting('claimComplexityFilterClaims', [complexity])
+            }
+          }
+
           const navigation = register(complexityName, {
             resolve: () => {
-              updateFilterHandler('claimComplexityFilterClaims', complexity)
+              update()
             },
             neighbors: {
               left: Object.keys(ClaimState)[0],
@@ -297,7 +309,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                   complexity,
                 )}
                 onChange={() => {
-                  updateFilterHandler('claimComplexityFilterClaims', complexity)
+                  update()
                 }}
               />
               <span style={{ marginLeft: '0.5rem' }}>
@@ -354,9 +366,32 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
       <FilterElement>
         <Label>Groups</Label>
         {range(numberMemberGroups).map((filterNumber, index) => {
+          const update = () => {
+            if (page && page !== '1') {
+              history.push(`/claims/list/1`)
+            }
+
+            if (settings?.memberGroupsFilterClaims) {
+              if (settings?.memberGroupsFilterClaims.includes(filterNumber)) {
+                updateSetting('memberGroupsFilterClaims', [
+                  ...settings?.memberGroupsFilterClaims.filter(
+                    (value) => value !== filterNumber,
+                  ),
+                ])
+              } else {
+                updateSetting('memberGroupsFilterClaims', [
+                  ...settings?.memberGroupsFilterClaims,
+                  filterNumber,
+                ])
+              }
+            } else {
+              updateSetting('memberGroupsFilterClaims', [filterNumber])
+            }
+          }
+
           const navigation = register(`Member Number ${filterNumber}`, {
             resolve: () => {
-              updateFilterHandler('memberGroupsFilterClaims', filterNumber)
+              update()
             },
             neighbors: {
               left: `Member Groups ${numberMemberGroupsOptions[0].label}`,
@@ -386,7 +421,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                   filterNumber,
                 )}
                 onChange={() => {
-                  updateFilterHandler('memberGroupsFilterClaims', filterNumber)
+                  update()
                 }}
               />
               <MemberGroupColorBadge
@@ -404,9 +439,32 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           const markets = Object.keys(Market)
           const marketName = convertEnumOrSentenceToTitle(market)
 
+          const update = () => {
+            if (page && page !== '1') {
+              history.push(`/claims/list/1`)
+            }
+
+            if (settings?.marketFilterClaims) {
+              if (settings?.marketFilterClaims.includes(market)) {
+                updateSetting('marketFilterClaims', [
+                  ...settings?.marketFilterClaims.filter(
+                    (value) => value !== market,
+                  ),
+                ])
+              } else {
+                updateSetting('marketFilterClaims', [
+                  ...settings?.marketFilterClaims,
+                  market,
+                ])
+              }
+            } else {
+              updateSetting('marketFilterClaims', [market])
+            }
+          }
+
           const navigation = register(marketName, {
             resolve: () => {
-              updateFilterHandler('marketFilterClaims', market)
+              update()
             },
             neighbors: {
               left: `Member Number ${range(numberMemberGroups)[0]}`,
@@ -422,7 +480,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 label={marketName}
                 checked={settings.marketFilterClaims?.includes(market)}
                 onChange={() => {
-                  updateFilterHandler('marketFilterClaims', market)
+                  update()
                 }}
               />
               <span style={{ marginLeft: '0.5rem' }}>
