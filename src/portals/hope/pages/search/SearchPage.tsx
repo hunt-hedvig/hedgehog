@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router'
 import { SearchCategory } from 'portals/hope/features/search/components/SearchCategoryButtons'
 import { QuoteSearch } from 'portals/hope/features/search/quotes/QuoteSearch'
 import { QuoteCartSearch } from 'portals/hope/features/search/carts/QuoteCartSearch'
-import { useQueryParams } from '@hedvig-ui/hooks/use-query-params'
+import { useQueryParams } from '@hedvig-ui'
 
 const SearchPage: Page<
   RouteComponentProps<{

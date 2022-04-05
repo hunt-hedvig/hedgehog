@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { FadeIn, MainHeadline } from '@hedvig-ui'
+import { FadeIn, MainHeadline, useQueryParams } from '@hedvig-ui'
 import { ClaimsTemplates } from 'portals/hope/features/claims/claim-templates/ClaimsTemplatesList'
 import { ClaimListFilters } from 'portals/hope/features/claims/claims-list/filters/ClaimListFilters'
 import { LargeClaimsList } from 'portals/hope/features/claims/claims-list/LargeClaimsList'
@@ -9,7 +9,6 @@ import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
 import { useTemplateClaims } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
 import { ClaimTemplateFilters } from 'portals/hope/features/claims/claim-templates/components/ClaimTemplateFilters'
-import { useQueryParams } from '@hedvig-ui/hooks/use-query-params'
 
 const ListPage = styled.div`
   display: flex;

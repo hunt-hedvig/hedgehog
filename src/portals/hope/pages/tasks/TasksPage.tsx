@@ -285,12 +285,12 @@ const TasksPage: Page = () => {
                 />
               </ListContainer>
             )}
-            {claimId && (
+            {claimId && memberId && (
               <ListContainer>
                 <ClaimContainer claimId={claimId} />
               </ListContainer>
             )}
-            {!memberId && (
+            {!memberId && !claimId && (
               <ListContainer>
                 {groups.map((group) => (
                   <TaskListItem
