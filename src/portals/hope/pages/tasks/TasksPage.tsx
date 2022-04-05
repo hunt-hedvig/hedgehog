@@ -1,7 +1,7 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
-import { Flex, Placeholder } from '@hedvig-ui'
+import { Flex, Placeholder, useQueryParams } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 import { Question, QuestionGroup } from 'types/generated/graphql'
@@ -22,7 +22,7 @@ import { TaskChat } from '../../features/tasks/TaskChat'
 import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
 import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
 import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
-import { RouteComponentProps, useHistory } from 'react-router'
+import { useHistory } from 'react-router'
 import { motion } from 'framer-motion'
 import {
   formatLocale,
@@ -230,15 +230,12 @@ const getMemberName = (group: QuestionGroup) => {
     : undefined
 }
 
-const TasksPage: Page<
-  RouteComponentProps<{
-    memberId?: string
-    tab?: string
-  }>
-> = ({ match }) => {
+const TasksPage: Page = () => {
   const history = useHistory()
-  const memberId = match.params.memberId
-  const tab = match.params.tab
+  const queryParams = useQueryParams()
+
+  const memberId = queryParams.get('memberId')
+  const tab = queryParams.get('tab')
 
   const { resolve } = useResolveQuestion()
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -343,7 +340,14 @@ const TasksPage: Page<
                   tab={tab ?? 'contracts'}
                   title={title}
                   onChangeTab={(newTab) =>
-                    history.replace(`/questions/${selectedMemberId}/${newTab}`)
+                    history.replace(
+                      `/questions?memberId=${selectedMemberId}&tab=${newTab}`,
+                    )
+                  }
+                  onClickClaim={(claimId: string) =>
+                    history.replace(
+                      `/questions?memberId=${memberId}&tab=${tab}&claimId=${claimId}`,
+                    )
                   }
                 />
               </ListContainer>
@@ -386,7 +390,9 @@ const TasksPage: Page<
                         {getMemberName(group) ? (
                           <div
                             onClick={() => {
-                              history.replace(`/questions/${group.memberId}`)
+                              history.replace(
+                                `/questions?memberId=${group.memberId}`,
+                              )
                               setSelectedQuestionGroup(group)
                             }}
                           >
@@ -422,7 +428,9 @@ const TasksPage: Page<
                 history.replace(`/questions`)
               }}
               onSelectMember={() => {
-                history.replace(`/questions/${selectedQuestionGroup.memberId}`)
+                history.replace(
+                  `/questions?memberId=${selectedQuestionGroup.memberId}`,
+                )
               }}
             />
           )}

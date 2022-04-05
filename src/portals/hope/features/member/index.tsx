@@ -15,6 +15,15 @@ import { PickedLocale } from 'portals/hope/features/config/constants'
 import { useGetMemberInfo } from 'portals/hope/features/member/tabs/member-tab/hooks/use-get-member-info'
 import { useTitle } from '@hedvig-ui/hooks/use-title'
 import { usePushMemberHistory } from 'portals/hope/common/hooks/use-push-member-history'
+import { ClaimsTab } from 'portals/hope/features/member/tabs/claims-tab/ClaimsTab'
+import { MemberFilesTab } from 'portals/hope/features/member/tabs/files-tab/FileTab'
+import { ContractTab } from 'portals/hope/features/member/tabs/contracts-tab'
+import { QuotesTab } from 'portals/hope/features/member/tabs/quote-tab/QuotesTab'
+import { PaymentsTab } from 'portals/hope/features/member/tabs/payments-tab/PaymentsTab'
+import { AccountTab } from 'portals/hope/features/member/tabs/account-tab'
+import { MemberTab } from 'portals/hope/features/member/tabs/member-tab/MemberTab'
+import { DebtTab } from 'portals/hope/features/member/tabs/debt-tab'
+import { CampaignsTab } from 'portals/hope/features/member/tabs/campaigns-tab'
 
 const MemberPageContainer = styled.div<{ chat?: boolean }>`
   display: flex;
@@ -56,13 +65,14 @@ export const MemberTabs: React.FC<{
   memberId: string
   tab: string
   onChangeTab: (newTab: string) => void
+  onClickClaim: (claimId: string) => void
   chat?: boolean
   title?: string
-}> = ({ memberId, tab, onChangeTab, chat = true, title }) => {
-  usePushMemberHistory(memberId)
+}> = ({ memberId, tab, onChangeTab, onClickClaim, chat = true, title }) => {
   const [member] = useGetMemberInfo(memberId)
   const { numberMemberGroups } = useNumberMemberGroups()
   const panes = memberPagePanes(memberId)
+  usePushMemberHistory(memberId)
 
   useTitle(
     title ??
@@ -73,7 +83,28 @@ export const MemberTabs: React.FC<{
     return null
   }
 
-  const Pane = panes.find((pane) => pane.tabName === tab)?.component()
+  const paneComponent = () => {
+    switch (tab) {
+      case 'claims':
+        return <ClaimsTab memberId={memberId} onClickClaim={onClickClaim} />
+      case 'files':
+        return <MemberFilesTab memberId={memberId} />
+      case 'contracts':
+        return <ContractTab memberId={memberId} />
+      case 'quotes':
+        return <QuotesTab memberId={memberId} />
+      case 'payments':
+        return <PaymentsTab memberId={memberId} />
+      case 'account':
+        return <AccountTab memberId={memberId} />
+      case 'member':
+        return <MemberTab memberId={memberId} />
+      case 'debt':
+        return <DebtTab memberId={memberId} />
+      case 'campaigns':
+        return <CampaignsTab memberId={memberId} />
+    }
+  }
 
   return (
     <Flex>
@@ -118,7 +149,7 @@ export const MemberTabs: React.FC<{
             hotkey: pane.hotkey,
           }))}
         />
-        <div style={{ marginTop: '4rem' }}>{Pane}</div>
+        <div style={{ marginTop: '4rem' }}>{paneComponent()}</div>
       </MemberPageContainer>
     </Flex>
   )

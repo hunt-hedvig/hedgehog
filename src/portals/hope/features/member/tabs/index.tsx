@@ -1,8 +1,8 @@
 import { ContractTab } from 'portals/hope/features/member/tabs/contracts-tab'
-import { MemberFile } from 'portals/hope/features/member/tabs/files-tab/FileTab'
+import { MemberFilesTab } from 'portals/hope/features/member/tabs/files-tab/FileTab'
 import { MemberTab } from 'portals/hope/features/member/tabs/member-tab/MemberTab'
 import { PaymentsTab } from 'portals/hope/features/member/tabs/payments-tab/PaymentsTab'
-import { Quotes } from 'portals/hope/features/member/tabs/quote-tab/Quotes'
+import { QuotesTab } from 'portals/hope/features/member/tabs/quote-tab/QuotesTab'
 
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 import React from 'react'
@@ -30,7 +30,7 @@ export const memberPagePanes = (memberId: string) => [
       key: Keys.Two,
     },
     path: `members/${memberId}/files`,
-    component: () => <MemberFile memberId={memberId} />,
+    component: () => <MemberFilesTab memberId={memberId} />,
   },
   {
     tabTitle: 'Contracts',
@@ -50,7 +50,7 @@ export const memberPagePanes = (memberId: string) => [
       key: Keys.Four,
     },
     path: `members/${memberId}/quotes`,
-    component: () => <Quotes memberId={memberId} />,
+    component: () => <QuotesTab memberId={memberId} />,
   },
   {
     tabTitle: 'Payments',

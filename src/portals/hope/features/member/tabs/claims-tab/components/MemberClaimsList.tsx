@@ -11,13 +11,12 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
-import { parseISO } from 'date-fns'
+import {convertEnumToTitle} from '@hedvig-ui/utils/text'
+import {parseISO} from 'date-fns'
 import formatDate from 'date-fns/format'
 import React from 'react'
-import { ClaimState } from 'types/generated/graphql'
-import { useGetMemberClaims } from 'portals/hope/features/member/tabs/claims-tab/hooks/use-get-member-claims'
-import { useHistory } from 'react-router'
+import {ClaimState} from 'types/generated/graphql'
+import {useGetMemberClaims} from 'portals/hope/features/member/tabs/claims-tab/hooks/use-get-member-claims'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;
@@ -41,10 +40,10 @@ const FlexVertically = styled.div`
   flex-direction: column;
 `
 
-export const MemberClaimsList: React.FC<{ memberId: string }> = ({
-  memberId,
-}) => {
-  const history = useHistory()
+export const MemberClaimsList: React.FC<{
+  memberId: string
+  onClickClaim: (claimId: string) => void
+}> = ({ memberId, onClickClaim }) => {
   const [memberClaims, { loading }] = useGetMemberClaims(memberId)
 
   const claims = memberClaims ?? []
@@ -82,10 +81,7 @@ export const MemberClaimsList: React.FC<{ memberId: string }> = ({
             )
 
             return (
-              <TableRow
-                key={claim.id}
-                onClick={() => history.push(`/claims/${claim.id}`)}
-              >
+              <TableRow key={claim.id} onClick={() => onClickClaim(claim.id)}>
                 <TableColumn>
                   <FlexVertically>
                     {registrationDateString}

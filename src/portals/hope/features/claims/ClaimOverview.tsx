@@ -1,6 +1,10 @@
-import React, {useState} from 'react'
-import {useRestrictClaim} from 'portals/hope/common/hooks/use-restrict-claim'
-import {ClaimState, useClaimDetailsQuery, useResourceAccessInformationQuery,} from 'types/generated/graphql'
+import React, { useState } from 'react'
+import { useRestrictClaim } from 'portals/hope/common/hooks/use-restrict-claim'
+import {
+  ClaimState,
+  useClaimDetailsQuery,
+  useResourceAccessInformationQuery,
+} from 'types/generated/graphql'
 import {
   Button,
   Card,
@@ -13,23 +17,23 @@ import {
   Shadowed,
   StandaloneMessage,
 } from '@hedvig-ui'
-import {Prompt} from 'react-router'
-import {ChatPane} from 'portals/hope/features/member/tabs/ChatPane'
-import {ClaimRestrictionInformation} from 'portals/hope/features/claims/claim-details/ClaimRestrictionInformation'
-import {MemberInformation} from 'portals/hope/features/claims/claim-details/MemberInformation/MemberInformation'
-import {ClaimInformation} from 'portals/hope/features/claims/claim-details/ClaimInformation/ClaimInformation'
-import {ClaimType} from 'portals/hope/features/claims/claim-details/ClaimType/ClaimType'
-import {ClaimTranscriptions} from 'portals/hope/features/claims/claim-details/ClaimTranscriptions'
-import {ClaimNotes} from 'portals/hope/features/claims/claim-details/ClaimNotes'
-import {getCarrierText} from 'portals/hope/features/member/tabs/contracts-tab/utils'
-import {ClaimReserve} from 'portals/hope/features/claims/claim-details/ClaimReserve'
-import {ClaimPayments} from 'portals/hope/features/claims/claim-details/ClaimPayments/ClaimPayments'
-import {ClaimFileTable} from 'portals/hope/features/claims/claim-details/ClaimFiles'
-import {ClaimEvents} from 'portals/hope/features/claims/claim-details/ClaimEvents'
+import { Prompt } from 'react-router'
+import { ChatPane } from 'portals/hope/features/member/tabs/ChatPane'
+import { ClaimRestrictionInformation } from 'portals/hope/features/claims/claim-details/ClaimRestrictionInformation'
+import { MemberInformation } from 'portals/hope/features/claims/claim-details/MemberInformation/MemberInformation'
+import { ClaimInformation } from 'portals/hope/features/claims/claim-details/ClaimInformation/ClaimInformation'
+import { ClaimType } from 'portals/hope/features/claims/claim-details/ClaimType/ClaimType'
+import { ClaimTranscriptions } from 'portals/hope/features/claims/claim-details/ClaimTranscriptions'
+import { ClaimNotes } from 'portals/hope/features/claims/claim-details/ClaimNotes'
+import { getCarrierText } from 'portals/hope/features/member/tabs/contracts-tab/utils'
+import { ClaimReserve } from 'portals/hope/features/claims/claim-details/ClaimReserve'
+import { ClaimPayments } from 'portals/hope/features/claims/claim-details/ClaimPayments/ClaimPayments'
+import { ClaimFileTable } from 'portals/hope/features/claims/claim-details/ClaimFiles'
+import { ClaimEvents } from 'portals/hope/features/claims/claim-details/ClaimEvents'
 import gql from 'graphql-tag'
 import styled from '@emotion/styled'
-import {ShieldLockFill} from 'react-bootstrap-icons'
-import {usePushMemberHistory} from "portals/hope/common/hooks/use-push-member-history";
+import { ShieldLockFill } from 'react-bootstrap-icons'
+import { usePushMemberHistory } from 'portals/hope/common/hooks/use-push-member-history'
 
 const ChatPaneAdjustedContainer = styled.div`
   width: clamp(1000px, calc(100% - 400px), calc(100% - 400px));
@@ -101,8 +105,7 @@ gql`
   }
 `
 
-
-export const ClaimOverview: React.FC<{ claimId: string }> = ({ claimId }) => {)
+export const ClaimOverview: React.FC<{ claimId: string }> = ({ claimId }) => {
   const { restriction } = useRestrictClaim(claimId)
   const [showEvents, setShowEvents] = useState(false)
   const { data, error } = useClaimDetailsQuery({
