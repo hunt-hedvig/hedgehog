@@ -41,7 +41,7 @@ const Header = styled.div`
   font-size: 32px;
 `
 
-const Badge = styled('div')<{ memberId: string; numberMemberGroups: number }>`
+const Badge = styled.div<{ memberId: string; numberMemberGroups: number }>`
   float: right;
   display: inline-flex;
   padding: 0.5rem 1rem;

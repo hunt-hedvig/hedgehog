@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import {ClaimState, useMemberHasOpenClaimQuery} from 'types/generated/graphql'
+import { ClaimState, useMemberHasOpenClaimQuery } from 'types/generated/graphql'
 
 gql`
   query MemberHasOpenClaim($memberId: ID!) {

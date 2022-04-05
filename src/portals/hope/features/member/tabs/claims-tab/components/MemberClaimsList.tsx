@@ -11,12 +11,12 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import {convertEnumToTitle} from '@hedvig-ui/utils/text'
-import {parseISO} from 'date-fns'
+import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React from 'react'
-import {ClaimState} from 'types/generated/graphql'
-import {useGetMemberClaims} from 'portals/hope/features/member/tabs/claims-tab/hooks/use-get-member-claims'
+import { ClaimState } from 'types/generated/graphql'
+import { useGetMemberClaims } from 'portals/hope/features/member/tabs/claims-tab/hooks/use-get-member-claims'
 
 const ClaimStateBadge = styled.span<{ state: ClaimState }>`
   display: inline-block;
