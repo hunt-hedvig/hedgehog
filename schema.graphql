@@ -393,7 +393,7 @@ type UserNotification {
 
 type UserSettings {
     darkMode: Boolean
-    featureFlags: JSON
+    featureFlags: [String!]
     numberOfMemberGroups: Int
     claimComplexityFilterClaims: [ClaimComplexity!]
     claimStatesFilterClaims: [ClaimState!]
