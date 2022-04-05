@@ -11,9 +11,13 @@ import {
   PinAngleFill,
   Trash,
 } from 'react-bootstrap-icons'
-import { formatLocale, useTemplateMessages } from '../use-template-messages'
+import { formatLocale, LocaleDisplayed } from '../use-template-messages'
 import { Template, UpsertTemplateInput } from 'types/generated/graphql'
-import { PickedLocale, PickedLocaleMarket } from '../../config/constants'
+import {
+  MarketFlags,
+  PickedLocale,
+  PickedLocaleMarket,
+} from '../../config/constants'
 
 const show = keyframes`
   from {
@@ -105,24 +109,33 @@ const TemplatesListTitle = styled.div`
 
 export const TemplateMessagesModal: React.FC<{
   hide: () => void
-}> = ({ hide }) => {
+  templates: Template[]
+  create: (template: UpsertTemplateInput, actionOnSuccess?: () => void) => void
+  edit: (template: Template) => void
+  delete: (id: string) => void
+  pin: (id: string) => void
+  select: (text: string) => void
+  locale: PickedLocale
+  memberId?: string
+  currentLocaleDisplayed: LocaleDisplayed | null
+  changeLocaleDisplayed: (memberId: string, isEnglish?: boolean) => void
+}> = ({
+  hide,
+  select,
+  templates,
+  create: createTemplate,
+  edit: editTemplate,
+  delete: deleteTemplate,
+  pin: pinTemplate,
+  locale: currentLocale,
+  memberId,
+  currentLocaleDisplayed,
+  changeLocaleDisplayed,
+}) => {
   const [query, setQuery] = useState('')
   const [editingTemplate, setEditingTemplate] = useState<Template | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
-
-  const {
-    select,
-    templates,
-    create: createTemplate,
-    edit: editTemplate,
-    delete: deleteTemplate,
-    pin: pinTemplate,
-    locale: currentLocale,
-    memberId,
-    currentLocaleDisplayed,
-    changeLocaleDisplayed,
-  } = useTemplateMessages()
 
   const templatesRef = useRef<HTMLDivElement>(null)
 
@@ -315,7 +328,8 @@ export const TemplateMessagesModal: React.FC<{
         {getFilteredTemplates(false)?.length ? (
           <div>
             <TemplatesListTitle>
-              {getFilteredTemplates(false)?.length} Templates
+              {getFilteredTemplates(false)?.length} Templates{' '}
+              {MarketFlags[PickedLocaleMarket[currentLocale]]}
             </TemplatesListTitle>
             {getFilteredTemplates(false).map((template) => (
               <TemplateItem

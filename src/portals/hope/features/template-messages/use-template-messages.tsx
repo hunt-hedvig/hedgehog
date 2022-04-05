@@ -514,7 +514,22 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
     >
       {children}
       {showTemplateMessages && (
-        <TemplateMessagesModal hide={() => setShowTemplateMessages(false)} />
+        <TemplateMessagesModal
+          select={(text: string) => setSelectedText(text)}
+          templates={templates}
+          create={createHandler}
+          edit={editHandler}
+          delete={deleteHandler}
+          pin={pinHandler}
+          locale={locale}
+          memberId={memberId}
+          currentLocaleDisplayed={
+            localesDisplayed?.find((locale) => locale.memberId === memberId) ||
+            null
+          }
+          changeLocaleDisplayed={changeLocaleDisplayed}
+          hide={() => setShowTemplateMessages(false)}
+        />
       )}
     </TemplateMessagesContext.Provider>
   )
