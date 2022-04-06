@@ -22,6 +22,7 @@ const MemberPage: Page<
         onChangeTab={(newTab) =>
           history.replace(`/members/${memberId}/${newTab}`)
         }
+        onClickClaim={(claimId) => history.push(`/claims/${claimId}`)}
       />
       <ChatPane memberId={memberId} />
     </>

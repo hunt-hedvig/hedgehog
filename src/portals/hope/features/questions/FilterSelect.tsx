@@ -10,13 +10,11 @@ import {
 } from 'portals/hope/features/config/constants'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 import {
-  doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
 } from 'portals/hope/features/questions/utils'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React from 'react'
-import { Shield, ShieldShaded } from 'react-bootstrap-icons'
 import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
 import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
@@ -31,11 +29,9 @@ export const FilterState: Record<string, number> = {
     },
     {},
   ),
-  HasOpenClaim: Object.keys(MemberGroups).length,
-  NoOpenClaim: Object.keys(MemberGroups).length + 1,
   ...Object.keys(Market).reduce<Record<string, number>>(
     (acc, market, index) => {
-      acc[market] = Object.keys(MemberGroups).length + 2 + index
+      acc[market] = Object.keys(MemberGroups).length + index
       return acc
     },
     {},
@@ -223,91 +219,6 @@ export const FilterSelect: React.FC<{
               </FadeIn>
             )
           })}
-      </ButtonsGroup>
-      <ButtonsGroup
-        style={{
-          justifyContent: push ? push : 'center',
-          marginTop: !small ? '1.0em' : '0.6em',
-        }}
-      >
-        <FadeIn
-          delay={`${
-            animationDelay + animationItemDelay * (numberMemberGroups + 4)
-          }ms`}
-          {...register('Open Claims Filter', {
-            resolve: () => {
-              onToggle(
-                FilterState.HasOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
-              )
-            },
-            neighbors: {
-              up: `Market ${Object.keys(Market)[0]} Filter`,
-              right: 'No Claims Filter',
-            },
-          })}
-        >
-          <FilterButton
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            small={small}
-            selected={filters.includes(FilterState.HasOpenClaim)}
-            onClick={() =>
-              onToggle(
-                FilterState.HasOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
-              )
-            }
-          >
-            Open claims{' '}
-            <ShieldShaded style={{ marginLeft: !small ? '0.5em' : '0.3em' }} />
-            <CountBadge selected={filters.includes(FilterState.HasOpenClaim)}>
-              <div>
-                {getCountByFilter(FilterState.HasOpenClaim, doClaimFilter)}
-              </div>
-            </CountBadge>
-          </FilterButton>
-        </FadeIn>
-        <FadeIn
-          delay={`${
-            animationDelay + animationItemDelay * (numberMemberGroups + 5)
-          }ms`}
-          {...register('No Claims Filter', {
-            resolve: () => {
-              onToggle(
-                FilterState.NoOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
-              )
-            },
-            neighbors: {
-              up: `Market ${
-                Object.keys(Market)[Object.keys(Market).length - 1]
-              } Filter`,
-              left: 'Open Claims Filter',
-            },
-          })}
-        >
-          <FilterButton
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            small={small}
-            selected={filters.includes(FilterState.NoOpenClaim)}
-            onClick={() =>
-              onToggle(
-                FilterState.NoOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
-              )
-            }
-          >
-            No claims{' '}
-            <Shield style={{ marginLeft: !small ? '0.5em' : '0.3em' }} />
-            <CountBadge selected={filters.includes(FilterState.NoOpenClaim)}>
-              <div>
-                {getCountByFilter(FilterState.NoOpenClaim, doClaimFilter)}
-              </div>
-            </CountBadge>
-          </FilterButton>
-        </FadeIn>
       </ButtonsGroup>
     </>
   )

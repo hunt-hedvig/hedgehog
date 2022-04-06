@@ -10,7 +10,7 @@ import { TrackingProvider } from 'portals/hope/features/tracking/hooks/use-track
 import { Tracker } from 'portals/hope/features/tracking/Tracker'
 import { useAuthenticate } from 'portals/hope/features/user/hooks/use-authenticate'
 import { MeProvider } from 'portals/hope/features/user/hooks/use-me'
-import { MemberHistoryProvider } from 'portals/hope/features/user/hooks/use-member-history'
+import { MemberHistoryProvider } from 'portals/hope/common/hooks/use-member-history'
 import { NumberMemberGroupsProvider } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { TemplateMessagesProvider } from 'portals/hope/features/template-messages/use-template-messages'
 import { Routes } from 'portals/hope/pages/routes'

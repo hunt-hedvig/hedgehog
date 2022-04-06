@@ -53,7 +53,7 @@ const MemberFileTable: React.FC<{
   </Table>
 )
 
-export const MemberFile: React.FC<{
+export const MemberFilesTab: React.FC<{
   memberId: string
 }> = ({ memberId }) => {
   const { data, loading, error } = useFileUploadsQueryQuery({

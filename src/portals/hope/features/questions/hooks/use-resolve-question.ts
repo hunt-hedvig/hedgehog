@@ -1,6 +1,5 @@
 import gql from 'graphql-tag'
 import {
-  AuthenticationDocument,
   GetQuestionsGroupsDocument,
   GetQuestionsGroupsQuery,
   useMarkQuestionAsResolvedMutation,
@@ -13,13 +12,7 @@ gql`
 `
 
 export const useResolveQuestion = () => {
-  const [markAsResolved, { loading }] = useMarkQuestionAsResolvedMutation({
-    refetchQueries: [
-      {
-        query: GetQuestionsGroupsDocument,
-      },
-    ],
-  })
+  const [markAsResolved, { loading }] = useMarkQuestionAsResolvedMutation()
 
   const resolve = (memberId: string) =>
     markAsResolved({
@@ -29,7 +22,7 @@ export const useResolveQuestion = () => {
       },
       update: (cache) => {
         const cachedData = cache.readQuery({
-          query: AuthenticationDocument,
+          query: GetQuestionsGroupsDocument,
         })
 
         const cachedGroups = (cachedData as GetQuestionsGroupsQuery)
