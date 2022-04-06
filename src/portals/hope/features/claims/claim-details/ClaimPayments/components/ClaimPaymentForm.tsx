@@ -125,7 +125,14 @@ export const ClaimPaymentForm: React.FC<{
   const [isOverridden, setIsOverridden] = useState(false)
   const [date, setDate] = useState<string | null>(null)
 
-  const form = useForm()
+  const form = useForm<{
+    amount: string
+    deductible: number
+    note: string
+    type: ClaimPaymentType & 'AutomaticSwish'
+    phoneNumber: string
+    message: string
+  }>()
 
   const claim = data?.claim
   const member = data?.claim?.member
@@ -139,7 +146,12 @@ export const ClaimPaymentForm: React.FC<{
 
   useEffect(() => {
     if (selectedPayment) {
-      // console.log(selectedPayment)
+      form.setValue('amount', selectedPayment.amount)
+      form.setValue('deductible', selectedPayment.deductible)
+      form.setValue('note', selectedPayment.note)
+      setIsExGratia(selectedPayment.exGratia)
+      setDate(selectedPayment.paidAt)
+      form.setValue('type', selectedPayment.type)
     }
   }, [selectedPayment])
 
