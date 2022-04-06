@@ -16,9 +16,9 @@ export const useSelectedFilters = () => {
   ])
 
   const intermediateMarketFilterMap: Record<number, Market> = {
-    6: Market.Sweden,
-    7: Market.Norway,
-    8: Market.Denmark,
+    4: Market.Sweden,
+    5: Market.Norway,
+    6: Market.Denmark,
   }
 
   const toggleFilterHandler = (
@@ -49,7 +49,7 @@ export const useSelectedFilters = () => {
 
   return {
     selectedFilters: selectedFilters.filter((filter) => {
-      if (filter >= 6 && filter <= 8) {
+      if (filter >= 4 && filter <= 6) {
         return userMarkets.includes(intermediateMarketFilterMap[filter])
       }
       return true

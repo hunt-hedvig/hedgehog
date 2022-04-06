@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSearch } from 'portals/hope/common/hooks/use-search'
-import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
+import { useMemberHistory } from 'portals/hope/common/hooks/use-member-history'
 import { SearchInput } from 'portals/hope/features/search/components/SearchInput'
 import {
   Button,

@@ -7,8 +7,8 @@ import { DropdownProps as _DropdownProps } from './Dropdown/dropdown'
 import { InfoTagStatus as _InfoTagStatus } from './InfoRow/info-row'
 import { InputProps as _InputProps } from './Input/input'
 import {
-  ModalProps as _ModalProps,
   ModalAdditionalOptions as _ModalAdditionalOptions,
+  ModalProps as _ModalProps,
 } from './Modal'
 import { FlagProp as _FlagProp } from './OrbIndicator/orb-indicator'
 import { SpacingSize as _SpacingSize } from './Spacing/spacing'
@@ -123,3 +123,5 @@ export { TextDatePicker } from './TextDatePicker'
 export { isStringNumber } from './utils/text'
 
 export { useDebounce } from './hooks/use-debounce'
+
+export { useQueryParams } from './hooks/use-query-params'

@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
-import { FadeIn, MainHeadline } from '@hedvig-ui'
+import { FadeIn, MainHeadline, useQueryParams } from '@hedvig-ui'
 import { ClaimsTemplates } from 'portals/hope/features/claims/claim-templates/ClaimsTemplatesList'
 import { ClaimListFilters } from 'portals/hope/features/claims/claims-list/filters/ClaimListFilters'
 import { LargeClaimsList } from 'portals/hope/features/claims/claims-list/LargeClaimsList'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RouteComponentProps, useLocation } from 'react-router'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
@@ -17,12 +17,6 @@ const ListPage = styled.div`
   align-items: flex-start;
   margin: 0;
 `
-
-const useQuery = () => {
-  const { search } = useLocation()
-
-  return useMemo(() => new URLSearchParams(search), [search])
-}
 
 export interface ClaimsFiltersType {
   filterClaimStates: ClaimState[] | null
@@ -45,7 +39,7 @@ const ClaimsListPage: Page<
   },
 }) => {
   const location = useLocation()
-  const filterQuery = useQuery().get('template')
+  const filterQuery = useQueryParams().get('template')
 
   const {
     templateActive,
