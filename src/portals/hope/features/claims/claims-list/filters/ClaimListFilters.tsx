@@ -145,34 +145,57 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
   const [outcomeOpen, setOutcomeOpen] = useState(false)
 
-  const updateFilterHandler = (
+  const updateFilterHandler = (field: keyof UserSettings, value: string) => {
+    if (page && page !== '1') {
+      history.push(`/claims/list/1`)
+    }
+
+    const newSettingValue = settings[field] as string[]
+
+    if (!newSettingValue) {
+      updateSetting(field, [value])
+
+      return
+    }
+
+    if (newSettingValue.includes(value as string)) {
+      updateSetting(
+        field,
+        newSettingValue?.filter(
+          (currentValue: string) => currentValue !== value,
+        ),
+      )
+    } else {
+      updateSetting(field, [...newSettingValue, value])
+    }
+  }
+
+  const updateFilterNumberHandler = (
     field: keyof UserSettings,
-    value: string | number,
+    value: number,
   ) => {
     if (page && page !== '1') {
       history.push(`/claims/list/1`)
     }
 
-    if (!settings[field]) {
+    const newSettingValue = settings[field] as number[]
+
+    if (!newSettingValue) {
       updateSetting(field, [value])
-    }
 
-    const currentValue = settings[field]
-
-    if (!currentValue || typeof currentValue !== 'object') {
       return
     }
 
-    if (currentValue.includes(value)) {
+    if (newSettingValue.includes(value as number)) {
       updateSetting(
         field,
-        currentValue.filter((item: string | number) => item !== value),
+        newSettingValue?.filter(
+          (currentValue: number) => currentValue !== value,
+        ),
       )
-
-      return
+    } else {
+      updateSetting(field, [...newSettingValue, value])
     }
-
-    updateSetting(field, [...currentValue, value])
   }
 
   const updateOutcomeFilterHandler = (value: string | null) => {
@@ -356,7 +379,10 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         {range(numberMemberGroups).map((filterNumber, index) => {
           const navigation = register(`Member Number ${filterNumber}`, {
             resolve: () => {
-              updateFilterHandler('memberGroupsFilterClaims', filterNumber)
+              updateFilterNumberHandler(
+                'memberGroupsFilterClaims',
+                filterNumber,
+              )
             },
             neighbors: {
               left: `Member Groups ${numberMemberGroupsOptions[0].label}`,
@@ -386,7 +412,10 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                   filterNumber,
                 )}
                 onChange={() => {
-                  updateFilterHandler('memberGroupsFilterClaims', filterNumber)
+                  updateFilterNumberHandler(
+                    'memberGroupsFilterClaims',
+                    filterNumber,
+                  )
                 }}
               />
               <MemberGroupColorBadge
