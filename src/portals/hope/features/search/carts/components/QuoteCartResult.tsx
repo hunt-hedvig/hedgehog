@@ -201,6 +201,7 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
         </Flex>
         <Button
           disabled={!firstQuote}
+          variant={hasBypassedUwgl ? 'tertiary' : 'secondary'}
           onClick={() => {
             if (hasBypassedUwgl && firstQuote) {
               copy(
@@ -237,7 +238,7 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
             })
           }}
         >
-          {hasBypassedUwgl ? 'Copy link' : 'Make signable'}
+          {hasBypassedUwgl ? 'Copy offer link' : 'Exempt cart from guidelines'}
         </Button>
       </Flex>
       <Flex className="quotes" direction="column" fullWidth>
