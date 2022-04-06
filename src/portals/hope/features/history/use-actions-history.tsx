@@ -39,17 +39,16 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
   const isCommandPressed = useKeyIsPressed(Keys.Command)
   const isZPressed = useKeyIsPressed(Keys.Z)
 
-  let timeoutID: any
+  let timeoutID: ReturnType<typeof setTimeout>
 
-  function showAlert() {
+  function undoHandler() {
     timeoutID = setTimeout(() => {
       setWaitUndo(false)
-      console.log('ACTION')
       actionsList[actionsList.length - 1].action()
     }, 3000)
   }
 
-  function clearAlert() {
+  function clearUndoHandler() {
     clearTimeout(timeoutID)
   }
 
@@ -59,7 +58,7 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
         duration: 5000,
       })
 
-      showAlert()
+      undoHandler()
     } else {
       toast.remove()
     }
@@ -69,7 +68,8 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
     if (isCommandPressed && isZPressed && waitUndo) {
       const lastAction = actionsList[actionsList.length - 1]
       lastAction.undoAction()
-      clearAlert()
+      // Doesn't clear timeout
+      clearUndoHandler()
       setWaitUndo(false)
     }
   }, [isCommandPressed, isZPressed])
