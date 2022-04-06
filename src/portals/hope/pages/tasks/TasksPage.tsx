@@ -183,13 +183,13 @@ const TasksPage: Page = () => {
     if (loading) return
 
     if (groupByRoute) {
-      setSelectedQuestionGroup(groupByRoute)
+      selectQuestionGroupHandler(groupByRoute)
 
       return
     }
 
     history.replace('/questions')
-    setSelectedQuestionGroup(null)
+    selectQuestionGroupHandler(null)
   }, [groupByRoute])
 
   const selectQuestionGroupHandler = (group: QuestionGroup | null) => {
@@ -210,6 +210,50 @@ const TasksPage: Page = () => {
     }
 
     setLocale((group.pickedLocale || PickedLocale.SvSe) as PickedLocale)
+  }
+
+  const resolveHandler = () => {
+    const activeGroup = selectedQuestionGroup ?? groupByRoute
+
+    if (!activeGroup) return
+
+    const activeGroupIndex = questionGroups.findIndex(
+      (group) => group.memberId === activeGroup?.memberId,
+    )
+
+    if (activeGroupIndex !== -1) {
+      const hasMoreGroups = activeGroupIndex < questionGroups.length - 2
+
+      if (questionGroups.length > 0 && hasMoreGroups) {
+        selectQuestionGroupHandler(questionGroups[activeGroupIndex + 1])
+      }
+
+      if (questionGroups.length > 0 && !hasMoreGroups) {
+        selectQuestionGroupHandler(questionGroups[0])
+      }
+    }
+
+    resolve(activeGroup?.memberId ?? '')
+
+    history.replace(`/questions`)
+  }
+
+  const selectMemberHandler = (openClaimId: string | null) => {
+    if (!(selectedQuestionGroup || groupByRoute)) return
+
+    if (!openClaimId) {
+      history.push(
+        `/questions?memberId=${
+          selectedQuestionGroup?.memberId ?? groupByRoute?.memberId
+        }`,
+      )
+    } else {
+      history.push(
+        `/questions?memberId=${
+          selectedQuestionGroup?.memberId ?? groupByRoute?.memberId
+        }&tab=claims&claimId=${openClaimId}`,
+      )
+    }
   }
 
   const fullName =
@@ -312,33 +356,8 @@ const TasksPage: Page = () => {
               resolvable={!!(selectedQuestionGroup || groupByRoute)}
               memberId={selectedQuestionGroup?.memberId ?? memberId ?? ''}
               fullName={fullName}
-              onResolve={() => {
-                if (!(selectedQuestionGroup || groupByRoute)) return
-
-                resolve(
-                  selectedQuestionGroup?.memberId ??
-                    groupByRoute?.memberId ??
-                    '',
-                )
-                history.replace(`/questions`)
-              }}
-              onSelectMember={(openClaimId) => {
-                if (!(selectedQuestionGroup || groupByRoute)) return
-
-                if (!openClaimId) {
-                  history.push(
-                    `/questions?memberId=${
-                      selectedQuestionGroup?.memberId ?? groupByRoute?.memberId
-                    }`,
-                  )
-                } else {
-                  history.push(
-                    `/questions?memberId=${
-                      selectedQuestionGroup?.memberId ?? groupByRoute?.memberId
-                    }&tab=claims&claimId=${openClaimId}`,
-                  )
-                }
-              }}
+              onResolve={resolveHandler}
+              onSelectMember={selectMemberHandler}
             />
           )}
         </TaskChatWrapper>
