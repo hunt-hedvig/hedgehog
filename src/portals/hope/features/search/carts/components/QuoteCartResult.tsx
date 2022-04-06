@@ -153,6 +153,11 @@ const QuoteResultRow: React.FC<{
   )
 }
 
+const getOnboardingUrl = () => {
+  return (window as Window & typeof global & { HEDVIG_ONBOARDING_URL: string })
+    .HEDVIG_ONBOARDING_URL
+}
+
 export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
   quoteCart: { id, quotes },
 }) => {
@@ -199,7 +204,7 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
           onClick={() => {
             if (hasBypassedUwgl && firstQuote) {
               copy(
-                `${process.env.HEDVIG_ONBOARDING_URL}/${
+                `${getOnboardingUrl()}/${
                   MarketLanguage[firstQuote.market as Market]
                 }/new-member/offer/${id}`,
               )

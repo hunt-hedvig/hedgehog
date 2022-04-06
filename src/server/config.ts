@@ -34,6 +34,10 @@ const authServiceHost = requireNotNullish(
 const useAuthAsLogin = process.env.USE_STAGING_SPECIFIC_TOOLS === 'true'
 
 export const config = {
+  hedvigOnboardingUrl: requireNotNullish(
+    process.env.HEDVIG_ONBOARDING_URL,
+    'hedvig onboarding url',
+  ),
   oauthClientId: requireNotNullish(
     process.env.OAUTH_CLIENT_ID,
     'oauth client id',
