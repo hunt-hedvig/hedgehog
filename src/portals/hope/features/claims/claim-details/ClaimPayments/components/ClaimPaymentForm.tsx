@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import {
+  ClaimPayment,
   ClaimPaymentInput,
   ClaimPaymentType,
   ClaimState,
@@ -110,7 +111,8 @@ gql`
 
 export const ClaimPaymentForm: React.FC<{
   claimId: string
-}> = ({ claimId }) => {
+  selectedPayment: ClaimPayment | null
+}> = ({ claimId, selectedPayment }) => {
   const { data } = useMemberPaymentInformationQuery({
     variables: { claimId },
   })
@@ -134,6 +136,12 @@ export const ClaimPaymentForm: React.FC<{
   const isPaymentActivated =
     !!member?.directDebitStatus?.activated ||
     !!member?.payoutMethodStatus?.activated
+
+  useEffect(() => {
+    if (selectedPayment) {
+      // console.log(selectedPayment)
+    }
+  }, [selectedPayment])
 
   useEffect(() => {
     if (isExGratia && form.getValues().type === ClaimPaymentType.Automatic) {

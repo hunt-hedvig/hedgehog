@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useClaimPaymentsQuery } from 'types/generated/graphql'
+import { useClaimPaymentsQuery, ClaimPayment } from 'types/generated/graphql'
 
 import {
   CardContent,
@@ -11,7 +11,7 @@ import {
   ThirdLevelHeadline,
 } from '@hedvig-ui'
 import { Market } from 'portals/hope/features/config/constants'
-import React from 'react'
+import React, { useState } from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { ClaimPaymentForm } from './components/ClaimPaymentForm'
 import gql from 'graphql-tag'
@@ -56,6 +56,19 @@ export const ClaimPayments: React.FC<{
   })
 
   const identity = data?.claim?.member?.identity
+
+  const [paymentCorrection, setPaymentCorrection] =
+    useState<ClaimPayment | null>(null)
+
+  const selectPaymentHandler = (payment: ClaimPayment) => {
+    if (!paymentCorrection || payment.id !== paymentCorrection.id) {
+      setPaymentCorrection(payment)
+
+      return
+    }
+
+    setPaymentCorrection(null)
+  }
 
   return (
     <CardContent>
@@ -108,10 +121,13 @@ export const ClaimPayments: React.FC<{
         )}
       </div>
 
-      <ClaimPaymentsTable claimId={claimId} />
+      <ClaimPaymentsTable
+        claimId={claimId}
+        selectPayment={selectPaymentHandler}
+      />
 
       <Spacing top="medium" />
-      <ClaimPaymentForm claimId={claimId} />
+      <ClaimPaymentForm claimId={claimId} selectedPayment={paymentCorrection} />
     </CardContent>
   )
 }
