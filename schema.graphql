@@ -940,7 +940,7 @@ type Quote {
   validity: Int
   memberId: ID
   breachedUnderwritingGuidelines: [String!]
-  # underwritingGuidelinesBypassed: Boolean!
+  underwritingGuidelinesBypassed: Boolean!
   isComplete: Boolean
   schema: JSON
   schemaData: JSON
