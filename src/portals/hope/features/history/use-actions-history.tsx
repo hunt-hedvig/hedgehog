@@ -44,6 +44,7 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
   function undoHandler() {
     timeoutID = setTimeout(() => {
       setWaitUndo(false)
+      console.log('ACTION!!!')
       actionsList[actionsList.length - 1].action()
     }, 3000)
   }
