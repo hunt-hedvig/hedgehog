@@ -93,14 +93,12 @@ gql`
       state
       productType
       breachedUnderwritingGuidelines
-      underwritingGuidelinesBypassed
     }
   }
 
   mutation BypassUnderwritingGuidelines($quoteIds: [ID!]!) {
     bypassUnderwritingGuidelines(quoteIds: $quoteIds) {
       id
-      underwritingGuidelinesBypassed
     }
   }
 `
@@ -171,9 +169,11 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
   const createdAt = firstQuote?.createdAt
   const state = firstQuote?.state
 
+  /*
   const hasBypassedUwgl = data?.quotes?.every(
     (quote) => quote.underwritingGuidelinesBypassed,
   )
+   */
 
   const geoInfo = [
     firstQuotePreview?.street,
@@ -195,8 +195,9 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
           </div>
         </Flex>
         <Button
-          disabled={!firstQuote}
+          disabled={true} // TODO: Revert
           onClick={() => {
+            const hasBypassedUwgl = false
             if (hasBypassedUwgl && firstQuote) {
               copy(
                 `${process.env.HEDVIG_ONBOARDING_URL}/${
@@ -232,7 +233,7 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
             })
           }}
         >
-          {hasBypassedUwgl ? 'Copy link' : 'Make signable'}
+          Make signable
         </Button>
       </Flex>
       <Flex className="quotes" direction="column" fullWidth>

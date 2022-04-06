@@ -27,7 +27,6 @@ gql`
         isComplete
         createdAt
         breachedUnderwritingGuidelines
-        underwritingGuidelinesBypassed
         market
         originatingProductId
         signedProductId
