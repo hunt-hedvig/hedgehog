@@ -25,20 +25,16 @@ export const useSelectedFilters = () => {
     filter: FilterStateType,
     settingField: keyof UserSettings,
   ) => {
-    const currentValue = settings[settingField]
+    const currentValue = settings[settingField] as number[]
 
-    if (!Array.isArray(currentValue)) {
-      return
+    if (currentValue?.includes(filter)) {
+      updateSetting(
+        settingField,
+        currentValue?.filter((item: string | number) => item !== filter),
+      )
+    } else {
+      updateSetting(settingField, [...(currentValue || []), filter])
     }
-
-    updateSetting(
-      settingField,
-      (currentValue as number[])?.includes(filter)
-        ? (currentValue as number[])?.filter(
-            (item: string | number) => item !== filter,
-          )
-        : [...(currentValue || []), filter],
-    )
 
     if (selectedFilters.includes(filter)) {
       setSelectedFilters(
