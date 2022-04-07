@@ -1,4 +1,4 @@
-import { range } from '@hedvig-ui/utils/range'
+import { range } from '@hedvig-ui'
 import {
   Market,
   PickedLocale,

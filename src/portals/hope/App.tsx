@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 import { BaseStyle, Flex, Spinner, StandaloneMessage } from '@hedvig-ui'
-import { ConfirmDialogProvider } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { ConfirmDialogProvider } from '@hedvig-ui'
 import { colorsV3 } from '@hedviginsurance/brand'
-import { history } from 'entry'
 import { CommandLineProvider } from 'portals/hope/features/commands/use-command-line'
 import { VerticalMenu } from 'portals/hope/features/navigation/sidebar/VerticalMenu'
 import { TopBar } from 'portals/hope/features/navigation/topbar/TopBar'
@@ -18,8 +17,8 @@ import React, { useEffect } from 'react'
 import TagManager from 'react-gtm-module'
 import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
-import { Switch } from 'react-router'
-import { NavigationProvider } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { Switch, useHistory } from 'react-router'
+import { NavigationProvider } from '@hedvig-ui'
 
 const Layout = styled(BaseStyle)`
   display: flex;
@@ -61,6 +60,7 @@ const Content = styled(Flex)`
 `
 
 const App: React.FC = () => {
+  const history = useHistory()
   const { me, loading } = useAuthenticate()
 
   useEffect(() => {

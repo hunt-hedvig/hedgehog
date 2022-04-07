@@ -9,7 +9,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { dateTimeFormatter } from '@hedvig-ui/utils/date'
+import { dateTimeFormatter } from '@hedvig-ui'
 import React from 'react'
 import { FileUpload, useFileUploadsQueryQuery } from 'types/generated/graphql'
 

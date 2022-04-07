@@ -7,7 +7,7 @@ import {
   InfoText,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { Agreement } from 'portals/hope/features/member/tabs/contracts-tab/agreement'
 import { AgreementsTable } from 'portals/hope/features/member/tabs/contracts-tab/agreement/AgreementsTable'
 import { MasterInception } from 'portals/hope/features/member/tabs/contracts-tab/contract/master-inception'

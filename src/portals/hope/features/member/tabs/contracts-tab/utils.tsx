@@ -1,4 +1,4 @@
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { Contract, GenericAgreement } from 'types/generated/graphql'
 
 export const getCarrierText = (carrier: string) => {

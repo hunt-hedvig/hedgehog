@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, StandaloneMessage, ThirdLevelHeadline } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import { useMemberQuotes } from 'portals/hope/features/member/tabs/quote-tab/hooks/use-member-quotes'
 import { isExpired } from 'portals/hope/features/member/tabs/quote-tab/utils'
 import React from 'react'

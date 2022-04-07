@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { CardContent, Loadable, Spacing, Tabs } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import copy from 'copy-to-clipboard'
 import { MemberClaimsView } from 'portals/hope/features/claims/claim-details/MemberInformation/components/MemberClaimsView'

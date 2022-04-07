@@ -1,9 +1,6 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys, useKeyIsPressed } from '@hedvig-ui'
 import { UsersOnPath } from 'portals/hope/features/navigation/topbar/components/UsersOnPath'
 import { NotificationsModal } from 'portals/hope/features/user/notifications/NotificationsModal'
 import { ShareIcon } from 'portals/hope/features/user/share/components/ShareIcon'
@@ -13,7 +10,7 @@ import { UserPanel } from 'portals/hope/features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
 import { BellFill, PeopleFill } from 'react-bootstrap-icons'
 import UserMenu from './UserMenu'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 import { HTMLMotionProps, motion } from 'framer-motion'
 import { useNotifications } from 'portals/hope/features/user/notifications/hooks/use-notifications'

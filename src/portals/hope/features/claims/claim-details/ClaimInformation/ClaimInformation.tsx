@@ -12,7 +12,7 @@ import {
   Loadable,
   Paragraph,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
 import { ClaimContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimContractDropdown'
 import { ClaimOutcomeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'

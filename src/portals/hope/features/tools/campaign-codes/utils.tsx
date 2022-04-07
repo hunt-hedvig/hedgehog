@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Badge } from '@hedvig-ui'
-import { formatMoney } from '@hedvig-ui/utils/money'
+import { formatMoney } from '@hedvig-ui'
 import React from 'react'
 import {
   CampaignFilter,

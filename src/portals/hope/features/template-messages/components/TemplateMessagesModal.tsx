@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
-import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
+import { useClickOutside } from '@hedvig-ui'
 import { keyframes } from '@emotion/react'
 import { TemplateForm } from './TemplateForm'
 import { SearchIcon } from '../../members-search/styles'

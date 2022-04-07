@@ -8,8 +8,8 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { formatMoney } from '@hedvig-ui/utils/money'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { formatMoney } from '@hedvig-ui'
+import { convertEnumToTitle } from '@hedvig-ui'
 import React from 'react'
 import { AgreementStatus, GenericAgreement } from 'types/generated/graphql'
 import { getCarrierText } from 'portals/hope/features/member/tabs/contracts-tab/utils'

@@ -8,10 +8,7 @@ import {
   Spacing,
   SubmitButton,
 } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys, useKeyIsPressed } from '@hedvig-ui'
 import React, { useEffect } from 'react'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'

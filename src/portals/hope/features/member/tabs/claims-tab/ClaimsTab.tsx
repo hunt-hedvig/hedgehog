@@ -8,7 +8,7 @@ import {
   MainHeadline,
   Spacing,
 } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { format } from 'date-fns'
 import { MemberClaimsList } from 'portals/hope/features/member/tabs/claims-tab/components/MemberClaimsList'
 import React, { useState } from 'react'

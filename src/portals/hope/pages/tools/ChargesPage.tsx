@@ -10,8 +10,8 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { formatMoney } from '@hedvig-ui/utils/money'
+import { useTitle } from '@hedvig-ui'
+import { formatMoney } from '@hedvig-ui'
 import { colors } from '@hedviginsurance/brand'
 import { format } from 'date-fns'
 import gql from 'graphql-tag'

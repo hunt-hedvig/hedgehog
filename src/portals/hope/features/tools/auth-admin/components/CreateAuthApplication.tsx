@@ -1,12 +1,11 @@
 import { Row } from 'portals/hope/features/tools/employees/components/CreateEmployee'
-import { Button, ButtonsGroup, Input } from '@hedvig-ui'
+import { Button, ButtonsGroup, Input, useConfirmDialog } from '@hedvig-ui'
 import { toast } from 'react-hot-toast'
 import {
   ListAuthApplicationsDocument,
   useCreateApplicationMutation,
 } from 'types/generated/graphql'
 import React, { useState } from 'react'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
 
 export const CreateAuthApplication: React.FC = () => {
   const [createPressed, setCreatePressed] = useState(false)

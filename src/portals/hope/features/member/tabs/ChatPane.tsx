@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+import { Keys } from '@hedvig-ui'
+import { useInsecurePersistentState } from '@hedvig-ui'
 import { motion } from 'framer-motion'
 import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
 import { ChatPanel } from 'portals/hope/features/member/chat/ChatPanel'

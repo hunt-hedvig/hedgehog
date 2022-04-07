@@ -10,7 +10,7 @@ import {
 } from 'portals/hope/features/template-messages/use-template-messages'
 import { PickedLocaleMarket } from '../../features/config/constants'
 import { Page } from 'portals/sos/pages/routes'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import { Template, UpsertTemplateInput } from 'types/generated/graphql'
 
 const Container = styled(FadeIn)`

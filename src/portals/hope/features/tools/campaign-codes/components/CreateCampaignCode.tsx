@@ -4,7 +4,7 @@ import {
   Spacing,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { FreeMonthsForm } from 'portals/hope/features/tools/campaign-codes/forms/FreeMonthsForm'
 import { MonthlyPercentageForm } from 'portals/hope/features/tools/campaign-codes/forms/MonthlyPercentageForm'
 import { NoDiscountForm } from 'portals/hope/features/tools/campaign-codes/forms/NoDiscountForm'

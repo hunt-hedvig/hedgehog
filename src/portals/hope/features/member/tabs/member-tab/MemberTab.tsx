@@ -13,7 +13,7 @@ import {
   TableColumn,
   TableRow,
 } from '@hedvig-ui'
-import { dateTimeFormatter } from '@hedvig-ui/utils/date'
+import { dateTimeFormatter } from '@hedvig-ui'
 import React, { ChangeEvent, useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
 import { FormProvider, useForm } from 'react-hook-form'

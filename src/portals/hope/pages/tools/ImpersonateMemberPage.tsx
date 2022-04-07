@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import QRCode from 'react-qr-code'
 import { Button, Input, MainHeadline, Spacing } from '@hedvig-ui'
 import { useCreatePaymentCompletionLinkMutation } from 'types/generated/graphql'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { useTitle } from '@hedvig-ui'
 
 const ImpersonateMemberPage: Page = () => {
   useTitle('Impersonate Member')
