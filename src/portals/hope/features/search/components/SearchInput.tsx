@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Input } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui'
 import { SearchIcon } from 'portals/hope/features/members-search/styles'
 import React, { useState } from 'react'
 

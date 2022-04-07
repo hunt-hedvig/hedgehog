@@ -1,5 +1,5 @@
 import { Button } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import { useGetMemberName } from 'portals/hope/features/member/tabs/debt-tab/hooks/use-get-member-name'
 import React from 'react'
 import { toast } from 'react-hot-toast'

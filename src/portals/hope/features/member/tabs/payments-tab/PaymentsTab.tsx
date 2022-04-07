@@ -23,8 +23,8 @@ import {
   TableRow,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { formatMoney } from '@hedvig-ui/utils/money'
+import { useConfirmDialog } from '@hedvig-ui'
+import { formatMoney } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import { format, parseISO } from 'date-fns'
 import { Market } from 'portals/hope/features/config/constants'

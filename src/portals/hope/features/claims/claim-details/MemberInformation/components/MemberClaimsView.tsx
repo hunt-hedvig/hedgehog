@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Label, Spacing } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'

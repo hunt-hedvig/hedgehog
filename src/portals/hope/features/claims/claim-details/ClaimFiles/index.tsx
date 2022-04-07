@@ -10,7 +10,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { sleep } from '@hedvig-ui/utils/sleep'
+import { sleep } from '@hedvig-ui'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
 import { ClaimFileUpload, useClaimFilesQuery } from 'types/generated/graphql'

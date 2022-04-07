@@ -10,7 +10,7 @@ import {
   useSharePathMutation,
   useUsersQuery,
 } from 'types/generated/graphql'
-import { ArrayElement } from '@hedvig-ui/utils/array-element'
+import { ArrayElement } from '@hedvig-ui'
 
 const getFilteredUsers = (
   searchValue: string,

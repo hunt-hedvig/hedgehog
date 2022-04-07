@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Dropdown, DropdownOption, TableColumn, TableRow } from '@hedvig-ui'
-import { dateTimeFormatter } from '@hedvig-ui/utils/date'
-import { sleep } from '@hedvig-ui/utils/sleep'
+import { dateTimeFormatter } from '@hedvig-ui'
+import { sleep } from '@hedvig-ui'
 import React from 'react'
 import {
   ClaimFileUpload,

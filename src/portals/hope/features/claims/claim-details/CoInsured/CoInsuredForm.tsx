@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Flex, Spacing } from '@hedvig-ui'
-import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
+import { useClickOutside } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { EditableField } from 'portals/hope/features/claims/claim-details/CoInsured/EditableField'
 import { PlaceholderCard } from 'portals/hope/features/claims/claim-details/CoInsured/PlaceholderCard'

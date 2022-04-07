@@ -1,5 +1,5 @@
 import { LoadingMessage, StandaloneMessage, Tabs } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import {
   ContractMarketTypes,
   InsuranceType,

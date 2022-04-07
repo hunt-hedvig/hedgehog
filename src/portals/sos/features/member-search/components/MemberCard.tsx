@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import React from 'react'
 import chroma from 'chroma-js'
 import { Flex, Spacing } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { SimpleMemberLookupResult } from 'types/generated/graphql'
 
 const Card = styled.div`

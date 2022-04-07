@@ -7,8 +7,8 @@ import {
   TextArea,
   TextDatePicker,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { useConfirmDialog } from '@hedvig-ui'
+import { convertEnumToTitle } from '@hedvig-ui'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {

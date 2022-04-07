@@ -8,11 +8,8 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { convertCamelcaseToTitle } from '@hedvig-ui/utils/text'
+import { Keys, useKeyIsPressed } from '@hedvig-ui'
+import { convertCamelcaseToTitle } from '@hedvig-ui'
 import { UpdateNameInput } from 'portals/hope/features/tools/claim-types/tables/UpdateNameInput'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'

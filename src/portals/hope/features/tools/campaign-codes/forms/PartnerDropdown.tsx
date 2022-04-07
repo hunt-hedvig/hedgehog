@@ -3,10 +3,7 @@ import { mapCampaignOwners } from 'portals/hope/features/tools/campaign-codes/ut
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useCreateCampaignPartnerMutation } from 'types/generated/graphql'
-import {
-  CreatableDropdown,
-  SelectOption,
-} from '@hedvig-ui/SearchableDropdown/searchable-dropdown'
+import { CreatableDropdown, SelectOption } from '@hedvig-ui'
 
 export const PartnerDropdown: React.FC<{
   onChange: (data: SelectOption | null) => void

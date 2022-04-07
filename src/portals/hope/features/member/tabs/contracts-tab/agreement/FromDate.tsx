@@ -7,7 +7,7 @@ import {
   TextDatePicker,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import formatDate from 'date-fns/format'
 import { parseISO } from 'date-fns'
 import React from 'react'

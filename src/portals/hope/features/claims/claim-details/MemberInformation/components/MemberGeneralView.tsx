@@ -10,13 +10,13 @@ import {
   Placeholder,
   Popover,
 } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { formatMoney } from '@hedvig-ui/utils/money'
+import { useTitle } from '@hedvig-ui'
+import { formatMoney } from '@hedvig-ui'
 import {
   convertCamelcaseToTitle,
   convertEnumOrSentenceToTitle,
   formatPostalCode,
-} from '@hedvig-ui/utils/text'
+} from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import {
   addMonths,

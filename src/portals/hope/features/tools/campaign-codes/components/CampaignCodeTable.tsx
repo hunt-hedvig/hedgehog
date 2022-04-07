@@ -14,7 +14,7 @@ import {
   TableRow,
   TextDatePicker,
 } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { useTitle } from '@hedvig-ui'
 import { usePartnerCampaigns } from 'portals/hope/features/tools/campaign-codes/hooks/use-partner-campaigns'
 import { usePartnerCampaignOwners } from 'portals/hope/features/tools/campaign-codes/hooks/use-get-partner-campaign-owners'
 import {
@@ -36,8 +36,8 @@ import {
 } from 'types/generated/graphql'
 import { css } from '@emotion/react'
 import { PencilFill } from 'react-bootstrap-icons'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { Keys } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui'
 import gql from 'graphql-tag'
 
 const CenteredCell = styled(TableColumn)<{ editable?: boolean }>`

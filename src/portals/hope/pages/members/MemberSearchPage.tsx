@@ -1,5 +1,5 @@
 import { Button, FadeIn, Flex, MainHeadline, TablePageSelect } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { useTitle } from '@hedvig-ui'
 import { MembersList } from 'portals/hope/features/members-search/components/MembersList'
 import { MemberSuggestions } from 'portals/hope/features/members-search/components/MemberSuggestions'
 import { SearchForm } from 'portals/hope/features/members-search/components/SearchForm'

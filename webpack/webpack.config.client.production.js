@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, '..')
 
 module.exports = webpackConfig({
   entry: {
-    app: ['react-hot-loader/patch', path.resolve(root, 'src/entry.tsx')],
+    app: [require.resolve('react-hot-loader/patch'), path.resolve(root, 'src/entry.tsx')],
   },
   target: 'web',
   mode: 'production',

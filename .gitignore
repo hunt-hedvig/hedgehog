@@ -11,10 +11,11 @@ tsconfig.tsbuildinfo
 src/types/generated/graphql.tsx
 graphql.schema.json
 
-.pnp.*
 .yarn/*
+!.yarn/cache
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+/.eslintcache

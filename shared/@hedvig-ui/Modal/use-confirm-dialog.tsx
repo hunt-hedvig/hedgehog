@@ -1,10 +1,6 @@
 import styled from '@emotion/styled'
 import { Button as DefaultButton, Modal } from '@hedvig-ui'
-import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys, useKeyIsPressed } from '@hedvig-ui'
 import React, {
   createContext,
   useContext,

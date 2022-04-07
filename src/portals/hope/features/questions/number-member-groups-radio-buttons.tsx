@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { RadioGroup } from '@hedvig-ui'
-import { range } from '@hedvig-ui/utils/range'
+import { range } from '@hedvig-ui'
 import { MemberGroups } from 'portals/hope/features/config/constants'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'

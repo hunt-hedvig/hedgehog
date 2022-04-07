@@ -11,7 +11,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React from 'react'

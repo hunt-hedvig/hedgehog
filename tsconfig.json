@@ -10,16 +10,15 @@
     "noUnusedParameters": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "typeRoots": ["./src/types"],
     "types": ["jest", "node"],
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "skipLibCheck": true,
     "sourceMap": true,
-    "incremental": true,
     "noEmit": true,
     "paths": {
-      "*": ["*", "node_modules/*", "src/*", "shared/*"]
+      "*": ["*", "src/*", "shared/*"]
     },
     "removeComments": true
   },
@@ -31,5 +30,5 @@
     "./src/**/*.tsx",
     "./src/**/*.js"
   ],
-  "exclude": ["node_modules", "./src/apollo/**/*"]
+  "exclude": ["./src/apollo/**/*"]
 }

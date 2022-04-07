@@ -3,7 +3,7 @@ import {
   convertEnumOrSentenceToTitle,
   convertEnumToTitle,
   formatPostalCode,
-} from '@hedvig-ui/utils/text'
+} from '@hedvig-ui'
 
 it('convertEnumToTitle converts enum text to Title', () => {
   expect(convertEnumToTitle('MY_ENUM')).toBe('My Enum')

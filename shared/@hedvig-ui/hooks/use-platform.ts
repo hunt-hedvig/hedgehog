@@ -1,4 +1,4 @@
-import { Key, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Key, Keys } from '@hedvig-ui'
 import React from 'react'
 
 interface UsePlatformResult {

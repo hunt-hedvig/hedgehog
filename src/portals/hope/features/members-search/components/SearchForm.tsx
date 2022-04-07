@@ -1,10 +1,14 @@
-import { Checkbox, FadeIn, Input, Shadowed } from '@hedvig-ui'
 import {
+  Checkbox,
+  FadeIn,
+  Input,
   isPressing,
   Keys,
+  Shadowed,
   shouldIgnoreInput,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { usePlatform } from '@hedvig-ui/hooks/use-platform'
+  useNavigation,
+  usePlatform,
+} from '@hedvig-ui'
 import {
   EscapeButton,
   Group,
@@ -13,7 +17,6 @@ import {
   SearchTip,
 } from 'portals/hope/features/members-search/styles'
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 
 interface SearchFieldProps {
   onSubmit: (query: string, includeAll: boolean) => void
