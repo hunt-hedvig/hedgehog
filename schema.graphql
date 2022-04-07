@@ -56,6 +56,8 @@ type QueryType {
   quotes(ids: [String!]!): [Quote!]!
   quote(id: String!): Quote!
 
+  auth_applications: [AuthApplication!]!
+
   searchClaimType(query: String!): [ClaimTypeSearchResponse!]!
 }
 
@@ -233,6 +235,9 @@ type MutationType {
   upsertTemplate(input: UpsertTemplateInput!): Template!
   removeTemplate(id: ID!): Boolean!
   togglePinStatus(id: ID!): Template!
+
+  auth_createApplication(applicationName: String!): AuthApplication!
+  auth_generateCredentials(applicationId: ID!): AuthCredentialGenerationOutput!
 }
 
 type ClaimTypeSearchResponse {
@@ -1350,6 +1355,23 @@ type MonetaryAmountV2 {
 enum ClaimComplexity {
   SIMPLE
   COMPLEX
+}
+
+type AuthApplication {
+  id: ID!
+  name: String!
+  createdAt: Instant!
+  credentials: [AuthApplicationCredentials!]!
+}
+
+type AuthApplicationCredentials {
+  clientId: String!
+  createdAt: Instant!
+}
+
+type AuthCredentialGenerationOutput {
+  clientId: String!
+  clientSecret: String!
 }
 
 # A String-representation of `java.time.YearMonth`, ex: `"2018-06"`
