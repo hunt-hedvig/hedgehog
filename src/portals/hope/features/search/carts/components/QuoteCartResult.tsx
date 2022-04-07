@@ -153,6 +153,11 @@ const QuoteResultRow: React.FC<{
   )
 }
 
+const getOnboardingUrl = () => {
+  return (window as Window & typeof global & { HEDVIG_ONBOARDING_URL: string })
+    .HEDVIG_ONBOARDING_URL
+}
+
 export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
   quoteCart: { id, quotes },
 }) => {
@@ -196,10 +201,11 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
         </Flex>
         <Button
           disabled={!firstQuote}
+          variant={hasBypassedUwgl ? 'tertiary' : 'secondary'}
           onClick={() => {
             if (hasBypassedUwgl && firstQuote) {
               copy(
-                `${process.env.HEDVIG_ONBOARDING_URL}/${
+                `${getOnboardingUrl()}/${
                   MarketLanguage[firstQuote.market as Market]
                 }/new-member/offer/${id}`,
               )
@@ -232,7 +238,7 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
             })
           }}
         >
-          {hasBypassedUwgl ? 'Copy link' : 'Make signable'}
+          {hasBypassedUwgl ? 'Copy offer link' : 'Exempt cart from guidelines'}
         </Button>
       </Flex>
       <Flex className="quotes" direction="column" fullWidth>

@@ -4,7 +4,6 @@ import { ThirdLevelHeadline, InfoRow, InfoText, Card } from '@hedvig-ui'
 import {
   GenericAgreement,
   useGetTermsAndConditionsQuery,
-  UserSettingKey,
 } from 'types/generated/graphql'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 
@@ -37,7 +36,7 @@ export const TermsAndConditions: React.FC<TermsAndConditionsProps> = ({
       partner,
       carrier,
       date: createdAt.split('T')[0],
-      locale: settings[UserSettingKey.Languages] || locale || 'en_SE',
+      locale: settings.languages?.toString() || locale || 'en_SE',
     },
   })
 

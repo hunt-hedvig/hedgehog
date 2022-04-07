@@ -208,7 +208,7 @@ type MutationType {
   deleteCoInsured(claimId: ID!): Boolean!
 
   updateUser(input: UpdateUserInput!): User!
-  upsertUserSettings(settings: [UpsertUserSettingInput!]!): [UserSetting!]!
+  upsertUserSettings(settings: [UpsertUserSettingInput!]!): UserSettings!
 
   restrictResourceAccess(resourceId: ID!): ResourceAccessInformation!
   releaseResourceAccess(resourceId: ID!): Boolean!
@@ -344,27 +344,9 @@ type Me {
   scopes: [String!]!
   role: String!
   user: User!
-  settings(filters: UserSettingsFilter): [UserSetting!]!
+  settings: UserSettings!
   portal: String!
   availablePortals: [String!]!
-}
-
-input UserSettingsFilter {
-  keys: [UserSettingKey!]!
-}
-
-enum UserSettingKey {
-  DARK_MODE
-  FEATURE_FLAGS
-  NUMBER_OF_MEMBER_GROUPS
-  CLAIM_COMPLEXITY_FILTER
-  CLAIM_STATES_FILTER
-  MEMBER_GROUPS_FILTER
-  MARKET_FILTER
-  NUMBER_OF_CLAIMS_FILTER
-  OUTCOME_FILTER
-  FOCUS_MARKETS
-  LANGUAGES
 }
 
 type User {
@@ -406,9 +388,21 @@ type UserNotification {
   verbose: Boolean!
 }
 
-type UserSetting {
-  key: UserSettingKey!
-  value: JSON!
+type UserSettings {
+    darkMode: Boolean
+    featureFlags: [String!]
+    numberOfMemberGroups: Int
+    claimComplexityFilterClaims: [ClaimComplexity!]
+    claimStatesFilterClaims: [ClaimState!]
+    claimStatesFilterQuestions: [Int!]
+    memberGroupsFilterClaims: [Int!]
+    memberGroupsFilterQuestions: [Int!]
+    marketFilterClaims: [String!]
+    marketFilterQuestions: [Int!]
+    numberOfClaimsFilter: Int
+    outcomeFilterClaims: [String!]
+    focusMarkets: [String!]
+    languages: [String!]
 }
 
 enum GrantHolderType {
