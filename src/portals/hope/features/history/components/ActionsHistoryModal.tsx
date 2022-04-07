@@ -136,11 +136,11 @@ const DateInfo = styled.span`
 `
 
 const ActionItem = (
-  { action, title, id, date }: Action,
+  { revertAction, title, id, date }: Action,
   deleteAction: (id: string) => void,
 ) => {
   const revertHandler = () => {
-    action()
+    revertAction()
     deleteAction(id)
   }
 

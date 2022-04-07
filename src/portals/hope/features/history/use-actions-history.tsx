@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 type actionArgs = {
   action: () => void
   undoAction: () => void
+  revertAction: () => void
   title: string
 }
 interface ActionsHistoryContextProps {
@@ -25,6 +26,7 @@ export interface Action {
   id: string
   action: () => void
   undoAction: () => void
+  revertAction: () => void
   title: string
   date: Date
 }
@@ -38,6 +40,7 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
   const isZPressed = useKeyIsPressed(Keys.Z)
 
   useEffect(() => {
+    // The timeout during which the user can undo the action
     let timeoutID: ReturnType<typeof setTimeout>
 
     if (waitUndo) {
@@ -45,6 +48,7 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
         duration: 5000,
       })
 
+      // Setting the timeout after which the action will happen
       timeoutID = setTimeout(() => {
         setWaitUndo(false)
         actionsList[actionsList.length - 1].action()
@@ -53,10 +57,12 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
       toast.remove()
     }
 
+    // Removing the timeout if the user doesn't press Command + Z
     return () => clearTimeout(timeoutID)
   }, [waitUndo])
 
   useEffect(() => {
+    // Handling the Command + Z pressing and doing undo action if they're pressed
     if (isCommandPressed && isZPressed && waitUndo) {
       const lastAction = actionsList[actionsList.length - 1]
       lastAction.undoAction()
@@ -64,17 +70,23 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
     }
   }, [isCommandPressed, isZPressed])
 
-  const registerActionHandler = ({ title, action, undoAction }: actionArgs) => {
+  const registerActionHandler = ({
+    title,
+    action,
+    undoAction,
+    revertAction,
+  }: actionArgs) => {
     const newAction = {
       id: uuidv4(),
       title,
       action,
       undoAction,
+      revertAction,
       date: new Date(),
     }
 
+    // Add the action to the actions list and start waiting to undo the request
     setActionsList((prev) => [...prev, newAction])
-
     setWaitUndo(true)
   }
 

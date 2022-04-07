@@ -262,6 +262,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
       pinned: newTemplate.pinned,
     }
 
+    // Writing template to the Apollo cache ONLY
     template.messages
       .filter(
         (message) => message.language !== formatLocale(PickedLocale.EnSe, true),
@@ -293,6 +294,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
 
     registerAction({
       action: () => {
+        // Action if user doesn't press Command + Z
         toast.promise(
           upsertTemplate({
             variables: {
@@ -358,6 +360,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
           },
         )
       },
+      // Action if user pressed Command + Z (cleaning Apollo cache)
       undoAction: () => {
         template.messages
           .filter(
@@ -390,6 +393,78 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             })
           })
       },
+      // Revert action (for late reverting from history)
+      revertAction: () => {
+        toast.promise(
+          upsertTemplate({
+            variables: {
+              input: {
+                id: template.id,
+                title: oldTemplate.title,
+                expirationDate: oldTemplate.expirationDate,
+                // For removing __typename
+                messages: oldTemplate.messages.map((message) => ({
+                  message: message.message,
+                  language: message.language,
+                })),
+              },
+            },
+            optimisticResponse: {
+              upsertTemplate: { __typename: 'Template', ...template },
+            },
+            update: (
+              cache: ApolloCache<NormalizedCacheObject>,
+              { data: response },
+            ) => {
+              if (!response?.upsertTemplate) {
+                return
+              }
+
+              template.messages
+                .filter(
+                  (message) =>
+                    message.language !== formatLocale(PickedLocale.EnSe, true),
+                )
+                .map((message) => message.language)
+                .forEach((language) => {
+                  const cachedData = cache.readQuery({
+                    query: GetTemplatesDocument,
+                    variables: {
+                      locales: [language],
+                    },
+                  }) as GetTemplatesQuery
+
+                  const cachedTemplates =
+                    (cachedData as GetTemplatesQuery)?.templates ?? []
+
+                  cache.writeQuery({
+                    query: GetTemplatesDocument,
+                    data: {
+                      templates: [
+                        ...cachedTemplates.filter(
+                          (temp) => temp.id !== template.id,
+                        ),
+                        oldTemplate,
+                      ],
+                    },
+                    variables: {
+                      locales: [language],
+                    },
+                  })
+                })
+            },
+          }),
+          {
+            loading: 'Updating template',
+            success: () => {
+              PushUserAction('template', 'updated', null, null)
+              return `Updates of ${template.title} template was reverted`
+            },
+            error: 'Could not update template',
+          },
+        )
+      },
+      // The title that will be shown in the user history
       title: 'Edit template',
     })
   }
