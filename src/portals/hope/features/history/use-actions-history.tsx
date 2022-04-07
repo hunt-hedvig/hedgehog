@@ -39,30 +39,26 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
   const isCommandPressed = useKeyIsPressed(Keys.Command)
   const isZPressed = useKeyIsPressed(Keys.Z)
 
-  let timeoutID: ReturnType<typeof setTimeout>
-
-  function undoHandler() {
-    timeoutID = setTimeout(() => {
-      setWaitUndo(false)
-      console.log('ACTION!!!')
-      actionsList[actionsList.length - 1].action()
-    }, 3000)
-  }
-
-  function clearUndoHandler() {
-    clearTimeout(timeoutID)
-  }
-
   useEffect(() => {
+    let timeoutID: ReturnType<typeof setTimeout>
+
     if (waitUndo) {
       toast.loading('You have 5 sec to undo (cmd + Z)', {
         duration: 5000,
       })
 
-      undoHandler()
+      timeoutID = setTimeout(() => {
+        setWaitUndo(false)
+        console.log('ACTION!!!')
+        actionsList[actionsList.length - 1].action()
+      }, 3000)
+
+      return
     } else {
       toast.remove()
     }
+
+    return () => clearTimeout(timeoutID)
   }, [waitUndo])
 
   useEffect(() => {
@@ -70,7 +66,6 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
       const lastAction = actionsList[actionsList.length - 1]
       lastAction.undoAction()
       // Doesn't clear timeout
-      clearUndoHandler()
       setWaitUndo(false)
     }
   }, [isCommandPressed, isZPressed])
