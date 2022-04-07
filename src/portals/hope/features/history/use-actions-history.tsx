@@ -1,9 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys, useKeyIsPressed } from '@hedvig-ui'
 import { ActionsHistoryModal } from './components/ActionsHistoryModal'
 import { v4 as uuidv4 } from 'uuid'
 
