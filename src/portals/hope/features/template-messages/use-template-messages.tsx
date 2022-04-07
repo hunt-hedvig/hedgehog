@@ -291,8 +291,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
         })
       })
 
-    registerAction(
-      () => {
+    registerAction({
+      action: () => {
         toast.promise(
           upsertTemplate({
             variables: {
@@ -358,7 +358,7 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
           },
         )
       },
-      () => {
+      undoAction: () => {
         template.messages
           .filter(
             (message) =>
@@ -390,8 +390,8 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
             })
           })
       },
-      'Edit template',
-    )
+      title: 'Edit template',
+    })
   }
 
   const deleteHandler = (templateId: string) => {

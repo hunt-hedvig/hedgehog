@@ -7,12 +7,13 @@ import {
 import { ActionsHistoryModal } from './components/ActionsHistoryModal'
 import { v4 as uuidv4 } from 'uuid'
 
+type actionArgs = {
+  action: () => void
+  undoAction: () => void
+  title: string
+}
 interface ActionsHistoryContextProps {
-  registerAction: (
-    action: () => void,
-    undoAction: () => void,
-    title: string,
-  ) => void
+  registerAction: (args: actionArgs) => void
   showHistory: () => void
 }
 
@@ -49,11 +50,8 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
 
       timeoutID = setTimeout(() => {
         setWaitUndo(false)
-        console.log('ACTION!!!')
         actionsList[actionsList.length - 1].action()
       }, 3000)
-
-      return
     } else {
       toast.remove()
     }
@@ -65,16 +63,11 @@ export const ActionsHistoryProvider: React.FC = ({ children }) => {
     if (isCommandPressed && isZPressed && waitUndo) {
       const lastAction = actionsList[actionsList.length - 1]
       lastAction.undoAction()
-      // Doesn't clear timeout
       setWaitUndo(false)
     }
   }, [isCommandPressed, isZPressed])
 
-  const registerActionHandler = (
-    action: () => void,
-    undoAction: () => void,
-    title: string,
-  ) => {
+  const registerActionHandler = ({ title, action, undoAction }: actionArgs) => {
     const newAction = {
       id: uuidv4(),
       title,
