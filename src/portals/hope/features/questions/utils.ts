@@ -1,4 +1,4 @@
-import { range } from '@hedvig-ui/utils/range'
+import { range } from '@hedvig-ui'
 import {
   Market,
   PickedLocale,
@@ -8,7 +8,7 @@ import {
   FilterState,
   FilterStateType,
 } from 'portals/hope/features/questions/FilterSelect'
-import { Claim, ClaimState, QuestionGroup } from 'types/generated/graphql'
+import { QuestionGroup } from 'types/generated/graphql'
 
 const getGroupNumberForMember = (
   memberId: string,
@@ -16,13 +16,6 @@ const getGroupNumberForMember = (
 ) => {
   const memberIdNumber = Number(memberId)
   return memberIdNumber % numberMemberGroups
-}
-
-export const hasOpenClaim = (claims: ReadonlyArray<Claim>): boolean => {
-  return claims.some(
-    (claim) =>
-      claim.state === ClaimState.Open || claim.state === ClaimState.Reopened,
-  )
 }
 
 export const doMemberGroupFilter =
@@ -55,29 +48,4 @@ export const doMarketFilter =
         selectedFilters.includes(FilterState[market]) &&
         questionGroupMarket === market.toUpperCase(),
     )
-  }
-
-/*
-export const doClaimFilter =
-  (selectedFilters: ReadonlyArray<FilterStateType>) =>
-  (questionGroup: QuestionGroup): boolean => {
-    if (!questionGroup.member) {
-      return true
-    }
-    return (
-      (selectedFilters.includes(FilterState.HasOpenClaim) &&
-        hasOpenClaim(questionGroup.member.claims)) ||
-      (selectedFilters.includes(FilterState.NoOpenClaim) &&
-        !hasOpenClaim(questionGroup.member.claims))
-    )
-  }
-*/
-
-export const doClaimFilter =
-  () =>
-  (questionGroup: QuestionGroup): boolean => {
-    if (!questionGroup.firstName) {
-      return true
-    }
-    return true
   }

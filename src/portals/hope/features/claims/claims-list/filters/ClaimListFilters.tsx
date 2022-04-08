@@ -1,15 +1,4 @@
 import styled from '@emotion/styled'
-import { MemberGroupColorBadge } from 'portals/hope/features/questions/MemberGroupColorBadge'
-import React, { useState } from 'react'
-
-import { range } from '@hedvig-ui/utils/range'
-import { InfoCircle } from 'react-bootstrap-icons'
-import { useHistory } from 'react-router'
-import {
-  ClaimComplexity,
-  ClaimState,
-  UserSettingKey,
-} from 'types/generated/graphql'
 import {
   Checkbox,
   Flex,
@@ -20,21 +9,28 @@ import {
   Radio,
   TextDatePicker,
 } from '@hedvig-ui'
-import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
-import { useMe } from 'portals/hope/features/user/hooks/use-me'
-import { numberMemberGroupsOptions } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
+import { Keys } from '@hedvig-ui'
+import { useNavigation } from '@hedvig-ui'
+import { range } from '@hedvig-ui'
+import { convertEnumOrSentenceToTitle, convertEnumToTitle } from '@hedvig-ui'
+import { ClaimOutcomes } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
 import {
   Market,
   MarketFlags,
   MemberGroups,
 } from 'portals/hope/features/config/constants'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { MemberGroupColorBadge } from 'portals/hope/features/questions/MemberGroupColorBadge'
+import { numberMemberGroupsOptions } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
+import { useMe } from 'portals/hope/features/user/hooks/use-me'
+import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
+import React, { useState } from 'react'
+import { InfoCircle } from 'react-bootstrap-icons'
+import { useHistory } from 'react-router'
 import {
-  convertEnumOrSentenceToTitle,
-  convertEnumToTitle,
-} from '@hedvig-ui/utils/text'
-import { ClaimOutcomes } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
+  ClaimComplexity,
+  ClaimState,
+  UserSettings,
+} from 'types/generated/graphql'
 
 export const FilterWrapper = styled.div`
   width: 100%;
@@ -78,7 +74,7 @@ export const StyledLabel = styled(Label)`
 `
 
 const OutcomeFilter: React.FC<{
-  outcomes: ClaimOutcomes[]
+  outcomes?: string[] | null
   onSelect: (value: string | null) => void
   open: boolean
   multi: boolean
@@ -146,80 +142,98 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
   const { numberMemberGroups, setNumberMemberGroups } = useNumberMemberGroups()
   const [outcomeOpen, setOutcomeOpen] = useState(false)
 
-  const settingExist = (
-    field: UserSettingKey,
-    value: number | ClaimState | ClaimComplexity | Market,
-  ) => {
-    if (!settings[field]) {
-      return false
+  const updateFilterHandler = (field: keyof UserSettings, value: string) => {
+    if (page && page !== '1') {
+      history.push(`/claims/list/1`)
     }
-    return settings[field].claims
-      ? settings[field].claims.includes(value)
-      : false
+
+    const newSettingValue = settings[field] as string[]
+
+    if (!newSettingValue) {
+      updateSetting(field, [value])
+
+      return
+    }
+
+    if (newSettingValue.includes(value as string)) {
+      updateSetting(
+        field,
+        newSettingValue?.filter(
+          (currentValue: string) => currentValue !== value,
+        ),
+      )
+    } else {
+      updateSetting(field, [...newSettingValue, value])
+    }
   }
 
-  const updateFilterHandler = (
-    field: UserSettingKey,
-    value: string | number,
+  const updateFilterNumberHandler = (
+    field: keyof UserSettings,
+    value: number,
   ) => {
     if (page && page !== '1') {
       history.push(`/claims/list/1`)
     }
 
-    if (!settings[field] || !settings[field].claims) {
-      updateSetting(field, {
-        ...settings[field],
-        claims: [value],
-      })
+    const newSettingValue = settings[field] as number[]
+
+    if (!newSettingValue) {
+      updateSetting(field, [value])
 
       return
     }
 
-    updateSetting(field, {
-      ...settings[field],
-      claims: settings[field].claims.includes(value)
-        ? settings[field].claims.filter(
-            (currentValue: string) => currentValue !== value,
-          )
-        : [...settings[field].claims, value],
-    })
+    if (newSettingValue.includes(value as number)) {
+      updateSetting(
+        field,
+        newSettingValue?.filter(
+          (currentValue: number) => currentValue !== value,
+        ),
+      )
+    } else {
+      updateSetting(field, [...newSettingValue, value])
+    }
   }
 
   const updateOutcomeFilterHandler = (value: string | null) => {
-    const field = UserSettingKey.OutcomeFilter
+    if (!settings.outcomeFilterClaims) {
+      updateSetting('outcomeFilterClaims', [value])
+    }
 
-    if (!settings[field] || !settings[field].claims) {
-      updateSetting(field, {
-        ...settings[field],
-        claims: value ? [value] : [],
-      })
+    const currentValue = settings.outcomeFilterClaims
+
+    if (!currentValue || typeof currentValue !== 'object') {
+      return
+    }
+
+    if (!value) {
+      updateSetting('outcomeFilterClaims', [])
 
       return
     }
 
-    updateSetting(field, {
-      ...settings[field],
-      claims: !value
-        ? []
-        : settings[field].claims.includes(value)
-        ? settings[field].claims.filter(
-            (currentValue: string) => currentValue !== value,
-          )
-        : [...settings[field].claims, value],
-    })
+    if (currentValue.includes(value)) {
+      updateSetting(
+        'outcomeFilterClaims',
+        currentValue.filter((item) => item !== value),
+      )
+
+      return
+    }
+
+    updateSetting('outcomeFilterClaims', [...currentValue, value])
   }
 
   const updateNumberMemberSetting = (state: number) => {
     if (
-      state === 2 &&
-      settings[UserSettingKey.MemberGroupsFilter].claims.includes(2)
+      state === numberMemberGroups - 1 &&
+      settings.memberGroupsFilterClaims &&
+      settings.memberGroupsFilterClaims.includes(numberMemberGroups - 1)
     ) {
-      updateSetting(UserSettingKey.MemberGroupsFilter, {
-        ...settings[UserSettingKey.MemberGroupsFilter],
-        claims: settings[UserSettingKey.MemberGroupsFilter].claims.filter(
-          (memberGroup: number) => memberGroup !== 2,
-        ),
-      })
+      updateSetting(
+        'memberGroupsFilterClaims',
+        settings.memberGroupsFilterClaims.filter((group) => group !== state),
+      )
     }
   }
 
@@ -236,7 +250,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           const navigation = register(stateName, {
             focus: index === 0 ? Keys.F : undefined,
             resolve: () => {
-              updateFilterHandler(UserSettingKey.ClaimStatesFilter, state)
+              updateFilterHandler('claimStatesFilterClaims', state)
             },
             neighbors: {
               up: index ? states[index - 1] : undefined,
@@ -249,9 +263,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
             <Flex key={state} direction="row" align="center" {...navigation}>
               <Checkbox
                 label={stateName}
-                checked={settingExist(UserSettingKey.ClaimStatesFilter, state)}
+                checked={settings.claimStatesFilterClaims?.includes(state)}
                 onChange={() => {
-                  updateFilterHandler(UserSettingKey.ClaimStatesFilter, state)
+                  updateFilterHandler('claimStatesFilterClaims', state)
                 }}
               />
               <MemberGroupColorBadge
@@ -277,10 +291,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
 
           const navigation = register(complexityName, {
             resolve: () => {
-              updateFilterHandler(
-                UserSettingKey.ClaimComplexityFilter,
-                complexity,
-              )
+              updateFilterHandler('claimComplexityFilterClaims', complexity)
             },
             neighbors: {
               left: Object.keys(ClaimState)[0],
@@ -302,15 +313,11 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
             >
               <Checkbox
                 label={complexityName}
-                checked={settingExist(
-                  UserSettingKey.ClaimComplexityFilter,
+                checked={settings.claimComplexityFilterClaims?.includes(
                   complexity,
                 )}
                 onChange={() => {
-                  updateFilterHandler(
-                    UserSettingKey.ClaimComplexityFilter,
-                    complexity,
-                  )
+                  updateFilterHandler('claimComplexityFilterClaims', complexity)
                 }}
               />
               <span style={{ marginLeft: '0.5rem' }}>
@@ -327,9 +334,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           const navigation = register(`Member Groups ${option.label}`, {
             resolve: () => {
               updateNumberMemberSetting(option.value)
-              updateSetting(UserSettingKey.NumberOfMemberGroups, {
-                value: option.value,
-              })
+              updateSetting('numberOfMemberGroups', option.value)
               setNumberMemberGroups(option.value)
             },
             neighbors: {
@@ -356,9 +361,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 label={option.label}
                 onChange={() => {
                   updateNumberMemberSetting(option.value)
-                  updateSetting(UserSettingKey.NumberOfMemberGroups, {
-                    value: option.value,
-                  })
+                  updateSetting('numberOfMemberGroups', option.value)
                   setNumberMemberGroups(option.value)
                 }}
                 checked={option.value === numberMemberGroups || false}
@@ -373,8 +376,8 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
         {range(numberMemberGroups).map((filterNumber, index) => {
           const navigation = register(`Member Number ${filterNumber}`, {
             resolve: () => {
-              updateFilterHandler(
-                UserSettingKey.MemberGroupsFilter,
+              updateFilterNumberHandler(
+                'memberGroupsFilterClaims',
                 filterNumber,
               )
             },
@@ -402,13 +405,12 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
                 label={Object.keys(MemberGroups).find(
                   (_, index) => index === filterNumber,
                 )}
-                checked={settingExist(
-                  UserSettingKey.MemberGroupsFilter,
+                checked={settings.memberGroupsFilterClaims?.includes(
                   filterNumber,
                 )}
                 onChange={() => {
-                  updateFilterHandler(
-                    UserSettingKey.MemberGroupsFilter,
+                  updateFilterNumberHandler(
+                    'memberGroupsFilterClaims',
                     filterNumber,
                   )
                 }}
@@ -430,7 +432,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
 
           const navigation = register(marketName, {
             resolve: () => {
-              updateFilterHandler(UserSettingKey.MarketFilter, market)
+              updateFilterHandler('marketFilterClaims', market)
             },
             neighbors: {
               left: `Member Number ${range(numberMemberGroups)[0]}`,
@@ -444,9 +446,9 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
             <Flex key={market} direction="row" align="center" {...navigation}>
               <Checkbox
                 label={marketName}
-                checked={settingExist(UserSettingKey.MarketFilter, market)}
+                checked={settings.marketFilterClaims?.includes(market)}
                 onChange={() => {
-                  updateFilterHandler(UserSettingKey.MarketFilter, market)
+                  updateFilterHandler('marketFilterClaims', market)
                 }}
               />
               <span style={{ marginLeft: '0.5rem' }}>
@@ -473,11 +475,7 @@ export const ClaimListFilters: React.FC<ClaimListFiltersProps> = ({
           open={outcomeOpen}
           multi
           onSelect={updateOutcomeFilterHandler}
-          outcomes={
-            (settings[UserSettingKey.OutcomeFilter] &&
-              settings[UserSettingKey.OutcomeFilter].claims) ||
-            null
-          }
+          outcomes={settings.outcomeFilterClaims}
         />
       </FilterElement>
 

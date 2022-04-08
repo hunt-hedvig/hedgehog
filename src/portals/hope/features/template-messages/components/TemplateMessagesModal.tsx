@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
-import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
+import { useClickOutside } from '@hedvig-ui'
 import { keyframes } from '@emotion/react'
 import { TemplateForm } from './TemplateForm'
 import { SearchIcon } from '../../members-search/styles'
@@ -13,7 +13,11 @@ import {
 } from 'react-bootstrap-icons'
 import { formatLocale, useTemplateMessages } from '../use-template-messages'
 import { Template, UpsertTemplateInput } from 'types/generated/graphql'
-import { PickedLocale, PickedLocaleMarket } from '../../config/constants'
+import {
+  MarketFlags,
+  PickedLocale,
+  PickedLocaleMarket,
+} from '../../config/constants'
 
 const show = keyframes`
   from {
@@ -315,7 +319,8 @@ export const TemplateMessagesModal: React.FC<{
         {getFilteredTemplates(false)?.length ? (
           <div>
             <TemplatesListTitle>
-              {getFilteredTemplates(false)?.length} Templates
+              {getFilteredTemplates(false)?.length} Templates{' '}
+              {MarketFlags[PickedLocaleMarket[currentLocale]]}
             </TemplatesListTitle>
             {getFilteredTemplates(false).map((template) => (
               <TemplateItem

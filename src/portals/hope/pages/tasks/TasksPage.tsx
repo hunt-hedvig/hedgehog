@@ -1,32 +1,34 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
-import { Flex, Placeholder } from '@hedvig-ui'
+import { Flex, useQueryParams } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
-import { Question, QuestionGroup } from 'types/generated/graphql'
-import { formatDistanceToNowStrict, parseISO } from 'date-fns'
+import { QuestionGroup } from 'types/generated/graphql'
+import { parseISO } from 'date-fns'
 import {
   doMarketFilter,
   doMemberGroupFilter,
 } from 'portals/hope/features/questions/utils'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
-import {
-  getMemberFlag,
-  getMemberIdColor,
-} from 'portals/hope/features/member/utils'
 import { PickedLocale } from 'portals/hope/features/config/constants'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { useTitle } from '@hedvig-ui'
 import { MemberContainer } from '../../features/tasks/components/MemberContainer'
 import { TaskChat } from '../../features/tasks/TaskChat'
 import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
 import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
 import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
-import { RouteComponentProps, useHistory } from 'react-router'
+import { useHistory } from 'react-router'
+import { motion } from 'framer-motion'
 import {
   formatLocale,
   useTemplateMessages,
 } from '../../features/template-messages/use-template-messages'
+import formatDate from 'date-fns/format'
+import { ClaimContainer } from 'portals/hope/features/tasks/components/ClaimContainer'
+import { useClaimRegistrationDate } from 'portals/hope/common/hooks/use-claim-registration-date'
+import { TaskListItem } from 'portals/hope/features/tasks/components/TaskListItem'
+import { useMemberName } from 'portals/hope/common/hooks/use-member-name'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -37,7 +39,10 @@ const TaskNavigationWrapper = styled.div`
   min-width: 70%;
 
   margin-left: -4rem;
-  overflow-y: hidden;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
 `
 
 const TaskChatWrapper = styled.div`
@@ -93,7 +98,7 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
   }
 `
 
-const FilterBarItem = styled.button`
+const FilterBarItem = styled(motion.button)`
   background-color: transparent;
   transition: background-color 200ms;
   :hover {
@@ -117,86 +122,18 @@ const FilterBarItem = styled.button`
   }
 `
 
-const ListContainer = styled.div`
+const ListContainer = styled(motion.ul)`
+  flex: 1;
   width: 100%;
-  height: 100%;
   overflow-y: scroll;
+  overflow-x: hidden;
   ::-webkit-scrollbar-track {
     background: transparent;
   }
 
-  padding-bottom: 10rem;
-`
-
-const ListItem = styled.div<{ selected?: boolean }>`
-  display: flex;
-  font-size: 1.1rem;
-  padding: 1.75rem 2.05rem;
-  cursor: pointer;
-
-  transition: background-color 200ms;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-  :hover {
-    background-color: ${({ theme }) =>
-      chroma(theme.accent).alpha(0.2).brighten(2).hex()};
-  }
-
-  background-color: ${({ selected, theme }) =>
-    selected ? chroma(theme.accent).alpha(0.2).brighten(1).hex() : undefined};
-
-  .orb {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 3rem;
-
-    div {
-      width: 1rem;
-      height: 1rem;
-      border-radius: 50%;
-
-      background-color: transparent;
-    }
-  }
-
-  .flag {
-    padding: 0 2rem;
-  }
-
-  .name {
-    width: 30%;
-    padding-right: 2rem;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    div {
-      color: ${({ theme }) => theme.accent};
-      transition: color 200ms;
-
-      :hover {
-        color: ${({ theme }) => theme.accentLight};
-      }
-    }
-  }
-
-  .preview {
-    width: 70%;
-    color: ${({ theme }) =>
-      chroma(theme.semiStrongForeground).brighten(1).hex()};
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .options {
-    width: 10rem;
-    color: ${({ theme }) =>
-      chroma(theme.semiStrongForeground).brighten(1).hex()};
-
-    text-align: right;
+  & {
+    margin: 0;
+    padding: 0;
   }
 `
 
@@ -208,40 +145,27 @@ const Container = styled(Flex)`
   margin-left: -4rem;
 `
 
-const getQuestionBody = (question: Question) => {
-  try {
-    return JSON.parse(question.messageJsonString).body
-  } catch (e) {
-    return ''
-  }
-}
-
-const getMemberName = (group: QuestionGroup) => {
-  return group.firstName && group.lastName
-    ? `${group.firstName} ${group.lastName}`
-    : undefined
-}
-
-const TasksPage: Page<
-  RouteComponentProps<{
-    memberId?: string
-    tab?: string
-  }>
-> = ({ match }) => {
+const TasksPage: Page = () => {
   const history = useHistory()
-  const memberId = match.params.memberId
-  const tab = match.params.tab
+  const queryParams = useQueryParams()
+
+  const memberId = queryParams.get('memberId')
+  const tab = queryParams.get('tab')
+  const claimId = queryParams.get('claimId')
+
+  const { fullName: fullNameByQuery } = useMemberName(memberId ?? '')
 
   const { resolve } = useResolveQuestion()
   const { numberMemberGroups } = useNumberMemberGroups()
   const [questionGroups, { loading }] = useQuestionGroups()
   const { selectedFilters: filters, toggleFilter } = useSelectedFilters()
 
+  const claimRegistrationDate = useClaimRegistrationDate(claimId ?? '')
+
   const [showFilters, setShowFilters] = useState(false)
 
   const [selectedQuestionGroup, setSelectedQuestionGroup] =
     useState<QuestionGroup | null>(null)
-  const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null)
 
   const { setLocale, setMemberId, changeLocaleDisplayed } =
     useTemplateMessages()
@@ -259,15 +183,13 @@ const TasksPage: Page<
     if (loading) return
 
     if (groupByRoute) {
-      setSelectedMemberId(groupByRoute.memberId)
-      setSelectedQuestionGroup(groupByRoute)
+      selectQuestionGroupHandler(groupByRoute)
 
       return
     }
 
     history.replace('/questions')
-    setSelectedQuestionGroup(null)
-    setSelectedMemberId(null)
+    selectQuestionGroupHandler(null)
   }, [groupByRoute])
 
   const selectQuestionGroupHandler = (group: QuestionGroup | null) => {
@@ -290,9 +212,54 @@ const TasksPage: Page<
     setLocale((group.pickedLocale || PickedLocale.SvSe) as PickedLocale)
   }
 
-  const fullName = selectedQuestionGroup
-    ? `${selectedQuestionGroup.firstName} ${selectedQuestionGroup.lastName}`
-    : ''
+  const resolveHandler = () => {
+    const activeGroup = selectedQuestionGroup ?? groupByRoute
+
+    if (!activeGroup) return
+
+    const activeGroupIndex = questionGroups.findIndex(
+      (group) => group.memberId === activeGroup?.memberId,
+    )
+
+    if (activeGroupIndex !== -1) {
+      const hasMoreGroups = activeGroupIndex < questionGroups.length - 2
+
+      if (questionGroups.length > 0 && hasMoreGroups) {
+        selectQuestionGroupHandler(questionGroups[activeGroupIndex + 1])
+      }
+
+      if (questionGroups.length > 0 && !hasMoreGroups) {
+        selectQuestionGroupHandler(questionGroups[0])
+      }
+    }
+
+    resolve(activeGroup?.memberId ?? '')
+
+    history.replace(`/questions`)
+  }
+
+  const selectMemberHandler = (openClaimId: string | null) => {
+    if (!(selectedQuestionGroup || groupByRoute)) return
+
+    if (!openClaimId) {
+      history.push(
+        `/questions?memberId=${
+          selectedQuestionGroup?.memberId ?? groupByRoute?.memberId
+        }`,
+      )
+    } else {
+      history.push(
+        `/questions?memberId=${
+          selectedQuestionGroup?.memberId ?? groupByRoute?.memberId
+        }&tab=claims&claimId=${openClaimId}`,
+      )
+    }
+  }
+
+  const fullName =
+    selectedQuestionGroup?.firstName && selectedQuestionGroup?.lastName
+      ? `${selectedQuestionGroup.firstName} ${selectedQuestionGroup.lastName}`
+      : fullNameByQuery
 
   const title = memberId
     ? `Questions | ${fullName}`
@@ -308,120 +275,100 @@ const TasksPage: Page<
             <TopBar>
               <Flex>
                 <TopBarItem
-                  selected={!selectedMemberId}
-                  onClick={() => history.replace(`/questions`)}
+                  selected={!memberId}
+                  onClick={() => history.push(`/questions`)}
                 >
                   Incoming questions
                   <div className="count">{groups.length}</div>
                 </TopBarItem>
-                {selectedQuestionGroup && selectedMemberId && (
+                {memberId && (
+                  <TopBarItem
+                    selected={!claimId}
+                    onClick={() =>
+                      history.push(`/questions?memberId=${memberId}&tab=${tab}`)
+                    }
+                  >
+                    {fullName ?? 'Member'}
+                  </TopBarItem>
+                )}
+                {memberId && claimId && (
                   <TopBarItem selected={true}>
-                    {getMemberName(selectedQuestionGroup) ?? 'Member'}
+                    Claim{' '}
+                    {claimRegistrationDate &&
+                      formatDate(
+                        parseISO(claimRegistrationDate),
+                        'dd MMMM, yyyy',
+                      )}
                   </TopBarItem>
                 )}
               </Flex>
-              <FilterBarItem onClick={() => setShowFilters(true)}>
+              <FilterBarItem
+                onClick={() => setShowFilters(true)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 Filters
               </FilterBarItem>
             </TopBar>
-            {selectedMemberId && (
+            {memberId && !claimId && (
               <ListContainer>
                 <MemberContainer
-                  memberId={selectedMemberId}
+                  memberId={memberId}
                   tab={tab ?? 'contracts'}
                   title={title}
                   onChangeTab={(newTab) =>
-                    history.replace(`/questions/${selectedMemberId}/${newTab}`)
+                    history.replace(
+                      `/questions?memberId=${memberId}&tab=${newTab}`,
+                    )
+                  }
+                  onClickClaim={(claimId: string) =>
+                    history.push(
+                      `/questions?memberId=${memberId}&tab=${tab}&claimId=${claimId}`,
+                    )
                   }
                 />
               </ListContainer>
             )}
-            {!selectedMemberId && (
+            {claimId && memberId && (
               <ListContainer>
-                {groups.map((group) => {
-                  const previewQuestion = group?.questions?.slice(-1)[0] ?? ''
-                  const preview = getQuestionBody(previewQuestion)
-
-                  const orbColor = getMemberIdColor(
-                    group.memberId,
-                    numberMemberGroups,
-                  )
-
-                  const flag = group.market
-                    ? getMemberFlag(
-                        {
-                          market: group.market ?? '',
-                        },
-                        group.pickedLocale as PickedLocale,
-                      )
-                    : '🏳'
-
-                  return (
-                    <ListItem
-                      key={group.id}
-                      onClick={() => selectQuestionGroupHandler(group)}
-                      selected={
-                        group.memberId === selectedQuestionGroup?.memberId
-                      }
-                    >
-                      <div className="orb">
-                        <div style={{ backgroundColor: orbColor }} />
-                      </div>
-                      <div className="flag">{flag}</div>
-                      <span className="name">
-                        {getMemberName(group) ? (
-                          <div
-                            onClick={() => {
-                              history.replace(`/questions/${group.memberId}`)
-                              setSelectedQuestionGroup(group)
-                            }}
-                          >
-                            {getMemberName(group)}
-                          </div>
-                        ) : (
-                          <Placeholder>Name not available</Placeholder>
-                        )}
-                      </span>
-                      <span className="preview">{preview.text}</span>
-                      <div className="options">
-                        {formatDistanceToNowStrict(
-                          parseISO(previewQuestion.timestamp),
-                          {
-                            addSuffix: true,
-                          },
-                        )}
-                      </div>
-                    </ListItem>
-                  )
-                })}
+                <ClaimContainer claimId={claimId} />
+              </ListContainer>
+            )}
+            {!memberId && !claimId && (
+              <ListContainer>
+                {groups.map((group) => (
+                  <TaskListItem
+                    key={group.id}
+                    group={group}
+                    onClick={() => selectQuestionGroupHandler(group)}
+                    selected={
+                      group.memberId === selectedQuestionGroup?.memberId
+                    }
+                  />
+                ))}
               </ListContainer>
             )}
           </>
         </TaskNavigationWrapper>
         <TaskChatWrapper>
-          {selectedQuestionGroup && (
+          {(selectedQuestionGroup || memberId) && (
             <TaskChat
-              memberId={selectedQuestionGroup.memberId}
-              fullName={getMemberName(selectedQuestionGroup)}
-              onResolve={() => {
-                resolve(selectedQuestionGroup.memberId)
-                history.replace(`/questions`)
-              }}
-              onSelectMember={() => {
-                history.replace(`/questions/${selectedQuestionGroup.memberId}`)
-              }}
+              resolvable={!!(selectedQuestionGroup || groupByRoute)}
+              memberId={selectedQuestionGroup?.memberId ?? memberId ?? ''}
+              fullName={fullName}
+              onResolve={resolveHandler}
+              onSelectMember={selectMemberHandler}
             />
           )}
         </TaskChatWrapper>
       </Container>
 
-      {showFilters && (
-        <FilterModal
-          onClose={() => setShowFilters(false)}
-          filters={filters}
-          onToggle={toggleFilter}
-        />
-      )}
+      <FilterModal
+        visible={showFilters}
+        onClose={() => setShowFilters(false)}
+        filters={filters}
+        onToggle={toggleFilter}
+      />
     </>
   )
 }

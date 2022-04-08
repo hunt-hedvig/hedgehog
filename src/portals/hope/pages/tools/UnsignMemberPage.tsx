@@ -1,5 +1,5 @@
 import { Button, Input, MainHeadline, Spacing } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { useTitle } from '@hedvig-ui'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Page } from 'portals/hope/pages/routes'

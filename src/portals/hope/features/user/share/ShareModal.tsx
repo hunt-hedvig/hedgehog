@@ -1,10 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Input, Modal, Spacing, ThirdLevelHeadline } from '@hedvig-ui'
-import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys, useKeyIsPressed } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React, { useState } from 'react'
@@ -15,7 +11,8 @@ import {
   useSharePathMutation,
   useUsersQuery,
 } from 'types/generated/graphql'
-import { ArrayElement } from '@hedvig-ui/utils/array-element'
+import { ArrayElement } from '@hedvig-ui'
+import gql from 'graphql-tag'
 
 // noinspection CssInvalidPropertyValue
 const UserList = styled.div`
@@ -56,9 +53,16 @@ const SharedLabel = styled.div`
   padding: 0.5rem 0.8rem;
 `
 
+gql`
+  mutation SharePath($path: String!, $userId: ID!) {
+    sharePath(path: $path, userId: $userId)
+  }
+`
+
 export const ShareModal: React.FC<{
   onClose: () => void
-}> = ({ onClose }) => {
+  visible: boolean
+}> = ({ onClose, visible }) => {
   const { me } = useMe()
   const [filter, setFilter] = useState('')
   const { data } = useUsersQuery()
@@ -96,7 +100,11 @@ export const ShareModal: React.FC<{
   }
 
   return (
-    <Modal onClose={onClose} style={{ padding: '1.5rem', width: 500 }}>
+    <Modal
+      onClose={onClose}
+      style={{ padding: '1.5rem', width: 500 }}
+      visible={visible}
+    >
       <div>
         <ThirdLevelHeadline>Share page</ThirdLevelHeadline>
       </div>

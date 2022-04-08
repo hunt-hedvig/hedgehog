@@ -7,9 +7,8 @@ import {
 } from '@hedvig-ui'
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { useMarkAllNotificationsAsReadMutation } from 'types/generated/graphql'
-import { useMe } from '../hooks/use-me'
 import { NotificationItem } from './components/NotificationItem'
+import { useNotifications } from 'portals/hope/features/user/notifications/hooks/use-notifications'
 
 const Modal = styled(DefaultModal)`
   max-height: calc(80vh - 6.5rem);
@@ -22,7 +21,6 @@ const Modal = styled(DefaultModal)`
   flex-direction: column;
 `
 
-// noinspection CssInvalidPropertyValue
 const NotificationContainer = styled(Flex)`
   flex: 1;
 
@@ -37,19 +35,18 @@ const NotificationContainer = styled(Flex)`
 
 export const NotificationsModal: React.FC<{
   onClose: () => void
-}> = ({ onClose }) => {
-  const { me } = useMe()
-  const [markAllNotificationsAsRead] = useMarkAllNotificationsAsReadMutation()
+  visible: boolean
+}> = ({ onClose, visible }) => {
   const history = useHistory()
+  const { notifications, readAll } = useNotifications()
 
   useEffect(() => {
-    markAllNotificationsAsRead({
-      refetchQueries: ['GetMe'],
-    })
+    readAll()
   }, [])
 
   return (
     <Modal
+      visible={visible}
       onClose={onClose}
       options={{
         side: 'right',
@@ -65,7 +62,7 @@ export const NotificationsModal: React.FC<{
         <div>
           <ThirdLevelHeadline>Notifications</ThirdLevelHeadline>
         </div>
-        {me.notifications.length > 8 && (
+        {notifications.length > 8 && (
           <Button
             variant="tertiary"
             onClick={() => history.push('/notifications')}
@@ -75,7 +72,7 @@ export const NotificationsModal: React.FC<{
         )}
       </Flex>
       <NotificationContainer direction="column">
-        {me.notifications.slice(0, 8).map((notification) => (
+        {notifications.slice(0, 8).map((notification) => (
           <NotificationItem key={notification.id} notification={notification} />
         ))}
       </NotificationContainer>

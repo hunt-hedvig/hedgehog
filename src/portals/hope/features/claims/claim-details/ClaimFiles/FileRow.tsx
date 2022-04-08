@@ -1,13 +1,14 @@
 import styled from '@emotion/styled'
 import { Dropdown, DropdownOption, TableColumn, TableRow } from '@hedvig-ui'
-import { dateTimeFormatter } from '@hedvig-ui/utils/date'
-import { sleep } from '@hedvig-ui/utils/sleep'
+import { dateTimeFormatter } from '@hedvig-ui'
+import { sleep } from '@hedvig-ui'
 import React from 'react'
 import {
   ClaimFileUpload,
   useSetClaimFileCategoryMutation,
 } from 'types/generated/graphql'
 import { DeleteButton } from './DeleteClaimFileButton'
+import gql from 'graphql-tag'
 
 const Image = styled.img`
   width: 450px;
@@ -45,6 +46,23 @@ const fileUploadOptions = [
     value: 'Other',
   },
 ]
+
+gql`
+  mutation SetClaimFileCategory(
+    $claimId: ID!
+    $claimFileId: ID!
+    $category: String
+  ) {
+    setClaimFileCategory(
+      claimId: $claimId
+      claimFileId: $claimFileId
+      category: $category
+    ) {
+      claimId
+      claimFileId
+    }
+  }
+`
 
 export const FileRow: React.FC<{
   claimId: string

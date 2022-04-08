@@ -8,13 +8,22 @@ import {
   getMemberIdColor,
   MemberAge,
 } from 'portals/hope/features/member/utils'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { MemberDetails } from './MemberDetails'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
-import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { useGetMemberInfo } from 'portals/hope/features/member/tabs/member-tab/hooks/use-get-member-info'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { useTitle } from '@hedvig-ui'
+import { usePushMemberHistory } from 'portals/hope/common/hooks/use-push-member-history'
+import { ClaimsTab } from 'portals/hope/features/member/tabs/claims-tab/ClaimsTab'
+import { MemberFilesTab } from 'portals/hope/features/member/tabs/files-tab/FileTab'
+import { ContractTab } from 'portals/hope/features/member/tabs/contracts-tab'
+import { QuotesTab } from 'portals/hope/features/member/tabs/quote-tab/QuotesTab'
+import { PaymentsTab } from 'portals/hope/features/member/tabs/payments-tab/PaymentsTab'
+import { AccountTab } from 'portals/hope/features/member/tabs/account-tab'
+import { MemberTab } from 'portals/hope/features/member/tabs/member-tab/MemberTab'
+import { DebtTab } from 'portals/hope/features/member/tabs/debt-tab'
+import { CampaignsTab } from 'portals/hope/features/member/tabs/campaigns-tab'
 
 const MemberPageContainer = styled.div<{ chat?: boolean }>`
   display: flex;
@@ -32,7 +41,7 @@ const Header = styled.div`
   font-size: 32px;
 `
 
-const Badge = styled('div')<{ memberId: string; numberMemberGroups: number }>`
+const Badge = styled.div<{ memberId: string; numberMemberGroups: number }>`
   float: right;
   display: inline-flex;
   padding: 0.5rem 1rem;
@@ -56,25 +65,46 @@ export const MemberTabs: React.FC<{
   memberId: string
   tab: string
   onChangeTab: (newTab: string) => void
+  onClickClaim: (claimId: string) => void
   chat?: boolean
   title?: string
-}> = ({ memberId, tab, onChangeTab, chat = true, title }) => {
+}> = ({ memberId, tab, onChangeTab, onClickClaim, chat = true, title }) => {
   const [member] = useGetMemberInfo(memberId)
-  const { pushToMemberHistory } = useMemberHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const panes = memberPagePanes(memberId)
+  usePushMemberHistory(memberId)
 
   useTitle(
     title ??
       (member ? `${member?.firstName} ${member?.lastName}` : 'Loading...'),
   )
-  useEffect(() => pushToMemberHistory(memberId), [])
 
   if (!member) {
     return null
   }
 
-  const Pane = panes.find((pane) => pane.tabName === tab)?.component()
+  const paneComponent = () => {
+    switch (tab) {
+      case 'claims':
+        return <ClaimsTab memberId={memberId} onClickClaim={onClickClaim} />
+      case 'files':
+        return <MemberFilesTab memberId={memberId} />
+      case 'contracts':
+        return <ContractTab memberId={memberId} />
+      case 'quotes':
+        return <QuotesTab memberId={memberId} />
+      case 'payments':
+        return <PaymentsTab memberId={memberId} />
+      case 'account':
+        return <AccountTab memberId={memberId} />
+      case 'member':
+        return <MemberTab memberId={memberId} />
+      case 'debt':
+        return <DebtTab memberId={memberId} />
+      case 'campaigns':
+        return <CampaignsTab memberId={memberId} />
+    }
+  }
 
   return (
     <Flex>
@@ -119,7 +149,7 @@ export const MemberTabs: React.FC<{
             hotkey: pane.hotkey,
           }))}
         />
-        <div style={{ marginTop: '4rem' }}>{Pane}</div>
+        <div style={{ marginTop: '4rem' }}>{paneComponent()}</div>
       </MemberPageContainer>
     </Flex>
   )

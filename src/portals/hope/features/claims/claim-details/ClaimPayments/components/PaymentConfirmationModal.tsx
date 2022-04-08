@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
-import { Button, ButtonsGroup, Input, Modal } from '@hedvig-ui'
+import { Button, ButtonsGroup, Checkbox, Input, Modal } from '@hedvig-ui'
 import { Market } from 'portals/hope/features/config/constants'
-import React from 'react'
+import React, { useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import {
@@ -11,12 +11,18 @@ import {
   useCreateClaimPaymentMutation,
   Claim,
   useCreateSwishClaimPaymentMutation,
+  ClaimState,
 } from 'types/generated/graphql'
+import { useClaimStatus } from '../../ClaimInformation/components/ClaimStatusDropdown'
 
 const Explanation = styled.p`
   margin-top: 2em;
   font-size: 0.9em;
   color: ${({ theme }) => theme.semiStrongForeground};
+`
+
+const CloseClaimCheckbox = styled(Checkbox)`
+  margin-left: auto;
 `
 
 interface PaymentConfirmationModalProps {
@@ -32,6 +38,7 @@ interface PaymentConfirmationModalProps {
   claimId: string
   confirmSuccess: () => void
   clearForm: () => void
+  visible: boolean
 }
 
 export const PaymentConfirmationModal: React.FC<
@@ -47,9 +54,14 @@ export const PaymentConfirmationModal: React.FC<
   clearForm,
   claimId,
   confirmSuccess,
+  visible,
 }) => {
+  const [closeClaim, setCloseClaim] = useState(false)
   const [createPayment] = useCreateClaimPaymentMutation()
   const [createSwishPayment] = useCreateSwishClaimPaymentMutation()
+
+  const { status: claimStatus, setStatus: changeClaimStatus } =
+    useClaimStatus(claimId)
 
   const {
     register,
@@ -128,10 +140,15 @@ export const PaymentConfirmationModal: React.FC<
         },
       )
     }
+
+    if (closeClaim) {
+      changeClaimStatus(ClaimState.Closed)
+    }
   }
 
   return (
     <Modal
+      visible={visible}
       style={{ padding: '1rem', width: 500 }}
       onClose={() => {
         onClose()
@@ -167,6 +184,13 @@ export const PaymentConfirmationModal: React.FC<
           >
             Cancel
           </Button>
+          {claimStatus !== ClaimState.Closed && (
+            <CloseClaimCheckbox
+              label="Also close the claim"
+              checked={closeClaim}
+              onChange={() => setCloseClaim((prev) => !prev)}
+            />
+          )}
         </ButtonsGroup>
       </form>
     </Modal>

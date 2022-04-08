@@ -1,10 +1,6 @@
 import styled from '@emotion/styled'
 import { Button as DefaultButton, Modal } from '@hedvig-ui'
-import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys, useKeyIsPressed } from '@hedvig-ui'
 import React, {
   createContext,
   useContext,
@@ -27,7 +23,8 @@ export const ConfirmDialogComponent: React.FC<{
   content: React.ReactNode
   close: () => void
   confirm: () => void
-}> = ({ content, close, confirm }) => {
+  visible: boolean
+}> = ({ content, close, confirm, visible }) => {
   const isEnterPressed = useKeyIsPressed(Keys.Enter)
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
@@ -45,6 +42,7 @@ export const ConfirmDialogComponent: React.FC<{
 
   return (
     <Modal
+      visible={visible}
       style={{
         width: 400,
         padding: '1rem',
@@ -129,13 +127,12 @@ export const ConfirmDialogProvider: React.FC = ({ children }) => {
       }}
     >
       {children}
-      {showConfirmDialog && (
-        <ConfirmDialogComponent
-          content={message}
-          close={closeHandler}
-          confirm={confirmHandler}
-        />
-      )}
+      <ConfirmDialogComponent
+        visible={showConfirmDialog}
+        content={message}
+        close={closeHandler}
+        confirm={confirmHandler}
+      />
     </ConfirmDialogContext.Provider>
   )
 }

@@ -1,4 +1,4 @@
-import { formatMoney } from '@hedvig-ui/utils/money'
+import { formatMoney } from '@hedvig-ui'
 import React from 'react'
 import { MonetaryAmountV2 } from 'types/generated/graphql'
 

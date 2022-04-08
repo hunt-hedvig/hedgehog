@@ -1,6 +1,6 @@
 import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui'
 import React, { useRef } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 

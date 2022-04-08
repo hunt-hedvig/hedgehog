@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import React from 'react'
 import { ChatFill } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
-import { UserNotification } from 'types/generated/graphql'
+import { UserNotificationsQuery } from 'types/generated/graphql'
 
 const NotificationContainer = styled(Flex)<{ read?: boolean }>`
   :first-of-type {
@@ -58,9 +58,9 @@ const NotificationTimestamp = styled.div`
   padding-top: 0.2rem;
 `
 
-export const NotificationItem: React.FC<{ notification: UserNotification }> = ({
-  notification,
-}) => {
+export const NotificationItem: React.FC<{
+  notification: UserNotificationsQuery['me']['user']['notifications'][0]
+}> = ({ notification }) => {
   const history = useHistory()
 
   return (

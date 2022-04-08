@@ -16,12 +16,11 @@
 
     "moduleResolution": "node",
     "baseUrl": ".",
-    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "typeRoots": ["./src/types"],
     "types": ["jest", "node"],
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
   "include": ["./src/server"],
-  "exclude": ["node_modules"]
 }

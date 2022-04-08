@@ -7,7 +7,7 @@ import {
   StandaloneMessage,
   SubmitButton,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import { format } from 'date-fns'
 import { AddEntryInformation } from 'portals/hope/features/member/tabs/account-tab/AddEntryInformation'
 import React from 'react'

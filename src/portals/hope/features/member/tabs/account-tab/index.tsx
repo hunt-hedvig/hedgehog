@@ -16,7 +16,7 @@ import {
   StandaloneMessage,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { formatMoney } from '@hedvig-ui/utils/money'
+import { formatMoney } from '@hedvig-ui'
 import { AccountEntryTable } from 'portals/hope/features/member/tabs/account-tab/AccountEntryTable'
 import { AddEntryForm } from 'portals/hope/features/member/tabs/account-tab/AddEntryForm'
 import { AddMonthlyEntryForm } from 'portals/hope/features/member/tabs/account-tab/AddMonthlyEntryForm'

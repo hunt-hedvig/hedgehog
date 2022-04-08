@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Flex, Shadowed } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { ResourceAccessOverview } from 'portals/hope/features/resource-access/overview/ResourceAccessOverview'
 import React, { useState } from 'react'
@@ -26,12 +26,11 @@ export const ClaimRestrictionInformation: React.FC<{
 
   return (
     <>
-      {showModal && (
-        <ResourceAccessOverview
-          onClose={() => setShowModal(false)}
-          resourceId={claimId}
-        />
-      )}
+      <ResourceAccessOverview
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+        resourceId={claimId}
+      />
       <Flex direction="row" align="center">
         <Flex
           style={{ fontSize: '1.5rem' }}

@@ -7,7 +7,7 @@ import {
   SecondLevelHeadline,
   Spacing,
 } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { useTitle } from '@hedvig-ui'
 import { CreateOptionForm } from 'portals/hope/features/tools/claim-types/forms/CreateOptionForm'
 import { CreatePropertyForm } from 'portals/hope/features/tools/claim-types/forms/CreatePropertyForm'
 import { CreateRelationForm } from 'portals/hope/features/tools/claim-types/forms/CreateRelationForm'

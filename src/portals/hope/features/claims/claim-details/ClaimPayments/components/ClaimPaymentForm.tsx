@@ -259,8 +259,9 @@ export const ClaimPaymentForm: React.FC<{
           <Button type="submit">Create payment</Button>
         </div>
 
-        {!!confirmationData && member?.contractMarketInfo ? (
+        {member?.contractMarketInfo ? (
           <PaymentConfirmationModal
+            visible={!!confirmationData}
             onClose={() => {
               setConfirmationData(null)
             }}

@@ -9,7 +9,7 @@ import {
   Spacing,
   ThirdLevelHeadline,
 } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { useTitle } from '@hedvig-ui'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useGetMeQuery, useUpdateUserMutation } from 'types/generated/graphql'
@@ -17,7 +17,7 @@ import { Page } from 'portals/hope/pages/routes'
 import { AvailablePortals } from 'auth/components/AvailablePortals'
 import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 import { Market, MarketFlags } from 'portals/hope/features/config/constants'
-import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui'
 
 const ProfilePage: Page = () => {
   const { data } = useGetMeQuery()

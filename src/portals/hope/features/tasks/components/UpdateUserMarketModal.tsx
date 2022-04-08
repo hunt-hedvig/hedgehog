@@ -3,7 +3,7 @@ import { Button, Checkbox, Flex, Label, Modal } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import React from 'react'
 import { Market, MarketFlags } from 'portals/hope/features/config/constants'
-import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui'
 import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 
 const StyledModal = styled(Modal)`
@@ -34,11 +34,12 @@ const StyledModal = styled(Modal)`
 export const UpdateUserMarketModal: React.FC<{
   onClose: () => void
   onSubmit: () => void
-}> = ({ onClose, onSubmit }) => {
+  visible: boolean
+}> = ({ onClose, onSubmit, visible }) => {
   const { markets: userMarkets, removeMarket, addMarket } = useMyMarkets()
 
   return (
-    <StyledModal onClose={onClose}>
+    <StyledModal onClose={onClose} visible={visible}>
       <Flex
         style={{ height: '100%', width: '100%' }}
         direction="column"

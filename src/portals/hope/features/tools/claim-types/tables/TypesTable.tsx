@@ -6,7 +6,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import React from 'react'
 import { useGetClaimTypesQuery } from 'types/generated/graphql'
 

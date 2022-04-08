@@ -9,14 +9,14 @@ import {
   SecondLevelHeadline,
   Spacing,
 } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { changelog } from 'changelog'
+import { isPressing, Keys } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui'
+import { changelog } from '../../../changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'portals/hope/features/dashboard/Greeting'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React, { useState } from 'react'
-import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
+import { DashboardNumbers } from 'types/generated/graphql'
 import { Page } from 'portals/hope/pages/routes'
 import gql from 'graphql-tag'
 import { Link } from 'react-router-dom'
@@ -24,7 +24,7 @@ import { useTemplateClaims } from 'portals/hope/features/claims/claim-templates/
 import { FilteredMetric } from 'portals/hope/features/claims/claim-templates/FilteredMetric'
 import { Plus } from 'react-bootstrap-icons'
 import { CreateFilterModal } from 'portals/hope/features/claims/claim-templates/CreateFilterModal'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 import { useHistory } from 'react-router'
 
 const Wrapper = styled.div`
@@ -141,7 +141,7 @@ const DashboardPage: Page = () => {
   })
   const [createFilter, setCreateFilter] = useState(false)
 
-  const { settings, me } = useMe()
+  const { me } = useMe()
 
   const dashboardNumbers = dashboardData?.dashboardNumbers as
     | DashboardNumbers
@@ -174,39 +174,14 @@ const DashboardPage: Page = () => {
                 history.push('/claims/list/1')
               },
               neighbors: {
-                right:
-                  settings[UserSettingKey.FeatureFlags] &&
-                  settings[UserSettingKey.FeatureFlags]?.conversations
-                    ? 'ConversationsMetric'
-                    : 'QuestionsMetric',
+                right: 'QuestionsMetric',
               },
             })}
           >
             <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
             <MetricName>claims</MetricName>
           </Metric>
-          {settings[UserSettingKey.FeatureFlags] &&
-          settings[UserSettingKey.FeatureFlags]?.conversations ? (
-            <Metric
-              to="/conversations"
-              {...register('ConversationsMetric', {
-                resolve: () => {
-                  history.push('/conversations')
-                },
-                neighbors: {
-                  left: 'ClaimsMetric',
-                  right: templateFilters.length
-                    ? templateFilters[0].name
-                    : 'Add Template',
-                },
-              })}
-            >
-              <MetricNumber>
-                {dashboardNumbers?.numberOfQuestions || 0}
-              </MetricNumber>
-              <MetricName>conversations</MetricName>
-            </Metric>
-          ) : (
+          {
             <Metric
               to="/questions"
               {...register('QuestionsMetric', {
@@ -226,7 +201,7 @@ const DashboardPage: Page = () => {
               </MetricNumber>
               <MetricName>questions</MetricName>
             </Metric>
-          )}
+          }
 
           {templateFilters.map((template, index) => {
             const registeredTemplate = register(template.name, {
@@ -236,9 +211,6 @@ const DashboardPage: Page = () => {
               neighbors: {
                 left: index
                   ? templateFilters[index - 1].name
-                  : settings[UserSettingKey.FeatureFlags] &&
-                    settings[UserSettingKey.FeatureFlags]?.conversations
-                  ? 'ConversationsMetric'
                   : 'QuestionsMetric',
                 right:
                   index < templateFilters.length - 1
@@ -269,9 +241,6 @@ const DashboardPage: Page = () => {
               neighbors: {
                 left: templateFilters.length
                   ? templateFilters[templateFilters.length - 1].name
-                  : settings[UserSettingKey.FeatureFlags] &&
-                    settings[UserSettingKey.FeatureFlags]?.conversations
-                  ? 'ConversationsMetric'
                   : 'QuestionsMetric',
               },
             })}
@@ -326,12 +295,11 @@ const DashboardPage: Page = () => {
           })}
         </ChangeLogWrapper>
       </Spacing>
-      {createFilter && (
-        <CreateFilterModal
-          onClose={() => setCreateFilter(false)}
-          onSave={createTemplate}
-        />
-      )}
+      <CreateFilterModal
+        onClose={() => setCreateFilter(false)}
+        onSave={createTemplate}
+        visible={createFilter}
+      />
     </Wrapper>
   )
 }

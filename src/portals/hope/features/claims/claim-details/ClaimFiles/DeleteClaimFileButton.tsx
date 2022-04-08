@@ -1,8 +1,15 @@
 import { Button } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useMarkClaimFileAsDeletedMutation } from 'types/generated/graphql'
+import gql from 'graphql-tag'
+
+gql`
+  mutation MarkClaimFileAsDeleted($claimId: ID!, $claimFileId: ID!) {
+    markClaimFileAsDeleted(claimId: $claimId, claimFileId: $claimFileId)
+  }
+`
 
 export const DeleteButton: React.FC<{
   claimId: string

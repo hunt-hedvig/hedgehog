@@ -26,7 +26,8 @@ const Container = styled(Flex)`
 export const ResourceAccessOverview: React.FC<{
   onClose: () => void
   resourceId: string
-}> = ({ onClose, resourceId }) => {
+  visible: boolean
+}> = ({ onClose, resourceId, visible }) => {
   const { data } = useResourceAccessInformationQuery({
     variables: { resourceId },
   })
@@ -37,7 +38,7 @@ export const ResourceAccessOverview: React.FC<{
   }
 
   return (
-    <Modal onClose={onClose} style={{ padding: '1rem' }}>
+    <Modal onClose={onClose} style={{ padding: '1rem' }} visible={visible}>
       <Tabs
         style={{ margin: '1rem 0', padding: '0rem 1rem' }}
         list={[

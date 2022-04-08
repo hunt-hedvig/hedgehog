@@ -1,6 +1,6 @@
-import { convertCamelcaseToTitle } from '@hedvig-ui/utils/text'
+import { convertCamelcaseToTitle } from '@hedvig-ui'
 import React from 'react'
-import { ArrayElement } from '@hedvig-ui/utils/array-element'
+import { ArrayElement } from '@hedvig-ui'
 import {
   ContractStatus,
   MemberSearchHit,

@@ -12,9 +12,9 @@ import {
   TableRow,
   TextDatePicker,
 } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { isPressing, Keys } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
 import { TerminationReason } from 'portals/hope/features/member/tabs/contracts-tab/contract/termination-date'
 import React, { useState } from 'react'

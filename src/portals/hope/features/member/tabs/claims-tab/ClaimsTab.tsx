@@ -8,10 +8,10 @@ import {
   MainHeadline,
   Spacing,
 } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { format } from 'date-fns'
 import { MemberClaimsList } from 'portals/hope/features/member/tabs/claims-tab/components/MemberClaimsList'
-import React from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   ClaimSource,
@@ -35,13 +35,13 @@ const FormWrapper = styled.div`
 
 export const ClaimsTab: React.FC<{
   memberId: string
-}> = ({ memberId }) => {
-  const [createClaim, { loading: createClaimLoading }] =
-    useCreateClaimMutation()
+  onClickClaim: (claimId: string) => void
+}> = ({ memberId, onClickClaim }) => {
+  const [createClaim, { loading }] = useCreateClaimMutation()
 
-  const [showForm, setShowForm] = React.useState(false)
-  const [claimSource, setClaimSource] = React.useState<ClaimSource | null>(null)
-  const [claimDate, setClaimDate] = React.useState<Date>(new Date())
+  const [showForm, setShowForm] = useState(false)
+  const [claimSource, setClaimSource] = useState<ClaimSource | null>(null)
+  const [claimDate, setClaimDate] = useState(new Date())
 
   return (
     <FadeIn>
@@ -62,7 +62,7 @@ export const ClaimsTab: React.FC<{
               ))}
             </Dropdown>
             <DateTimePicker
-              disabled={createClaimLoading}
+              disabled={loading}
               date={claimDate}
               fullWidth={true}
               setDate={(date) => setClaimDate(date)}
@@ -71,7 +71,7 @@ export const ClaimsTab: React.FC<{
               showTimePicker
             />
             <Button
-              disabled={createClaimLoading}
+              disabled={loading}
               variant="secondary"
               onClick={() => {
                 setShowForm(false)
@@ -86,7 +86,7 @@ export const ClaimsTab: React.FC<{
                 claimSource === null ||
                 claimDate === null ||
                 claimDate > new Date() ||
-                createClaimLoading
+                loading
               }
               onClick={async () => {
                 if (claimSource === null || claimDate === null) {
@@ -130,7 +130,7 @@ export const ClaimsTab: React.FC<{
         )}
       </HeaderWrapper>
       <Spacing top />
-      <MemberClaimsList memberId={memberId} />
+      <MemberClaimsList memberId={memberId} onClickClaim={onClickClaim} />
     </FadeIn>
   )
 }

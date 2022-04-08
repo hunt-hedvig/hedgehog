@@ -11,8 +11,6 @@ import TasksPage from 'portals/hope/pages/tasks/TasksPage'
 import CheckInPage from 'portals/hope/pages/tasks/CheckInPage'
 import NotificationsPage from 'portals/hope/pages/NotificationsPage'
 import SearchPage from 'portals/hope/pages/search/SearchPage'
-import ConversationsOnboardingPage from 'portals/hope/pages/conversations/ConversationsOnboardingPage'
-import ConversationsPage from 'portals/hope/pages/conversations/ConversationsPage'
 import ClaimsListPage from 'portals/hope/pages/claims/list/ClaimsListPage'
 import ClaimDetailsPage from 'portals/hope/pages/claims/ClaimDetailsPage'
 import MemberSearchPage from 'portals/hope/pages/members/MemberSearchPage'
@@ -26,6 +24,7 @@ import EmployeesPage from 'portals/hope/pages/tools/EmployeesPage'
 import CampaignCodesPage from 'portals/hope/pages/tools/CampaignCodesPage'
 import UnsignMemberPage from 'portals/hope/pages/tools/UnsignMemberPage'
 import TemplateMessagesPage from 'portals/hope/pages/tools/TemplateMessagesPage'
+import AuthAdminPage from 'portals/hope/pages/tools/AuthAdminPage'
 
 export type Page<T = void> = React.FC<T>
 
@@ -77,16 +76,11 @@ export const Routes: React.FC = () => {
         <Route path="/" exact component={DashboardPage} />
         <Route path="/profile" component={ProfilePage} />
         <Route path="/dashborad" component={DashboardPage} />
-        <Route path="/questions/:memberId?/:tab?" component={TasksPage} />
+        <Route path="/questions" component={TasksPage} />
         <Route path="/tasks" exact component={QuestionsPage} />
         <Route path="/tasks/check-in" exact component={CheckInPage} />
         <Route path="/notifications" component={NotificationsPage} />
         <Route path="/search/:category" component={SearchPage} />
-        <Route
-          path="/conversations/onboarding"
-          component={ConversationsOnboardingPage}
-        />
-        <Route path="/conversations/:memberId?" component={ConversationsPage} />
         <Route path="/claims/list/:page?" exact component={ClaimsListPage} />
         <Route path="/claims/:claimId" exact component={ClaimDetailsPage} />
         <Redirect
@@ -115,10 +109,12 @@ export const Routes: React.FC = () => {
           path="/tools/template-messages"
           component={TemplateMessagesPage}
         />
+        <Route path="/tools/auth-admin" component={AuthAdminPage} />
         <Route
           path="/tools/impersonate-member"
           component={ImpersonateMemberPage}
         />
+
         <Route
           component={() => (
             <StandaloneMessage paddingTop="25vh">

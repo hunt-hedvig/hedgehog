@@ -7,7 +7,7 @@ import {
 } from 'portals/hope/features/questions/FilterSelect'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
-import { UserSettingKey } from 'types/generated/graphql'
+import { UserSettings } from 'src/types/generated/graphql'
 
 const Container = styled(Modal)`
   width: 60rem;
@@ -35,44 +35,43 @@ const Container = styled(Modal)`
 
 export const FilterModal: React.FC<{
   onClose: () => void
-  onToggle: (filter: FilterStateType, settingField?: UserSettingKey) => void
+  onToggle: (filter: FilterStateType, settingField: keyof UserSettings) => void
   filters: number[]
-}> = ({ onClose, onToggle, filters }) => {
-  return (
-    <Container onClose={onClose}>
-      <Flex
-        style={{ height: '100%', width: '100%' }}
-        direction="column"
-        justify="space-between"
-      >
-        <div>
-          <h4>Select Filters</h4>
+  visible: boolean
+}> = ({ onClose, onToggle, filters, visible }) => (
+  <Container onClose={onClose} visible={visible}>
+    <Flex
+      style={{ height: '100%', width: '100%' }}
+      direction="column"
+      justify="space-between"
+    >
+      <div>
+        <h4>Select Filters</h4>
 
+        <Flex
+          style={{
+            flexWrap: 'wrap',
+            marginTop: '3rem',
+          }}
+          justify="space-between"
+        >
           <Flex
-            style={{
-              flexWrap: 'wrap',
-              marginTop: '3rem',
-            }}
-            justify="space-between"
+            direction="column"
+            align="center"
+            fullWidth
+            style={{ marginBottom: '2rem' }}
           >
-            <Flex
-              direction="column"
-              align="center"
-              fullWidth
-              style={{ marginBottom: '2rem' }}
-            >
-              <Label>Number of member groups</Label>
-              <NumberMemberGroupsRadioButtons />
-            </Flex>
-            <FilterSelect
-              filters={filters}
-              onToggle={onToggle}
-              animationDelay={0}
-              animationItemDelay={20}
-            />
+            <Label>Number of member groups</Label>
+            <NumberMemberGroupsRadioButtons />
           </Flex>
-        </div>
-      </Flex>
-    </Container>
-  )
-}
+          <FilterSelect
+            filters={filters}
+            onToggle={onToggle}
+            animationDelay={0}
+            animationItemDelay={20}
+          />
+        </Flex>
+      </div>
+    </Flex>
+  </Container>
+)
