@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { CardContent, Loadable, Spacing, Tabs } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import copy from 'copy-to-clipboard'
 import { MemberClaimsView } from 'portals/hope/features/claims/claim-details/MemberInformation/components/MemberClaimsView'
@@ -45,7 +45,8 @@ const MemberCard = styled.div`
 export const MemberInformation: React.FC<{
   claimId: string
   memberId: string
-}> = ({ claimId, memberId }) => {
+  slim?: boolean
+}> = ({ claimId, memberId, slim = false }) => {
   const [tab, setTab] = useState<'general' | 'claims'>('general')
   const { data, loading } = useGetMemberInfoQuery({ variables: { memberId } })
   const { registerActions } = useCommandLine()
@@ -58,6 +59,7 @@ export const MemberInformation: React.FC<{
       label: `Go to member`,
       keys: [Keys.Option, Keys.M],
       onResolve: () => {
+        if (slim) return
         history.push(`/members/${memberId}`)
       },
     },
@@ -102,43 +104,50 @@ export const MemberInformation: React.FC<{
             <h3>
               {(member?.firstName ?? '') + ' ' + (member?.lastName ?? '')}
             </h3>
-            <Link
-              {...register('Claim Details - MemberId')}
-              to={`/members/${memberId}`}
-            >
-              {memberId}
-            </Link>{' '}
+            {!slim && (
+              <Link
+                to={`/members/${memberId}`}
+                {...register('Claim Details - MemberId')}
+              >
+                {memberId}
+              </Link>
+            )}
           </div>
           <div>{flag}</div>
         </MemberCard>
         <Spacing top="small" />
-        <Tabs
-          list={[
-            {
-              active: tab === 'general',
-              title: 'General',
-              action: () => {
-                PushUserAction('claim', 'view', 'member_overview_tab', null)
-                setTab('general')
+        {!slim && (
+          <Tabs
+            list={[
+              {
+                active: tab === 'general',
+                title: 'General',
+                action: () => {
+                  PushUserAction('claim', 'view', 'member_overview_tab', null)
+                  setTab('general')
+                },
               },
-            },
-            {
-              active: tab === 'claims',
-              title: `Claims (${totalClaimsWithoutDuplicates})`,
-              action: () => {
-                PushUserAction('claim', 'view', 'member_claims_tab', null)
-                setTab('claims')
+              {
+                active: tab === 'claims',
+                title: `Claims (${totalClaimsWithoutDuplicates})`,
+                action: () => {
+                  PushUserAction('claim', 'view', 'member_claims_tab', null)
+                  setTab('claims')
+                },
               },
-            },
-          ]}
-        />
-        <Spacing top="small" />
-        {tab === 'general' && (
-          <MemberGeneralView memberId={memberId} claimId={claimId} />
+            ]}
+          />
         )}
-        {tab === 'claims' && (
+        {tab === 'general' && !slim && (
+          <>
+            <Spacing top="small" />
+            <MemberGeneralView memberId={memberId} claimId={claimId} />
+          </>
+        )}
+        {tab === 'claims' && !slim && (
           <MemberClaimsView member={member} claimId={claimId} />
         )}
+        <MemberGeneralView memberId={memberId} claimId={claimId} />
       </Loadable>
     </CardContent>
   )

@@ -7,9 +7,9 @@ import {
   TableHeader,
   TableHeaderColumn,
 } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { sleep } from '@hedvig-ui/utils/sleep'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { useTitle } from '@hedvig-ui'
+import { sleep } from '@hedvig-ui'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { isPast, parseISO } from 'date-fns'
 import { Market, MarketFlags } from 'portals/hope/features/config/constants'
 import {

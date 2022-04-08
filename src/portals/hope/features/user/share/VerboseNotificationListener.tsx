@@ -1,17 +1,17 @@
 import { differenceInSeconds, parseISO } from 'date-fns'
-import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { VerboseNotification } from 'portals/hope/features/user/share/components/VerboseNotification'
 import React, { useEffect } from 'react'
 import { toast } from 'react-hot-toast'
+import { useNotifications } from 'portals/hope/features/user/notifications/hooks/use-notifications'
 
 export const VerboseNotificationListener: React.FC = () => {
-  const { me } = useMe()
+  const { notifications } = useNotifications()
   const NOTIFICATION_DURATION_SECONDS = 5
 
   useEffect(() => {
     const now = new Date()
 
-    const unreadVerboseNotifications = me.notifications.filter(
+    const unreadVerboseNotifications = notifications.filter(
       (notification) =>
         notification.verbose &&
         !notification.read &&
@@ -36,7 +36,7 @@ export const VerboseNotificationListener: React.FC = () => {
         },
       )
     })
-  }, [me.notifications, me])
+  }, [notifications])
 
   return null
 }

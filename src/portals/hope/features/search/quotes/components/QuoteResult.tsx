@@ -8,10 +8,7 @@ import {
 import { Flex, Label, Loadable } from '@hedvig-ui'
 import gql from 'graphql-tag'
 import formatDate from 'date-fns/format'
-import {
-  convertEnumOrSentenceToTitle,
-  convertEnumToTitle,
-} from '@hedvig-ui/utils/text'
+import { convertEnumOrSentenceToTitle, convertEnumToTitle } from '@hedvig-ui'
 
 const Wrapper = styled.div`
   max-width: 60rem;

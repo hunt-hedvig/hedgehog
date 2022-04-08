@@ -1,4 +1,4 @@
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+import { useInsecurePersistentState } from '@hedvig-ui'
 import { useEffect } from 'react'
 import { differenceInDays } from 'date-fns'
 

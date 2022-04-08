@@ -3,15 +3,13 @@ import {
   Button,
   Checkbox,
   FadeIn,
+  isPressing,
   Shadowed,
   Spacing,
   TextArea,
-} from '@hedvig-ui'
-import {
-  isPressing,
   Keys,
   useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+} from '@hedvig-ui'
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {

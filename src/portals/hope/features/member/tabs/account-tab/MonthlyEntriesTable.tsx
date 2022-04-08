@@ -11,8 +11,8 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { formatMoney } from '@hedvig-ui/utils/money'
+import { useConfirmDialog } from '@hedvig-ui'
+import { formatMoney } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
 import React from 'react'
 import { InfoCircleFill, Trash } from 'react-bootstrap-icons'

@@ -1,4 +1,4 @@
-import { Keys, NumberKeys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys, NumberKeys } from '@hedvig-ui'
 import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
 import { getMemberFlag } from 'portals/hope/features/member/utils'
 import {
@@ -10,7 +10,7 @@ import {
 } from 'portals/hope/features/members-search/styles'
 import React from 'react'
 import { useHistory } from 'react-router'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 import { useMemberNameAndContractMarketInfoQuery } from 'types/generated/graphql'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 

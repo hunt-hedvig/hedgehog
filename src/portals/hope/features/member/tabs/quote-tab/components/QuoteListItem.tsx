@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, ErrorText, Flex, Label, Modal } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { format, parseISO } from 'date-fns'
 import { UpdateQuoteForm } from 'portals/hope/features/member/tabs/quote-tab/components/UpdateQuoteForm'
@@ -10,7 +10,7 @@ import { Contract, Quote } from 'types/generated/graphql'
 import { QuoteActivation } from './QuoteActivation'
 import { QuoteContractCreation } from './QuoteContractCreation'
 import { QuotePrice } from './QuotePrice'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 
 const ActionsWrapper = styled.div`
   background-color: ${({ theme }) =>

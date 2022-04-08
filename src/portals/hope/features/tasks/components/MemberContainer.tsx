@@ -10,14 +10,16 @@ export const MemberContainer: React.FC<{
   memberId: string
   tab: string
   onChangeTab: (newTab: string) => void
+  onClickClaim: (claimId: string) => void
   title?: string
-}> = ({ memberId, tab, onChangeTab, title }) => {
+}> = ({ memberId, tab, onChangeTab, onClickClaim, title }) => {
   return (
     <Wrapper>
       <MemberTabs
         memberId={memberId}
         tab={tab}
         onChangeTab={onChangeTab}
+        onClickClaim={onClickClaim}
         chat={false}
         title={title}
       />

@@ -11,7 +11,7 @@ import { useSchemaForInsuranceType } from 'portals/hope/features/member/tabs/quo
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
-  GetQuotesDocument,
+  MemberQuotesDocument,
   useCreateQuoteForMemberBySchemaMutation,
 } from 'types/generated/graphql'
 import { Stars } from 'react-bootstrap-icons'
@@ -76,7 +76,7 @@ export const CreateQuoteForm: React.FC<{
         },
         refetchQueries: () => [
           {
-            query: GetQuotesDocument,
+            query: MemberQuotesDocument,
             variables: { memberId },
           },
         ],

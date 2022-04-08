@@ -1,11 +1,10 @@
 import styled from '@emotion/styled'
 import { RadioGroup } from '@hedvig-ui'
-import { range } from '@hedvig-ui/utils/range'
+import { range } from '@hedvig-ui'
 import { MemberGroups } from 'portals/hope/features/config/constants'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React from 'react'
-import { UserSettingKey } from 'types/generated/graphql'
 
 const Group = styled.div`
   display: flex;
@@ -50,7 +49,7 @@ export const NumberMemberGroupsRadioButtons: React.FC<MemberGroupsProps> = ({
               additionalSettingUpdate(e as number)
             }
             setNumberMemberGroups(e as number)
-            updateSetting(UserSettingKey.NumberOfMemberGroups, {
+            updateSetting('numberOfMemberGroups', {
               value: e as number,
             })
           } else {

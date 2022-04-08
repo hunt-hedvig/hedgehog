@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react'
 import { StandaloneMessage } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { Keys, useKeyIsPressed } from '@hedvig-ui'
+import { useTitle, useNavigation } from '@hedvig-ui'
+import React, { useEffect, useState } from 'react'
 import { QuestionGroup } from 'types/generated/graphql'
 import { QuestionGroupItem } from './QuestionGroupItem'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
 
 export const FilteredQuestionGroups: React.FC<{
   filterQuestionGroups: ReadonlyArray<QuestionGroup>

@@ -56,6 +56,8 @@ type QueryType {
   quotes(ids: [String!]!): [Quote!]!
   quote(id: String!): Quote!
 
+  auth_applications: [AuthApplication!]!
+
   searchClaimType(query: String!): [ClaimTypeSearchResponse!]!
 }
 
@@ -154,6 +156,7 @@ type MutationType {
   ): Quote!
   signQuoteForNewContract(quoteId: ID!, activationDate: LocalDate): Quote!
   overrideQuotePrice(input: OverrideQuotePriceInput!): Quote!
+  bypassUnderwritingGuidelines(quoteIds: [ID!]!): [Quote!]!
 
   createCampaignPartner(partnerId: ID!, partnerName: String!): Boolean!
   assignCampaignToPartnerPercentageDiscount(
@@ -207,7 +210,7 @@ type MutationType {
   deleteCoInsured(claimId: ID!): Boolean!
 
   updateUser(input: UpdateUserInput!): User!
-  upsertUserSettings(settings: [UpsertUserSettingInput!]!): [UserSetting!]!
+  upsertUserSettings(settings: [UpsertUserSettingInput!]!): UserSettings!
 
   restrictResourceAccess(resourceId: ID!): ResourceAccessInformation!
   releaseResourceAccess(resourceId: ID!): Boolean!
@@ -232,6 +235,9 @@ type MutationType {
   upsertTemplate(input: UpsertTemplateInput!): Template!
   removeTemplate(id: ID!): Boolean!
   togglePinStatus(id: ID!): Template!
+
+  auth_createApplication(applicationName: String!): AuthApplication!
+  auth_generateCredentials(applicationId: ID!): AuthCredentialGenerationOutput!
 }
 
 type ClaimTypeSearchResponse {
@@ -301,11 +307,7 @@ type SearchResultHighlight {
   values: [String!]!
 }
 
-union SearchHit =
-    MemberSearchHit
-  | NoteSearchHit
-  | QuoteSearchHit
-  | QuoteCartSearchHit
+union SearchHit = MemberSearchHit | NoteSearchHit | QuoteSearchHit | QuoteCartSearchHit
 
 type SearchResult {
   hit: SearchHit!
@@ -347,27 +349,9 @@ type Me {
   scopes: [String!]!
   role: String!
   user: User!
-  settings(filters: UserSettingsFilter): [UserSetting!]!
+  settings: UserSettings!
   portal: String!
   availablePortals: [String!]!
-}
-
-input UserSettingsFilter {
-  keys: [UserSettingKey!]!
-}
-
-enum UserSettingKey {
-  DARK_MODE
-  FEATURE_FLAGS
-  NUMBER_OF_MEMBER_GROUPS
-  CLAIM_COMPLEXITY_FILTER
-  CLAIM_STATES_FILTER
-  MEMBER_GROUPS_FILTER
-  MARKET_FILTER
-  NUMBER_OF_CLAIMS_FILTER
-  OUTCOME_FILTER
-  FOCUS_MARKETS
-  LANGUAGES
 }
 
 type User {
@@ -409,9 +393,21 @@ type UserNotification {
   verbose: Boolean!
 }
 
-type UserSetting {
-  key: UserSettingKey!
-  value: JSON!
+type UserSettings {
+    darkMode: Boolean
+    featureFlags: [String!]
+    numberOfMemberGroups: Int
+    claimComplexityFilterClaims: [ClaimComplexity!]
+    claimStatesFilterClaims: [ClaimState!]
+    claimStatesFilterQuestions: [Int!]
+    memberGroupsFilterClaims: [Int!]
+    memberGroupsFilterQuestions: [Int!]
+    marketFilterClaims: [String!]
+    marketFilterQuestions: [Int!]
+    numberOfClaimsFilter: Int
+    outcomeFilterClaims: [String!]
+    focusMarkets: [String!]
+    languages: [String!]
 }
 
 enum GrantHolderType {
@@ -759,7 +755,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-    MonthlyPercentageDiscountFixedPeriod
+  MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount
@@ -937,6 +933,7 @@ enum Gender {
 type Quote {
   id: ID!
   createdAt: Instant
+  market: String!
   price: Float
   currency: String
   productType: String
@@ -948,6 +945,7 @@ type Quote {
   validity: Int
   memberId: ID
   breachedUnderwritingGuidelines: [String!]
+  underwritingGuidelinesBypassed: Boolean!
   isComplete: Boolean
   schema: JSON
   schemaData: JSON
@@ -1357,6 +1355,23 @@ type MonetaryAmountV2 {
 enum ClaimComplexity {
   SIMPLE
   COMPLEX
+}
+
+type AuthApplication {
+  id: ID!
+  name: String!
+  createdAt: Instant!
+  credentials: [AuthApplicationCredentials!]!
+}
+
+type AuthApplicationCredentials {
+  clientId: String!
+  createdAt: Instant!
+}
+
+type AuthCredentialGenerationOutput {
+  clientId: String!
+  clientSecret: String!
 }
 
 # A String-representation of `java.time.YearMonth`, ex: `"2018-06"`

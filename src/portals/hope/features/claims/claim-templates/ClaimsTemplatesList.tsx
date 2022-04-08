@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { Label } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui'
 import { CreateFilterModal } from 'portals/hope/features/claims/claim-templates/CreateFilterModal'
 import { ClaimFilterTemplate } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
 import { useListClaims } from 'portals/hope/features/claims/claims-list/graphql/use-list-claims'
 import React, { useEffect, useState } from 'react'
 import { Plus } from 'react-bootstrap-icons'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 
 const Wrapper = styled.div`
   margin-top: 2rem;

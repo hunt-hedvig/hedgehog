@@ -1,10 +1,6 @@
 import styled from '@emotion/styled'
 import { FadeIn, FourthLevelHeadline, Input, Paragraph } from '@hedvig-ui'
-import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys, useKeyIsPressed } from '@hedvig-ui'
 import { useAdvancedActions } from 'portals/hope/features/commands/hooks/use-advanced-actions'
 import { CommandLineAction } from 'portals/hope/features/commands/use-command-line'
 import React, { useEffect, useState } from 'react'

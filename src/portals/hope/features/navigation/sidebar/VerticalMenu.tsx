@@ -17,8 +17,8 @@ import MediaQuery from 'react-media'
 import { useHistory, useLocation } from 'react-router'
 import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { Keys } from '@hedvig-ui'
+import { useNavigation } from '@hedvig-ui'
 import { CheckedInCard } from 'portals/hope/features/navigation/sidebar/CheckedInCard'
 
 const Wrapper = styled.div<{ collapsed: boolean }>`

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { ButtonsGroup, FadeIn } from '@hedvig-ui'
-import { range } from '@hedvig-ui/utils/range'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { range } from '@hedvig-ui'
+import { convertEnumToTitle } from '@hedvig-ui'
 import {
   Market,
   MarketFlags,
@@ -10,16 +10,14 @@ import {
 } from 'portals/hope/features/config/constants'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 import {
-  doClaimFilter,
   doMarketFilter,
   doMemberGroupFilter,
 } from 'portals/hope/features/questions/utils'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React from 'react'
-import { Shield, ShieldShaded } from 'react-bootstrap-icons'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
-import { QuestionGroup, UserSettingKey } from 'types/generated/graphql'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { useNavigation } from '@hedvig-ui'
+import { QuestionGroup, UserSettings } from 'types/generated/graphql'
+import { Keys } from '@hedvig-ui'
 import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 import { motion } from 'framer-motion'
 
@@ -31,11 +29,9 @@ export const FilterState: Record<string, number> = {
     },
     {},
   ),
-  HasOpenClaim: Object.keys(MemberGroups).length,
-  NoOpenClaim: Object.keys(MemberGroups).length + 1,
   ...Object.keys(Market).reduce<Record<string, number>>(
     (acc, market, index) => {
-      acc[market] = Object.keys(MemberGroups).length + 2 + index
+      acc[market] = Object.keys(MemberGroups).length + index
       return acc
     },
     {},
@@ -97,7 +93,7 @@ const CountBadge = styled.div<{ selected: boolean }>`
 
 export const FilterSelect: React.FC<{
   filters: ReadonlyArray<FilterStateType>
-  onToggle: (filter: FilterStateType, settingField?: UserSettingKey) => void
+  onToggle: (filter: FilterStateType, settingField: keyof UserSettings) => void
   animationDelay?: number
   animationItemDelay?: number
   push?: 'left' | 'right'
@@ -133,7 +129,7 @@ export const FilterSelect: React.FC<{
           const navigation = register(`Member Group ${memberGroup} Filter`, {
             focus: index === 0 ? Keys.F : undefined,
             resolve: () => {
-              onToggle(memberGroup, UserSettingKey.MemberGroupsFilter)
+              onToggle(memberGroup, 'memberGroupsFilterQuestions')
             },
             neighbors: {
               left: index
@@ -160,7 +156,7 @@ export const FilterSelect: React.FC<{
                 whileTap={{ scale: 0.95 }}
                 small={small}
                 onClick={() =>
-                  onToggle(memberGroup, UserSettingKey.MemberGroupsFilter)
+                  onToggle(memberGroup, 'memberGroupsFilterQuestions')
                 }
                 selected={filters.includes(memberGroup)}
               >
@@ -207,7 +203,7 @@ export const FilterSelect: React.FC<{
                   small={small}
                   selected={filters.includes(FilterState[market])}
                   onClick={() =>
-                    onToggle(FilterState[market], UserSettingKey.MarketFilter)
+                    onToggle(FilterState[market], 'marketFilterQuestions')
                   }
                 >
                   {convertEnumToTitle(market)}{' '}
@@ -223,91 +219,6 @@ export const FilterSelect: React.FC<{
               </FadeIn>
             )
           })}
-      </ButtonsGroup>
-      <ButtonsGroup
-        style={{
-          justifyContent: push ? push : 'center',
-          marginTop: !small ? '1.0em' : '0.6em',
-        }}
-      >
-        <FadeIn
-          delay={`${
-            animationDelay + animationItemDelay * (numberMemberGroups + 4)
-          }ms`}
-          {...register('Open Claims Filter', {
-            resolve: () => {
-              onToggle(
-                FilterState.HasOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
-              )
-            },
-            neighbors: {
-              up: `Market ${Object.keys(Market)[0]} Filter`,
-              right: 'No Claims Filter',
-            },
-          })}
-        >
-          <FilterButton
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            small={small}
-            selected={filters.includes(FilterState.HasOpenClaim)}
-            onClick={() =>
-              onToggle(
-                FilterState.HasOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
-              )
-            }
-          >
-            Open claims{' '}
-            <ShieldShaded style={{ marginLeft: !small ? '0.5em' : '0.3em' }} />
-            <CountBadge selected={filters.includes(FilterState.HasOpenClaim)}>
-              <div>
-                {getCountByFilter(FilterState.HasOpenClaim, doClaimFilter)}
-              </div>
-            </CountBadge>
-          </FilterButton>
-        </FadeIn>
-        <FadeIn
-          delay={`${
-            animationDelay + animationItemDelay * (numberMemberGroups + 5)
-          }ms`}
-          {...register('No Claims Filter', {
-            resolve: () => {
-              onToggle(
-                FilterState.NoOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
-              )
-            },
-            neighbors: {
-              up: `Market ${
-                Object.keys(Market)[Object.keys(Market).length - 1]
-              } Filter`,
-              left: 'Open Claims Filter',
-            },
-          })}
-        >
-          <FilterButton
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            small={small}
-            selected={filters.includes(FilterState.NoOpenClaim)}
-            onClick={() =>
-              onToggle(
-                FilterState.NoOpenClaim,
-                UserSettingKey.ClaimStatesFilter,
-              )
-            }
-          >
-            No claims{' '}
-            <Shield style={{ marginLeft: !small ? '0.5em' : '0.3em' }} />
-            <CountBadge selected={filters.includes(FilterState.NoOpenClaim)}>
-              <div>
-                {getCountByFilter(FilterState.NoOpenClaim, doClaimFilter)}
-              </div>
-            </CountBadge>
-          </FilterButton>
-        </FadeIn>
       </ButtonsGroup>
     </>
   )

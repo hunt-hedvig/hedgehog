@@ -14,7 +14,7 @@ import {
   GetTemplatesQuery,
 } from 'types/generated/graphql'
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+import { useInsecurePersistentState } from '@hedvig-ui'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`

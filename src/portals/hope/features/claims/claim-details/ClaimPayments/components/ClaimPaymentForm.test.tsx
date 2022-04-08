@@ -1,5 +1,5 @@
 import { MockedProvider } from '@apollo/client/testing'
-import { sleep, tickAsync } from '@hedvig-ui/utils/sleep'
+import { sleep, tickAsync } from '@hedvig-ui'
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import {

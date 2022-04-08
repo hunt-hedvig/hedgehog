@@ -1,18 +1,16 @@
 import { css, Theme } from '@emotion/react'
 import chroma from 'chroma-js'
 import styled from '@emotion/styled'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useMe } from 'portals/hope/features/user/hooks/use-me'
+import { isPressing, Keys } from '@hedvig-ui'
 import React, { useState } from 'react'
-import { DashboardNumbers, UserSettingKey } from 'types/generated/graphql'
+import { DashboardNumbers } from 'types/generated/graphql'
 import { Link } from 'react-router-dom'
 import { useTemplateClaims } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
 import { FilteredMetric } from 'portals/hope/features/claims/claim-templates/FilteredMetric'
 import { Plus } from 'react-bootstrap-icons'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
 import { useHistory } from 'react-router'
 import { CreateFilterModal } from '../claims/claim-templates/CreateFilterModal'
-import { lightTheme } from '@hedvig-ui'
+import { lightTheme, useNavigation } from '@hedvig-ui'
 
 const MetricsWrapper = styled.div`
   display: flex;
@@ -104,7 +102,6 @@ interface MetricListProps {
 
 export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
   const [createFilter, setCreateFilter] = useState(false)
-  const { settings } = useMe()
 
   const history = useHistory()
   const { register } = useNavigation()
@@ -129,11 +126,7 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
                 history.push('/claims/list/1')
               },
               neighbors: {
-                right:
-                  settings[UserSettingKey.FeatureFlags] &&
-                  settings[UserSettingKey.FeatureFlags]?.conversations
-                    ? 'ConversationsMetric'
-                    : 'QuestionsMetric',
+                right: 'QuestionsMetric',
               },
             },
             {
@@ -144,60 +137,32 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
           <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
           <MetricName>claims</MetricName>
         </Metric>
-        {settings[UserSettingKey.FeatureFlags] &&
-        settings[UserSettingKey.FeatureFlags]?.conversations ? (
-          <Metric
-            to="/conversations"
-            {...register(
-              'ConversationsMetric',
-              {
-                resolve: () => {
-                  history.push('/conversations')
-                },
-                neighbors: {
-                  left: 'ClaimsMetric',
-                  right: templateFilters.length
-                    ? templateFilters[0].name
-                    : 'Add Template',
-                },
+
+        <Metric
+          to="/questions"
+          {...register(
+            'QuestionsMetric',
+            {
+              resolve: () => {
+                history.push('/questions')
               },
-              {
-                background: chroma(lightTheme.accent).brighten(0.8).hex(),
+              neighbors: {
+                left: 'ClaimsMetric',
+                right: templateFilters.length
+                  ? templateFilters[0].name
+                  : 'Add Template',
               },
-            )}
-          >
-            <MetricNumber>
-              {dashboardNumbers?.numberOfQuestions || 0}
-            </MetricNumber>
-            <MetricName>conversations</MetricName>
-          </Metric>
-        ) : (
-          <Metric
-            to="/questions"
-            {...register(
-              'QuestionsMetric',
-              {
-                resolve: () => {
-                  history.push('/questions')
-                },
-                neighbors: {
-                  left: 'ClaimsMetric',
-                  right: templateFilters.length
-                    ? templateFilters[0].name
-                    : 'Add Template',
-                },
-              },
-              {
-                background: chroma(lightTheme.accent).brighten(0.8).hex(),
-              },
-            )}
-          >
-            <MetricNumber>
-              {dashboardNumbers?.numberOfQuestions || 0}
-            </MetricNumber>
-            <MetricName>questions</MetricName>
-          </Metric>
-        )}
+            },
+            {
+              background: chroma(lightTheme.accent).brighten(0.8).hex(),
+            },
+          )}
+        >
+          <MetricNumber>
+            {dashboardNumbers?.numberOfQuestions || 0}
+          </MetricNumber>
+          <MetricName>questions</MetricName>
+        </Metric>
 
         {templateFilters.map((template, index) => {
           const registeredTemplate = register(
@@ -209,9 +174,6 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
               neighbors: {
                 left: index
                   ? templateFilters[index - 1].name
-                  : settings[UserSettingKey.FeatureFlags] &&
-                    settings[UserSettingKey.FeatureFlags]?.conversations
-                  ? 'ConversationsMetric'
                   : 'QuestionsMetric',
                 right:
                   index < templateFilters.length - 1
@@ -248,9 +210,6 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
               neighbors: {
                 left: templateFilters.length
                   ? templateFilters[templateFilters.length - 1].name
-                  : settings[UserSettingKey.FeatureFlags] &&
-                    settings[UserSettingKey.FeatureFlags]?.conversations
-                  ? 'ConversationsMetric'
                   : 'QuestionsMetric',
               },
             },

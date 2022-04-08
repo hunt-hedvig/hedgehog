@@ -1,5 +1,5 @@
 import { Checkbox, Flex, Label } from '@hedvig-ui'
-import { range } from '@hedvig-ui/utils/range'
+import { range } from '@hedvig-ui'
 import {
   complexityIcons,
   FilterElement,
@@ -18,7 +18,7 @@ import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage
 import React from 'react'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
 import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
-import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui'
 
 interface ClaimTemplateFiltersProps
   extends React.HTMLAttributes<HTMLDivElement> {

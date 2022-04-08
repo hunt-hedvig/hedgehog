@@ -8,8 +8,8 @@ import {
   SecondLevelHeadline,
   Spacing,
 } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { changelog } from 'changelog'
+import { useTitle } from '@hedvig-ui'
+import { changelog } from '../../../changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'portals/hope/features/dashboard/Greeting'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'

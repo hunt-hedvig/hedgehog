@@ -5,6 +5,8 @@ import { TaskChatInput } from 'portals/hope/features/tasks/components/TaskChatIn
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
+import { useMemberHasOpenClaim } from 'portals/hope/common/hooks/use-member-has-open-claim'
+import { useMemberName } from 'portals/hope/common/hooks/use-member-name'
 
 const InChatTopNav = styled.div`
   cursor: pointer;
@@ -53,34 +55,40 @@ const InChatTopNav = styled.div`
 `
 
 export const TaskChat: React.FC<{
+  resolvable: boolean
   memberId: string
-  fullName?: string
   onResolve: () => void
-  onSelectMember: () => void
-}> = ({ memberId, onResolve, fullName, onSelectMember }) => {
+  fullName?: string | null
+  onSelectMember: (openClaimId: string | null) => void
+}> = ({ resolvable, memberId, onResolve, onSelectMember, fullName }) => {
+  const { fullName: fullNameByQuery } = useMemberName(memberId)
+  const openClaim = useMemberHasOpenClaim(memberId)
   const [isLarge, setIsLarge] = useState(false)
 
   return (
     <>
-      <InChatTopNav onClick={onSelectMember}>
+      <InChatTopNav onClick={() => onSelectMember(openClaim?.id ?? null)}>
         <Flex align="center">
           <div className="icon">
             <ChatFill />
           </div>
           <div>
-            <a onClick={onSelectMember}>
-              {fullName ?? <Placeholder>Name not available</Placeholder>}
+            <a onClick={() => onSelectMember(openClaim?.id ?? null)}>
+              {fullName ?? fullNameByQuery ?? (
+                <Placeholder>Name not available</Placeholder>
+              )}
             </a>
           </div>
         </Flex>
         <Button
+          disabled={!resolvable}
           variant="secondary"
           onClick={(e) => {
             e.stopPropagation()
             onResolve()
           }}
         >
-          Mark as resolved
+          {resolvable ? 'Mark as resolved' : 'Resolved'}
         </Button>
       </InChatTopNav>
       <div

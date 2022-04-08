@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { HotkeyStyled, Popover } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
 import {

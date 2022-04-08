@@ -48,6 +48,9 @@ const template = () => `
       "stagingSpecificTools": ${JSON.stringify(config.stagingSpecificTools)},
       "swishPayoutsEnabled": ${JSON.stringify(config.swishPayoutsEnabled)},
     };
+    window.HEDVIG_ONBOARDING_URL = ${JSON.stringify(
+      config.hedvigOnboardingUrl,
+    )};
   </script>
   <script src="${scriptLocation}"></script>
 </body>

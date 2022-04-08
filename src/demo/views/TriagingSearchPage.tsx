@@ -13,8 +13,9 @@ import {
   SearchClaimTypeQuery,
   useSearchClaimTypeLazyQuery,
 } from 'types/generated/graphql'
-import { useDebounce } from 'portals/hope/common/hooks/use-debounce'
-import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
+import { useDebounce } from '@hedvig-ui'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui'
+import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const StyledInput = styled(Input)`
   border: none;
@@ -112,7 +113,10 @@ export const TriagingSearchPage: React.FC<{
 
   const debouncedValue = useDebounce(query, 100)
 
-  useEffect(() => search(), [debouncedValue])
+  useEffect(() => {
+    search()
+    PushUserAction('triaging', 'search', 'query', query)
+  }, [debouncedValue])
 
   return (
     <div style={{ padding: '0 1.25rem' }}>
@@ -139,12 +143,29 @@ export const TriagingSearchPage: React.FC<{
           <SearchHitRow
             key={claimType}
             whileTap={{ scale: 0.96 }}
-            onClick={() => onSelect(convertEnumOrSentenceToTitle(claimType))}
+            onClick={() => {
+              onSelect(convertEnumOrSentenceToTitle(claimType))
+              PushUserAction(
+                'triaging',
+                'select',
+                'option',
+                convertEnumOrSentenceToTitle(claimType),
+              )
+            }}
           >
             <div>{convertEnumOrSentenceToTitle(claimType)}</div>
             <ChevronRight />
           </SearchHitRow>
         ))}
+        {query && (
+          <SearchHitRow
+            whileTap={{ scale: 0.96 }}
+            onClick={() => onSelect('Other')}
+          >
+            <div>Other</div>
+            <ChevronRight />
+          </SearchHitRow>
+        )}
       </ResultContainer>
     </div>
   )

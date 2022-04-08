@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, ButtonsGroup, Checkbox, Input, Modal } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui'
 import { Market } from 'portals/hope/features/config/constants'
 import React, { useState } from 'react'
 

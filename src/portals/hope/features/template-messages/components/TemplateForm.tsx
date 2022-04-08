@@ -14,7 +14,7 @@ import { formatLocale, uniquePickedLocales } from '../use-template-messages'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import formatDate from 'date-fns/format'
 import { PickedLocale } from '../../config/constants'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import {
   Template,
   TemplateMessage,

@@ -3,7 +3,7 @@ import React from 'react'
 import { toast } from 'react-hot-toast'
 import {
   GetContractsDocument,
-  GetQuotesDocument,
+  MemberQuotesDocument,
   Quote,
   useSignQuoteForNewContractMutation,
 } from 'types/generated/graphql'
@@ -44,7 +44,7 @@ export const QuoteContractCreation: React.FC<{
             },
             refetchQueries: () => [
               {
-                query: GetQuotesDocument,
+                query: MemberQuotesDocument,
                 variables: { memberId },
               },
               {

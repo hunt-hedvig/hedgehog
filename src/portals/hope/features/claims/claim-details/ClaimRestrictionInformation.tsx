@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Button, Flex, Shadowed } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { ResourceAccessOverview } from 'portals/hope/features/resource-access/overview/ResourceAccessOverview'
 import React, { useState } from 'react'

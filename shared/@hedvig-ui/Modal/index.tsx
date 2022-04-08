@@ -1,11 +1,8 @@
 import React, { useRef } from 'react'
 import styled from '@emotion/styled'
 import { Portal } from 'react-portal'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
+import { Keys, useKeyIsPressed } from '@hedvig-ui'
+import { useClickOutside } from '@hedvig-ui'
 import { motion, HTMLMotionProps, AnimatePresence } from 'framer-motion'
 
 const getPosition = (
