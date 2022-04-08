@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import React from 'react'

@@ -1,4 +1,4 @@
-import { useInsecurePersistentState } from '@hedvig-ui/hooks/use-insecure-persistent-state'
+import { useInsecurePersistentState } from '@hedvig-ui'
 import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage'
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'

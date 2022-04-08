@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { Button, FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
-import { useDraft } from '@hedvig-ui/hooks/use-draft'
+import { useDraft } from '@hedvig-ui'
 import {
   GetQuestionsGroupsDocument,
   useMarkQuestionAsResolvedMutation,
   useSendMessageMutation,
 } from 'types/generated/graphql'
-import { usePlatform } from '@hedvig-ui/hooks/use-platform'
+import { usePlatform } from '@hedvig-ui'
 import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
 import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui'
 import { toast } from 'react-hot-toast'
 import { FileText, TextareaResize } from 'react-bootstrap-icons'
 import chroma from 'chroma-js'

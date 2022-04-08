@@ -1,4 +1,4 @@
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys } from '@hedvig-ui'
 
 export const memberPagePanes = (memberId: string) => [
   {

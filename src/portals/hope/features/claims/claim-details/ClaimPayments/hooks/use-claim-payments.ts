@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import { ArrayElement } from '@hedvig-ui/utils/array-element'
+import { ArrayElement } from '@hedvig-ui'
 import {
   ClaimPaymentsFragment,
   useSortableClaimPaymentsQuery,

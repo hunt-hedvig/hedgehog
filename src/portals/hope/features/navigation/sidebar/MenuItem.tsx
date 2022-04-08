@@ -4,7 +4,7 @@ import React from 'react'
 import { ArrowUpRight, Icon } from 'react-bootstrap-icons'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { useCommandLine } from 'portals/hope/features/commands/use-command-line'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys } from '@hedvig-ui'
 import { Hotkey } from '@hedvig-ui'
 
 interface WithTransparent {

@@ -1,9 +1,4 @@
-import {
-  isPressing,
-  Key,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Key, Keys, useKeyIsPressed } from '@hedvig-ui'
 import { CommandLineModal } from 'portals/hope/features/commands/components/CommandLineModal'
 import { PushShortcutUsed } from 'portals/hope/features/tracking/utils/tags'
 import React, {

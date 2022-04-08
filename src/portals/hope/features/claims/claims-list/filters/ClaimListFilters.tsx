@@ -9,13 +9,10 @@ import {
   Radio,
   TextDatePicker,
 } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
-import { range } from '@hedvig-ui/utils/range'
-import {
-  convertEnumOrSentenceToTitle,
-  convertEnumToTitle,
-} from '@hedvig-ui/utils/text'
+import { Keys } from '@hedvig-ui'
+import { useNavigation } from '@hedvig-ui'
+import { range } from '@hedvig-ui'
+import { convertEnumOrSentenceToTitle, convertEnumToTitle } from '@hedvig-ui'
 import { ClaimOutcomes } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
 import {
   Market,

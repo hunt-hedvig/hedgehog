@@ -13,13 +13,9 @@ import {
   TablePageSelect,
   TableRow,
 } from '@hedvig-ui'
-import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { isPressing, Keys, useKeyIsPressed } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import { useListClaims } from 'portals/hope/features/claims/claims-list/graphql/use-list-claims'

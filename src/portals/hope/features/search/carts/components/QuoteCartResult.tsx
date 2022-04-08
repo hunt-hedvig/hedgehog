@@ -1,10 +1,7 @@
 import styled from '@emotion/styled'
 import { Button, Flex, Loadable, Placeholder } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import {
-  convertEnumOrSentenceToTitle,
-  convertEnumToTitle,
-} from '@hedvig-ui/utils/text'
+import { useConfirmDialog } from '@hedvig-ui'
+import { convertEnumOrSentenceToTitle, convertEnumToTitle } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import copy from 'copy-to-clipboard'
 import formatDate from 'date-fns/format'

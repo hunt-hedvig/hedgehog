@@ -12,7 +12,7 @@ import {
 } from 'portals/hope/features/questions/utils'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { PickedLocale } from 'portals/hope/features/config/constants'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { useTitle } from '@hedvig-ui'
 import { MemberContainer } from '../../features/tasks/components/MemberContainer'
 import { TaskChat } from '../../features/tasks/TaskChat'
 import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'

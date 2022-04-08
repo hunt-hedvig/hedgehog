@@ -7,7 +7,7 @@ import {
   SecondLevelHeadline,
   TextArea,
 } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { useTitle } from '@hedvig-ui'
 import { OnBlurChangeInput } from 'portals/hope/features/tools/perils-editor/inputs'
 import { PerilIconOptions } from 'portals/hope/features/tools/perils-editor/peril-icons'
 import React from 'react'

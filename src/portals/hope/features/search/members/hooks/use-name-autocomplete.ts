@@ -1,4 +1,4 @@
-import { ArrayElement } from '@hedvig-ui/utils/array-element'
+import { ArrayElement } from '@hedvig-ui'
 import {
   useSearch,
   UseSearchResult,

@@ -13,8 +13,8 @@ import {
   SearchClaimTypeQuery,
   useSearchClaimTypeLazyQuery,
 } from 'types/generated/graphql'
-import { useDebounce } from '@hedvig-ui/hooks/use-debounce'
-import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
+import { useDebounce } from '@hedvig-ui'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 const StyledInput = styled(Input)`

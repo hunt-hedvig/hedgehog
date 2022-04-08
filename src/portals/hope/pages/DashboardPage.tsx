@@ -9,9 +9,9 @@ import {
   SecondLevelHeadline,
   Spacing,
 } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { changelog } from 'changelog'
+import { isPressing, Keys } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui'
+import { changelog } from '../../../changelog'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { Greeting } from 'portals/hope/features/dashboard/Greeting'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
@@ -24,7 +24,7 @@ import { useTemplateClaims } from 'portals/hope/features/claims/claim-templates/
 import { FilteredMetric } from 'portals/hope/features/claims/claim-templates/FilteredMetric'
 import { Plus } from 'react-bootstrap-icons'
 import { CreateFilterModal } from 'portals/hope/features/claims/claim-templates/CreateFilterModal'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 import { useHistory } from 'react-router'
 
 const Wrapper = styled.div`

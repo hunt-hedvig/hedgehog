@@ -1,5 +1,5 @@
 import { Button } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useMarkClaimFileAsDeletedMutation } from 'types/generated/graphql'

@@ -1,9 +1,6 @@
 import { StandaloneMessage, withFadeIn } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { Keys, useKeyIsPressed } from '@hedvig-ui'
+import { useTitle } from '@hedvig-ui'
 import React, { useEffect, useState } from 'react'
 import { QuestionGroup } from 'types/generated/graphql'
 import { QuestionGroupItem, QuestionGroupItemProps } from './QuestionGroupItem'

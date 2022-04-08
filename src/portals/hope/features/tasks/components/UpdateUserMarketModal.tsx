@@ -3,7 +3,7 @@ import { Button, Checkbox, Flex, Label, Modal } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import React from 'react'
 import { Market, MarketFlags } from 'portals/hope/features/config/constants'
-import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui'
 import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 
 const StyledModal = styled(Modal)`

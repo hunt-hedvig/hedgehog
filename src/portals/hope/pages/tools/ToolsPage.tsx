@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { CardLink, CardsWrapper, FadeIn, MainHeadline } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
+import { useTitle } from '@hedvig-ui'
 import React from 'react'
 import { useHistory } from 'react-router'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 
 const Row = styled.div<{ columns?: number }>`
   display: grid;
@@ -183,9 +183,10 @@ const ToolsPage: React.FC = () => {
             Claim Types
           </Card>
         </Row>
-        <Row>
+        <Row columns={2}>
           <Card
             to="/tools/template-messages"
+            span={6}
             {...register('TemplateMessages', {
               resolve: () => {
                 history.push('/tools/template-messages')
@@ -193,11 +194,29 @@ const ToolsPage: React.FC = () => {
               neighbors: {
                 up: 'CampaignCodes',
                 down: 'UnsignMember',
+                right: 'AuthAdmin',
               },
             })}
           >
             <Icon>📋</Icon>
             Template Messages
+          </Card>
+          <Card
+            to="/tools/auth-admin"
+            span={6}
+            {...register('AuthAdmin', {
+              resolve: () => {
+                history.push('/tools/auth-admin')
+              },
+              neighbors: {
+                up: 'ClaimTypes',
+                down: 'UnsignMember',
+                left: 'TemplateMessages',
+              },
+            })}
+          >
+            <Icon>🔐</Icon>
+            Auth Admin
           </Card>
         </Row>
       </CardsWrapper>

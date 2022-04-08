@@ -1,7 +1,7 @@
 import {
   convertCamelcaseToTitle,
   convertEnumOrSentenceToTitle,
-} from '@hedvig-ui/utils/text'
+} from '@hedvig-ui'
 import React from 'react'
 import { Quote } from 'types/generated/graphql'
 import { Label } from '@hedvig-ui'

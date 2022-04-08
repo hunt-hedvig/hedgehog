@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { convertEnumOrSentenceToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumOrSentenceToTitle } from '@hedvig-ui'
 
 const SearchCategoryButton = styled.button<{ selected?: boolean }>`
   border: none;

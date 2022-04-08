@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { ButtonsGroup, FadeIn } from '@hedvig-ui'
-import { range } from '@hedvig-ui/utils/range'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { range } from '@hedvig-ui'
+import { convertEnumToTitle } from '@hedvig-ui'
 import {
   Market,
   MarketFlags,
@@ -15,9 +15,9 @@ import {
 } from 'portals/hope/features/questions/utils'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React from 'react'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 import { QuestionGroup, UserSettings } from 'types/generated/graphql'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys } from '@hedvig-ui'
 import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 import { motion } from 'framer-motion'
 

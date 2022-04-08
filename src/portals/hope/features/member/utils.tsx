@@ -1,4 +1,4 @@
-import { getBirthdayInfo, getBirthDayText } from '@hedvig-ui/utils/date'
+import { getBirthdayInfo, getBirthDayText } from '@hedvig-ui'
 import { differenceInYears, parse } from 'date-fns'
 import {
   Market,
