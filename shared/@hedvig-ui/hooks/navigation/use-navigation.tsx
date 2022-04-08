@@ -406,6 +406,8 @@ export const useNavigation = () => {
     withFocus,
     focusTarget,
     autoFocus,
+    isHorizontal,
+    styles,
   }: {
     list: T[]
     name: string
@@ -416,6 +418,16 @@ export const useNavigation = () => {
     withFocus?: boolean
     focusTarget?: string
     autoFocus?: boolean
+    isHorizontal?: boolean
+    styles?:
+      | {
+          focus?: React.CSSProperties
+          basic?: React.CSSProperties
+        }
+      | ((item: T) => {
+          focus?: React.CSSProperties
+          basic?: React.CSSProperties
+        })
   }) => {
     return {
       registerItem: (item: T) => {
@@ -425,25 +437,33 @@ export const useNavigation = () => {
           .map((item) => item[nameField])
           .indexOf(item[nameField])
 
-        return register(listName, {
-          focus,
-          resolve: () => {
-            resolve?.(item)
-          },
-          neighbors: {
-            up: itemIndex
-              ? `${name} - ${list[itemIndex - 1][nameField]}`
-              : undefined,
-            down:
-              itemIndex < list.length - 1
-                ? `${name} - ${list[itemIndex + 1][nameField]}`
+        const firstDirection = isHorizontal ? 'left' : 'up'
+        const secondDirection = isHorizontal ? 'right' : 'down'
+
+        return register(
+          listName,
+          {
+            focus,
+            resolve: () => {
+              resolve?.(item)
+            },
+            neighbors: {
+              [firstDirection]: itemIndex
+                ? `${name} - ${list[itemIndex - 1][nameField]}`
                 : undefined,
+              [secondDirection]:
+                itemIndex < list.length - 1
+                  ? `${name} - ${list[itemIndex + 1][nameField]}`
+                  : undefined,
+            },
+            focusCondition,
+            withFocus,
+            focusTarget,
+            autoFocus: autoFocus ? list.indexOf(item) === 0 : false,
           },
-          focusCondition,
-          withFocus,
-          focusTarget,
-          autoFocus: autoFocus ? list.indexOf(item) === 0 : false,
-        })
+          typeof styles === 'function' ? styles(item).focus : styles?.focus,
+          typeof styles === 'function' ? styles(item).basic : styles?.basic,
+        )
       },
     }
   }

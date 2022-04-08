@@ -1,16 +1,18 @@
 import { css, Theme } from '@emotion/react'
-import chroma from 'chroma-js'
 import styled from '@emotion/styled'
-import { isPressing, Keys } from '@hedvig-ui'
 import React, { useState } from 'react'
 import { DashboardNumbers } from 'types/generated/graphql'
 import { Link } from 'react-router-dom'
-import { useTemplateClaims } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
+import {
+  ClaimFilterTemplate,
+  useTemplateClaims,
+} from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
 import { FilteredMetric } from 'portals/hope/features/claims/claim-templates/FilteredMetric'
 import { Plus } from 'react-bootstrap-icons'
 import { useHistory } from 'react-router'
 import { CreateFilterModal } from '../claims/claim-templates/CreateFilterModal'
 import { lightTheme, useNavigation } from '@hedvig-ui'
+import chroma from 'chroma-js'
 
 const MetricsWrapper = styled.div`
   display: flex;
@@ -55,8 +57,6 @@ const AddMetricCard = styled.div`
   margin-right: 1rem;
   margin-bottom: 1rem;
   padding: 15px 0;
-
-  border: 2px dotted ${({ theme }) => theme.border};
 
   & svg {
     width: 2em;
@@ -104,7 +104,7 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
   const [createFilter, setCreateFilter] = useState(false)
 
   const history = useHistory()
-  const { register } = useNavigation()
+  const { registerList } = useNavigation()
 
   const {
     templateFilters,
@@ -113,120 +113,96 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
     removeTemplate,
   } = useTemplateClaims()
 
+  interface MetricListType {
+    name: string
+    number?: number
+    template?: ClaimFilterTemplate
+    link: string
+    addTemplate?: boolean
+  }
+
+  const templatesMetrics: MetricListType[] = templateFilters
+    ? templateFilters.map((template) => ({
+        name: template.name,
+        link: `/claims/list/1?template=${template.id}`,
+        template: template,
+      }))
+    : []
+
+  const MetricsList: MetricListType[] = [
+    {
+      name: 'claims',
+      number: dashboardNumbers?.numberOfClaims || 0,
+      link: '/claims/list/1',
+    },
+    {
+      name: 'questions',
+      number: dashboardNumbers?.numberOfQuestions || 0,
+      link: '/questions',
+    },
+    ...templatesMetrics,
+    {
+      name: 'add-template',
+      link: '',
+      addTemplate: true,
+    },
+  ]
+
+  const { registerItem } = registerList({
+    list: MetricsList,
+    name: 'MetricList',
+    nameField: 'name',
+    autoFocus: true,
+    resolve: (item) =>
+      !item.addTemplate && item.link
+        ? history.push(item.link)
+        : setCreateFilter(true),
+    isHorizontal: true,
+    styles: (item) => {
+      return {
+        basic: item.addTemplate
+          ? {
+              border: `2px dotted ${lightTheme.border}`,
+            }
+          : {},
+        focus: !item.addTemplate
+          ? {
+              background: chroma(lightTheme.accent).brighten(0.8).hex(),
+            }
+          : {},
+      }
+    },
+  })
+
   return (
     <>
       <MetricsWrapper>
-        <Metric
-          to="/claims/list/1"
-          {...register(
-            'ClaimsMetric',
-            {
-              autoFocus: true,
-              resolve: () => {
-                history.push('/claims/list/1')
-              },
-              neighbors: {
-                right: 'QuestionsMetric',
-              },
-            },
-            {
-              background: chroma(lightTheme.accent).brighten(0.8).hex(),
-            },
-          )}
-        >
-          <MetricNumber>{dashboardNumbers?.numberOfClaims || 0}</MetricNumber>
-          <MetricName>claims</MetricName>
-        </Metric>
-
-        <Metric
-          to="/questions"
-          {...register(
-            'QuestionsMetric',
-            {
-              resolve: () => {
-                history.push('/questions')
-              },
-              neighbors: {
-                left: 'ClaimsMetric',
-                right: templateFilters.length
-                  ? templateFilters[0].name
-                  : 'Add Template',
-              },
-            },
-            {
-              background: chroma(lightTheme.accent).brighten(0.8).hex(),
-            },
-          )}
-        >
-          <MetricNumber>
-            {dashboardNumbers?.numberOfQuestions || 0}
-          </MetricNumber>
-          <MetricName>questions</MetricName>
-        </Metric>
-
-        {templateFilters.map((template, index) => {
-          const registeredTemplate = register(
-            template.name,
-            {
-              resolve: () => {
-                history.push(`/claims/list/1?template=${template.id}`)
-              },
-              neighbors: {
-                left: index
-                  ? templateFilters[index - 1].name
-                  : 'QuestionsMetric',
-                right:
-                  index < templateFilters.length - 1
-                    ? templateFilters[index + 1].name
-                    : 'Add Template',
-              },
-            },
-            {
-              background: chroma(lightTheme.accent).brighten(0.8).hex(),
-            },
-          )
-
-          return (
+        {MetricsList.map((metric) =>
+          !metric.template && !metric.addTemplate ? (
+            <Metric to={metric.link} {...registerItem(metric)}>
+              <MetricNumber>{metric.number}</MetricNumber>
+              <MetricName>{metric.name}</MetricName>
+            </Metric>
+          ) : metric.template && !metric.addTemplate ? (
             <FilteredMetric
               onCreate={createTemplate}
               onRemove={removeTemplate}
               onEdit={editTemplateWithName}
-              key={template.id}
-              template={template}
-              style={{
-                ...registeredTemplate.style,
-              }}
+              key={metric.template.id}
+              template={metric.template}
+              {...registerItem(metric)}
             />
-          )
-        })}
-
-        <AddMetricCard
-          {...register(
-            'Add Template',
-            {
-              resolve: () => {
-                setCreateFilter(true)
-              },
-              neighbors: {
-                left: templateFilters.length
-                  ? templateFilters[templateFilters.length - 1].name
-                  : 'QuestionsMetric',
-              },
-            },
-            {},
-            { border: `2px dotted ${lightTheme.border}` },
-          )}
-          tabIndex={0}
-          onClick={() => setCreateFilter(true)}
-          onKeyDown={(e) => {
-            if (isPressing(e, Keys.Enter)) {
-              setCreateFilter(true)
-            }
-          }}
-        >
-          <Plus />
-          <span>Filtered Claim Template</span>
-        </AddMetricCard>
+          ) : (
+            <AddMetricCard
+              {...registerItem(metric)}
+              tabIndex={0}
+              onClick={() => setCreateFilter(true)}
+            >
+              <Plus />
+              <span>Filtered Claim Template</span>
+            </AddMetricCard>
+          ),
+        )}
       </MetricsWrapper>
       <CreateFilterModal
         onClose={() => setCreateFilter(false)}
