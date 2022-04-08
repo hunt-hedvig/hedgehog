@@ -5,7 +5,7 @@ import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage
 import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { ClaimTemplateFilters } from 'portals/hope/features/claims/claim-templates/components/ClaimTemplateFilters'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 
 const ClaimFilters = styled(ClaimTemplateFilters)`
   display: grid;

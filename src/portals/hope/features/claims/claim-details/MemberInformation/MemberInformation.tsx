@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom'
 import { useGetMemberInfoQuery } from 'types/generated/graphql'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 
 const MemberCard = styled.div`
   display: flex;

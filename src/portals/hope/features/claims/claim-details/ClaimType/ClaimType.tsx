@@ -11,7 +11,7 @@ import {
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 
 gql`
   query ClaimTypeInformation($claimId: ID!) {

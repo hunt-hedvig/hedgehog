@@ -3,7 +3,7 @@ import React from 'react'
 import { FileEarmark, FileEarmarkArrowUpFill } from 'react-bootstrap-icons'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 
 const UploadClaimFileWrapper = styled('div')`
   padding: 1rem 1rem;

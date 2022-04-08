@@ -36,7 +36,7 @@ import {
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { toast } from 'react-hot-toast'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 
 const SelectWrapper = styled.div`
   margin-top: 1em;

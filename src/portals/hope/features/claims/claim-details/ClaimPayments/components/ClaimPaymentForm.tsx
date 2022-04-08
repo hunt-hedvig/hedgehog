@@ -23,7 +23,7 @@ import {
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 import gql from 'graphql-tag'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 import { useClaimStatus } from '../../ClaimInformation/components/ClaimStatusDropdown'
 
 const areSwishPayoutsEnabled = () => {

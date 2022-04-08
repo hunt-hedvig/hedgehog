@@ -17,7 +17,7 @@ import {
   useAnswerQuestionMutation,
   useMarkQuestionAsResolvedMutation,
 } from 'types/generated/graphql'
-import { usePlatform } from '@hedvig-ui/hooks/use-platform'
+import { usePlatform } from '@hedvig-ui'
 
 const SpacingStyled = styled(Spacing)`
   & .form__field {
