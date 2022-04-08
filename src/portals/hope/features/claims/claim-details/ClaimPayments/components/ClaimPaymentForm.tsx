@@ -146,8 +146,11 @@ export const ClaimPaymentForm: React.FC<{
 
   useEffect(() => {
     if (selectedPayment) {
-      form.setValue('amount', selectedPayment.amount)
-      form.setValue('deductible', selectedPayment.deductible)
+      form.setValue('amount', selectedPayment.amount.amount.split('.')[0])
+      form.setValue(
+        'deductible',
+        selectedPayment.deductible.amount.split('.')[0],
+      )
       form.setValue('note', selectedPayment.note)
       setIsExGratia(selectedPayment.exGratia)
       setDate(selectedPayment.paidAt)
