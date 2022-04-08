@@ -392,7 +392,9 @@ export const ClaimPaymentForm: React.FC<{
           )}
 
         <div>
-          <SubmitButton>Create payment</SubmitButton>
+          <SubmitButton>
+            {selectedPayment ? 'Correct payment' : 'Create payment'}
+          </SubmitButton>
         </div>
 
         {member?.contractMarketInfo && (
