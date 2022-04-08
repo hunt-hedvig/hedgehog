@@ -16,7 +16,11 @@ import {
   FieldValues,
   SubmitHandler,
 } from 'react-hook-form'
-import { Form, FormInput, FormSelect } from '@hedvig-ui/Form/testForm'
+import {
+  TestForm as Form,
+  TestFormInput as FormInput,
+  TestFormSelect as FormSelect,
+} from '@hedvig-ui'
 
 const areSwishPayoutsEnabled = () => {
   return (

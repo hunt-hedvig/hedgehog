@@ -61,6 +61,11 @@ export {
   SubmitButton,
 } from './Form/form'
 export {
+  Form as TestForm,
+  FormSelect as TestFormSelect,
+  FormInput as TestFormInput,
+} from './Form/testForm'
+export {
   InfoContainer,
   InfoRow,
   InfoSection,
