@@ -37,7 +37,6 @@ interface PaymentConfirmationModalProps {
   date: string | null
   claimId: string
   confirmSuccess: () => void
-  clearForm: () => void
   visible: boolean
 }
 
@@ -51,7 +50,6 @@ export const PaymentConfirmationModal: React.FC<
   isOverridden,
   claim,
   date,
-  clearForm,
   claimId,
   confirmSuccess,
   visible,
@@ -152,7 +150,6 @@ export const PaymentConfirmationModal: React.FC<
       style={{ padding: '1rem', width: 500 }}
       onClose={() => {
         onClose()
-        clearForm()
       }}
     >
       {!identified && market === Market.Norway && (
@@ -166,10 +163,10 @@ export const PaymentConfirmationModal: React.FC<
       <form onSubmit={handleSubmit(submitHandler)}>
         <Input
           autoFocus
-          {...register('confirmation', { required: true })}
+          {...register('confirmation', { required: 'This field is required' })}
           name="confirmation"
           placeholder="Amount"
-          error={errors.confirmation?.type === 'required'}
+          errors={errors}
         />
         <ButtonsGroup style={{ marginTop: '1em' }}>
           <Button disabled={watch('confirmation') !== amount} type="submit">
