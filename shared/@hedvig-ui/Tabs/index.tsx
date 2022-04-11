@@ -8,6 +8,7 @@ import {
   useKeyIsPressed,
 } from '../hooks/keyboard/use-key-is-pressed'
 import { useNavigation } from '../hooks/navigation/use-navigation'
+import { lightTheme } from '../themes'
 
 const TabStyled = styled.li<{ active?: boolean }>`
   transition: all 0.3s;
@@ -122,29 +123,43 @@ const TabsWrapper = styled.ul<{ tabCount: number }>`
 
 export interface TabsProps extends React.HTMLAttributes<HTMLUListElement> {
   list: TabProps[]
+  withMetaKey?: boolean
 }
 
-export const Tabs: React.FC<TabsProps> = ({ list, ...props }) => {
+export const Tabs: React.FC<TabsProps> = ({ list, withMetaKey, ...props }) => {
   const { register } = useNavigation()
 
   return (
     <TabsWrapper tabCount={list.length} {...props}>
       {list.map((tab, index) => {
-        const tabNavigation = register(`Tab - ${tab.title}`, {
-          // The active tab is not updated after action
-          // focus: tab.active ? Keys.T : undefined,
-          focus: index === 0 ? Keys.T : undefined,
-          resolve: () => {
-            tab.action()
+        const tabNavigation = register(
+          `Tab - ${tab.title}`,
+          {
+            // The active tab is not updated after action
+            // focus: tab.active ? Keys.T : undefined,
+            focus: Keys.T,
+            resolve: () => {
+              tab.action()
+            },
+            neighbors: {
+              left: index ? `Tab - ${list[index - 1].title}` : undefined,
+              right:
+                index < list.length - 1
+                  ? `Tab - ${list[index + 1].title}`
+                  : undefined,
+            },
+            metaKey: withMetaKey ? 'shiftKey' : undefined,
           },
-          neighbors: {
-            left: index ? `Tab - ${list[index - 1].title}` : undefined,
-            right:
-              index < list.length - 1
-                ? `Tab - ${list[index + 1].title}`
-                : undefined,
+          {
+            border: `1px solid ${lightTheme.accent}`,
           },
-        })
+          {
+            borderWidth: '1px',
+            borderBottom: `1px solid ${
+              tab.active ? lightTheme.accent : lightTheme.accentLight
+            }`,
+          },
+        )
 
         return <Tab key={tab.title} {...tab} {...tabNavigation} />
       })}

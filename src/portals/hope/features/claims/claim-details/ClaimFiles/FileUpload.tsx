@@ -3,6 +3,7 @@ import React from 'react'
 import { FileEarmark, FileEarmarkArrowUpFill } from 'react-bootstrap-icons'
 import Dropzone from 'react-dropzone'
 import { toast } from 'react-hot-toast'
+import { useNavigation } from '@hedvig-ui'
 
 const UploadClaimFileWrapper = styled('div')`
   padding: 1rem 1rem;
@@ -36,6 +37,8 @@ export const FileUpload: React.FC<{
   memberId: string
   onUpload: () => void
 }> = ({ claimId, memberId, onUpload }) => {
+  const { register } = useNavigation()
+
   const handleDrop = (acceptedFiles: ReadonlyArray<File>) => {
     const claimFiles = new FormData()
 
@@ -65,7 +68,7 @@ export const FileUpload: React.FC<{
       <FileUploadContainer>
         <Dropzone onDrop={handleDrop}>
           {({ getRootProps, getInputProps, isDragActive }) => (
-            <Button {...getRootProps()}>
+            <Button {...getRootProps()} {...register('Claim File Input')}>
               <div style={{ width: '100%' }}>
                 <div style={{ fontSize: '4.0em' }}>
                   {isDragActive ? <FileEarmarkArrowUpFill /> : <FileEarmark />}

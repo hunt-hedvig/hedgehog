@@ -53,7 +53,10 @@ const useClaimDatePicker = (claimId: string): UseClaimDatePickerResult => {
   return { setDate, date: data?.claim?.dateOfOccurrence ?? null }
 }
 
-export const ClaimDatePicker: React.FC<{ claimId: string }> = ({ claimId }) => {
+export const ClaimDatePicker: React.FC<{ claimId: string }> = ({
+  claimId,
+  ...props
+}) => {
   const { setDate, date } = useClaimDatePicker(claimId)
 
   return (
@@ -64,6 +67,7 @@ export const ClaimDatePicker: React.FC<{ claimId: string }> = ({ claimId }) => {
         setDate(newDate)
       }}
       placeholder="When did it happen?"
+      {...props}
     />
   )
 }

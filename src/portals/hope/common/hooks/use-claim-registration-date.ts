@@ -10,10 +10,11 @@ gql`
   }
 `
 
-export const useClaimRegistrationDate = (claimId: string) => {
+export const useClaimRegistrationDate = (claimId: string | null) => {
   const { data } = useClaimRegistrationDateQuery({
-    variables: { claimId },
+    variables: { claimId: claimId ?? '' },
     fetchPolicy: 'cache-first',
+    skip: !claimId,
   })
 
   return data?.claim?.registrationDate

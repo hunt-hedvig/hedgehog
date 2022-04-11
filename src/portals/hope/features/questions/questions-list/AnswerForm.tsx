@@ -1,22 +1,23 @@
 import styled from '@emotion/styled'
 import {
+  Button,
   Checkbox,
   FadeIn,
-  Form,
-  FormTextArea,
+  isPressing,
   Shadowed,
   Spacing,
-  SubmitButton,
+  TextArea,
+  Keys,
+  useKeyIsPressed,
 } from '@hedvig-ui'
-import { Keys, useKeyIsPressed } from '@hedvig-ui'
-import React, { useEffect } from 'react'
-import { FieldValues, FormProvider, useForm } from 'react-hook-form'
+import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   GetQuestionsGroupsDocument,
   useAnswerQuestionMutation,
   useMarkQuestionAsResolvedMutation,
 } from 'types/generated/graphql'
+import { usePlatform } from '@hedvig-ui'
 
 const SpacingStyled = styled(Spacing)`
   & .form__field {
@@ -25,13 +26,13 @@ const SpacingStyled = styled(Spacing)`
 `
 
 const MarkAsResolvedWrapper = styled.div`
-  padding-left: 1rem;
   display: flex;
 `
 
 const SubmitButtonWrapper = styled.div`
   display: flex;
   align-items: flex-end;
+  margin-top: 1rem;
 `
 
 const CheckTip = styled.div`
@@ -48,9 +49,12 @@ export const AnswerForm: React.FC<{
   onDone: () => void
   onError: () => void
   isFocused: boolean
-  isGroupFocused: boolean
-}> = ({ memberId, onDone, onError, isGroupFocused, isFocused }) => {
-  const form = useForm()
+}> = ({ memberId, onDone, onError, isFocused }) => {
+  const [answer, setAnswer] = useState<string>()
+
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
+
+  const { isMetaKey } = usePlatform()
   const isEnterPressed = useKeyIsPressed(Keys.Enter)
   const isCommandPressed = useKeyIsPressed(Keys.Command)
 
@@ -60,18 +64,19 @@ export const AnswerForm: React.FC<{
   const [markQuestionAsResolved, { loading: loadingMarkQuestionAsResolved }] =
     useMarkQuestionAsResolvedMutation()
 
-  const loading =
-    loadingAnswerQuestion ||
-    loadingMarkQuestionAsResolved ||
-    form.formState.isSubmitting
+  const loading = loadingAnswerQuestion || loadingMarkQuestionAsResolved
 
-  const onSubmit = (data: FieldValues) => {
+  const onSubmit = () => {
+    if (!answer) {
+      return
+    }
+
     onDone()
     toast.promise(
       answerQuestion({
         variables: {
           memberId,
-          answer: data.answer.trim(),
+          answer,
         },
         refetchQueries: [
           {
@@ -115,35 +120,37 @@ export const AnswerForm: React.FC<{
   }
 
   useEffect(() => {
-    if (isEnterPressed && isCommandPressed && isGroupFocused && !isFocused) {
-      handleMarkAsResolved()
+    if (isFocused) {
+      setTimeout(() => {
+        textAreaRef.current?.focus()
+      })
+    } else {
+      textAreaRef.current?.blur()
     }
-    if (isEnterPressed && isCommandPressed && isFocused) {
-      onSubmit(form.getValues())
+  }, [isFocused])
+
+  useEffect(() => {
+    if (isEnterPressed && isCommandPressed && !isFocused) {
+      handleMarkAsResolved()
     }
   }, [isEnterPressed, isCommandPressed])
 
   return (
     <>
       <SpacingStyled top="small" bottom="small">
-        <FormProvider {...form}>
-          <Form onSubmit={onSubmit}>
-            <FormTextArea
-              name="answer"
-              defaultValue=""
-              rules={{
-                required: 'Cannot send an empty message',
-                pattern: {
-                  value: /[^\s]/,
-                  message: 'Cannot send a message without text',
-                },
-              }}
-            />
-            <SubmitButtonWrapper>
-              <SubmitButton>Send</SubmitButton>
-            </SubmitButtonWrapper>
-          </Form>
-        </FormProvider>
+        <TextArea
+          value={answer}
+          onChange={({ currentTarget: { value } }) => setAnswer(value)}
+          ref={textAreaRef}
+          onKeyDown={(e) => {
+            if (isMetaKey(e) && isPressing(e, Keys.Enter) && isFocused) {
+              onSubmit()
+            }
+          }}
+        />
+        <SubmitButtonWrapper>
+          <Button onClick={onSubmit}>Send</Button>
+        </SubmitButtonWrapper>
       </SpacingStyled>
       <MarkAsResolvedWrapper>
         <Checkbox
@@ -152,7 +159,7 @@ export const AnswerForm: React.FC<{
           disabled={loading}
         />
       </MarkAsResolvedWrapper>
-      {isGroupFocused && !isFocused && (
+      {!isFocused && (
         <FadeIn duration={200}>
           <CheckTip>
             Press <Shadowed>Command</Shadowed> + <Shadowed>Enter</Shadowed> to

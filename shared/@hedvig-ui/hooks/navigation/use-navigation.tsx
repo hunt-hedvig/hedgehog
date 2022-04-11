@@ -14,7 +14,10 @@ interface NavigationContextProps {
   cursor: string | null
   setCursor: (focus: string | null) => void
   registry: Record<string, UseNavigationRegisterOptions>
-  setRegistryItem: (name: string, options: UseNavigationRegisterOptions) => void
+  setRegistryItem: (
+    name: string,
+    options?: UseNavigationRegisterOptions,
+  ) => void
   assignRef: (name: string, ref: unknown) => void
   removeRegistryItem: (name: string) => void
 }
@@ -44,27 +47,58 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
     return true
   }
 
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    const autoFocusItem = Object.keys(registry.current).find(
+      (name) => registry.current[name].autoFocus,
+    )
+
+    if (autoFocusItem) {
+      setCursor(autoFocusItem)
+      cursorRef.current = autoFocusItem
+    }
+  }, [pathname])
+
   const handleKeydown = (e: KeyboardEvent) => {
-    if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) {
-      return
+    if (cursorRef.current) {
+      document.getElementById(cursorRef.current)?.blur()
     }
 
     if (!(e.target instanceof Node)) {
       return
     }
 
-    if (e.target?.nodeName === 'INPUT' || e.target?.nodeName === 'TEXTAREA') {
+    if (
+      (e.target?.nodeName === 'INPUT' || e.target?.nodeName === 'TEXTAREA') &&
+      e.code !== 'Escape' &&
+      e.code !== 'Enter'
+    ) {
       return
     }
 
     Object.keys(registry.current).some((name) => {
       const options = registry.current[name]
 
+      if (
+        !options.metaKey &&
+        (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey)
+      ) {
+        return
+      }
+
       if (!options?.focus) {
         return false
       }
 
-      if (isPressing(e, options.focus)) {
+      if (options.metaKey && !e[options.metaKey]) {
+        return
+      }
+
+      if (
+        isPressing(e, options.focus) &&
+        (options.focusCondition ? options.focusCondition(name) : true)
+      ) {
         setCursor(name)
         cursorRef.current = name
         return true
@@ -82,6 +116,14 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     if (isPressing(e, Keys.Escape)) {
+      if (
+        cursorRef.current &&
+        (target.withFocus || target.focusTarget) &&
+        'activeElement' in document
+      ) {
+        ;(document.activeElement as HTMLElement)?.blur()
+      }
+
       if (!target?.parent) {
         setCursor(null)
         cursorRef.current = null
@@ -104,6 +146,13 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     if (isPressing(e, Keys.Enter)) {
+      if (cursorRef.current && (target.withFocus || target.focusTarget)) {
+        const element = document.getElementById(
+          target.focusTarget || cursorRef.current,
+        )
+        element?.focus()
+      }
+
       if (!target?.resolve) {
         return
       }
@@ -122,21 +171,38 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
         ? target.resolve(registry.current[cursorRef.current].ref) ?? null
         : null
 
-      setCursor(nextCursor)
-      cursorRef.current = nextCursor
+      if (nextCursor) {
+        setCursor(nextCursor)
+        cursorRef.current = nextCursor
 
-      return
+        return
+      }
+
+      setCursor(null)
+    }
+
+    const getNextCursor = (target: string | string[] | (() => string)) => {
+      return typeof target === 'function'
+        ? target()
+        : typeof target === 'object' &&
+          target.find((item: string) => registry.current[item])
+        ? (target.find((item: string) => registry.current[item]) as string)
+        : typeof target !== 'object'
+        ? target
+        : ''
     }
 
     if (isPressing(e, Keys.Up) && target?.neighbors?.up) {
       e.preventDefault()
-      const nextCursor =
-        typeof target.neighbors.up === 'function'
-          ? target.neighbors.up()
-          : target.neighbors.up
+
+      const nextCursor: string = getNextCursor(target.neighbors.up)
 
       if (!validate(nextCursor)) {
         return
+      }
+
+      if (target.onNavigation) {
+        target.onNavigation(nextCursor, 'up')
       }
 
       setCursor(nextCursor)
@@ -146,13 +212,14 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (isPressing(e, Keys.Down) && target?.neighbors?.down) {
       e.preventDefault()
-      const nextCursor =
-        typeof target.neighbors.down === 'function'
-          ? target.neighbors.down()
-          : target.neighbors.down
+      const nextCursor: string = getNextCursor(target.neighbors.down)
 
       if (!validate(nextCursor)) {
         return
+      }
+
+      if (target.onNavigation) {
+        target.onNavigation(nextCursor, 'down')
       }
 
       setCursor(nextCursor)
@@ -162,13 +229,14 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (isPressing(e, Keys.Left) && target?.neighbors?.left) {
       e.preventDefault()
-      const nextCursor =
-        typeof target.neighbors.left === 'function'
-          ? target.neighbors.left()
-          : target.neighbors.left
+      const nextCursor: string = getNextCursor(target.neighbors.left)
 
       if (!validate(nextCursor)) {
         return
+      }
+
+      if (target.onNavigation) {
+        target.onNavigation(nextCursor, 'left')
       }
 
       setCursor(nextCursor)
@@ -178,13 +246,14 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (isPressing(e, Keys.Right) && target?.neighbors?.right) {
       e.preventDefault()
-      const nextCursor =
-        typeof target.neighbors.right === 'function'
-          ? target.neighbors.right()
-          : target.neighbors.right
+      const nextCursor: string = getNextCursor(target.neighbors.right)
 
       if (!validate(nextCursor)) {
         return
+      }
+
+      if (target.onNavigation) {
+        target.onNavigation(nextCursor, 'right')
       }
 
       setCursor(nextCursor)
@@ -207,9 +276,11 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleSetRegistryItem = (
     name: string,
-    options: UseNavigationRegisterOptions,
+    options?: UseNavigationRegisterOptions,
   ) => {
-    registry.current[name] = options
+    if (options && Object.keys(options).length !== 0) {
+      registry.current[name] = options
+    }
   }
 
   const removeRegistryItem = (name: string) => {
@@ -239,19 +310,27 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 }
 
 interface NodeNavigationDirections {
-  up?: string | (() => string)
-  down?: string | (() => string)
-  left?: string | (() => string)
-  right?: string | (() => string)
+  up?: string | string[] | (() => string)
+  down?: string | string[] | (() => string)
+  left?: string | string[] | (() => string)
+  right?: string | string[] | (() => string)
 }
 
 interface UseNavigationRegisterOptions {
   autoFocus?: boolean
+  onNavigation?: (
+    nextCursor: string,
+    direction: 'up' | 'down' | 'left' | 'right',
+  ) => void
   focus?: Key
+  metaKey?: 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey'
   resolve?: string | ((ref: unknown) => string | void)
   parent?: string | ((ref: unknown) => string)
   neighbors?: NodeNavigationDirections
   ref?: unknown
+  focusCondition?: (item: string) => boolean
+  withFocus?: boolean
+  focusTarget?: string
 }
 
 export const useNavigation = () => {
@@ -263,21 +342,19 @@ export const useNavigation = () => {
     removeRegistryItem,
     assignRef,
   } = useContext(NavigationContext)
-  const localItems = useRef<Record<string, UseNavigationRegisterOptions>>({})
 
-  const location = useLocation()
+  const localItems = useRef<Record<string, UseNavigationRegisterOptions>>({})
 
   const registerItem = (
     name: string,
-    options: UseNavigationRegisterOptions,
+    options?: UseNavigationRegisterOptions,
   ) => {
     setRegistryItem(name, options)
-    localItems.current[name] = options
-  }
 
-  useEffect(() => {
-    setCursor(null)
-  }, [location])
+    if (options && Object.keys(options).length !== 0) {
+      localItems.current[name] = options
+    }
+  }
 
   useEffect(() => {
     if (cursor) {
@@ -289,7 +366,7 @@ export const useNavigation = () => {
         setCursor(name)
       }
     })
-  }, [cursor, localItems.current, location])
+  }, [cursor, localItems.current])
 
   const itemExists = (name: string) => !!registry[name]
 
@@ -302,34 +379,120 @@ export const useNavigation = () => {
     }
   }, [])
 
-  return {
-    register: (name: string, options: UseNavigationRegisterOptions) => {
-      if (!itemExists(name)) {
-        registerItem(name, options)
-      }
+  const register = (
+    name: string,
+    options?: UseNavigationRegisterOptions,
+    activeStyle?: React.CSSProperties,
+    style?: React.CSSProperties,
+  ) => {
+    if (!itemExists(name)) {
+      registerItem(name, options)
+    }
 
-      if (cursor !== name) {
-        return {}
-      }
-
+    if (cursor !== name) {
       return {
         style: {
-          border: `2px solid ${chroma(lightTheme.accent).brighten(1).hex()}`,
+          border: '2px solid transparent',
+          ...style,
         },
-        // eslint-disable-next-line
-        ref: (ref: any) => {
-          assignRef(name, ref)
-
-          ref?.scrollIntoView({
-            inline: 'center',
-            block: 'center',
-            behavior: 'smooth',
-          })
-        },
+        id: name,
       }
-    },
-    focus: (name: string) => setCursor(name),
-    cursor,
-    setCursor,
+    }
+
+    return {
+      style: {
+        border: `2px solid ${chroma(lightTheme.accent).brighten(1).hex()}`,
+        ...activeStyle,
+      },
+      // eslint-disable-next-line
+      ref: (ref: any) => {
+        assignRef(name, ref)
+
+        ref?.focus()
+        ref?.scrollIntoView({
+          inline: 'center',
+          block: 'center',
+          behavior: 'smooth',
+        })
+      },
+      id: name,
+    }
+  }
+
+  const registerList = <T,>({
+    list,
+    name,
+    nameField,
+    focus,
+    resolve,
+    focusCondition,
+    withFocus,
+    focusTarget,
+    autoFocus,
+    isHorizontal,
+    styles,
+  }: {
+    list: T[]
+    name: string
+    nameField: keyof T
+    focus?: Key
+    resolve?: (item: T) => void
+    focusCondition?: (itemName: string) => boolean
+    withFocus?: boolean
+    focusTarget?: string
+    autoFocus?: boolean
+    isHorizontal?: boolean
+    styles?:
+      | {
+          focus?: React.CSSProperties
+          basic?: React.CSSProperties
+        }
+      | ((item: T) => {
+          focus?: React.CSSProperties
+          basic?: React.CSSProperties
+        })
+  }) => {
+    return {
+      registerItem: (item: T) => {
+        const listName = `${name} - ${item[nameField]}`
+
+        const itemIndex = list
+          .map((item) => item[nameField])
+          .indexOf(item[nameField])
+
+        const firstDirection = isHorizontal ? 'left' : 'up'
+        const secondDirection = isHorizontal ? 'right' : 'down'
+
+        return register(
+          listName,
+          {
+            focus,
+            resolve: () => {
+              resolve?.(item)
+            },
+            neighbors: {
+              [firstDirection]: itemIndex
+                ? `${name} - ${list[itemIndex - 1][nameField]}`
+                : undefined,
+              [secondDirection]:
+                itemIndex < list.length - 1
+                  ? `${name} - ${list[itemIndex + 1][nameField]}`
+                  : undefined,
+            },
+            focusCondition,
+            withFocus,
+            focusTarget,
+            autoFocus: autoFocus ? list.indexOf(item) === 0 : false,
+          },
+          typeof styles === 'function' ? styles(item).focus : styles?.focus,
+          typeof styles === 'function' ? styles(item).basic : styles?.basic,
+        )
+      },
+    }
+  }
+
+  return {
+    register,
+    registerList,
   }
 }

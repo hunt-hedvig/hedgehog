@@ -125,6 +125,8 @@ export const ClaimPaymentForm: React.FC<{
     }
   }, [exGratia])
 
+  const { register } = useNavigation()
+
   const claim = data?.claim
   const member = data?.claim?.member
 

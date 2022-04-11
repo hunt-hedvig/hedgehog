@@ -65,13 +65,23 @@ interface CreatableSelectProps {
   onChange: (option: SelectOption | null) => void
   noOptionsMessage?: () => string
   options: SelectOption[]
+  style?: React.CSSProperties
 }
 
-export const CreatableDropdown: React.FC<CreatableSelectProps> = (props) => {
+export const CreatableDropdown: React.FC<CreatableSelectProps> = ({
+  style,
+  ...props
+}) => {
   return (
     <Wrapper>
       <CreatableSelect
         {...props}
+        styles={{
+          container: (provided) => ({
+            ...provided,
+            ...style,
+          }),
+        }}
         classNamePrefix="searchable-type-select"
         isSearchable={true}
       />
@@ -81,13 +91,19 @@ export const CreatableDropdown: React.FC<CreatableSelectProps> = (props) => {
 
 export const SearchableDropdown: React.FC<
   Omit<CreatableSelectProps, 'formatCreateLabel' | 'onCreateOption'>
-> = (props) => {
+> = ({ style, ...props }) => {
   return (
     <Wrapper>
       <Select
         {...props}
         classNamePrefix="searchable-type-select"
         isSearchable={true}
+        styles={{
+          container: (provided) => ({
+            ...provided,
+            ...style,
+          }),
+        }}
       />
     </Wrapper>
   )
