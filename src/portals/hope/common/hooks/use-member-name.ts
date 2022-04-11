@@ -11,10 +11,11 @@ gql`
   }
 `
 
-export const useMemberName = (memberId: string) => {
+export const useMemberName = (memberId: string | null) => {
   const { data } = useMemberNameQuery({
-    variables: { memberId },
+    variables: { memberId: memberId ?? '' },
     fetchPolicy: 'cache-first',
+    skip: !memberId,
   })
 
   const firstName = data?.member?.firstName ?? null
