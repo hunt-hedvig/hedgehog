@@ -259,7 +259,11 @@ export const VerticalMenu: React.FC = () => {
         (menuItem) => menuItem.title === itemTitle,
       )?.route
 
-      if (history.location.pathname === '/' && route === routes.dashborad) {
+      if (
+        (history.location.pathname === '/' ||
+          history.location.pathname === '/profile') &&
+        route === routes.dashborad
+      ) {
         return true
       }
 

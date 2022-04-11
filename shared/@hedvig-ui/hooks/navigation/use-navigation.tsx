@@ -8,6 +8,7 @@ import React, {
 } from 'react'
 import { lightTheme } from '@hedvig-ui'
 import chroma from 'chroma-js'
+import { useLocation } from 'react-router'
 
 interface NavigationContextProps {
   cursor: string | null
@@ -46,7 +47,24 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
     return true
   }
 
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    const autoFocusItem = Object.keys(registry.current).find(
+      (name) => registry.current[name].autoFocus,
+    )
+
+    if (autoFocusItem) {
+      setCursor(autoFocusItem)
+      cursorRef.current = autoFocusItem
+    }
+  }, [pathname])
+
   const handleKeydown = (e: KeyboardEvent) => {
+    if (cursorRef.current) {
+      document.getElementById(cursorRef.current)?.blur()
+    }
+
     if (!(e.target instanceof Node)) {
       return
     }
@@ -153,10 +171,14 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
         ? target.resolve(registry.current[cursorRef.current].ref) ?? null
         : null
 
-      setCursor(nextCursor)
-      cursorRef.current = nextCursor
+      if (nextCursor) {
+        setCursor(nextCursor)
+        cursorRef.current = nextCursor
 
-      return
+        return
+      }
+
+      setCursor(null)
     }
 
     const getNextCursor = (target: string | string[] | (() => string)) => {
@@ -386,6 +408,7 @@ export const useNavigation = () => {
       ref: (ref: any) => {
         assignRef(name, ref)
 
+        ref?.focus()
         ref?.scrollIntoView({
           inline: 'center',
           block: 'center',

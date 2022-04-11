@@ -179,7 +179,11 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
       <MetricsWrapper>
         {MetricsList.map((metric) =>
           !metric.template && !metric.addTemplate ? (
-            <Metric to={metric.link} {...registerItem(metric)}>
+            <Metric
+              key={metric.name}
+              to={metric.link}
+              {...registerItem(metric)}
+            >
               <MetricNumber>{metric.number}</MetricNumber>
               <MetricName>{metric.name}</MetricName>
             </Metric>
@@ -195,6 +199,7 @@ export const MetricList: React.FC<MetricListProps> = ({ dashboardNumbers }) => {
           ) : (
             <AddMetricCard
               {...registerItem(metric)}
+              key={metric.name}
               tabIndex={0}
               onClick={() => setCreateFilter(true)}
             >
