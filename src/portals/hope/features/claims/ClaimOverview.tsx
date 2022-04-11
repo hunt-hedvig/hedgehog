@@ -11,11 +11,14 @@ import {
   CardsWrapper,
   FadeIn,
   Flex,
+  HotkeyStyled,
+  Keys,
   LoadingMessage,
   MainHeadline,
   Paragraph,
   Shadowed,
   StandaloneMessage,
+  useNavigation,
 } from '@hedvig-ui'
 import { Prompt } from 'react-router'
 import { ChatPane } from 'portals/hope/features/member/tabs/ChatPane'
@@ -34,6 +37,8 @@ import gql from 'graphql-tag'
 import styled from '@emotion/styled'
 import { ShieldLockFill } from 'react-bootstrap-icons'
 import { usePushMemberHistory } from 'portals/hope/common/hooks/use-push-member-history'
+import { useCommandLine } from '../commands/use-command-line'
+import chroma from 'chroma-js'
 
 const Container = styled.div<{ chat?: boolean }>`
   width: ${({ chat }) =>
@@ -55,6 +60,16 @@ const NoCarrierMessage = styled(StandaloneMessage)`
 const NoCarrierSubtitle = styled(Paragraph)`
   font-size: 0.8em;
   padding-top: 1em;
+`
+
+const Hotkey = styled(HotkeyStyled)`
+  right: 0.5rem;
+  top: 0.5rem;
+  padding: 0.5rem;
+  line-height: 0.5rem;
+
+  background-color: ${({ theme }) =>
+    chroma(theme.accentLighter).brighten(0.4).hex()}};
 `
 
 const RestrictedClaimMessage: React.FC<{ claimId: string }> = ({ claimId }) => {
@@ -120,6 +135,9 @@ export const ClaimOverview: React.FC<{
   const transcriptions = data?.claim?.transcriptions ?? []
   const carrier = data?.claim?.agreement?.carrier
 
+  const { isHintingControl } = useCommandLine()
+  const { register } = useNavigation()
+
   usePushMemberHistory(memberId)
 
   if (error) {
@@ -161,17 +179,68 @@ export const ClaimOverview: React.FC<{
             </CardsWrapper>
           )}
           <CardsWrapper contentWrap="noWrap">
-            <Card span={3}>
+            <Card
+              span={3}
+              {...register(
+                'Claim Card #1',
+                {
+                  focus: Keys.One,
+                  metaKey: 'ctrlKey',
+                  focusTarget: 'Claim Details - MemberId',
+                },
+                {
+                  border: '2px solid blue',
+                },
+                {
+                  border: '2px solid transparent',
+                },
+              )}
+            >
+              {isHintingControl && <Hotkey>1</Hotkey>}
               <MemberInformation
                 claimId={claimId}
                 memberId={memberId}
                 slim={standalone}
               />
             </Card>
-            <Card span={3}>
+            <Card
+              span={3}
+              {...register(
+                'Claim Card #2',
+                {
+                  focus: Keys.Two,
+                  metaKey: 'ctrlKey',
+                  focusTarget: 'Claim Status',
+                },
+                {
+                  border: '2px solid blue',
+                },
+                {
+                  border: '2px solid transparent',
+                },
+              )}
+            >
+              {isHintingControl && <Hotkey>2</Hotkey>}
               <ClaimInformation claimId={claimId} />
             </Card>
-            <Card span={3}>
+            <Card
+              span={3}
+              {...register(
+                'Claim Card #3',
+                {
+                  focus: Keys.Three,
+                  metaKey: 'ctrlKey',
+                  focusTarget: 'Claim Type',
+                },
+                {
+                  border: '2px solid blue',
+                },
+                {
+                  border: '2px solid transparent',
+                },
+              )}
+            >
+              {isHintingControl && <Hotkey>3</Hotkey>}
               <ClaimType claimId={claimId} />
             </Card>
           </CardsWrapper>
@@ -183,7 +252,23 @@ export const ClaimOverview: React.FC<{
             </CardsWrapper>
           )}
           <CardsWrapper contentWrap="noWrap">
-            <Card>
+            <Card
+              {...register(
+                'Claim Card #4',
+                {
+                  focus: Keys.Four,
+                  metaKey: 'ctrlKey',
+                  focusTarget: 'Claim Notes Textarea',
+                },
+                {
+                  border: '2px solid blue',
+                },
+                {
+                  border: '2px solid transparent',
+                },
+              )}
+            >
+              {isHintingControl && <Hotkey>4</Hotkey>}
               <ClaimNotes claimId={claimId} />
             </Card>
           </CardsWrapper>
@@ -205,12 +290,47 @@ export const ClaimOverview: React.FC<{
           ) : (
             <>
               <CardsWrapper contentWrap="noWrap">
-                <Card>
+                <Card
+                  {...register(
+                    'Claim Card #5',
+                    {
+                      focus: Keys.Five,
+                      metaKey: 'ctrlKey',
+
+                      focusTarget: 'Claim Reserve Input',
+                    },
+                    {
+                      border: '2px solid blue',
+                    },
+                    {
+                      border: '2px solid transparent',
+                    },
+                  )}
+                >
+                  {isHintingControl && <Hotkey>5</Hotkey>}
                   <ClaimReserve claimId={claimId} />
                 </Card>
               </CardsWrapper>
-              <CardsWrapper contentWrap="noWrap">
+              <CardsWrapper
+                contentWrap="noWrap"
+                {...register(
+                  'Claim Card #6',
+                  {
+                    focus: Keys.Six,
+                    metaKey: 'ctrlKey',
+
+                    focusTarget: 'Claim Payments Payout',
+                  },
+                  {
+                    border: '2px solid blue',
+                  },
+                  {
+                    border: '2px solid transparent',
+                  },
+                )}
+              >
                 <Card>
+                  {isHintingControl && <Hotkey>6</Hotkey>}
                   <ClaimPayments claimId={claimId} />
                 </Card>
               </CardsWrapper>
@@ -218,7 +338,23 @@ export const ClaimOverview: React.FC<{
           )}
 
           <CardsWrapper contentWrap="noWrap">
-            <Card>
+            <Card
+              {...register(
+                'Claim Card #7',
+                {
+                  focus: Keys.Seven,
+                  metaKey: 'ctrlKey',
+                  focusTarget: 'Claim File Input',
+                },
+                {
+                  border: '2px solid blue',
+                },
+                {
+                  border: '2px solid transparent',
+                },
+              )}
+            >
+              {isHintingControl && <Hotkey>7</Hotkey>}
               <ClaimFileTable claimId={claimId} memberId={memberId} />
             </Card>
           </CardsWrapper>

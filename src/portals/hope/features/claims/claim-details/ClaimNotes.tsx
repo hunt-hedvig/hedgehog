@@ -27,6 +27,7 @@ import formatDate from 'date-fns/format'
 import { useDraft } from '@hedvig-ui'
 import gql from 'graphql-tag'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useNavigation } from '@hedvig-ui'
 
 const ClaimNoteWrapper = styled.div`
   display: flex;
@@ -144,6 +145,8 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
 
   const [textFieldFocused, setTextFieldFocused] = useState(false)
 
+  const { register } = useNavigation()
+
   return (
     <CardContent>
       <CardTitle title="Notes" />
@@ -178,6 +181,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
             setNote('')
           }
         }}
+        {...register('Claim Notes Textarea')}
       />
       <Spacing top="small" />
       <SubNoteWrapper>
