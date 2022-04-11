@@ -187,21 +187,18 @@ export const TopBar = () => {
 
         <div style={{ marginLeft: '1rem' }} />
         <CircleButton
-          id="show_users_online"
           onClick={() => {
             PushUserAction('user_panel', 'open', null, null)
             setShowUsers(true)
           }}
-          style={
-            register('UsersOnlineButton', {
-              resolve: () => {
-                setShowUsers(true)
-              },
-              neighbors: {
-                left: 'NotificationsButton',
-              },
-            }).style
-          }
+          {...register('UsersOnlineButton', {
+            resolve: () => {
+              setShowUsers(true)
+            },
+            neighbors: {
+              left: 'NotificationsButton',
+            },
+          })}
         >
           <PeopleFill />
         </CircleButton>
