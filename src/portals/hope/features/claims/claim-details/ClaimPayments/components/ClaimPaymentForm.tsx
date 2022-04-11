@@ -125,8 +125,6 @@ export const ClaimPaymentForm: React.FC<{
     }
   }, [exGratia])
 
-  const { register } = useNavigation()
-
   const claim = data?.claim
   const member = data?.claim?.member
 
@@ -260,7 +258,7 @@ export const ClaimPaymentForm: React.FC<{
         />
       ) : null}
 
-      <Button type="submit">Create Payment</Button>
+      <Button type="submit">Create payment</Button>
 
       {member?.contractMarketInfo ? (
         <PaymentConfirmationModal
