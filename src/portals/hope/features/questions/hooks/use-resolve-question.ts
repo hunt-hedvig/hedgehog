@@ -4,6 +4,7 @@ import {
   GetQuestionsGroupsQuery,
   useMarkQuestionAsResolvedMutation,
 } from 'types/generated/graphql'
+import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 
 gql`
   mutation MarkQuestionAsResolved($memberId: ID!) {
@@ -14,13 +15,15 @@ gql`
 export const useResolveQuestion = () => {
   const [markAsResolved, { loading }] = useMarkQuestionAsResolvedMutation()
 
-  const resolve = (memberId: string) =>
-    markAsResolved({
+  const resolve = (memberId: string) => {
+    if (!memberId) return
+
+    return markAsResolved({
       variables: { memberId },
       optimisticResponse: {
         markQuestionAsResolved: true,
       },
-      update: (cache) => {
+      update: (cache: ApolloCache<NormalizedCacheObject>) => {
         const cachedData = cache.readQuery({
           query: GetQuestionsGroupsDocument,
         })
@@ -42,6 +45,7 @@ export const useResolveQuestion = () => {
         })
       },
     })
+  }
 
   return {
     loading,
