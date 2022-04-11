@@ -187,7 +187,6 @@ export const TopBar = () => {
 
         <div style={{ marginLeft: '1rem' }} />
         <CircleButton
-          id="show_users_online"
           onClick={() => {
             PushUserAction('user_panel', 'open', null, null)
             setShowUsers(true)
