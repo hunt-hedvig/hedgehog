@@ -119,6 +119,7 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
     width: 1.4rem;
     height: 1.4rem;
     margin-left: 1rem;
+    margin-right: -2.4rem;
   }
 
   :hover {
