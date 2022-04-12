@@ -297,13 +297,15 @@ const TasksPage: Page = () => {
                   </div>
                 ))}
               </TabContainer>
-              <FilterBarItem
-                onClick={() => setShowFilters(true)}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Filters
-              </FilterBarItem>
+              {!memberId && (
+                <FilterBarItem
+                  onClick={() => setShowFilters(true)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Filters
+                </FilterBarItem>
+              )}
             </TopBar>
             {!memberId ? (
               <ListContainer>
