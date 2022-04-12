@@ -1,33 +1,23 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
-import { Flex, useQueryParams, useTitle } from '@hedvig-ui'
+import React, { useState } from 'react'
+import { Flex, useTitle } from '@hedvig-ui'
 import chroma from 'chroma-js'
-import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
-import { QuestionGroup } from 'types/generated/graphql'
-import { parseISO } from 'date-fns'
-import {
-  doMarketFilter,
-  doMemberGroupFilter,
-} from 'portals/hope/features/questions/utils'
-import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { PickedLocale } from 'portals/hope/features/config/constants'
-import { MemberContainer } from '../../features/tasks/components/MemberContainer'
 import { TaskChat } from '../../features/tasks/TaskChat'
 import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
-import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
-import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
 import { useHistory } from 'react-router'
 import { motion } from 'framer-motion'
 import {
   formatLocale,
   useTemplateMessages,
 } from '../../features/template-messages/use-template-messages'
-import formatDate from 'date-fns/format'
-import { ClaimContainer } from 'portals/hope/features/tasks/components/ClaimContainer'
-import { useClaimRegistrationDate } from 'portals/hope/common/hooks/use-claim-registration-date'
 import { TaskListItem } from 'portals/hope/features/tasks/components/TaskListItem'
-import { useMemberName } from 'portals/hope/common/hooks/use-member-name'
+import {
+  useTaskNavigation,
+  useTasks,
+} from 'portals/hope/features/tasks/hooks/use-tasks'
+import { ChevronLeft, X } from 'react-bootstrap-icons'
 
 const TaskNavigationWrapper = styled.div`
   height: 100%;
@@ -36,9 +26,9 @@ const TaskNavigationWrapper = styled.div`
   background-color: white;
 
   min-width: 70%;
+  overflow: hidden;
 
   margin-left: -4rem;
-  overflow: hidden;
 
   display: flex;
   flex-direction: column;
@@ -62,10 +52,40 @@ const TopBar = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid
     ${({ theme }) => chroma(theme.semiStrongForeground).brighten(3.25).hex()};
+`
+
+// noinspection CssInvalidPropertyValue
+const TabContainer = styled.div`
+  display: flex;
   width: 100%;
+
+  overflow-x: overlay;
+
+  ::-webkit-scrollbar {
+    height: 0.5rem;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) =>
+      chroma(theme.semiStrongForeground).alpha(0.2).hex()};
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 `
 
 const TopBarItem = styled.button<{ selected?: boolean }>`
+  display: flex;
+  align-items: center;
+
+  .title {
+    transition: color 200ms;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
   background-color: ${({ theme, selected }) =>
     selected
       ? 'transparent'
@@ -74,17 +94,54 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
   cursor: pointer;
   padding: 2rem 2rem;
 
-  display: flex;
-  align-items: center;
-
   color: ${({ theme, selected }) =>
     selected
       ? undefined
       : chroma(theme.semiStrongForeground).brighten(2).hex()};
 
   transition: color 200ms;
+
+  .back-button {
+    display: flex;
+    align-items: center;
+    color: ${({ theme }) => theme.accent};
+
+    svg {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .close-button {
+    color: ${({ theme }) => theme.accent};
+    transition: background-color 200ms;
+    opacity: 0;
+
+    background-color: ${({ theme }) => chroma(theme.accent).alpha(0.1).hex()};
+
+    border-radius: 50%;
+    width: 1.4rem;
+    height: 1.4rem;
+    margin-left: 1rem;
+  }
+
   :hover {
-    color: ${({ theme }) => chroma(theme.semiStrongForeground).alpha(4).hex()};
+    .title {
+      color: ${({ theme }) =>
+        chroma(theme.semiStrongForeground).alpha(4).hex()};
+    }
+
+    .close-button {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-button {
+      color: ${({ theme }) => chroma(theme.accent).brighten(2).hex()};
+
+      svg {
+        fill: ${({ theme }) => chroma(theme.accent).brighten(2).hex()};
+      }
+    }
   }
 
   .count {
@@ -146,119 +203,43 @@ const Container = styled(Flex)`
 
 const TasksPage: Page = () => {
   const history = useHistory()
-  const queryParams = useQueryParams()
-
-  const memberId = queryParams.get('memberId')
-  const tab = queryParams.get('tab')
-  const claimId = queryParams.get('claimId')
-
-  const { fullName: fullNameByQuery } = useMemberName(memberId)
-
-  const { resolve } = useResolveQuestion()
-  const { numberMemberGroups } = useNumberMemberGroups()
-  const [questionGroups, { loading }] = useQuestionGroups()
-  const { selectedFilters: filters, toggleFilter } = useSelectedFilters()
-
-  const claimRegistrationDate = useClaimRegistrationDate(claimId)
-
   const [showFilters, setShowFilters] = useState(false)
-
-  const [selectedQuestionGroup, setSelectedQuestionGroup] =
-    useState<QuestionGroup | null>(null)
-
   const { setLocale, setMemberId, changeLocaleDisplayed } =
     useTemplateMessages()
+  const {
+    navigate,
+    params: { memberId },
+  } = useTaskNavigation()
 
-  const groups =
-    filters.length > 0
-      ? questionGroups
-          .filter(doMemberGroupFilter(numberMemberGroups)(filters))
-          .filter(doMarketFilter(filters))
-      : questionGroups
+  const {
+    incomingTasks: groups,
+    activeTask,
+    activeTaskMeta: { fullName },
+    selectTask,
+    resolveTask,
+    render,
+    tabs,
+    selectTab,
+    closeTab,
+  } = useTasks({
+    params: { memberId },
+    onResolve: () => history.replace(`/questions`),
+    onSelect: (task) => {
+      if (!task) return
 
-  const groupByRoute = groups.find((group) => group.memberId === memberId)
+      setMemberId(task.memberId)
 
-  useEffect(() => {
-    if (loading) return
-
-    if (groupByRoute) {
-      selectQuestionGroupHandler(groupByRoute)
-
-      return
-    }
-
-    history.replace('/questions')
-    selectQuestionGroupHandler(null)
-  }, [groupByRoute])
-
-  const selectQuestionGroupHandler = (group: QuestionGroup | null) => {
-    setSelectedQuestionGroup(group)
-
-    if (!group) {
-      return
-    }
-
-    setMemberId(group.memberId)
-
-    if (
-      group.pickedLocale &&
-      formatLocale(group.pickedLocale as PickedLocale, true) ===
-        formatLocale(PickedLocale.EnSe, true)
-    ) {
-      changeLocaleDisplayed(group.memberId, true)
-    }
-
-    setLocale((group.pickedLocale || PickedLocale.SvSe) as PickedLocale)
-  }
-
-  const resolveHandler = () => {
-    const activeGroup = selectedQuestionGroup ?? groupByRoute
-
-    if (!activeGroup) return
-
-    const activeGroupIndex = questionGroups.findIndex(
-      (group) => group.memberId === activeGroup?.memberId,
-    )
-
-    if (activeGroupIndex !== -1) {
-      const hasMoreGroups = activeGroupIndex < questionGroups.length - 2
-
-      if (questionGroups.length > 0 && hasMoreGroups) {
-        selectQuestionGroupHandler(questionGroups[activeGroupIndex + 1])
+      if (
+        task.pickedLocale &&
+        formatLocale(task.pickedLocale as PickedLocale, true) ===
+          formatLocale(PickedLocale.EnSe, true)
+      ) {
+        changeLocaleDisplayed(task.memberId, true)
       }
 
-      if (questionGroups.length > 0 && !hasMoreGroups) {
-        selectQuestionGroupHandler(questionGroups[0])
-      }
-    }
-
-    resolve(activeGroup?.memberId ?? '')
-
-    history.replace(`/questions`)
-  }
-
-  const selectMemberHandler = (openClaimId: string | null) => {
-    if (!(selectedQuestionGroup || groupByRoute)) return
-
-    if (!openClaimId) {
-      history.push(
-        `/questions?memberId=${
-          selectedQuestionGroup?.memberId ?? groupByRoute?.memberId
-        }`,
-      )
-    } else {
-      history.push(
-        `/questions?memberId=${
-          selectedQuestionGroup?.memberId ?? groupByRoute?.memberId
-        }&tab=claims&claimId=${openClaimId}`,
-      )
-    }
-  }
-
-  const fullName =
-    selectedQuestionGroup?.firstName && selectedQuestionGroup?.lastName
-      ? `${selectedQuestionGroup.firstName} ${selectedQuestionGroup.lastName}`
-      : fullNameByQuery
+      setLocale((task.pickedLocale || PickedLocale.SvSe) as PickedLocale)
+    },
+  })
 
   const title = memberId
     ? `Questions | ${fullName}`
@@ -272,35 +253,52 @@ const TasksPage: Page = () => {
         <TaskNavigationWrapper>
           <>
             <TopBar>
-              <Flex>
+              {!tabs.length ? (
                 <TopBarItem
                   selected={!memberId}
                   onClick={() => history.push(`/questions`)}
+                  style={{ minWidth: '20rem' }}
                 >
                   Incoming questions
                   <div className="count">{groups.length}</div>
                 </TopBarItem>
-                {memberId && (
-                  <TopBarItem
-                    selected={!claimId}
-                    onClick={() =>
-                      history.push(`/questions?memberId=${memberId}&tab=${tab}`)
-                    }
-                  >
-                    {fullName ?? 'Member'}
-                  </TopBarItem>
-                )}
-                {memberId && claimId && (
-                  <TopBarItem selected={true}>
-                    Claim{' '}
-                    {claimRegistrationDate &&
-                      formatDate(
-                        parseISO(claimRegistrationDate),
-                        'dd MMMM, yyyy',
+              ) : (
+                <TopBarItem
+                  selected={!memberId}
+                  onClick={() => history.push(`/questions`)}
+                >
+                  <div className="back-button">
+                    <ChevronLeft />
+                    Back
+                  </div>
+                </TopBarItem>
+              )}
+              <TabContainer>
+                {tabs.map(({ selected, title, resourceId, type }, index) => (
+                  <div key={title + index}>
+                    <TopBarItem
+                      selected={selected}
+                      onClick={() => selectTab(resourceId)}
+                    >
+                      <div className="title">{title}</div>
+                      {type === 'claim' && (
+                        <motion.div
+                          whileHover={{ scale: 1.15 }}
+                          style={{ display: 'flex', alignItems: 'center' }}
+                        >
+                          <X
+                            onClick={(e) => {
+                              closeTab(resourceId)
+                              e.stopPropagation()
+                            }}
+                            className="close-button"
+                          />
+                        </motion.div>
                       )}
-                  </TopBarItem>
-                )}
-              </Flex>
+                    </TopBarItem>
+                  </div>
+                ))}
+              </TabContainer>
               <FilterBarItem
                 onClick={() => setShowFilters(true)}
                 whileHover={{ scale: 1.1 }}
@@ -309,54 +307,46 @@ const TasksPage: Page = () => {
                 Filters
               </FilterBarItem>
             </TopBar>
-            {memberId && !claimId && (
-              <ListContainer>
-                <MemberContainer
-                  memberId={memberId}
-                  tab={tab ?? 'contracts'}
-                  title={title}
-                  onChangeTab={(newTab) =>
-                    history.replace(
-                      `/questions?memberId=${memberId}&tab=${newTab}`,
-                    )
-                  }
-                  onClickClaim={(claimId: string) =>
-                    history.push(
-                      `/questions?memberId=${memberId}&tab=${tab}&claimId=${claimId}`,
-                    )
-                  }
-                />
-              </ListContainer>
-            )}
-            {claimId && memberId && (
-              <ListContainer>
-                <ClaimContainer claimId={claimId} />
-              </ListContainer>
-            )}
-            {!memberId && !claimId && (
+            {!memberId ? (
               <ListContainer>
                 {groups.map((group) => (
                   <TaskListItem
                     key={group.id}
                     group={group}
-                    onClick={() => selectQuestionGroupHandler(group)}
-                    selected={
-                      group.memberId === selectedQuestionGroup?.memberId
-                    }
+                    onClick={() => selectTask(group)}
+                    selected={group.memberId === activeTask?.memberId}
                   />
                 ))}
               </ListContainer>
+            ) : (
+              <ListContainer>{render()}</ListContainer>
             )}
           </>
         </TaskNavigationWrapper>
         <TaskChatWrapper>
-          {(selectedQuestionGroup || memberId) && (
+          {(activeTask || memberId) && (
             <TaskChat
-              resolvable={!!(selectedQuestionGroup || groupByRoute)}
-              memberId={selectedQuestionGroup?.memberId ?? memberId ?? ''}
+              resolvable={!!activeTask}
+              memberId={activeTask?.memberId || memberId || ''}
               fullName={fullName}
-              onResolve={resolveHandler}
-              onSelectMember={selectMemberHandler}
+              onResolve={() => activeTask && resolveTask(activeTask.memberId)}
+              onSelectMember={(openClaimId) => {
+                if (!activeTask) return
+
+                if (!openClaimId) {
+                  navigate({
+                    memberId: activeTask?.memberId,
+                    active: activeTask?.memberId,
+                  })
+                } else {
+                  navigate({
+                    memberId: activeTask?.memberId,
+                    tab: 'claims',
+                    active: openClaimId,
+                    claimIds: openClaimId,
+                  })
+                }
+              }}
             />
           )}
         </TaskChatWrapper>
@@ -365,8 +355,6 @@ const TasksPage: Page = () => {
       <FilterModal
         visible={showFilters}
         onClose={() => setShowFilters(false)}
-        filters={filters}
-        onToggle={toggleFilter}
       />
     </>
   )

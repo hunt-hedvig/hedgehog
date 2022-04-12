@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { Button, FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
-import { useDraft } from '@hedvig-ui'
 import {
-  GetQuestionsGroupsDocument,
-  useMarkQuestionAsResolvedMutation,
-  useSendMessageMutation,
-} from 'types/generated/graphql'
-import { usePlatform } from '@hedvig-ui'
+  Button,
+  FadeIn,
+  Flex,
+  isPressing,
+  Keys,
+  Paragraph,
+  Shadowed,
+  TextArea,
+  useDraft,
+  usePlatform,
+} from '@hedvig-ui'
+import { useSendMessageMutation } from 'types/generated/graphql'
 import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
 import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
-import { isPressing, Keys } from '@hedvig-ui'
 import { toast } from 'react-hot-toast'
 import { FileText, TextareaResize } from 'react-bootstrap-icons'
 import chroma from 'chroma-js'
+import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
 
 const Container = styled.div`
   width: 100%;
@@ -153,13 +158,7 @@ export const TaskChatInput: React.FC<{
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()
   const { isMetaKey, metaKey } = usePlatform()
-  const [markAsResolved, { loading }] = useMarkQuestionAsResolvedMutation({
-    refetchQueries: [
-      {
-        query: GetQuestionsGroupsDocument,
-      },
-    ],
-  })
+  const { resolve, loading } = useResolveQuestion()
 
   const { hinting, templateHint, onChange, onKeyDown, clearHinting } =
     useTemplatesHinting(message, setMessage, isMetaKey)
@@ -217,22 +216,14 @@ export const TaskChatInput: React.FC<{
       !loading &&
       !message
     ) {
-      toast.promise(
-        markAsResolved({
-          variables: { memberId },
-          optimisticResponse: {
-            markQuestionAsResolved: true,
-          },
-        }),
-        {
-          loading: 'Marking as resolved',
-          success: () => {
-            onResolve()
-            return 'Marked as resolved'
-          },
-          error: 'Could not mark as resolved',
+      toast.promise(resolve(memberId), {
+        loading: 'Marking as resolved',
+        success: () => {
+          onResolve()
+          return 'Marked as resolved'
         },
-      )
+        error: 'Could not mark as resolved',
+      })
     }
   }
 

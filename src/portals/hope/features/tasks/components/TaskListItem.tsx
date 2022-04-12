@@ -1,7 +1,6 @@
 import React from 'react'
 import { Question, QuestionGroup } from 'types/generated/graphql'
 import { useMemberHasOpenClaim } from 'portals/hope/common/hooks/use-member-has-open-claim'
-import { useHistory } from 'react-router'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import {
   getMemberFlag,
@@ -13,6 +12,7 @@ import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import styled from '@emotion/styled'
 import { motion } from 'framer-motion'
 import chroma from 'chroma-js'
+import { useTaskNavigation } from 'portals/hope/features/tasks/hooks/use-tasks'
 
 const getQuestionBody = (question: Question) => {
   try {
@@ -105,8 +105,8 @@ export const TaskListItem: React.FC<{
   onClick: () => void
   selected: boolean
 }> = ({ group, onClick, selected }) => {
+  const { navigate } = useTaskNavigation()
   const openClaim = useMemberHasOpenClaim(group.memberId)
-  const history = useHistory()
   const { numberMemberGroups } = useNumberMemberGroups()
   const previewQuestion = group?.questions?.slice(-1)[0] ?? ''
   const preview = getQuestionBody(previewQuestion)
@@ -139,11 +139,17 @@ export const TaskListItem: React.FC<{
           <div
             onClick={() => {
               if (openClaim) {
-                history.replace(
-                  `/questions?memberId=${group.memberId}&tab=claims&claimId=${openClaim.id}`,
-                )
+                navigate({
+                  memberId: group.memberId,
+                  tab: 'claims',
+                  claimIds: openClaim.id,
+                  active: openClaim.id,
+                })
               } else {
-                history.replace(`/questions?memberId=${group.memberId}`)
+                navigate({
+                  memberId: group.memberId,
+                  active: group.memberId,
+                })
               }
               onClick()
             }}
