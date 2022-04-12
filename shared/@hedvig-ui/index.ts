@@ -14,6 +14,9 @@ import { FlagProp as _FlagProp } from './OrbIndicator/orb-indicator'
 import { SpacingSize as _SpacingSize } from './Spacing/spacing'
 import { TabsProps as _TabsProps } from './Tabs'
 import { TextAreaProps as _TextAreaProps } from './TextArea/text-area'
+import { FadeInProps as _FadeInProps } from './animations/fade-in'
+import { FadeDirection as _FadeDirection } from './animations/fade'
+import { FadeType as _FadeType } from './animations/fade'
 
 export { Flex } from './Flex/flex'
 
@@ -85,7 +88,12 @@ export { TextArea } from './TextArea/text-area'
 export type TextAreaProps = _TextAreaProps
 
 export { FadeIn, withFadeIn } from './animations/fade-in'
+export type FadeInProps = _FadeInProps
+
 export { Fade, useFadeAnimation } from './animations/fade'
+export type FadeDirection = _FadeDirection
+export type FadeType = _FadeType
+
 export {
   LoadingMessage,
   StandaloneMessage,

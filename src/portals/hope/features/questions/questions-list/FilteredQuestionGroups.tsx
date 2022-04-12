@@ -1,23 +1,28 @@
-import { StandaloneMessage, withFadeIn } from '@hedvig-ui'
+import { StandaloneMessage } from '@hedvig-ui'
 import { Keys, useKeyIsPressed } from '@hedvig-ui'
-import { useTitle } from '@hedvig-ui'
+import { useTitle, useNavigation } from '@hedvig-ui'
 import React, { useEffect, useState } from 'react'
 import { QuestionGroup } from 'types/generated/graphql'
-import { QuestionGroupItem, QuestionGroupItemProps } from './QuestionGroupItem'
-
-const FadeInQuestionGroup =
-  withFadeIn<QuestionGroupItemProps>(QuestionGroupItem)
+import { QuestionGroupItem } from './QuestionGroupItem'
 
 export const FilteredQuestionGroups: React.FC<{
   filterQuestionGroups: ReadonlyArray<QuestionGroup>
 }> = ({ filterQuestionGroups }) => {
-  const [focusedItem, setFocusedItem] = useState(1)
-  const [focusedInsideItem, setFocusedInsideItem] = useState(0)
+  const [focusedItem, setFocusedItem] = useState<string | null>(null)
 
-  const isUpPressed = useKeyIsPressed(Keys.Up)
-  const isDownPressed = useKeyIsPressed(Keys.Down)
-  const isEnterPressed = useKeyIsPressed(Keys.Enter)
-  const isCommandPressed = useKeyIsPressed(Keys.Command)
+  const { registerList } = useNavigation()
+
+  const { registerItem } = registerList({
+    list: [...filterQuestionGroups],
+    name: 'Question',
+    nameField: 'memberId',
+    resolve: (item) => {
+      setFocusedItem(item.memberId)
+      return `Question-${item.memberId}`
+    },
+    autoFocus: true,
+  })
+
   const isEscapePressed = useKeyIsPressed(Keys.Escape)
 
   useTitle(
@@ -30,28 +35,8 @@ export const FilteredQuestionGroups: React.FC<{
   )
 
   useEffect(() => {
-    const length = filterQuestionGroups.length
-
-    if (!focusedInsideItem && isDownPressed && focusedItem < length) {
-      setFocusedItem((prev) => prev + 1)
-    } else if (!focusedInsideItem && isUpPressed && focusedItem > 1) {
-      setFocusedItem((prev) => prev - 1)
-    } else if (!focusedInsideItem && isUpPressed && focusedItem === 1) {
-      setFocusedItem(length)
-    } else if (!focusedInsideItem && isDownPressed && focusedItem === length) {
-      setFocusedItem(1)
-    }
-  }, [isUpPressed, isDownPressed])
-
-  useEffect(() => {
-    if (isEnterPressed && !isCommandPressed && !focusedInsideItem) {
-      setFocusedInsideItem(focusedItem)
-    }
-  }, [isEnterPressed])
-
-  useEffect(() => {
-    if (isEscapePressed && focusedInsideItem) {
-      setFocusedInsideItem(0)
+    if (isEscapePressed && focusedItem) {
+      setFocusedItem(null)
     }
   }, [isEscapePressed])
 
@@ -60,12 +45,12 @@ export const FilteredQuestionGroups: React.FC<{
       {filterQuestionGroups.length ? (
         <>
           {filterQuestionGroups.map((questionGroup, index) => (
-            <FadeInQuestionGroup
+            <QuestionGroupItem
               delay={`${index * 100}ms`}
               key={questionGroup.id}
+              isFocused={questionGroup.memberId === focusedItem || false}
               questionGroup={questionGroup}
-              isGroupFocused={index === focusedItem - 1}
-              isFocusedInside={index === focusedInsideItem - 1}
+              {...registerItem(questionGroup)}
             />
           ))}
         </>

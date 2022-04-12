@@ -30,9 +30,6 @@ const authServiceHost = requireNotNullish(
   'auth service host',
 )
 
-// Quick-and-dirty proxy for whether we run staging or not...
-const useAuthAsLogin = process.env.USE_STAGING_SPECIFIC_TOOLS === 'true'
-
 export const config = {
   hedvigOnboardingUrl: requireNotNullish(
     process.env.HEDVIG_ONBOARDING_URL,
@@ -48,9 +45,7 @@ export const config = {
   ),
   gatekeeperHost,
   authServiceHost,
-  loginUrl: useAuthAsLogin
-    ? `${authServiceHost}/login`
-    : `${gatekeeperHost}/sso`,
+  loginUrl: `${authServiceHost}/login`,
   stagingSpecificTools: process.env.USE_STAGING_SPECIFIC_TOOLS === 'true',
   useHelmet: process.env.USE_HELMET === 'true',
   useSecureCookies: process.env.USE_SECURE_COOKIES === 'true',

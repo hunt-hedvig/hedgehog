@@ -1,7 +1,7 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
-import { Flex, useQueryParams } from '@hedvig-ui'
+import { Flex, useQueryParams, useTitle } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
 import { QuestionGroup } from 'types/generated/graphql'
@@ -12,7 +12,6 @@ import {
 } from 'portals/hope/features/questions/utils'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { PickedLocale } from 'portals/hope/features/config/constants'
-import { useTitle } from '@hedvig-ui'
 import { MemberContainer } from '../../features/tasks/components/MemberContainer'
 import { TaskChat } from '../../features/tasks/TaskChat'
 import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
@@ -153,14 +152,14 @@ const TasksPage: Page = () => {
   const tab = queryParams.get('tab')
   const claimId = queryParams.get('claimId')
 
-  const { fullName: fullNameByQuery } = useMemberName(memberId ?? '')
+  const { fullName: fullNameByQuery } = useMemberName(memberId)
 
   const { resolve } = useResolveQuestion()
   const { numberMemberGroups } = useNumberMemberGroups()
   const [questionGroups, { loading }] = useQuestionGroups()
   const { selectedFilters: filters, toggleFilter } = useSelectedFilters()
 
-  const claimRegistrationDate = useClaimRegistrationDate(claimId ?? '')
+  const claimRegistrationDate = useClaimRegistrationDate(claimId)
 
   const [showFilters, setShowFilters] = useState(false)
 

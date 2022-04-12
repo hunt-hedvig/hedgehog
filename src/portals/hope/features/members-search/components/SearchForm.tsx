@@ -16,7 +16,7 @@ import {
   SearchInputGroup,
   SearchTip,
 } from 'portals/hope/features/members-search/styles'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 interface SearchFieldProps {
   onSubmit: (query: string, includeAll: boolean) => void
@@ -53,28 +53,15 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
       setIncludeAll,
       currentResultSize,
       setLuckySearch,
-      membersLength,
-      suggestionsLength,
     },
     forwardRef,
   ) => {
     const [textFieldFocused, setTextFieldFocused] = useState(false)
     const { isMetaKey, metaKey } = usePlatform()
-    const { focus, register, cursor } = useNavigation()
+    const { register } = useNavigation()
 
     const defaultRef = useRef<HTMLInputElement>(null)
     const ref = (forwardRef ?? defaultRef) as React.RefObject<HTMLInputElement>
-
-    useEffect(() => {
-      if (ref.current) {
-        if (cursor === 'Member Search Form') {
-          ref.current.focus()
-          return
-        }
-
-        ref.current.blur()
-      }
-    }, [cursor])
 
     return (
       <form
@@ -88,8 +75,10 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
         <Group>
           <SearchInputGroup>
             <Input
-              style={{ borderRadius: '0.5rem' }}
-              {...register('Member Search Form', { autoFocus: true })}
+              {...register('Member Search Form', {
+                autoFocus: true,
+                withFocus: true,
+              })}
               onChange={({ target: { value } }) => {
                 if (shouldIgnoreInput(value)) {
                   return
@@ -98,7 +87,6 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
               }}
               icon={<SearchIcon muted={!query} />}
               placeholder="Looking for someone...?"
-              id="query"
               value={query}
               loading={loading}
               size="large"
@@ -114,14 +102,6 @@ export const SearchForm = React.forwardRef<HTMLInputElement, SearchFieldProps>(
               }}
               onBlur={() => setTextFieldFocused(false)}
               onKeyDown={(e) => {
-                if (isPressing(e, Keys.Down)) {
-                  if (membersLength) {
-                    focus('Table Row 0')
-                  } else if (suggestionsLength) {
-                    focus('Member Suggestion 1')
-                  }
-                }
-
                 if (
                   isMetaKey(e) &&
                   isPressing(e, Keys.Enter) &&

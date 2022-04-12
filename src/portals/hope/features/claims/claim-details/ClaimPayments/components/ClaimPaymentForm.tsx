@@ -23,6 +23,7 @@ import {
 import { PaymentConfirmationModal } from './PaymentConfirmationModal'
 import gql from 'graphql-tag'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useNavigation } from '@hedvig-ui'
 import { useClaimStatus } from '../../ClaimInformation/components/ClaimStatusDropdown'
 
 const areSwishPayoutsEnabled = () => {
@@ -124,6 +125,8 @@ export const ClaimPaymentForm: React.FC<{
   const [date, setDate] = useState<string | null>(null)
 
   const form = useForm()
+
+  const { register } = useNavigation()
 
   const claim = data?.claim
   const member = data?.claim?.member
@@ -268,6 +271,7 @@ export const ClaimPaymentForm: React.FC<{
     <FormProvider {...form}>
       <Form onSubmit={() => setIsConfirming(true)}>
         <FormInput
+          {...register('Claim Payments Payout')}
           placeholder="Payout amount"
           name="amount"
           defaultValue=""
@@ -300,7 +304,6 @@ export const ClaimPaymentForm: React.FC<{
         <Checkbox
           label="Ex Gratia?"
           name="exGratia"
-          style={{ width: '8rem', marginBottom: '1.5rem' }}
           checked={isExGratia}
           onChange={() => setIsExGratia((prev) => !prev)}
         />

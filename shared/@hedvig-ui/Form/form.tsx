@@ -200,6 +200,7 @@ const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
   defaultValue,
   options,
   placeholder,
+  ...props
 }) => {
   return (
     <Controller
@@ -207,7 +208,7 @@ const FormDropdownComponent: React.FC<FormDropdownProps & FormFieldProps> = ({
       rules={rules}
       defaultValue={defaultValue}
       render={({ onChange, value, onBlur }) => (
-        <Dropdown onBlur={onBlur} placeholder={placeholder}>
+        <Dropdown onBlur={onBlur} placeholder={placeholder} {...props}>
           {options.map((opt) => (
             <DropdownOption
               style={{ fontSize: 14 }}

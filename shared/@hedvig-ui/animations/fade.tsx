@@ -109,5 +109,5 @@ export const Fade: React.FC<
   )
 }
 
-type FadeDirection = 'up' | 'down'
-type FadeType = 'in' | 'out'
+export type FadeDirection = 'up' | 'down'
+export type FadeType = 'in' | 'out'

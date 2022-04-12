@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom'
 import { useGetMemberInfoQuery } from 'types/generated/graphql'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useNavigation } from '@hedvig-ui'
 
 const MemberCard = styled.div`
   display: flex;
@@ -93,6 +94,8 @@ export const MemberInformation: React.FC<{
       )
     : ''
 
+  const { register } = useNavigation()
+
   return (
     <CardContent>
       <Loadable loading={loading}>
@@ -101,7 +104,14 @@ export const MemberInformation: React.FC<{
             <h3>
               {(member?.firstName ?? '') + ' ' + (member?.lastName ?? '')}
             </h3>
-            {!slim && <Link to={`/members/${memberId}`}>{memberId}</Link>}
+            {!slim && (
+              <Link
+                to={`/members/${memberId}`}
+                {...register('Claim Details - MemberId')}
+              >
+                {memberId}
+              </Link>
+            )}
           </div>
           <div>{flag}</div>
         </MemberCard>

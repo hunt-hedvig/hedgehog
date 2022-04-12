@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 import { QuestionGroupInfo } from 'portals/hope/features/questions/questions-list/QuestionGroupInfo'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
+import { FadeIn, FadeInProps } from '@hedvig-ui'
 import { QuestionGroup } from 'types/generated/graphql'
 import { AnswerForm } from './AnswerForm'
 
-const QuestionGroupWrapper = styled.div<{ isVisible: boolean }>`
+const QuestionGroupWrapper = styled(FadeIn)<{ isVisible: boolean }>`
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
   transform: ${({ isVisible }) => (isVisible ? 'scale(1)' : 'scale(0.8)')};
   transition: all 0.8s ease-out;
@@ -26,46 +27,42 @@ const QuestionGroupWrapper = styled.div<{ isVisible: boolean }>`
   }
 `
 
-export interface QuestionGroupItemProps {
+export interface QuestionGroupItemProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    FadeInProps {
   questionGroup: QuestionGroup
-  isGroupFocused: boolean
-  isFocusedInside: boolean
+  isFocused: boolean
 }
 
-export const QuestionGroupItem: React.FC<QuestionGroupItemProps> = ({
-  questionGroup,
-  isGroupFocused,
-  isFocusedInside,
-}) => {
+export const QuestionGroupItem = React.forwardRef<
+  HTMLDivElement,
+  QuestionGroupItemProps
+>(({ questionGroup, isFocused, ...props }, forwardRef) => {
   const [isVisible, setVisible] = React.useState(false)
 
-  const groupRef = useRef<HTMLDivElement>(null)
+  const internalRef = useRef<HTMLDivElement>(null)
 
-  React.useEffect(() => {
+  const ref = forwardRef ?? internalRef
+
+  useEffect(() => {
     setVisible(true)
   }, [])
-
-  React.useEffect(() => {
-    if (isGroupFocused && groupRef.current) {
-      groupRef.current.focus()
-    }
-  }, [isGroupFocused, groupRef])
 
   return (
     <QuestionGroupWrapper
       key={questionGroup.id}
       isVisible={isVisible}
-      ref={groupRef}
+      ref={ref}
       tabIndex={0}
+      {...props}
     >
       <QuestionGroupInfo group={questionGroup} />
       <AnswerForm
         memberId={questionGroup.memberId}
         onDone={() => setVisible(false)}
         onError={() => setVisible(true)}
-        isFocused={isFocusedInside}
-        isGroupFocused={isGroupFocused}
+        isFocused={isFocused}
       />
     </QuestionGroupWrapper>
   )
-}
+})
