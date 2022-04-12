@@ -80,16 +80,18 @@ export const TaskChat: React.FC<{
             </a>
           </div>
         </Flex>
-        <Button
-          disabled={!resolvable}
-          variant="secondary"
-          onClick={(e) => {
-            e.stopPropagation()
-            onResolve()
-          }}
-        >
-          {resolvable ? 'Mark as resolved' : 'Resolved'}
-        </Button>
+        {resolvable && (
+          <Button
+            disabled={!resolvable}
+            variant="secondary"
+            onClick={(e) => {
+              e.stopPropagation()
+              onResolve()
+            }}
+          >
+            Mark as resolved
+          </Button>
+        )}
       </InChatTopNav>
       <div
         style={{
