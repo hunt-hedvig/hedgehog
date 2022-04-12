@@ -86,10 +86,7 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
     overflow: hidden;
   }
 
-  background-color: ${({ theme, selected }) =>
-    selected
-      ? 'transparent'
-      : chroma(theme.semiStrongForeground).alpha(0.05).hex()};
+  background-color: transparent;
   border: none;
   cursor: pointer;
   padding: 2rem 2rem;
