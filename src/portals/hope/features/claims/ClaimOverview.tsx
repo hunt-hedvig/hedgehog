@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRestrictClaim } from 'portals/hope/common/hooks/use-restrict-claim'
 import {
+  ClaimDetailsQuery,
   ClaimState,
   useClaimDetailsQuery,
   useResourceAccessInformationQuery,
@@ -117,6 +118,7 @@ gql`
       trial {
         id
       }
+      registrationDate
     }
   }
 `
@@ -124,12 +126,17 @@ gql`
 export const ClaimOverview: React.FC<{
   claimId: string
   standalone?: boolean
-}> = ({ claimId, standalone = false }) => {
+  onMounted?: (claim: ClaimDetailsQuery['claim']) => void
+}> = ({ claimId, standalone = false, onMounted }) => {
   const { restriction } = useRestrictClaim(claimId)
   const [showEvents, setShowEvents] = useState(false)
   const { data, error } = useClaimDetailsQuery({
     variables: { claimId },
   })
+
+  useEffect(() => {
+    if (data?.claim) onMounted?.(data.claim)
+  }, [data])
 
   const memberId = data?.claim?.member.memberId
   const transcriptions = data?.claim?.transcriptions ?? []

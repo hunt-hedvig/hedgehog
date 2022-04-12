@@ -24,7 +24,6 @@ const ListPage = styled.div`
 
 const QuestionsPage: Page = () => {
   const { selectedFilters, toggleFilter } = useSelectedFilters()
-
   const [questionGroups, { loading }] = useQuestionGroups()
 
   if (loading) {
