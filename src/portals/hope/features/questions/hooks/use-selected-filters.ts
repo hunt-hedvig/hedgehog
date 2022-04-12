@@ -1,7 +1,7 @@
 import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { UserSettings } from 'types/generated/graphql'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Market } from 'portals/hope/features/config/constants'
 import { FilterStateType } from 'portals/hope/features/questions/FilterSelect'
 
@@ -21,6 +21,28 @@ export const useSelectedFilters = () => {
     6: Market.Denmark,
   }
 
+  const applyIntermediateFilter = (filters: number[]) =>
+    filters.filter((filter) => {
+      if (filter >= 4 && filter <= 6) {
+        return userMarkets.includes(intermediateMarketFilterMap[filter])
+      }
+      return true
+    })
+
+  useEffect(() => {
+    const newFilters = [
+      ...(settings.claimStatesFilterQuestions || []),
+      ...(settings.memberGroupsFilterQuestions || []),
+      ...(settings.marketFilterQuestions || []),
+    ]
+
+    const equal =
+      newFilters.every((item) => selectedFilters.includes(item)) &&
+      selectedFilters.every((item) => newFilters.includes(item))
+
+    if (!equal) setSelectedFilters(newFilters)
+  }, [settings])
+
   const toggleFilterHandler = (
     filter: FilterStateType,
     settingField: keyof UserSettings,
@@ -32,26 +54,14 @@ export const useSelectedFilters = () => {
         settingField,
         currentValue?.filter((item: string | number) => item !== filter),
       )
-    } else {
-      updateSetting(settingField, [...(currentValue || []), filter])
+      return
     }
 
-    if (selectedFilters.includes(filter)) {
-      setSelectedFilters(
-        selectedFilters.filter((prevFilter) => filter !== prevFilter),
-      )
-    } else {
-      setSelectedFilters([...selectedFilters, filter])
-    }
+    updateSetting(settingField, [...(currentValue || []), filter])
   }
 
   return {
-    selectedFilters: selectedFilters.filter((filter) => {
-      if (filter >= 4 && filter <= 6) {
-        return userMarkets.includes(intermediateMarketFilterMap[filter])
-      }
-      return true
-    }),
+    selectedFilters: applyIntermediateFilter(selectedFilters),
     toggleFilter: toggleFilterHandler,
   }
 }

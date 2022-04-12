@@ -15,10 +15,8 @@ gql`
 export const useResolveQuestion = () => {
   const [markAsResolved, { loading }] = useMarkQuestionAsResolvedMutation()
 
-  const resolve = (memberId: string) => {
-    if (!memberId) return
-
-    return markAsResolved({
+  const resolve = (memberId: string) =>
+    markAsResolved({
       variables: { memberId },
       optimisticResponse: {
         markQuestionAsResolved: true,
@@ -45,7 +43,6 @@ export const useResolveQuestion = () => {
         })
       },
     })
-  }
 
   return {
     loading,
