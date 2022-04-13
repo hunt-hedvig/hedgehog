@@ -4,7 +4,6 @@ import TagManager from 'react-gtm-module'
 import { Redirect, Route, Switch, useLocation } from 'react-router'
 import ImpersonateMemberPage from './tools/ImpersonateMemberPage'
 import { useFeatureFlag } from 'portals/hope/common/hooks/use-feature-flag'
-import QuestionsPage from 'portals/hope/pages/QuestionsPage'
 import DashboardPage from './DashboardPage'
 import ProfilePage from './settings/ProfilePage'
 import TasksPage from 'portals/hope/pages/tasks/TasksPage'
@@ -76,7 +75,6 @@ export const Routes: React.FC = () => {
         <Route path="/profile" component={ProfilePage} />
         <Route path="/dashborad" component={DashboardPage} />
         <Route path="/questions" component={TasksPage} />
-        <Route path="/tasks" exact component={QuestionsPage} />
         <Route path="/notifications" component={NotificationsPage} />
         <Route path="/search/:category" component={SearchPage} />
         <Route path="/claims/list/:page?" exact component={ClaimsListPage} />
