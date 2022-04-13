@@ -63,6 +63,7 @@ export enum InsuranceType {
   SwedishApartment = 'SWEDISH_APARTMENT',
   SwedishHouse = 'SWEDISH_HOUSE',
   SwedishAccident = 'SWEDISH_ACCIDENT',
+  SwedishCar = 'SWEDISH_CAR',
   NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
   NorwegianTravel = 'NORWEGIAN_TRAVEL',
   NorwegianAccident = 'NORWEGIAN_ACCIDENT',
@@ -79,6 +80,7 @@ export enum QuoteProductType {
   HomeContent = 'HOME_CONTENT',
   Travel = 'TRAVEL',
   Accident = 'ACCIDENT',
+  Car = 'CAR',
 }
 
 export const QuoteProductTypeContractMap: Record<
@@ -104,6 +106,7 @@ export const QuoteProductTypeContractMap: Record<
     InsuranceType.NorwegianTravel,
     InsuranceType.DanishTravel,
   ],
+  [QuoteProductType.Car]: [InsuranceType.SwedishCar],
 }
 
 export const ContractMarketTypes: Record<Market, InsuranceType[]> = {
@@ -111,6 +114,7 @@ export const ContractMarketTypes: Record<Market, InsuranceType[]> = {
     InsuranceType.SwedishHouse,
     InsuranceType.SwedishApartment,
     InsuranceType.SwedishAccident,
+    InsuranceType.SwedishCar,
   ],
   NORWAY: [
     InsuranceType.NorwegianHomeContent,
@@ -133,6 +137,9 @@ export enum TypeOfContract {
   SeApartmentStudentRent = 'SE_APARTMENT_STUDENT_RENT',
   SeAccident = 'SE_ACCIDENT',
   SeAccidentStudent = 'SE_ACCIDENT_STUDENT',
+  SeCarFull = 'SE_CAR_FULL',
+  SeCarHalf = 'SE_CAR_HALF',
+  SeCarTraffic = 'SE_CAR_TRAFFIC',
   NoHomeContentOwn = 'NO_HOME_CONTENT_OWN',
   NoHomeContentRent = 'NO_HOME_CONTENT_RENT',
   NoHomeContentYouthOwn = 'NO_HOME_CONTENT_YOUTH_OWN',
@@ -159,6 +166,9 @@ export const TypeOfContractType: Record<TypeOfContract, InsuranceType> = {
   [TypeOfContract.SeApartmentStudentRent]: InsuranceType.SwedishApartment,
   [TypeOfContract.SeAccident]: InsuranceType.SwedishAccident,
   [TypeOfContract.SeAccidentStudent]: InsuranceType.SwedishAccident,
+  [TypeOfContract.SeCarFull]: InsuranceType.SwedishCar,
+  [TypeOfContract.SeCarHalf]: InsuranceType.SwedishCar,
+  [TypeOfContract.SeCarTraffic]: InsuranceType.SwedishCar,
   [TypeOfContract.NoHomeContentOwn]: InsuranceType.NorwegianHomeContent,
   [TypeOfContract.NoHomeContentRent]: InsuranceType.NorwegianHomeContent,
   [TypeOfContract.NoHomeContentYouthOwn]: InsuranceType.NorwegianHomeContent,
