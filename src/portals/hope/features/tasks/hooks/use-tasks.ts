@@ -133,22 +133,24 @@ export const useTasks = ({
     }
   }
 
-  const resolveTaskHandler = (memberIdToResolve: string) => {
+  const resolveTaskHandler = (memberIdToResolve: string, autoSelect = true) => {
     if (!activeTask) return
 
-    const activeGroupIndex = incomingTasks.findIndex(
-      (group) => group.memberId === activeTask?.memberId,
-    )
+    if (autoSelect) {
+      const activeGroupIndex = incomingTasks.findIndex(
+        (group) => group.memberId === activeTask?.memberId,
+      )
 
-    if (activeGroupIndex !== -1) {
-      const hasMoreGroups = activeGroupIndex < incomingTasks.length - 2
+      if (activeGroupIndex !== -1) {
+        const hasMoreGroups = activeGroupIndex < incomingTasks.length - 2
 
-      if (incomingTasks.length > 0 && hasMoreGroups) {
-        setSelectedTask(incomingTasks[activeGroupIndex + 1])
-      }
+        if (incomingTasks.length > 0 && hasMoreGroups) {
+          setSelectedTask(incomingTasks[activeGroupIndex + 1])
+        }
 
-      if (incomingTasks.length > 0 && !hasMoreGroups) {
-        setSelectedTask(incomingTasks[0])
+        if (incomingTasks.length > 0 && !hasMoreGroups) {
+          setSelectedTask(incomingTasks[0])
+        }
       }
     }
 

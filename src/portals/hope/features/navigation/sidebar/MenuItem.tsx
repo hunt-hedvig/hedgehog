@@ -64,8 +64,8 @@ interface MenuItemProps extends NavLinkProps {
   shouldAlwaysCollapse: boolean
   isCollapsed: boolean
   transparent?: boolean
-  hotkey: string
-  hotkeyHandler: () => void
+  hotkey?: string
+  hotkeyHandler?: () => void
   accent?: boolean
 }
 
@@ -76,8 +76,8 @@ interface ExternalMenuItemProps
   icon: Icon
   shouldAlwaysCollapse: boolean
   isCollapsed: boolean
-  hotkey: string
-  hotkeyHandler: () => void
+  hotkey?: string
+  hotkeyHandler?: () => void
 }
 
 export const MenuItem: React.FC<MenuItemProps> = ({
@@ -95,8 +95,8 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   registerActions([
     {
       label: title,
-      keys: [Keys.Option, Keys[hotkey]],
-      onResolve: hotkeyHandler,
+      keys: hotkey ? [Keys.Option, Keys[hotkey]] : [],
+      onResolve: () => hotkeyHandler?.(),
     },
   ])
 
@@ -127,8 +127,8 @@ export const ExternalMenuItem: React.FC<ExternalMenuItemProps> = ({
   registerActions([
     {
       label: title,
-      keys: [Keys.Option, Keys[hotkey]],
-      onResolve: hotkeyHandler,
+      keys: hotkey ? [Keys.Option, Keys[hotkey]] : [],
+      onResolve: () => hotkeyHandler?.(),
     },
   ])
 

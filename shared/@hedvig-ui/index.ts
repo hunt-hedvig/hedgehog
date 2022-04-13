@@ -175,6 +175,7 @@ export { useTitle } from './hooks/use-title'
 export { useQueryParams } from './hooks/use-query-params'
 export { useClickOutside } from './hooks/use-click-outside'
 export { useKeyboardListener } from './hooks/keyboard/use-keyboard-listener'
+export { useMediaQuery } from './hooks/use-media-query'
 export {
   useKeyIsPressed,
   isPressing,

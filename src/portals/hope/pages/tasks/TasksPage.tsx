@@ -1,7 +1,7 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import { Flex, useTitle } from '@hedvig-ui'
+import { Flex, useMediaQuery, useTitle } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { TaskChat } from '../../features/tasks/TaskChat'
@@ -47,6 +47,16 @@ const TaskChatWrapper = styled.div`
     width: 0;
     display: none;
   }
+
+  @media (max-width: 800px) {
+    position: absolute;
+    top: 4.5rem;
+    left: 0;
+
+    height: calc(100vh - 4.5rem);
+    overflow-y: scroll;
+    background-color: ${({ theme }) => theme.background};
+  }
 `
 
 const TopBar = styled.div`
@@ -58,6 +68,10 @@ const TopBar = styled.div`
 
 const CheckInBar = styled.div`
   padding: 2rem 2rem 2rem 4rem;
+
+  @media (max-width: 800px) {
+    padding: 2rem;
+  }
 
   background-color: ${({ theme }) =>
     chroma(theme.semiStrongForeground).brighten(3.5).hex()};
@@ -200,6 +214,17 @@ const ListContainer = styled(motion.ul)`
     padding: 0;
   }
 `
+const BackButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1002;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4.5rem;
+  padding: 1.5rem;
+`
 
 const Container = styled(Flex)`
   margin-top: -4rem;
@@ -210,6 +235,7 @@ const Container = styled(Flex)`
 `
 
 const TasksPage: Page = () => {
+  const isMobile = useMediaQuery('(max-width: 800px)')
   const history = useHistory()
   const { loading, checkedIn } = useCheckInOut()
   const [showFilters, setShowFilters] = useState(false)
@@ -233,7 +259,11 @@ const TasksPage: Page = () => {
     closeTab,
   } = useTasks({
     params: { memberId },
-    onResolve: () => history.replace(`/questions`),
+    onResolve: () => {
+      if (isMobile) selectTask(null)
+
+      history.replace(`/questions`)
+    },
     onSelect: (task) => {
       if (!task) return
 
@@ -259,19 +289,31 @@ const TasksPage: Page = () => {
 
   return (
     <>
+      {isMobile && activeTask && (
+        <BackButtonContainer
+          onClick={() => {
+            selectTask(null)
+            history.push('/questions')
+          }}
+        >
+          <ChevronLeft />
+        </BackButtonContainer>
+      )}
       <Container>
         <TaskNavigationWrapper fullWidth={!(activeTask || memberId)}>
           <>
             <TopBar>
               {!tabs.length ? (
-                <TopBarItem
-                  selected={!memberId}
-                  onClick={() => history.push(`/questions`)}
-                  style={{ minWidth: '20rem' }}
-                >
-                  Incoming questions
-                  <div className="count">{groups.length}</div>
-                </TopBarItem>
+                <>
+                  <TopBarItem
+                    selected={!memberId}
+                    onClick={() => history.push(`/questions`)}
+                    style={{ minWidth: '16rem', paddingRight: '1rem' }}
+                  >
+                    Incoming questions
+                    <div className="count">{groups.length}</div>
+                  </TopBarItem>
+                </>
               ) : (
                 <TopBarItem
                   selected={!memberId}
@@ -344,10 +386,15 @@ const TasksPage: Page = () => {
         {(activeTask || memberId) && (
           <TaskChatWrapper>
             <TaskChat
+              slim={isMobile}
               resolvable={!!activeTask && checkedIn}
               memberId={activeTask?.memberId || memberId || ''}
               fullName={fullName}
-              onResolve={() => activeTask && resolveTask(activeTask.memberId)}
+              onResolve={() => {
+                if (!activeTask) return
+
+                resolveTask(activeTask.memberId, !isMobile)
+              }}
               onSelectMember={(openClaimId) => {
                 if (!activeTask) return
 

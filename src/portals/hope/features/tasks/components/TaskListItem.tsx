@@ -51,14 +51,28 @@ const ListItem = styled(motion.li)<{ selected?: boolean }>`
 
       background-color: transparent;
     }
+
+    @media (max-width: 800px) {
+      min-width: 1.5rem;
+    }
   }
 
   .flag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 0 2rem;
+    @media (max-width: 800px) {
+      padding: 0 1.5rem;
+    }
   }
 
   .name {
     width: 30%;
+
+    @media (max-width: 800px) {
+      width: 100%;
+    }
     padding-right: 2rem;
 
     white-space: nowrap;
@@ -76,7 +90,7 @@ const ListItem = styled(motion.li)<{ selected?: boolean }>`
   }
 
   .preview {
-    width: 70%;
+    width: 90%;
     color: ${({ theme }) =>
       chroma(theme.semiStrongForeground).brighten(1).hex()};
 
@@ -85,8 +99,27 @@ const ListItem = styled(motion.li)<{ selected?: boolean }>`
     text-overflow: ellipsis;
   }
 
+  .name-preview-container {
+    display: flex;
+    width: 100%;
+
+    @media (max-width: 800px) {
+      flex-direction: column;
+      max-width: 60%;
+    }
+  }
+
   .options {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     width: 10rem;
+    @media (max-width: 800px) {
+      width: 20%;
+      min-width: 5rem;
+      font-size: 0.75rem;
+    }
+
     color: ${({ theme }) =>
       chroma(theme.semiStrongForeground).brighten(1).hex()};
 
@@ -135,34 +168,36 @@ export const TaskListItem: React.FC<{
         <div style={{ backgroundColor: orbColor }} />
       </div>
       <div className="flag">{flag}</div>
-      <span className="name">
-        {getMemberName(group) ? (
-          <div
-            onClick={() => {
-              if (disabled) return
-              if (openClaim) {
-                navigate({
-                  memberId: group.memberId,
-                  tab: 'claims',
-                  claimIds: openClaim.id,
-                  active: openClaim.id,
-                })
-              } else {
-                navigate({
-                  memberId: group.memberId,
-                  active: group.memberId,
-                })
-              }
-              onClick()
-            }}
-          >
-            {getMemberName(group)}
-          </div>
-        ) : (
-          <Placeholder>Name not available</Placeholder>
-        )}
-      </span>
-      <span className="preview">{preview.text}</span>
+      <div className="name-preview-container">
+        <span className="name">
+          {getMemberName(group) ? (
+            <div
+              onClick={() => {
+                if (disabled) return
+                if (openClaim) {
+                  navigate({
+                    memberId: group.memberId,
+                    tab: 'claims',
+                    claimIds: openClaim.id,
+                    active: openClaim.id,
+                  })
+                } else {
+                  navigate({
+                    memberId: group.memberId,
+                    active: group.memberId,
+                  })
+                }
+                onClick()
+              }}
+            >
+              {getMemberName(group)}
+            </div>
+          ) : (
+            <Placeholder>Name not available</Placeholder>
+          )}
+        </span>
+        <span className="preview">{preview.text}</span>
+      </div>
       <div className="options">
         {formatDistanceToNowStrict(parseISO(previewQuestion.timestamp), {
           addSuffix: true,

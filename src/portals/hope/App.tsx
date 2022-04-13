@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
-import { BaseStyle, Flex, Spinner, StandaloneMessage } from '@hedvig-ui'
+import {
+  BaseStyle,
+  Flex,
+  Spinner,
+  StandaloneMessage,
+  useMediaQuery,
+} from '@hedvig-ui'
 import { ConfirmDialogProvider } from '@hedvig-ui'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { CommandLineProvider } from 'portals/hope/features/commands/use-command-line'
@@ -19,6 +25,7 @@ import { hot } from 'react-hot-loader/root'
 import { Toaster } from 'react-hot-toast'
 import { Switch, useHistory } from 'react-router'
 import { NavigationProvider } from '@hedvig-ui'
+import { MobileTopBar } from 'portals/hope/features/navigation/topbar/MobileTopBar'
 
 const Layout = styled(BaseStyle)`
   display: flex;
@@ -60,6 +67,7 @@ const Content = styled(Flex)`
 `
 
 const App: React.FC = () => {
+  const isMobile = useMediaQuery('(max-width: 800px)')
   const history = useHistory()
   const { me, loading } = useAuthenticate()
 
@@ -97,13 +105,12 @@ const App: React.FC = () => {
                     <Layout>
                       <Tracker />
                       <Content>
-                        {!history.location.pathname.startsWith('/login') && (
-                          <VerticalMenu />
-                        )}
+                        {!history.location.pathname.startsWith('/login') &&
+                          !isMobile && <VerticalMenu />}
                         <Main
                           dark={history.location.pathname.startsWith('/login')}
                         >
-                          <TopBar />
+                          {isMobile ? <MobileTopBar /> : <TopBar />}
                           <MainContent>
                             <Switch>
                               <Routes />
