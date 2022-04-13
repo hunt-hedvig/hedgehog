@@ -46,8 +46,8 @@ export const CircleButtonStyles = styled(motion.button)`
   }
 
   & > svg {
-    height: 1rem;
-    width: 1rem;
+    width: 100%;
+
     pointer-events: none;
   }
 
