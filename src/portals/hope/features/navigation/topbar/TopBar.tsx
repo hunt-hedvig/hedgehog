@@ -45,9 +45,9 @@ export const CircleButtonStyles = styled(motion.button)`
     background-color: ${({ theme }) => theme.accentLight};
   }
 
-  & svg {
-    height: 16px;
-    width: 16px;
+  & > svg {
+    height: 1rem;
+    width: 1rem;
     pointer-events: none;
   }
 
