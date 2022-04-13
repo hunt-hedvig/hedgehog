@@ -18,14 +18,16 @@ import {
   useTasks,
 } from 'portals/hope/features/tasks/hooks/use-tasks'
 import { ChevronLeft, X } from 'react-bootstrap-icons'
+import { useCheckInOut } from 'portals/hope/features/tasks/hooks/use-check-in-out'
+import { CheckInMessage } from 'portals/hope/features/tasks/CheckInMessage'
 
-const TaskNavigationWrapper = styled.div`
+const TaskNavigationWrapper = styled.div<{ fullWidth: boolean }>`
   height: 100%;
   box-shadow: 0 0 2rem rgba(0, 0, 0, 0.2);
   clip-path: inset(0px -10rem 0px 0px);
   background-color: white;
 
-  min-width: 70%;
+  min-width: ${({ fullWidth }) => (fullWidth ? 'calc(100% + 4rem)' : '70%')};
   overflow: hidden;
 
   margin-left: -4rem;
@@ -52,6 +54,13 @@ const TopBar = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid
     ${({ theme }) => chroma(theme.semiStrongForeground).brighten(3.25).hex()};
+`
+
+const CheckInBar = styled.div`
+  padding: 2rem 2rem 2rem 4rem;
+
+  background-color: ${({ theme }) =>
+    chroma(theme.semiStrongForeground).brighten(3.5).hex()};
 `
 
 // noinspection CssInvalidPropertyValue
@@ -86,10 +95,7 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
     overflow: hidden;
   }
 
-  background-color: ${({ theme, selected }) =>
-    selected
-      ? 'transparent'
-      : chroma(theme.semiStrongForeground).alpha(0.05).hex()};
+  background-color: transparent;
   border: none;
   cursor: pointer;
   padding: 2rem 2rem;
@@ -122,6 +128,7 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
     width: 1.4rem;
     height: 1.4rem;
     margin-left: 1rem;
+    margin-right: -2.4rem;
   }
 
   :hover {
@@ -183,6 +190,7 @@ const ListContainer = styled(motion.ul)`
   width: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
+
   ::-webkit-scrollbar-track {
     background: transparent;
   }
@@ -203,9 +211,11 @@ const Container = styled(Flex)`
 
 const TasksPage: Page = () => {
   const history = useHistory()
+  const { loading, checkedIn } = useCheckInOut()
   const [showFilters, setShowFilters] = useState(false)
   const { setLocale, setMemberId, changeLocaleDisplayed } =
     useTemplateMessages()
+
   const {
     navigate,
     params: { memberId },
@@ -250,7 +260,7 @@ const TasksPage: Page = () => {
   return (
     <>
       <Container>
-        <TaskNavigationWrapper>
+        <TaskNavigationWrapper fullWidth={!(activeTask || memberId)}>
           <>
             <TopBar>
               {!tabs.length ? (
@@ -299,18 +309,26 @@ const TasksPage: Page = () => {
                   </div>
                 ))}
               </TabContainer>
-              <FilterBarItem
-                onClick={() => setShowFilters(true)}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Filters
-              </FilterBarItem>
+              {!memberId && (
+                <FilterBarItem
+                  onClick={() => setShowFilters(true)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Filters
+                </FilterBarItem>
+              )}
             </TopBar>
+            {!(loading || checkedIn) && !memberId && (
+              <CheckInBar>
+                <CheckInMessage />
+              </CheckInBar>
+            )}
             {!memberId ? (
               <ListContainer>
                 {groups.map((group) => (
                   <TaskListItem
+                    disabled={!checkedIn}
                     key={group.id}
                     group={group}
                     onClick={() => selectTask(group)}
@@ -323,10 +341,10 @@ const TasksPage: Page = () => {
             )}
           </>
         </TaskNavigationWrapper>
-        <TaskChatWrapper>
-          {(activeTask || memberId) && (
+        {(activeTask || memberId) && (
+          <TaskChatWrapper>
             <TaskChat
-              resolvable={!!activeTask}
+              resolvable={!!activeTask && checkedIn}
               memberId={activeTask?.memberId || memberId || ''}
               fullName={fullName}
               onResolve={() => activeTask && resolveTask(activeTask.memberId)}
@@ -335,12 +353,12 @@ const TasksPage: Page = () => {
 
                 if (!openClaimId) {
                   navigate({
-                    memberId: activeTask?.memberId,
-                    active: activeTask?.memberId,
+                    memberId: activeTask.memberId,
+                    active: activeTask.memberId,
                   })
                 } else {
                   navigate({
-                    memberId: activeTask?.memberId,
+                    memberId: activeTask.memberId,
                     tab: 'claims',
                     active: openClaimId,
                     claimIds: openClaimId,
@@ -348,8 +366,8 @@ const TasksPage: Page = () => {
                 }
               }}
             />
-          )}
-        </TaskChatWrapper>
+          </TaskChatWrapper>
+        )}
       </Container>
 
       <FilterModal

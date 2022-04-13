@@ -101,10 +101,11 @@ const getMemberName = (group: QuestionGroup) => {
 }
 
 export const TaskListItem: React.FC<{
+  disabled?: boolean
   group: QuestionGroup
   onClick: () => void
   selected: boolean
-}> = ({ group, onClick, selected }) => {
+}> = ({ group, onClick, selected, disabled }) => {
   const { navigate } = useTaskNavigation()
   const openClaim = useMemberHasOpenClaim(group.memberId)
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -127,7 +128,7 @@ export const TaskListItem: React.FC<{
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       key={group.id}
-      onClick={onClick}
+      onClick={() => !disabled && onClick()}
       selected={selected}
     >
       <div className="orb">
@@ -138,6 +139,7 @@ export const TaskListItem: React.FC<{
         {getMemberName(group) ? (
           <div
             onClick={() => {
+              if (disabled) return
               if (openClaim) {
                 navigate({
                   memberId: group.memberId,

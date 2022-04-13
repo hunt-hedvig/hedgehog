@@ -131,7 +131,7 @@ const Menu = styled.div`
 const routes = {
   dashborad: '/dashborad',
   claims: '/claims/list/1',
-  questions: '/tasks/check-in',
+  questions: '/questions',
   search: '/members',
   tools: '/tools',
   trustly: 'https://backoffice.trustly.com/?Locale=en_GB#/tab_orders',
@@ -315,13 +315,6 @@ export const VerticalMenu: React.FC = () => {
                       if (
                         location.pathname === '/' &&
                         item.route === routes.dashborad
-                      ) {
-                        return true
-                      }
-
-                      if (
-                        location.pathname.startsWith('/questions') &&
-                        item.route === '/tasks/check-in'
                       ) {
                         return true
                       }
