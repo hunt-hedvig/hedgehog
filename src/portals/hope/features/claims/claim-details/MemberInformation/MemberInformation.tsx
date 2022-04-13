@@ -104,7 +104,19 @@ export const MemberInformation: React.FC<{
             <h3>
               {(member?.firstName ?? '') + ' ' + (member?.lastName ?? '')}
             </h3>
-            {!slim && (
+            {slim ? (
+              <a
+                href="#"
+                onClick={() => {
+                  copy(memberId || '', {
+                    format: 'text/plain',
+                  })
+                  toast.success('Member ID copied to clipboard')
+                }}
+              >
+                {memberId}
+              </a>
+            ) : (
               <Link
                 to={`/members/${memberId}`}
                 {...register('Claim Details - MemberId')}
