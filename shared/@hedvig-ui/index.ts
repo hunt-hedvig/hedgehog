@@ -4,6 +4,7 @@ import { BadgeProps as _BadgeProps } from './Badge/badge'
 import { ButtonProps as _ButtonProps } from './Button/button'
 import { CardTitleBadgeProps as _CardTitleBadgeProps } from './Card/card'
 import { DropdownProps as _DropdownProps } from './Dropdown/dropdown'
+import { SelectProps as _SelectProps } from './Select'
 import { InfoTagStatus as _InfoTagStatus } from './InfoRow/info-row'
 import { InputProps as _InputProps } from './Input/input'
 import {
@@ -54,6 +55,9 @@ export { DateTimePicker } from './DateTimePicker/DateTimePicker'
 
 export { Dropdown, Option as DropdownOption } from './Dropdown/dropdown'
 export type DropdownProps = _DropdownProps
+
+export { Select } from './Select'
+export type SelectProps = _SelectProps
 
 export { MultiDropdown } from './Dropdown/multi-dropdown'
 export {
