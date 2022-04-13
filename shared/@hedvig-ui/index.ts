@@ -61,13 +61,6 @@ export type SelectProps = _SelectProps
 
 export { MultiDropdown } from './Dropdown/multi-dropdown'
 export {
-  Form,
-  FormDropdown,
-  FormInput,
-  FormTextArea,
-  SubmitButton,
-} from './Form/form'
-export {
   InfoContainer,
   InfoRow,
   InfoSection,

@@ -1,23 +1,22 @@
-import {
-  Button,
-  Form,
-  FormDropdown,
-  FormInput,
-  Spacing,
-  StandaloneMessage,
-  SubmitButton,
-} from '@hedvig-ui'
+import { Button, Input, Select, Spacing, StandaloneMessage } from '@hedvig-ui'
 import { useConfirmDialog } from '@hedvig-ui'
 import { format } from 'date-fns'
 import { AddEntryInformation } from 'portals/hope/features/member/tabs/account-tab/AddEntryInformation'
 import React from 'react'
-import { FieldValues, FormProvider, useForm } from 'react-hook-form'
+import { FieldValues, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import {
   AccountEntryInput,
   useAddAccountEntryToMemberMutation,
 } from 'types/generated/graphql'
 import { useContractMarketInfo } from 'portals/hope/common/hooks/use-contract-market-info'
+import styled from '@emotion/styled'
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
 
 const entryTypeOptions = [
   {
@@ -97,7 +96,13 @@ export const AddEntryForm: React.FC<{
 }> = ({ memberId, onCancel, onSuccess }) => {
   const { preferredCurrency } = useContractMarketInfo(memberId)
   const [addAccountEntry] = useAddAccountEntryToMemberMutation()
-  const form = useForm()
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    watch,
+    reset,
+  } = useForm()
   const { confirm } = useConfirmDialog()
 
   if (!preferredCurrency) {
@@ -129,7 +134,7 @@ export const AddEntryForm: React.FC<{
         {
           loading: 'Adding entry',
           success: () => {
-            form.reset()
+            reset()
             onSuccess()
             return 'Entry added'
           },
@@ -140,104 +145,104 @@ export const AddEntryForm: React.FC<{
   }
 
   return (
-    <FormProvider {...form}>
-      <Form onSubmit={onSubmit}>
-        <FormDropdown
-          label="Entry Type"
-          options={entryTypeOptions}
-          name="type"
-          defaultValue=""
-          rules={{
-            required: 'Type is required',
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <Select
+        {...register('type', {
+          required: 'Type is required',
+        })}
+        label="Entry Type"
+        options={entryTypeOptions}
+        name="type"
+        errors={errors}
+        placeholder="Select entry type"
+      />
+      <Input
+        {...register('amount.amount', {
+          required: 'Amount is required',
+          pattern: {
+            value: /[^0]/,
+            message: 'Amount cannot be zero',
+          },
+        })}
+        label="Amount"
+        placeholder="A positive amount will charge more, a negative will charge less"
+        defaultValue=""
+        type="number"
+        affix={{
+          content: preferredCurrency,
+        }}
+        errors={errors}
+      />
+      <Select
+        {...register('source', {
+          required: 'Source is required',
+          pattern: {
+            value: /[^other$]/,
+            message:
+              "Other should not be used. Please contact Elvin to add the option you are looking for (he promises he'll be fast)",
+          },
+        })}
+        label="Source"
+        options={sourceOptions}
+        errors={errors}
+        placeholder="Select source"
+      />
+      <Input
+        {...register('reference', {
+          required: 'Reference is required',
+          maxLength: {
+            value: 50,
+            message: 'The reference is too long (max 50 characters)',
+          },
+        })}
+        label="Reference"
+        placeholder="Reference of source, e.g. object insurance id, campaign code (BENIFY, SPRING etc.), travel insurance destination)"
+        defaultValue=""
+        errors={errors}
+      />
+      <Input
+        {...register('title', {
+          maxLength: {
+            value: 100,
+            message: 'The title is too long (max 100 characters)',
+          },
+        })}
+        label="Title"
+        placeholder="If this is to be shown in the app at a later point, this is the title of the entry"
+        defaultValue=""
+        errors={errors}
+      />
+      <Input
+        {...register('comment')}
+        label="Comment"
+        placeholder="Notes on what happened"
+        name="comment"
+        defaultValue=""
+      />
+      <Spacing bottom="small">
+        <AddEntryInformation
+          amount={{
+            amount: watch('amount.amount'),
+            currency: preferredCurrency,
           }}
         />
-        <FormInput
-          label="Amount"
-          placeholder="A positive amount will charge more, a negative will charge less"
-          name="amount.amount"
-          defaultValue=""
-          type="number"
-          affix={{
-            content: preferredCurrency,
-          }}
-          rules={{
-            required: 'Amount is required',
-            pattern: {
-              value: /[^0]/,
-              message: 'Amount cannot be zero',
-            },
-          }}
-        />
-        <FormDropdown
-          label="Source"
-          options={sourceOptions}
-          name="source"
-          defaultValue=""
-          rules={{
-            required: 'Source is required',
-            pattern: {
-              value: /[^other$]/,
-              message:
-                "Other should not be used. Please contact Elvin to add the option you are looking for (he promises he'll be fast)",
-            },
-          }}
-        />
-        <FormInput
-          label="Reference"
-          placeholder="Reference of source, e.g. object insurance id, campaign code (BENIFY, SPRING etc.), travel insurance destination)"
-          name="reference"
-          defaultValue=""
-          rules={{
-            required: 'Reference is required',
-            maxLength: {
-              value: 50,
-              message: 'The reference is too long (max 50 characters)',
-            },
-          }}
-        />
-        <FormInput
-          label="Title"
-          placeholder="If this is to be shown in the app at a later point, this is the title of the entry"
-          name="title"
-          defaultValue=""
-          rules={{
-            maxLength: {
-              value: 100,
-              message: 'The title is too long (max 100 characters)',
-            },
-          }}
-        />
-        <FormInput
-          label="Comment"
-          placeholder="Notes on what happened"
-          name="comment"
-          defaultValue=""
-        />
-        <Spacing bottom="small">
-          <AddEntryInformation
-            amount={{
-              amount: form.watch('amount.amount'),
-              currency: preferredCurrency,
-            }}
-          />
-        </Spacing>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            columnGap: 15,
-          }}
+      </Spacing>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          columnGap: 15,
+        }}
+      >
+        <Button type="submit">Add entry</Button>
+        <Button
+          variant="tertiary"
+          onClick={onCancel}
+          style={{ marginLeft: '1.0em' }}
         >
-          <SubmitButton>Add entry</SubmitButton>
-          <Button
-            variant="tertiary"
-            onClick={onCancel}
-            style={{ marginLeft: '1.0em' }}
-          >
-            Cancel
-          </Button>
-        </div>
-      </Form>
-    </FormProvider>
+          Cancel
+        </Button>
+      </div>
+    </Form>
   )
 }
