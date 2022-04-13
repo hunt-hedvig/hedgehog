@@ -13,6 +13,21 @@ import { useHistory } from 'react-router'
 import { useNavigation } from '@hedvig-ui'
 import { useMemberNameAndContractMarketInfoQuery } from 'types/generated/graphql'
 import { PickedLocale } from 'portals/hope/features/config/constants'
+import gql from 'graphql-tag'
+
+gql`
+  query MemberNameAndContractMarketInfo($memberId: ID!) {
+    member(id: $memberId) {
+      memberId
+      firstName
+      lastName
+      contractMarketInfo {
+        market
+      }
+      pickedLocale
+    }
+  }
+`
 
 export const MemberSuggestions: React.FC<{
   suggestions: ReadonlyArray<string>

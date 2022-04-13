@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 import {
-  GetQuestionsGroupsDocument,
-  GetQuestionsGroupsQuery,
+  QuestionsGroupsDocument,
+  QuestionsGroupsQuery,
   useMarkQuestionAsResolvedMutation,
 } from 'types/generated/graphql'
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
@@ -23,10 +23,10 @@ export const useResolveQuestion = () => {
       },
       update: (cache: ApolloCache<NormalizedCacheObject>) => {
         const cachedData = cache.readQuery({
-          query: GetQuestionsGroupsDocument,
+          query: QuestionsGroupsDocument,
         })
 
-        const cachedGroups = (cachedData as GetQuestionsGroupsQuery)
+        const cachedGroups = (cachedData as QuestionsGroupsQuery)
           ?.questionGroups
 
         if (!cachedGroups) {
@@ -34,7 +34,7 @@ export const useResolveQuestion = () => {
         }
 
         cache.writeQuery({
-          query: GetQuestionsGroupsDocument,
+          query: QuestionsGroupsDocument,
           data: {
             questionGroups: cachedGroups.filter(
               (group) => group.memberId !== memberId,

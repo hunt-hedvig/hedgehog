@@ -18,7 +18,7 @@ import { useTemplateMessages } from 'portals/hope/features/template-messages/use
 import { toast } from 'react-hot-toast'
 import { FileText, TextareaResize } from 'react-bootstrap-icons'
 import chroma from 'chroma-js'
-import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
+import { useResolveQuestion } from 'portals/hope/features/filters/hooks/use-resolve-question'
 
 const Container = styled.div`
   width: 100%;

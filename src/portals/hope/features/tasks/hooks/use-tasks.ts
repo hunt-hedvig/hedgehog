@@ -1,17 +1,17 @@
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
-import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
-import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
-import {
-  doMarketFilter,
-  doMemberGroupFilter,
-} from 'portals/hope/features/questions/utils'
+import { useQuestionGroups } from 'portals/hope/features/filters/hooks/use-question-groups'
+import { useSelectedFilters } from 'portals/hope/features/filters/hooks/use-selected-filters'
 import { QuestionGroup } from 'types/generated/graphql'
 import { useEffect, useState } from 'react'
-import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
+import { useResolveQuestion } from 'portals/hope/features/filters/hooks/use-resolve-question'
 import { useMemberName } from 'portals/hope/common/hooks/use-member-name'
 import { useQueryParams } from '@hedvig-ui'
 import { useHistory } from 'react-router'
 import { useTaskTabs } from 'portals/hope/features/tasks/hooks/use-task-tabs'
+import {
+  doMarketFilter,
+  doMemberGroupFilter,
+} from 'portals/hope/features/filters/FilterSelect'
 
 interface UseTaskNavigateParameters {
   to: {
