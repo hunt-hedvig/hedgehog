@@ -49,6 +49,7 @@ export interface SelectProps extends React.HTMLAttributes<HTMLSelectElement> {
   label?: string
   errors?: FieldErrors
   wrapperStyle?: React.CSSProperties
+  disabled?: boolean
   children?: Array<React.ReactElement<HTMLOptionElement>>
 }
 
@@ -63,7 +64,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 
     return (
       <Wrapper style={wrapperStyle}>
-        {label && <Label style={{ marginLeft: 0.5 }}>{label}</Label>}
+        {label && <Label>{label}</Label>}
         <SelectStyled ref={ref} name={name} {...props}>
           {options
             ? options.map(({ key, text, value, ...option }) => (

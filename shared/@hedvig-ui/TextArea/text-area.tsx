@@ -29,6 +29,8 @@ const styles = (theme: Theme, resize?: boolean, maxHeight?: string) => css`
 
 const Wrapper = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
 `
 
 const Error = styled.span`

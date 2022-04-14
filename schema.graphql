@@ -1167,6 +1167,7 @@ type ClaimPayment {
   exGratia: Boolean!
   transaction: Transaction
   status: ClaimPaymentStatus
+  correctsPaymentId: String
 }
 
 enum ClaimPaymentStatus {
@@ -1186,6 +1187,7 @@ input ClaimPaymentInput {
   exGratia: Boolean!
   sanctionListSkipped: Boolean!
   carrier: String!
+  correctsPaymentId: String
 }
 
 input ClaimSwishPaymentInput {

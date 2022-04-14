@@ -4,6 +4,7 @@ import { Market } from 'portals/hope/features/config/constants'
 import React, { useEffect, useState } from 'react'
 import {
   Claim,
+  ClaimPayment,
   ClaimPaymentType,
   SanctionStatus,
   useMemberPaymentInformationQuery,
@@ -95,9 +96,20 @@ const Form = styled.form`
   gap: 1rem;
 `
 
+const ButtonsGroup = styled.div<{ isCorrection: boolean }>`
+  margin-top: 1rem;
+
+  display: grid;
+  grid-template-columns: ${({ isCorrection }) =>
+    isCorrection ? '1fr 1fr' : '1fr'};
+  gap: 1rem;
+`
+
 export const ClaimPaymentForm: React.FC<{
   claimId: string
-}> = ({ claimId }) => {
+  selectedPayment: ClaimPayment | null
+  clearSelection: () => void
+}> = ({ claimId, selectedPayment, clearSelection }) => {
   const { data } = useMemberPaymentInformationQuery({
     variables: { claimId },
   })
@@ -117,7 +129,38 @@ export const ClaimPaymentForm: React.FC<{
     setValue,
     getValues,
     reset,
-  } = useForm()
+  } = useForm<{
+    type: ClaimPaymentType | 'AutomaticSwish'
+    amount: string
+    deductible: string
+    note: string
+    phoneNumber?: string
+    message?: string
+  }>()
+
+  useEffect(() => {
+    if (!selectedPayment) {
+      return
+    }
+
+    setValue('amount', selectedPayment.amount.amount)
+    setValue('deductible', selectedPayment.deductible.amount)
+    setValue('note', selectedPayment.note)
+    setValue('type', selectedPayment.type)
+    setExGratia(selectedPayment.exGratia)
+
+    if (
+      selectedPayment.type !== ClaimPaymentType.Automatic &&
+      selectedPayment.paidAt
+    ) {
+      setDate(selectedPayment.paidAt)
+    }
+
+    // if (selectedPayment.phoneNumber && selectedPayment.message) {
+    //   setValue('phoneNumber', selectedPayment.phoneNumber)
+    //   setValue('message', selectedPayment.message)
+    // }
+  }, [selectedPayment])
 
   useEffect(() => {
     if (exGratia && getValues().type === ClaimPaymentType.Automatic) {
@@ -156,6 +199,11 @@ export const ClaimPaymentForm: React.FC<{
     setConfirmationData(values)
   }
 
+  const correctionCancelHandler = () => {
+    clearSelection()
+    clearFormHandler()
+  }
+
   const confirmSuccess = () => {
     PushUserAction('claim', 'create', 'payment', null)
     clearFormHandler()
@@ -175,6 +223,7 @@ export const ClaimPaymentForm: React.FC<{
 
       <Input
         {...register('deductible')}
+        disabled={!!selectedPayment}
         placeholder="Deductible"
         label="Deductible"
         step="any"
@@ -182,6 +231,7 @@ export const ClaimPaymentForm: React.FC<{
       />
 
       <Input
+        disabled={!!selectedPayment}
         placeholder="Note"
         {...register('note', { required: 'Note is required' })}
         errors={errors}
@@ -190,13 +240,19 @@ export const ClaimPaymentForm: React.FC<{
 
       <Checkbox
         label="Ex Gratia?"
+        disabled={!!selectedPayment}
         name="exGratia"
         style={{ width: '8rem' }}
         checked={exGratia}
         onChange={() => setExGratia((prev) => !prev)}
       />
 
-      <Select {...register('type')} placeholder="Type" label="Type">
+      <Select
+        {...register('type')}
+        placeholder="Type"
+        label="Type"
+        disabled={!!selectedPayment}
+      >
         <option
           value={ClaimPaymentType.Automatic}
           hidden={exGratia}
@@ -229,6 +285,7 @@ export const ClaimPaymentForm: React.FC<{
 
       {isPotentiallySanctioned ? (
         <Checkbox
+          disabled={!!selectedPayment}
           style={{ width: '40rem' }}
           label="Override sanction list result (I promise that I have manually checked the list)"
           name="overriden"
@@ -241,10 +298,12 @@ export const ClaimPaymentForm: React.FC<{
         <>
           <Input
             {...register('phoneNumber')}
+            disabled={!!selectedPayment}
             placeholder="Phone number (467XXXXXXXX)"
           />
           <Input
             {...register('message')}
+            disabled={!!selectedPayment}
             placeholder="Swish notification message"
           />
         </>
@@ -252,13 +311,28 @@ export const ClaimPaymentForm: React.FC<{
 
       {watch('type') !== ClaimPaymentType.Automatic ? (
         <TextDatePicker
+          disabled={!!selectedPayment}
+          label="Paid at"
           placeholder="Payment performed"
           value={date}
           onChange={setDate}
         />
       ) : null}
 
-      <Button type="submit">Create payment</Button>
+      <ButtonsGroup isCorrection={!!selectedPayment}>
+        <Button type="submit">
+          {selectedPayment ? 'Make Correction' : 'Create payment'}
+        </Button>
+        {!!selectedPayment && (
+          <Button
+            type="button"
+            variant="tertiary"
+            onClick={correctionCancelHandler}
+          >
+            Cancel
+          </Button>
+        )}
+      </ButtonsGroup>
 
       {member?.contractMarketInfo ? (
         <PaymentConfirmationModal
@@ -274,6 +348,7 @@ export const ClaimPaymentForm: React.FC<{
           date={date}
           claimId={claimId}
           confirmSuccess={confirmSuccess}
+          selectedId={selectedPayment?.id}
         />
       ) : null}
     </Form>

@@ -19,6 +19,7 @@ import copy from 'copy-to-clipboard'
 import { toast } from 'react-hot-toast'
 import { format, parseISO } from 'date-fns'
 import { useClaimPayments } from '../hooks/use-claim-payments'
+import { ClaimPayment } from 'src/types/generated/graphql'
 
 const ScrollX = styled.div`
   margin-bottom: 1em;
@@ -75,7 +76,10 @@ const TotalDeductible = styled.div`
   margin-left: 2em;
 `
 
-export const ClaimPaymentsTable: FC<{ claimId: string }> = ({ claimId }) => {
+export const ClaimPaymentsTable: FC<{
+  claimId: string
+  onPaymentSelect: (payment: ClaimPayment) => void
+}> = ({ claimId, onPaymentSelect }) => {
   const { payments, sortBy, setSortBy, totalAmount, totalDeductible } =
     useClaimPayments(claimId)
 
@@ -134,6 +138,7 @@ export const ClaimPaymentsTable: FC<{ claimId: string }> = ({ claimId }) => {
                     format: 'text/plain',
                   })
                   toast.success('Copied payment ID')
+                  onPaymentSelect(payment)
                 }}
               >
                 <TableColumn>

@@ -11,6 +11,7 @@ import DatePicker from 'react-datepicker'
 import { Keys } from '../hooks/keyboard/use-key-is-pressed'
 import { useClickOutside } from '../hooks/use-click-outside'
 import { toast } from 'react-hot-toast'
+import { Label } from '../Typography/typography'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -93,6 +94,7 @@ interface TextDatePickerProps extends Omit<InputProps, 'value' | 'onChange'> {
   showTimePicker?: boolean
   withCurrentTime?: boolean
   position?: 'top' | 'bottom'
+  label?: string
 }
 
 type TextDatePickerChangeEvent =
@@ -111,6 +113,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
   showTimePicker,
   withCurrentTime,
   position,
+  label,
   ...props
 }) => {
   const [showOldDatepicker, setShowOldDatepicker] = React.useState(false)
@@ -182,6 +185,7 @@ export const TextDatePicker: React.FC<TextDatePickerProps> = ({
 
   return (
     <Wrapper>
+      {label && <Label>{label}</Label>}
       <Input
         {...props}
         error={error}

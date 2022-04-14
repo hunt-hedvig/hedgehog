@@ -38,6 +38,7 @@ interface PaymentConfirmationModalProps {
   claimId: string
   confirmSuccess: () => void
   visible: boolean
+  selectedId?: string
 }
 
 export const PaymentConfirmationModal: React.FC<
@@ -53,6 +54,7 @@ export const PaymentConfirmationModal: React.FC<
   claimId,
   confirmSuccess,
   visible,
+  selectedId,
 }) => {
   const [closeClaim, setCloseClaim] = useState(false)
   const [createPayment] = useCreateClaimPaymentMutation()
@@ -75,6 +77,7 @@ export const PaymentConfirmationModal: React.FC<
     }
 
     const paymentInput: Partial<ClaimPaymentInput | ClaimSwishPaymentInput> = {
+      correctsPaymentId: selectedId ? selectedId : null,
       amount: {
         amount: +amount,
         currency: 'SEK',
@@ -158,7 +161,8 @@ export const PaymentConfirmationModal: React.FC<
         </Explanation>
       )}
       <Explanation>
-        To perform the payment, confirm it by entering "{amount}" below.
+        To {selectedId ? 'correct' : 'perform'} the payment, confirm it by
+        entering "{amount}" below.
       </Explanation>
       <form onSubmit={handleSubmit(submitHandler)}>
         <Input
@@ -173,6 +177,7 @@ export const PaymentConfirmationModal: React.FC<
             Confirm
           </Button>
           <Button
+            type="button"
             variant="tertiary"
             style={{ marginLeft: '1.0em' }}
             onClick={() => {
