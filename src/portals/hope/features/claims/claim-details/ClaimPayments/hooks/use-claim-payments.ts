@@ -17,6 +17,7 @@ gql`
   fragment ClaimPayments on Claim {
     payments {
       id
+      correctsPaymentId
       deductible
       amount
       exGratia

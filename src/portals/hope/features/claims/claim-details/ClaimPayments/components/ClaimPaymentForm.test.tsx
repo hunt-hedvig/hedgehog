@@ -52,7 +52,11 @@ const PaymentInformationMock = {
 it("doesn't submit empty form", async () => {
   const wrapper = render(
     <MockedProvider mocks={[PaymentInformationMock]}>
-      <ClaimPaymentForm claimId="abc123" />
+      <ClaimPaymentForm
+        claimId="abc123"
+        selectedPayment={null}
+        clearSelection={() => undefined}
+      />
     </MockedProvider>,
   )
 
@@ -110,7 +114,11 @@ it('submits valid form with confirmation', async () => {
         },
       ]}
     >
-      <ClaimPaymentForm claimId="abc123" />
+      <ClaimPaymentForm
+        claimId="abc123"
+        selectedPayment={null}
+        clearSelection={() => undefined}
+      />
     </MockedProvider>,
   )
 
