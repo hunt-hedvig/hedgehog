@@ -19,6 +19,7 @@ import { toast } from 'react-hot-toast'
 import { FileText, TextareaResize } from 'react-bootstrap-icons'
 import chroma from 'chroma-js'
 import { useResolveQuestion } from 'portals/hope/features/filters/hooks/use-resolve-question'
+import { useCommandLine } from '../../commands/use-command-line'
 
 const Container = styled.div`
   width: 100%;
@@ -165,6 +166,25 @@ export const TaskChatInput: React.FC<{
     useTemplatesHinting(message, setMessage, isMetaKey)
   const { show, selected } = useTemplateMessages()
 
+  const { registerActions } = useCommandLine()
+
+  registerActions([
+    {
+      label: `Resolve question`,
+      keys: [Keys.Command, Keys.Shift, Keys.Enter],
+      onResolve: () => {
+        toast.promise(resolve(memberId), {
+          loading: 'Marking as resolved',
+          success: () => {
+            onResolve()
+            return 'Marked as resolved'
+          },
+          error: 'Could not mark as resolved',
+        })
+      },
+    },
+  ])
+
   useEffect(() => {
     if (selected) {
       clearHinting()
@@ -208,23 +228,6 @@ export const TaskChatInput: React.FC<{
     if (isMetaKey(e) && isPressing(e, Keys.Enter) && !hinting) {
       handleSendMessage()
       return
-    }
-
-    if (
-      isMetaKey(e) &&
-      isPressing(e, Keys.Enter) &&
-      e.shiftKey &&
-      !loading &&
-      !message
-    ) {
-      toast.promise(resolve(memberId), {
-        loading: 'Marking as resolved',
-        success: () => {
-          onResolve()
-          return 'Marked as resolved'
-        },
-        error: 'Could not mark as resolved',
-      })
     }
   }
 
