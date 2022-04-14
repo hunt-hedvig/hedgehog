@@ -61,6 +61,10 @@ export const ClaimPayments: React.FC<{
 
   const identity = data?.claim?.member?.identity
 
+  const selectPaymentHandler = (payment: ClaimPayment) => {
+    setSelectedPayment((prev) => (prev?.id === payment.id ? null : payment))
+  }
+
   return (
     <CardContent>
       <CardTitle
@@ -114,7 +118,7 @@ export const ClaimPayments: React.FC<{
 
       <ClaimPaymentsTable
         claimId={claimId}
-        onPaymentSelect={(payment: ClaimPayment) => setSelectedPayment(payment)}
+        onPaymentSelect={selectPaymentHandler}
         selectedPaymentId={selectedPayment?.id}
       />
 
