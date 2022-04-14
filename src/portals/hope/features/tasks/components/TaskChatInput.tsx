@@ -172,7 +172,16 @@ export const TaskChatInput: React.FC<{
     {
       label: `Resolve question`,
       keys: [Keys.Command, Keys.Shift, Keys.Enter],
-      onResolve,
+      onResolve: () => {
+        toast.promise(resolve(memberId), {
+          loading: 'Marking as resolved',
+          success: () => {
+            onResolve()
+            return 'Marked as resolved'
+          },
+          error: 'Could not mark as resolved',
+        })
+      },
     },
   ])
 
@@ -219,23 +228,6 @@ export const TaskChatInput: React.FC<{
     if (isMetaKey(e) && isPressing(e, Keys.Enter) && !hinting) {
       handleSendMessage()
       return
-    }
-
-    if (
-      isMetaKey(e) &&
-      isPressing(e, Keys.Enter) &&
-      e.shiftKey &&
-      !loading &&
-      !message
-    ) {
-      toast.promise(resolve(memberId), {
-        loading: 'Marking as resolved',
-        success: () => {
-          onResolve()
-          return 'Marked as resolved'
-        },
-        error: 'Could not mark as resolved',
-      })
     }
   }
 
