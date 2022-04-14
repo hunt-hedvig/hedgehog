@@ -101,7 +101,7 @@ const ButtonsGroup = styled.div<{ isCorrection: boolean }>`
 
   display: grid;
   grid-template-columns: ${({ isCorrection }) =>
-    isCorrection ? '1fr 1fr' : '1fr'};
+    isCorrection ? '10rem 10rem' : '10rem'};
   gap: 1rem;
 `
 

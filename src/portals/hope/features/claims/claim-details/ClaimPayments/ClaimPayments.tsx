@@ -115,6 +115,7 @@ export const ClaimPayments: React.FC<{
       <ClaimPaymentsTable
         claimId={claimId}
         onPaymentSelect={(payment: ClaimPayment) => setSelectedPayment(payment)}
+        selectedPaymentId={selectedPayment?.id}
       />
 
       <Spacing top="medium" />

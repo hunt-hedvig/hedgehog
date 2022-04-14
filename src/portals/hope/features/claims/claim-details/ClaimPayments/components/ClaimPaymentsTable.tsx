@@ -76,10 +76,18 @@ const TotalDeductible = styled.div`
   margin-left: 2em;
 `
 
+const PaymentRow = styled(TableRow)`
+  & td {
+    ${({ active, theme }) =>
+      active && `background-color: ${theme.accentLight} !important;`}
+  }
+`
+
 export const ClaimPaymentsTable: FC<{
   claimId: string
   onPaymentSelect: (payment: ClaimPayment) => void
-}> = ({ claimId, onPaymentSelect }) => {
+  selectedPaymentId?: string
+}> = ({ claimId, onPaymentSelect, selectedPaymentId }) => {
   const { payments, sortBy, setSortBy, totalAmount, totalDeductible } =
     useClaimPayments(claimId)
 
@@ -131,7 +139,8 @@ export const ClaimPaymentsTable: FC<{
           </TableHeader>
           <TableBody>
             {payments.map((payment) => (
-              <TableRow
+              <PaymentRow
+                active={selectedPaymentId === payment.id}
                 key={payment.id}
                 onClick={() => {
                   copy(payment.id, {
@@ -165,11 +174,14 @@ export const ClaimPaymentsTable: FC<{
                   )}
                 </TableColumn>
                 <TableColumn>{payment.note}</TableColumn>
-                <TableColumn>{payment.type}</TableColumn>
+                <TableColumn>
+                  {payment.type}
+                  {payment.correctsPaymentId && ' CORRECTION'}
+                </TableColumn>
                 <TableColumn>
                   <Capitalized>{payment.status}</Capitalized>
                 </TableColumn>
-              </TableRow>
+              </PaymentRow>
             ))}
           </TableBody>
         </Table>
@@ -197,7 +209,9 @@ export const ClaimPaymentsTable: FC<{
         </PaymentTotalWrapper>
         {tableHovered ? (
           <FadeIn duration={200}>
-            <Tip>Click on a payment row to copy the payment ID</Tip>
+            <Tip>
+              Click on a payment row to copy the payment ID or correct it
+            </Tip>
           </FadeIn>
         ) : (
           <div>
