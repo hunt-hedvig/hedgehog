@@ -94,7 +94,7 @@ export const QuoteProductTypeContractMap: Record<
   ],
   [QuoteProductType.Apartment]: [
       InsuranceType.SwedishApartment,
-    InsuranceType.SwedishQasaRental
+    InsuranceType.SwedishQasaRental,
   ],
   [QuoteProductType.Accident]: [
     InsuranceType.DanishAccident,
@@ -119,7 +119,7 @@ export const ContractMarketTypes: Record<Market, InsuranceType[]> = {
     InsuranceType.SwedishApartment,
     InsuranceType.SwedishAccident,
     InsuranceType.SwedishCar,
-    InsuranceType.SwedishQasaRental
+    InsuranceType.SwedishQasaRental,
   ],
   NORWAY: [
     InsuranceType.NorwegianHomeContent,
