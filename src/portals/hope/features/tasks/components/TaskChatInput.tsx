@@ -18,7 +18,7 @@ import { useTemplateMessages } from 'portals/hope/features/template-messages/use
 import { toast } from 'react-hot-toast'
 import { FileText, TextareaResize } from 'react-bootstrap-icons'
 import chroma from 'chroma-js'
-import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
+import { useResolveQuestion } from 'portals/hope/features/filters/hooks/use-resolve-question'
 
 const Container = styled.div`
   width: 100%;
@@ -153,7 +153,8 @@ export const TaskChatInput: React.FC<{
   onResolve: () => void
   onResize: () => void
   isLarge: boolean
-}> = ({ memberId, onFocus, onBlur, onResolve, isLarge, onResize }) => {
+  slim?: boolean
+}> = ({ memberId, onFocus, onBlur, onResolve, isLarge, onResize, slim }) => {
   const [message, setMessage] = useDraft(memberId)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()
@@ -177,35 +178,35 @@ export const TaskChatInput: React.FC<{
     setMessage(e.currentTarget.value)
   }
 
+  const handleSendMessage = () => {
+    if (loading || !message) return
+
+    toast.promise(
+      sendMessage({
+        variables: {
+          input: {
+            memberId,
+            message,
+            forceSendMessage: false,
+          },
+        },
+      }),
+      {
+        loading: 'Sending message',
+        success: () => {
+          setMessage('')
+          return 'Message sent'
+        },
+        error: 'Could not send message',
+      },
+    )
+  }
+
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     onKeyDown(e)
 
-    if (
-      isMetaKey(e) &&
-      isPressing(e, Keys.Enter) &&
-      !loading &&
-      message &&
-      !hinting
-    ) {
-      toast.promise(
-        sendMessage({
-          variables: {
-            input: {
-              memberId,
-              message,
-              forceSendMessage: false,
-            },
-          },
-        }),
-        {
-          loading: 'Sending message',
-          success: () => {
-            setMessage('')
-            return 'Message sent'
-          },
-          error: 'Could not send message',
-        },
-      )
+    if (isMetaKey(e) && isPressing(e, Keys.Enter) && !hinting) {
+      handleSendMessage()
       return
     }
 
@@ -250,45 +251,64 @@ export const TaskChatInput: React.FC<{
             onBlur()
           }}
           placeholder={
-            !hinting ? `Message goes here or type '/' for templates` : ''
+            !hinting
+              ? slim
+                ? 'Message goes here '
+                : `Message goes here or type '/' for templates`
+              : ''
           }
           value={message}
           onChange={onChangeHandler}
           onKeyDown={(e) => handleOnKeyDown(e)}
         />
-        <TextAreaFooter onClick={show}>
-          <div className="divider" />
-          <TemplatesButton
-            size="small"
-            variant="tertiary"
-            icon={
-              <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
-            }
-          >
-            templates
-          </TemplatesButton>
-        </TextAreaFooter>
+        {!slim && (
+          <TextAreaFooter onClick={show}>
+            <div className="divider" />
+            <TemplatesButton
+              size="small"
+              variant="tertiary"
+              icon={
+                <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
+              }
+            >
+              templates
+            </TemplatesButton>
+          </TextAreaFooter>
+        )}
       </Container>
-      <Flex
-        fullWidth
-        justify={'space-between'}
-        style={{ padding: '0 1.25rem', marginTop: '1rem' }}
-      >
-        <FadeIn duration={200}>
-          <Tip>
-            <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
-            <Shadowed>Enter</Shadowed> to mark as resolved
-          </Tip>
-        </FadeIn>
-        {inputFocused && (
+      {slim && (
+        <Flex justify="flex-end">
+          <Button
+            style={{ marginTop: '1rem', minWidth: '7.5rem' }}
+            disabled={loading || !message}
+            onClick={() => handleSendMessage()}
+          >
+            Send
+          </Button>
+        </Flex>
+      )}
+      {!slim && (
+        <Flex
+          fullWidth
+          justify={'space-between'}
+          style={{ padding: '0 1.25rem', marginTop: '1rem' }}
+        >
           <FadeIn duration={200}>
             <Tip>
-              <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Enter</Shadowed>{' '}
-              to send
+              <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
+              <Shadowed>Enter</Shadowed> to mark as resolved
             </Tip>
           </FadeIn>
-        )}
-      </Flex>
+          {inputFocused && (
+            <FadeIn duration={200}>
+              <Tip>
+                <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Enter</Shadowed>{' '}
+                to send
+              </Tip>
+            </FadeIn>
+          )}
+        </Flex>
+      )}
     </>
   )
 }

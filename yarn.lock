@@ -11096,12 +11096,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^6.11.2":
-  version: 6.15.8
-  resolution: "react-hook-form@npm:6.15.8"
+"react-hook-form@npm:^7.28.1":
+  version: 7.28.1
+  resolution: "react-hook-form@npm:7.28.1"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: 867d0f8ab1c1a449ebe7027ce56c8b382e7ea516b60c9dcb1484cea1f7e6968b2ad5746e2113fdf5a8454d3759abf34fe65fbbea03babe2baa9eae4a96662b06
+  checksum: 176e653f3c5c1882125b6d51d3b2258c7120202227b91edbf74708eb3f0d455b3c827f1b6c236cdf208de82871b14e86d9aeacbd44c418bcf591b2346721156f
   languageName: node
   linkType: hard
 
@@ -11876,7 +11876,7 @@ __metadata:
     react-dom: ^17.0.2
     react-dropzone: ^10.1.10
     react-gtm-module: ^2.0.11
-    react-hook-form: ^6.11.2
+    react-hook-form: ^7.28.1
     react-hot-loader: ^4.13.0
     react-hot-toast: ^2.1.0
     react-linkify: ^1.0.0-alpha

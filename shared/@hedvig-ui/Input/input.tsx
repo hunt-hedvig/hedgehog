@@ -3,6 +3,9 @@ import styled from '@emotion/styled'
 import React, { InputHTMLAttributes, useRef } from 'react'
 import { CheckCircleFill, ExclamationCircleFill } from 'react-bootstrap-icons'
 import { Spinner } from '../Spinner/spinner'
+import { FieldErrors } from 'react-hook-form'
+import { ErrorMessage } from '@hookform/error-message'
+import { Label } from '../Typography/typography'
 
 export type InputSize = 'small' | 'medium' | 'large'
 const paddingSize: Record<InputSize, string> = {
@@ -159,6 +162,15 @@ const Affix = styled.div<{ size?: InputSize }>`
   width: 50px;
 `
 
+const Wrapper = styled.div`
+  width: 100%;
+`
+
+const Error = styled.span`
+  font-size: 12px;
+  color: ${({ theme }) => theme.danger};
+`
+
 interface AffixType {
   content: string
 }
@@ -170,10 +182,13 @@ export interface InputProps
   success?: boolean
   muted?: boolean
   style?: React.CSSProperties
+  wrapperStyle?: React.CSSProperties
   size?: InputSize
   loading?: boolean
   icon?: React.ReactNode
   affix?: AffixType
+  errors?: FieldErrors
+  label?: string
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -188,6 +203,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       size,
       affix,
       style,
+      errors,
+      label,
+      name,
+      wrapperStyle,
       ...props
     },
     forwardRef,
@@ -195,38 +214,50 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const internalRef = useRef<HTMLInputElement>(null)
     const isAffix = Boolean(affix)
     const isSuccess = success && !error && !loading
-    const isError = error && !success && !loading
+    const isError =
+      (error || (errors && name && errors[name])) && !success && !loading
 
     const ref = forwardRef ?? internalRef
 
     return (
-      <InputWrapper style={style}>
-        {icon ? <CustomIcon>{icon}</CustomIcon> : null}
-        <InputStyled
-          ref={ref}
-          className="input"
-          withIcon={Boolean(icon)}
-          inputSize={size}
-          success={success}
-          error={error}
-          isLoading={loading}
-          muted={muted}
-          disabled={disabled}
-          placeholder={props.placeholder}
-          onWheel={(e) => {
-            if (props.type === 'number') {
-              e.currentTarget.blur()
-            } else if (props.onWheel) {
-              props.onWheel(e)
-            }
-          }}
-          {...props}
-        />
-        {affix && affix.content && <Affix size={size}>{affix.content}</Affix>}
-        {loading && <Loading affix={isAffix ? 1 : 0} size={size} />}
-        {isSuccess && <SuccessIcon affix={isAffix ? 1 : 0} size={size} />}
-        {isError && <ErrorIcon affix={isAffix ? 1 : 0} size={size} />}
-      </InputWrapper>
+      <Wrapper style={wrapperStyle}>
+        <Label>{label}</Label>
+        <InputWrapper style={style}>
+          {icon ? <CustomIcon>{icon}</CustomIcon> : null}
+          <InputStyled
+            ref={ref}
+            className="input"
+            name={name}
+            withIcon={Boolean(icon)}
+            inputSize={size}
+            success={success}
+            error={error}
+            isLoading={loading}
+            muted={muted}
+            disabled={disabled}
+            placeholder={props.placeholder}
+            onWheel={(e) => {
+              if (props.type === 'number') {
+                e.currentTarget.blur()
+              } else if (props.onWheel) {
+                props.onWheel(e)
+              }
+            }}
+            {...props}
+          />
+          {affix && affix.content && <Affix size={size}>{affix.content}</Affix>}
+          {loading && <Loading affix={isAffix ? 1 : 0} size={size} />}
+          {isSuccess && <SuccessIcon affix={isAffix ? 1 : 0} size={size} />}
+          {isError && <ErrorIcon affix={isAffix ? 1 : 0} size={size} />}
+        </InputWrapper>
+        {name && errors && (
+          <ErrorMessage
+            errors={errors}
+            name={name}
+            render={({ message }) => <Error>{message}</Error>}
+          />
+        )}
+      </Wrapper>
     )
   },
 )

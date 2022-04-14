@@ -3,7 +3,7 @@ import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { UserSettings } from 'types/generated/graphql'
 import { useEffect, useState } from 'react'
 import { Market } from 'portals/hope/features/config/constants'
-import { FilterStateType } from 'portals/hope/features/questions/FilterSelect'
+import { FilterStateType } from 'portals/hope/features/filters/FilterSelect'
 
 export const useSelectedFilters = () => {
   const { markets: userMarkets } = useMyMarkets()

@@ -1,17 +1,17 @@
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
-import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
-import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
-import {
-  doMarketFilter,
-  doMemberGroupFilter,
-} from 'portals/hope/features/questions/utils'
+import { useQuestionGroups } from 'portals/hope/features/filters/hooks/use-question-groups'
+import { useSelectedFilters } from 'portals/hope/features/filters/hooks/use-selected-filters'
 import { QuestionGroup } from 'types/generated/graphql'
 import { useEffect, useState } from 'react'
-import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
+import { useResolveQuestion } from 'portals/hope/features/filters/hooks/use-resolve-question'
 import { useMemberName } from 'portals/hope/common/hooks/use-member-name'
 import { useQueryParams } from '@hedvig-ui'
 import { useHistory } from 'react-router'
 import { useTaskTabs } from 'portals/hope/features/tasks/hooks/use-task-tabs'
+import {
+  doMarketFilter,
+  doMemberGroupFilter,
+} from 'portals/hope/features/filters/FilterSelect'
 
 interface UseTaskNavigateParameters {
   to: {
@@ -133,22 +133,24 @@ export const useTasks = ({
     }
   }
 
-  const resolveTaskHandler = (memberIdToResolve: string) => {
+  const resolveTaskHandler = (memberIdToResolve: string, autoSelect = true) => {
     if (!activeTask) return
 
-    const activeGroupIndex = incomingTasks.findIndex(
-      (group) => group.memberId === activeTask?.memberId,
-    )
+    if (autoSelect) {
+      const activeGroupIndex = incomingTasks.findIndex(
+        (group) => group.memberId === activeTask?.memberId,
+      )
 
-    if (activeGroupIndex !== -1) {
-      const hasMoreGroups = activeGroupIndex < incomingTasks.length - 2
+      if (activeGroupIndex !== -1) {
+        const hasMoreGroups = activeGroupIndex < incomingTasks.length - 2
 
-      if (incomingTasks.length > 0 && hasMoreGroups) {
-        setSelectedTask(incomingTasks[activeGroupIndex + 1])
-      }
+        if (incomingTasks.length > 0 && hasMoreGroups) {
+          setSelectedTask(incomingTasks[activeGroupIndex + 1])
+        }
 
-      if (incomingTasks.length > 0 && !hasMoreGroups) {
-        setSelectedTask(incomingTasks[0])
+        if (incomingTasks.length > 0 && !hasMoreGroups) {
+          setSelectedTask(incomingTasks[0])
+        }
       }
     }
 

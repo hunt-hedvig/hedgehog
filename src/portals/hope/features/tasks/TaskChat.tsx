@@ -60,7 +60,8 @@ export const TaskChat: React.FC<{
   onResolve: () => void
   fullName?: string | null
   onSelectMember: (openClaimId: string | null) => void
-}> = ({ resolvable, memberId, onResolve, onSelectMember, fullName }) => {
+  slim?: boolean
+}> = ({ resolvable, memberId, onResolve, onSelectMember, fullName, slim }) => {
   const { fullName: fullNameByQuery } = useMemberName(memberId)
   const openClaim = useMemberHasOpenClaim(memberId)
   const [isLarge, setIsLarge] = useState(false)
@@ -80,16 +81,18 @@ export const TaskChat: React.FC<{
             </a>
           </div>
         </Flex>
-        <Button
-          disabled={!resolvable}
-          variant="secondary"
-          onClick={(e) => {
-            e.stopPropagation()
-            onResolve()
-          }}
-        >
-          {resolvable ? 'Mark as resolved' : 'Resolved'}
-        </Button>
+        {resolvable && (
+          <Button
+            disabled={!resolvable}
+            variant="secondary"
+            onClick={(e) => {
+              e.stopPropagation()
+              onResolve()
+            }}
+          >
+            Mark as resolved
+          </Button>
+        )}
       </InChatTopNav>
       <div
         style={{
@@ -119,6 +122,7 @@ export const TaskChat: React.FC<{
           onBlur={() => void 0}
           onFocus={() => void 0}
           onResolve={onResolve}
+          slim={slim}
         />
       </div>
     </>

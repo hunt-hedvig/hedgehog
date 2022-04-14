@@ -7,12 +7,10 @@ import {
   MarketFlags,
   MemberGroupColors,
   MemberGroups,
+  PickedLocale,
+  PickedLocaleMarket,
 } from 'portals/hope/features/config/constants'
-import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
-import {
-  doMarketFilter,
-  doMemberGroupFilter,
-} from 'portals/hope/features/questions/utils'
+import { useQuestionGroups } from 'portals/hope/features/filters/hooks/use-question-groups'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React from 'react'
 import { useNavigation } from '@hedvig-ui'
@@ -20,6 +18,46 @@ import { QuestionGroup, UserSettings } from 'types/generated/graphql'
 import { Keys } from '@hedvig-ui'
 import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 import { motion } from 'framer-motion'
+
+const getGroupNumberForMember = (
+  memberId: string,
+  numberMemberGroups: number,
+) => {
+  const memberIdNumber = Number(memberId)
+  return memberIdNumber % numberMemberGroups
+}
+
+export const doMemberGroupFilter =
+  (numberMemberGroups: number) =>
+  (selectedFilters: ReadonlyArray<FilterStateType>) =>
+  (questionGroup: QuestionGroup): boolean => {
+    return range(numberMemberGroups)
+      .map(
+        (memberGroupNumber) =>
+          selectedFilters.includes(memberGroupNumber) &&
+          getGroupNumberForMember(
+            questionGroup.memberId,
+            numberMemberGroups,
+          ) === memberGroupNumber,
+      )
+      .includes(true)
+  }
+
+export const doMarketFilter =
+  (selectedFilters: ReadonlyArray<FilterStateType>) =>
+  (questionGroup: QuestionGroup): boolean => {
+    const questionGroupMarket = questionGroup?.market
+      ? questionGroup.market
+      : questionGroup.pickedLocale
+      ? PickedLocaleMarket[questionGroup.pickedLocale as PickedLocale]
+      : Market.Sweden
+
+    return Object.keys(Market).some(
+      (market) =>
+        selectedFilters.includes(FilterState[market]) &&
+        questionGroupMarket === market.toUpperCase(),
+    )
+  }
 
 export const FilterState: Record<string, number> = {
   ...Object.keys(MemberGroups).reduce<Record<string, number>>(

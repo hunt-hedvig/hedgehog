@@ -18,6 +18,7 @@ import {
 } from 'types/generated/graphql'
 import { useDraft } from '@hedvig-ui'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import gql from 'graphql-tag'
 
 const MessagesPanelContainer = styled.div`
   display: flex;
@@ -93,6 +94,21 @@ const ChatTip = styled.div`
 
   @media (max-width: 768px) {
     display: none;
+  }
+`
+
+gql`
+  mutation SendMessage($input: SendMessageInput!) {
+    sendMessage(input: $input) {
+      ... on SendMessageFailed {
+        memberId
+        errorCode
+        errorMessage
+      }
+      ... on SendMessageSuccessful {
+        memberId
+      }
+    }
   }
 `
 

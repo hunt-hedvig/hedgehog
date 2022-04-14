@@ -12,12 +12,12 @@ import {
   MarketFlags,
   MemberGroups,
 } from 'portals/hope/features/config/constants'
-import { MemberGroupColorBadge } from 'portals/hope/features/questions/MemberGroupColorBadge'
+import { MemberGroupColorBadge } from 'portals/hope/features/filters/MemberGroupColorBadge'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import { ClaimsFiltersType } from 'portals/hope/pages/claims/list/ClaimsListPage'
 import React from 'react'
 import { ClaimComplexity, ClaimState } from 'types/generated/graphql'
-import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
+import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/filters/NumberMemberGroupsRadioButtons'
 import { convertEnumOrSentenceToTitle } from '@hedvig-ui'
 
 interface ClaimTemplateFiltersProps

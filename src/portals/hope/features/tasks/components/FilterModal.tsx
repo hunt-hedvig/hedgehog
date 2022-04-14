@@ -1,10 +1,10 @@
 import React from 'react'
 import { Flex, Label, Modal } from '@hedvig-ui'
-import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
-import { FilterSelect } from 'portals/hope/features/questions/FilterSelect'
+import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/filters/NumberMemberGroupsRadioButtons'
+import { FilterSelect } from 'portals/hope/features/filters/FilterSelect'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
-import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
+import { useSelectedFilters } from 'portals/hope/features/filters/hooks/use-selected-filters'
 
 const Container = styled(Modal)`
   width: 60rem;

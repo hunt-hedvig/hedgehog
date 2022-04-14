@@ -19,8 +19,8 @@ import {
   MarketFlags,
   MemberGroups,
 } from 'portals/hope/features/config/constants'
-import { MemberGroupColorBadge } from 'portals/hope/features/questions/MemberGroupColorBadge'
-import { numberMemberGroupsOptions } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
+import { MemberGroupColorBadge } from 'portals/hope/features/filters/MemberGroupColorBadge'
+import { numberMemberGroupsOptions } from 'portals/hope/features/filters/NumberMemberGroupsRadioButtons'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React, { useState } from 'react'

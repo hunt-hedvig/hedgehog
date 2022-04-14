@@ -38,7 +38,9 @@ const PaymentInformationMock = {
             preferredCurrency: 'SEK',
           },
           directDebitStatus: null,
-          payoutMethodStatus: null,
+          payoutMethodStatus: {
+            activated: true,
+          },
           adyenShopperReference: null,
           identity: null,
         },

@@ -67,7 +67,7 @@ export const ErrorText = styled.p`
 `
 
 interface HotkeyProps {
-  hotkey: string
+  hotkey?: string
   hinting: boolean
   dark?: boolean
   children: React.ReactNode
@@ -90,7 +90,7 @@ export const Hotkey = (props: HotkeyProps) => {
   return (
     <HotkeyWrapper>
       {props.children}
-      {props.hinting && (
+      {props.hinting && props.hotkey && (
         <HotkeyStyled dark={props.dark}>{props.hotkey}</HotkeyStyled>
       )}
     </HotkeyWrapper>

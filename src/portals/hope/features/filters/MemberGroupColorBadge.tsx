@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { MemberGroupColors } from 'portals/hope/features/config/constants'
-import { FilterStateType } from 'portals/hope/features/questions/FilterSelect'
+import { FilterStateType } from 'portals/hope/features/filters/FilterSelect'
 
 export const MemberGroupColorBadge = styled.div<{ filter?: FilterStateType }>`
   display: inline-block;

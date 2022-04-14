@@ -3,11 +3,8 @@ import {
   Button,
   ButtonsGroup,
   FadeIn,
-  Form,
-  FormInput,
-  Label,
+  Input,
   Modal,
-  SubmitButton,
   Table,
   TableBody,
   TableColumn,
@@ -16,7 +13,7 @@ import {
 import { dateTimeFormatter } from '@hedvig-ui'
 import React, { ChangeEvent, useState } from 'react'
 import { PencilSquare } from 'react-bootstrap-icons'
-import { FormProvider, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import {
   EditMemberInfoInput,
@@ -43,6 +40,12 @@ const ButtonWrapper = styled.div`
   margin-top: 1em;
   display: flex;
   justify-content: flex-end;
+`
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `
 
 const memberFieldFormatters: Record<
@@ -119,7 +122,7 @@ export const MemberTab: React.FC<{
   const [editMemberInfo] = useEditMemberInfoMutation()
   const [setFraudulentStatus] = useSetFraudulentStatusMutation()
 
-  const form = useForm()
+  const { register, handleSubmit } = useForm()
 
   if (!member) {
     return null
@@ -162,7 +165,7 @@ export const MemberTab: React.FC<{
     handleClose()
   }
 
-  const handleSubmit = () => {
+  const onSubmit = () => {
     editMemberInfo({
       variables: {
         request: editMemberInfoRequest,
@@ -257,39 +260,41 @@ export const MemberTab: React.FC<{
         </Button>
       </ButtonWrapper>
       <EditMemberModal onClose={handleClose} visible={modalOpen}>
-        <FormProvider {...form}>
-          <Form
-            onSubmit={handleSubmit}
-            onChange={(e) => {
-              const event = e as unknown as ChangeEvent<HTMLInputElement>
-              handleChange(event.target.name, event.target.value)
+        <Form
+          onSubmit={handleSubmit(onSubmit)}
+          onChange={(e) => {
+            const event = e as unknown as ChangeEvent<HTMLInputElement>
+            handleChange(event.target.name, event.target.value)
+          }}
+        >
+          <>
+            {Object.keys(memberInfoWithoutSsn).map((field) => (
+              <React.Fragment key={field}>
+                <Input
+                  {...register(field)}
+                  label={getFieldName(field)}
+                  key={field}
+                  disabled={isDisabled(field)}
+                  defaultValue={getFieldValue(
+                    member[field as keyof EditMemberInformationQuery['member']],
+                  )}
+                />
+              </React.Fragment>
+            ))}
+          </>
+          <ButtonsGroup
+            style={{
+              justifyContent: 'flex-end',
+              marginTop: '1rem',
+              marginBottom: '0,5rem',
             }}
           >
-            <>
-              {Object.keys(memberInfoWithoutSsn).map((field) => (
-                <React.Fragment key={field}>
-                  <Label>{getFieldName(field)}</Label>
-                  <FormInput
-                    name={field}
-                    key={field}
-                    disabled={isDisabled(field)}
-                    defaultValue={getFieldValue(
-                      member[
-                        field as keyof EditMemberInformationQuery['member']
-                      ],
-                    )}
-                  />
-                </React.Fragment>
-              ))}
-            </>
-            <ButtonsGroup style={{ justifyContent: 'flex-end' }}>
-              <Button variant="secondary" type="button" onClick={handleCancel}>
-                Cancel
-              </Button>
-              <SubmitButton>Submit</SubmitButton>
-            </ButtonsGroup>
-          </Form>
-        </FormProvider>
+            <Button variant="secondary" type="button" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button type="submit">Submit</Button>
+          </ButtonsGroup>
+        </Form>
       </EditMemberModal>
     </FadeIn>
   ) : (
