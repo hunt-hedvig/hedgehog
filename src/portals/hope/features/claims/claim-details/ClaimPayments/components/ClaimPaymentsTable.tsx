@@ -14,12 +14,14 @@ import {
   TableHeader,
   TableHeaderColumn,
   TableRow,
+  Popover,
 } from '@hedvig-ui'
 import copy from 'copy-to-clipboard'
 import { toast } from 'react-hot-toast'
 import { format, parseISO } from 'date-fns'
 import { useClaimPayments } from '../hooks/use-claim-payments'
 import { ClaimPayment } from 'src/types/generated/graphql'
+import { ExclamationTriangle } from 'react-bootstrap-icons'
 
 const ScrollX = styled.div`
   margin-bottom: 1em;
@@ -74,6 +76,20 @@ const TotalDeductible = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 2em;
+`
+
+const AmountColumn = styled(TableColumn)`
+  position: relative;
+`
+
+const CorrectionHint = styled(Popover)`
+  position: absolute;
+  top: 40%;
+  right: 1rem;
+
+  & svg {
+    color: ${({ theme }) => theme.darkWarning};
+  }
 `
 
 const PaymentRow = styled(TableRow)`
@@ -150,9 +166,14 @@ export const ClaimPaymentsTable: FC<{
                   onPaymentSelect(payment)
                 }}
               >
-                <TableColumn>
+                <AmountColumn>
                   <Monetary amount={payment.amount} />
-                </TableColumn>
+                  {payment.correctsPaymentId && (
+                    <CorrectionHint contents="This payment with corrections">
+                      <ExclamationTriangle />
+                    </CorrectionHint>
+                  )}
+                </AmountColumn>
                 <TableColumn>
                   <Monetary amount={payment.deductible} />
                 </TableColumn>
