@@ -169,7 +169,10 @@ export const ClaimPaymentsTable: FC<{
                 <AmountColumn>
                   <Monetary amount={payment.amount} />
                   {payment.correctsPaymentId && (
-                    <CorrectionHint contents="This payment with corrections">
+                    <CorrectionHint
+                      contents="This payment with corrections"
+                      style={{ width: '200px' }}
+                    >
                       <ExclamationTriangle />
                     </CorrectionHint>
                   )}
@@ -195,10 +198,7 @@ export const ClaimPaymentsTable: FC<{
                   )}
                 </TableColumn>
                 <TableColumn>{payment.note}</TableColumn>
-                <TableColumn>
-                  {payment.type}
-                  {payment.correctsPaymentId && ' CORRECTION'}
-                </TableColumn>
+                <TableColumn>{payment.type}</TableColumn>
                 <TableColumn>
                   <Capitalized>{payment.status}</Capitalized>
                 </TableColumn>
