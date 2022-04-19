@@ -11,7 +11,6 @@ import {
 } from 'types/generated/graphql'
 import gql from 'graphql-tag'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
-import { useNavigation } from '@hedvig-ui'
 
 gql`
   query ClaimTypeInformation($claimId: ID!) {
@@ -95,8 +94,6 @@ export const ClaimType: React.FC<{
     }).catch(() => toast.error('Could not set type'))
   }
 
-  const { register } = useNavigation()
-
   return (
     <Flex direction="column">
       <CardContent>
@@ -135,7 +132,7 @@ export const ClaimType: React.FC<{
                 label: convertEnumToTitle(claimType),
                 searchTerms: claimType,
               }))}
-              {...register('Claim Type')}
+              inputId="claim-type-dropdown"
             />
             {!!selectedClaimType && (
               <ClaimPropertyForm
