@@ -1,4 +1,4 @@
-import { convertCamelcaseToTitle } from '@hedvig-ui'
+import { convertCamelcaseToTitle, Keys, useKeyIsPressed } from '@hedvig-ui'
 import React from 'react'
 import { ArrayElement } from '@hedvig-ui'
 import {
@@ -92,6 +92,8 @@ const SearchHitTag: React.FC<{
 export const MemberHitRow: React.FC<{
   result: ArrayElement<SearchQuery['search']>
 }> = ({ result }) => {
+  const isCommandPressed = useKeyIsPressed(Keys.Command)
+
   const history = useHistory()
 
   const hit = result.hit as MemberSearchHit
@@ -106,12 +108,21 @@ export const MemberHitRow: React.FC<{
     (highlight) => !highlight.field.includes('keyword'),
   )
 
+  const redirectMemberHandler = (id: string) => {
+    const link = `/members/${id}/contracts`
+
+    if (isCommandPressed) {
+      window.open(link, '_blank')
+      return
+    }
+
+    history.push(link)
+  }
+
   return (
     <TableRow
       tabIndex={0}
-      onClick={() =>
-        hit.memberId && history.push(`/members/${hit.memberId}/contracts`)
-      }
+      onClick={() => hit.memberId && redirectMemberHandler(hit.memberId)}
     >
       <TableColumn style={{ verticalAlign: 'top' }}>
         <Flex direction="column">
