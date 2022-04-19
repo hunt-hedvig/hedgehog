@@ -17,6 +17,7 @@ import {
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
 import { useMemberSearchContracts } from 'portals/hope/features/search/members/hooks/use-member-search-contracts'
+import { useHistory } from 'react-router'
 
 type CircleVariation =
   | 'success'
@@ -91,6 +92,8 @@ const SearchHitTag: React.FC<{
 export const MemberHitRow: React.FC<{
   result: ArrayElement<SearchQuery['search']>
 }> = ({ result }) => {
+  const history = useHistory()
+
   const hit = result.hit as MemberSearchHit
 
   const { member, loading, groupBy, contracts } = useMemberSearchContracts(
@@ -107,7 +110,7 @@ export const MemberHitRow: React.FC<{
     <TableRow
       tabIndex={0}
       onClick={() =>
-        hit.memberId && window.open(`/members/${hit.memberId}/contracts`)
+        hit.memberId && history.push(`/members/${hit.memberId}/contracts`)
       }
     >
       <TableColumn style={{ verticalAlign: 'top' }}>
