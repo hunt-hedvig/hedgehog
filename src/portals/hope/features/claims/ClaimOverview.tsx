@@ -237,7 +237,7 @@ export const ClaimOverview: React.FC<{
                 {
                   focus: Keys.Three,
                   metaKey: 'ctrlKey',
-                  focusTarget: 'Claim Type',
+                  focusTarget: 'claim-type-dropdown',
                 },
                 {
                   border: '2px solid blue',

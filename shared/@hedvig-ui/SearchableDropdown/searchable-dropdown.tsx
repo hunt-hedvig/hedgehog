@@ -66,6 +66,7 @@ interface CreatableSelectProps {
   noOptionsMessage?: () => string
   options: SelectOption[]
   style?: React.CSSProperties
+  inputId?: string
 }
 
 export const CreatableDropdown: React.FC<CreatableSelectProps> = ({

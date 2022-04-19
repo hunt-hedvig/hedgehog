@@ -89,9 +89,11 @@ const SearchHitTag: React.FC<{
   return <Tag>{convertTagText(highlight.field).replaceAll('.', ', ')}</Tag>
 }
 
-export const MemberHitRow: React.FC<{
-  result: ArrayElement<SearchQuery['search']>
-}> = ({ result }) => {
+export const MemberHitRow: React.FC<
+  {
+    result: ArrayElement<SearchQuery['search']>
+  } & React.HTMLAttributes<HTMLTableRowElement>
+> = ({ result, ...props }) => {
   const isCommandPressed = useKeyIsPressed(Keys.Command)
 
   const history = useHistory()
@@ -123,6 +125,7 @@ export const MemberHitRow: React.FC<{
     <TableRow
       tabIndex={0}
       onClick={() => hit.memberId && redirectMemberHandler(hit.memberId)}
+      {...props}
     >
       <TableColumn style={{ verticalAlign: 'top' }}>
         <Flex direction="column">

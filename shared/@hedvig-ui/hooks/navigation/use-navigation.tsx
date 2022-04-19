@@ -61,10 +61,6 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [pathname])
 
   const handleKeydown = (e: KeyboardEvent) => {
-    if (cursorRef.current) {
-      document.getElementById(cursorRef.current)?.blur()
-    }
-
     if (!(e.target instanceof Node)) {
       return
     }
@@ -101,6 +97,14 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
       ) {
         setCursor(name)
         cursorRef.current = name
+        if (
+          cursorRef.current &&
+          (registry.current[cursorRef.current].withFocus ||
+            registry.current[cursorRef.current].focusTarget) &&
+          'activeElement' in document
+        ) {
+          ;(document.activeElement as HTMLElement)?.blur()
+        }
         return true
       }
 
@@ -151,6 +155,8 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
           target.focusTarget || cursorRef.current,
         )
         element?.focus()
+        setCursor(null)
+        cursorRef.current = null
       }
 
       if (!target?.resolve) {
@@ -331,6 +337,7 @@ interface UseNavigationRegisterOptions {
   focusCondition?: (item: string) => boolean
   withFocus?: boolean
   focusTarget?: string
+  specifyId?: string
 }
 
 export const useNavigation = () => {
@@ -395,7 +402,7 @@ export const useNavigation = () => {
           border: '2px solid transparent',
           ...style,
         },
-        id: name,
+        id: options?.specifyId || name,
       }
     }
 
@@ -408,12 +415,17 @@ export const useNavigation = () => {
       ref: (ref: any) => {
         assignRef(name, ref)
 
-        ref?.focus()
         ref?.scrollIntoView({
           inline: 'center',
           block: 'center',
           behavior: 'smooth',
         })
+
+        if (ref && ref.nodeName === 'INPUT') {
+          return
+        }
+
+        ref?.focus()
       },
       id: name,
     }
@@ -431,6 +443,7 @@ export const useNavigation = () => {
     autoFocus,
     isHorizontal,
     styles,
+    edges,
   }: {
     list: T[]
     name: string
@@ -442,6 +455,10 @@ export const useNavigation = () => {
     focusTarget?: string
     autoFocus?: boolean
     isHorizontal?: boolean
+    edges?: {
+      first?: string
+      second?: string
+    }
     styles?:
       | {
           focus?: React.CSSProperties
@@ -473,16 +490,16 @@ export const useNavigation = () => {
             neighbors: {
               [firstDirection]: itemIndex
                 ? `${name} - ${list[itemIndex - 1][nameField]}`
-                : undefined,
+                : edges?.first || undefined,
               [secondDirection]:
                 itemIndex < list.length - 1
                   ? `${name} - ${list[itemIndex + 1][nameField]}`
-                  : undefined,
+                  : edges?.second || undefined,
             },
             focusCondition,
             withFocus,
             focusTarget,
-            autoFocus: autoFocus ? list.indexOf(item) === 0 : false,
+            autoFocus: autoFocus ? itemIndex === 0 : false,
           },
           typeof styles === 'function' ? styles(item).focus : styles?.focus,
           typeof styles === 'function' ? styles(item).basic : styles?.basic,
