@@ -83,12 +83,22 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
         return
       }
 
-      if (!options?.focus) {
+      if (options.metaKey && !e[options.metaKey]) {
+        return
+      }
+
+      if (options?.focusedActions && name === cursorRef.current) {
+        options.focusedActions.forEach((action) => {
+          if (isPressing(e, action.key)) {
+            action.action()
+          }
+        })
+
         return false
       }
 
-      if (options.metaKey && !e[options.metaKey]) {
-        return
+      if (!options?.focus) {
+        return false
       }
 
       if (
@@ -338,6 +348,10 @@ interface UseNavigationRegisterOptions {
   withFocus?: boolean
   focusTarget?: string
   specifyId?: string
+  focusedActions?: {
+    key: Key
+    action: () => void
+  }[]
 }
 
 export const useNavigation = () => {
