@@ -334,6 +334,21 @@ export const TemplateMessagesModal: React.FC<{
                       ? `TemplatesList - Row ${index + 1}`
                       : undefined,
                 },
+                metaKey: 'altKey',
+                focusedActions: [
+                  {
+                    key: Keys.P,
+                    action: () => {
+                      pinHandler(template.id)
+                    },
+                  },
+                  {
+                    key: Keys.E,
+                    action: () => {
+                      setEditingTemplate(template)
+                    },
+                  },
+                ],
               })
 
               return (
@@ -387,6 +402,21 @@ export const TemplateMessagesModal: React.FC<{
                       ? `TemplatesList - Row ${index + 1}`
                       : undefined,
                 },
+                metaKey: 'altKey',
+                focusedActions: [
+                  {
+                    key: Keys.P,
+                    action: () => {
+                      pinHandler(template.id)
+                    },
+                  },
+                  {
+                    key: Keys.E,
+                    action: () => {
+                      setEditingTemplate(template)
+                    },
+                  },
+                ],
               })
 
               return (
