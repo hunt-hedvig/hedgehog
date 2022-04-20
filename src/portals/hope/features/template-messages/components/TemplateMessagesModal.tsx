@@ -1,6 +1,11 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
-import { useClickOutside } from '@hedvig-ui'
+import {
+  Keys,
+  useClickOutside,
+  useKeyIsPressed,
+  useNavigation,
+} from '@hedvig-ui'
 import { keyframes } from '@emotion/react'
 import { TemplateForm } from './TemplateForm'
 import { SearchIcon } from '../../members-search/styles'
@@ -115,6 +120,15 @@ export const TemplateMessagesModal: React.FC<{
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
 
+  const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isNPressed = useKeyIsPressed(Keys.N)
+
+  useEffect(() => {
+    if (isOptionPressed && isNPressed) {
+      setIsCreating(true)
+    }
+  }, [isOptionPressed, isNPressed])
+
   const {
     select,
     templates,
@@ -127,6 +141,8 @@ export const TemplateMessagesModal: React.FC<{
     currentLocaleDisplayed,
     changeLocaleDisplayed,
   } = useTemplateMessages()
+
+  const { register } = useNavigation()
 
   const templatesRef = useRef<HTMLDivElement>(null)
 
@@ -260,7 +276,6 @@ export const TemplateMessagesModal: React.FC<{
     <Container ref={templatesRef} closing={closing}>
       <Header>
         <Input
-          style={{ borderRadius: 'unset' }}
           onChange={({ target: { value } }) => {
             setQuery(value)
           }}
@@ -271,10 +286,23 @@ export const TemplateMessagesModal: React.FC<{
             />
           }
           placeholder="Search Template"
-          id="query"
           value={query}
           type="search"
           autoFocus
+          {...register(
+            'Templates Search',
+            {
+              autoFocus: true,
+              withFocus: true,
+              neighbors: {
+                down: 'TemplatesList - Row 0',
+              },
+            },
+            {},
+            {
+              borderRadius: 'unset',
+            },
+          )}
         />
         <Button
           variant="tertiary"
@@ -291,29 +319,48 @@ export const TemplateMessagesModal: React.FC<{
             <TemplatesListTitle>
               {getFilteredTemplates(true)?.length} Pinned
             </TemplatesListTitle>
-            {getFilteredTemplates(true).map((template) => (
-              <TemplateItem
-                key={template.id}
-                id={template.id}
-                name={template.title}
-                text={
-                  currentLocaleDisplayed?.isEnglishLocale
-                    ? template.messages.find(
-                        (msg) =>
-                          msg.language ===
-                          formatLocale(PickedLocale.EnSe, true),
-                      )?.message || ''
-                    : template.messages.find(
-                        (msg) => msg.language === formatLocale(currentLocale),
-                      )?.message || ''
-                }
-                pinned={template.pinned || false}
-                onSelect={selectHandler}
-                onDelete={deleteHandler}
-                onEdit={editHandler}
-                onPin={pinHandler}
-              />
-            ))}
+            {getFilteredTemplates(true).map((template, index) => {
+              const navigation = register(`TemplatesList - Row ${index}`, {
+                resolve: () => {
+                  selectHandler(template.id)
+                },
+                neighbors: {
+                  up: index
+                    ? `TemplatesList - Row ${index - 1}`
+                    : 'Templates Search',
+                  down:
+                    index < getFilteredTemplates(true)?.length - 1 ||
+                    getFilteredTemplates(false)?.length
+                      ? `TemplatesList - Row ${index + 1}`
+                      : undefined,
+                },
+              })
+
+              return (
+                <TemplateItem
+                  key={template.id}
+                  templateId={template.id}
+                  name={template.title}
+                  text={
+                    currentLocaleDisplayed?.isEnglishLocale
+                      ? template.messages.find(
+                          (msg) =>
+                            msg.language ===
+                            formatLocale(PickedLocale.EnSe, true),
+                        )?.message || ''
+                      : template.messages.find(
+                          (msg) => msg.language === formatLocale(currentLocale),
+                        )?.message || ''
+                  }
+                  pinned={template.pinned || false}
+                  onSelect={selectHandler}
+                  onDelete={deleteHandler}
+                  onEdit={editHandler}
+                  onPin={pinHandler}
+                  {...navigation}
+                />
+              )
+            })}
           </div>
         ) : null}
         {getFilteredTemplates(false)?.length ? (
@@ -322,29 +369,51 @@ export const TemplateMessagesModal: React.FC<{
               {getFilteredTemplates(false)?.length} Templates{' '}
               {MarketFlags[PickedLocaleMarket[currentLocale]]}
             </TemplatesListTitle>
-            {getFilteredTemplates(false).map((template) => (
-              <TemplateItem
-                key={template.id}
-                id={template.id}
-                name={template.title}
-                text={
-                  currentLocaleDisplayed?.isEnglishLocale
-                    ? template.messages.find(
-                        (msg) =>
-                          msg.language ===
-                          formatLocale(PickedLocale.EnSe, true),
-                      )?.message || ''
-                    : template.messages.find(
-                        (msg) => msg.language === formatLocale(currentLocale),
-                      )?.message || ''
-                }
-                pinned={template.pinned || false}
-                onSelect={selectHandler}
-                onDelete={deleteHandler}
-                onEdit={editHandler}
-                onPin={pinHandler}
-              />
-            ))}
+            {getFilteredTemplates(false).map((template, idx) => {
+              const index = getFilteredTemplates(true).length + idx
+
+              const navigation = register(`TemplatesList - Row ${index}`, {
+                resolve: () => {
+                  selectHandler(template.id)
+                },
+                neighbors: {
+                  up: index
+                    ? `TemplatesList - Row ${index - 1}`
+                    : 'Template Search',
+                  down:
+                    index <
+                    getFilteredTemplates(true).length +
+                      getFilteredTemplates(false).length
+                      ? `TemplatesList - Row ${index + 1}`
+                      : undefined,
+                },
+              })
+
+              return (
+                <TemplateItem
+                  key={template.id}
+                  templateId={template.id}
+                  name={template.title}
+                  text={
+                    currentLocaleDisplayed?.isEnglishLocale
+                      ? template.messages.find(
+                          (msg) =>
+                            msg.language ===
+                            formatLocale(PickedLocale.EnSe, true),
+                        )?.message || ''
+                      : template.messages.find(
+                          (msg) => msg.language === formatLocale(currentLocale),
+                        )?.message || ''
+                  }
+                  pinned={template.pinned || false}
+                  onSelect={selectHandler}
+                  onDelete={deleteHandler}
+                  onEdit={editHandler}
+                  onPin={pinHandler}
+                  {...navigation}
+                />
+              )
+            })}
           </div>
         ) : (
           <EmptyContainer>No records found</EmptyContainer>
@@ -441,8 +510,9 @@ const TemplateTitle = styled.div`
   }
 `
 
-interface TemplateItemProps {
-  id: string
+interface TemplateItemProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
+  templateId: string
   name: string
   text: string
   pinned: boolean
@@ -453,7 +523,7 @@ interface TemplateItemProps {
 }
 
 const TemplateItem = ({
-  id,
+  templateId,
   name,
   text,
   pinned,
@@ -461,6 +531,7 @@ const TemplateItem = ({
   onDelete,
   onEdit,
   onPin,
+  ...props
 }: TemplateItemProps) => {
   const [isHover, setIsHover] = useState(false)
 
@@ -468,20 +539,21 @@ const TemplateItem = ({
     <TemplateContainer
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
+      {...props}
     >
       <TemplateTop>
-        <TemplateTitle onClick={() => onSelect(id)}>
-          {pinned && <PinAngleFill onClick={() => onPin(id)} />}
+        <TemplateTitle onClick={() => onSelect(templateId)}>
+          {pinned && <PinAngleFill onClick={() => onPin(templateId)} />}
           <h3>{name}</h3>
         </TemplateTitle>
         <TemplateActions>
           {isHover && (
             <>
-              <EditIcon onClick={() => onEdit(id)} />
+              <EditIcon onClick={() => onEdit(templateId)} />
               {pinned ? (
-                <PinAngleFill onClick={() => onPin(id)} />
+                <PinAngleFill onClick={() => onPin(templateId)} />
               ) : (
-                <PinAngle onClick={() => onPin(id)} />
+                <PinAngle onClick={() => onPin(templateId)} />
               )}
               <Trash
                 onClick={() => {
@@ -491,7 +563,7 @@ const TemplateItem = ({
                       'Are you sure you want to delete this message template?',
                     )
                   ) {
-                    onDelete(id)
+                    onDelete(templateId)
                   }
                 }}
               />
@@ -499,7 +571,7 @@ const TemplateItem = ({
           )}
         </TemplateActions>
       </TemplateTop>
-      <TemplateContent onClick={() => onSelect(id)}>
+      <TemplateContent onClick={() => onSelect(templateId)}>
         {text || (
           <EmptyContainer style={{ textAlign: 'start', fontSize: '1rem' }}>
             (no one has written for this language yet..)

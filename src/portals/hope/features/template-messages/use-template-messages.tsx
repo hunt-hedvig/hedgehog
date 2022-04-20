@@ -14,7 +14,7 @@ import {
   GetTemplatesQuery,
 } from 'types/generated/graphql'
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
-import { useInsecurePersistentState } from '@hedvig-ui'
+import { useInsecurePersistentState, Keys, useKeyIsPressed } from '@hedvig-ui'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`
@@ -130,6 +130,9 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [showTemplateMessages, setShowTemplateMessages] = useState(false)
 
+  const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isWPressed = useKeyIsPressed(Keys.W)
+
   const [localesDisplayed, setLocalesDisplayed] = useInsecurePersistentState<
     LocaleDisplayed[]
   >('templates:member:language', [])
@@ -145,6 +148,12 @@ export const TemplateMessagesProvider: React.FC = ({ children }) => {
   const [removeTemplate] = useRemoveTemplateMutation()
 
   const templates = data?.templates ?? []
+
+  useEffect(() => {
+    if (isOptionPressed && isWPressed && memberId) {
+      setShowTemplateMessages((prev) => !prev)
+    }
+  }, [isOptionPressed, isWPressed])
 
   useEffect(() => {
     if (
