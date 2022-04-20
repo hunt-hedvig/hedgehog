@@ -157,7 +157,6 @@ export const MemberInformation: React.FC<{
         {tab === 'claims' && (
           <MemberClaimsView member={member} claimId={claimId} slim={slim} />
         )}
-        <MemberGeneralView memberId={memberId} claimId={claimId} />
       </Loadable>
     </CardContent>
   )
