@@ -1,5 +1,5 @@
 import { ChatFill } from 'react-bootstrap-icons'
-import { Button, Flex, Placeholder } from '@hedvig-ui'
+import { Button, Flex, HotkeyHint, Keys, Placeholder } from '@hedvig-ui'
 import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
 import { TaskChatInput } from 'portals/hope/features/tasks/components/TaskChatInput'
 import React, { useState } from 'react'
@@ -82,16 +82,22 @@ export const TaskChat: React.FC<{
           </div>
         </Flex>
         {resolvable && (
-          <Button
-            disabled={!resolvable}
-            variant="secondary"
-            onClick={(e) => {
-              e.stopPropagation()
-              onResolve()
-            }}
+          <HotkeyHint
+            text="mark as resolved"
+            keys={[Keys.Command, Keys.Shift, Keys.Enter]}
+            position="bottom"
           >
-            Mark as resolved
-          </Button>
+            <Button
+              disabled={!resolvable}
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation()
+                onResolve()
+              }}
+            >
+              Mark as resolved
+            </Button>
+          </HotkeyHint>
         )}
       </InChatTopNav>
       <div

@@ -12,7 +12,6 @@ const HintContainer = styled(motion.div)`
   position: absolute;
 
   right: 0;
-  bottom: calc(100% + 5px);
 
   width: fit-content;
 
@@ -56,6 +55,7 @@ interface HotkeyHintProps extends HTMLMotionProps<'div'> {
   text: string
   keys: Key | Key[]
   wrapperStyles?: React.CSSProperties
+  position?: 'top' | 'bottom'
 }
 
 export const HotkeyHint: React.FC<HotkeyHintProps> = ({
@@ -77,12 +77,22 @@ export const HotkeyHint: React.FC<HotkeyHintProps> = ({
   )
 }
 
-export const Hint: React.FC<HotkeyHintProps> = ({ text, keys, ...props }) => (
+export const Hint: React.FC<HotkeyHintProps> = ({
+  text,
+  keys,
+  position,
+  ...props
+}) => (
   <HintContainer
     key="hint"
     initial={{ y: 15, opacity: 0 }}
     animate={{ y: 0, opacity: 1 }}
     exit={{ y: 15, opacity: 0 }}
+    style={
+      position === 'bottom'
+        ? { top: 'calc(100% + 5px)' }
+        : { bottom: 'calc(100% + 5px)' }
+    }
     {...props}
   >
     <p>{text}</p>
