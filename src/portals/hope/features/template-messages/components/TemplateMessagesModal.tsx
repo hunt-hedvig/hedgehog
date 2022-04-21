@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import styled from '@emotion/styled'
-import { useClickOutside } from '@hedvig-ui'
+import { HotkeyHint, Keys, useClickOutside } from '@hedvig-ui'
 import { keyframes } from '@emotion/react'
 import { TemplateForm } from './TemplateForm'
 import { SearchIcon } from '../../members-search/styles'
@@ -276,14 +276,20 @@ export const TemplateMessagesModal: React.FC<{
           type="search"
           autoFocus
         />
-        <Button
-          variant="tertiary"
-          size="small"
-          onClick={() => setIsCreating(true)}
-          style={{ margin: '0.5rem 0' }}
+        <HotkeyHint
+          text="create template"
+          keys={[Keys.Option, Keys.N]}
+          position="bottom"
         >
-          + new template
-        </Button>
+          <Button
+            variant="tertiary"
+            size="small"
+            onClick={() => setIsCreating(true)}
+            style={{ margin: '0.5rem 0' }}
+          >
+            + new template
+          </Button>
+        </HotkeyHint>
       </Header>
       <Content>
         {getFilteredTemplates(true)?.length ? (

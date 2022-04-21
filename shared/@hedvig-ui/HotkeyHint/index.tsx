@@ -6,6 +6,8 @@ import chroma from 'chroma-js'
 
 const Wrapper = styled.div`
   position: relative;
+
+  width: fit-content;
 `
 
 const HintContainer = styled(motion.div)`
@@ -30,7 +32,7 @@ const HintContainer = styled(motion.div)`
     white-space: nowrap;
     line-height: 0;
     color: ${({ theme }) =>
-      chroma(theme.backgroundLight).alpha(0.6).hex()} !important;
+      chroma(theme.placeholderColor).brighten(0.6).hex()} !important;
   }
 `
 
