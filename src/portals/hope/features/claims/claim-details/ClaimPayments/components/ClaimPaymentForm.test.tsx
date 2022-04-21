@@ -86,6 +86,7 @@ it('submits valid form with confirmation', async () => {
     carrier: 'HEDVIG',
     type: ClaimPaymentType.Automatic,
     paidAt: null,
+    correctsPaymentId: null,
   }
 
   const wrapper = render(
