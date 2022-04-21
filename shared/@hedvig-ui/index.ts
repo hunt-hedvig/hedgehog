@@ -183,3 +183,4 @@ export {
   useConfirmDialog,
   ConfirmDialogProvider,
 } from './Modal/use-confirm-dialog'
+export { HotkeyHint } from './HotkeyHint'
