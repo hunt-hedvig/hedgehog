@@ -10,6 +10,7 @@ import {
   Shadowed,
   TextArea,
   useDraft,
+  useNavigation,
   usePlatform,
 } from '@hedvig-ui'
 import { useSendMessageMutation } from 'types/generated/graphql'
@@ -231,6 +232,8 @@ export const TaskChatInput: React.FC<{
     }
   }
 
+  const { register } = useNavigation()
+
   return (
     <>
       <Container>
@@ -244,7 +247,6 @@ export const TaskChatInput: React.FC<{
         </HintContainer>
 
         <TaskTextArea
-          style={{ height: isLarge ? '20rem' : '8rem' }}
           onFocus={() => {
             setInputFocused(true)
             onFocus()
@@ -263,6 +265,16 @@ export const TaskChatInput: React.FC<{
           value={message}
           onChange={onChangeHandler}
           onKeyDown={(e) => handleOnKeyDown(e)}
+          {...register(
+            'TaskChat',
+            {},
+            {
+              height: isLarge ? '20rem' : '8rem',
+            },
+            {
+              height: isLarge ? '20rem' : '8rem',
+            },
+          )}
         />
         {!slim && (
           <TextAreaFooter onClick={show}>

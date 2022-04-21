@@ -10,7 +10,7 @@ import { PickedLocale } from 'portals/hope/features/config/constants'
 import { Placeholder } from '@hedvig-ui'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import styled from '@emotion/styled'
-import { motion } from 'framer-motion'
+import { motion, HTMLMotionProps } from 'framer-motion'
 import chroma from 'chroma-js'
 import { useTaskNavigation } from 'portals/hope/features/tasks/hooks/use-tasks'
 
@@ -133,12 +133,14 @@ const getMemberName = (group: QuestionGroup) => {
     : undefined
 }
 
-export const TaskListItem: React.FC<{
-  disabled?: boolean
-  group: QuestionGroup
-  onClick: () => void
-  selected: boolean
-}> = ({ group, onClick, selected, disabled }) => {
+export const TaskListItem: React.FC<
+  {
+    disabled?: boolean
+    group: QuestionGroup
+    onClick: () => void
+    selected: boolean
+  } & HTMLMotionProps<'li'>
+> = ({ group, onClick, selected, disabled, ...props }) => {
   const { navigate } = useTaskNavigation()
   const openClaim = useMemberHasOpenClaim(group.memberId)
   const { numberMemberGroups } = useNumberMemberGroups()
@@ -163,6 +165,7 @@ export const TaskListItem: React.FC<{
       key={group.id}
       onClick={() => !disabled && onClick()}
       selected={selected}
+      {...props}
     >
       <div className="orb">
         <div style={{ backgroundColor: orbColor }} />

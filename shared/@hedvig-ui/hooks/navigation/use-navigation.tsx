@@ -444,12 +444,13 @@ export const useNavigation = () => {
     isHorizontal,
     styles,
     edges,
+    onNavigation,
   }: {
     list: T[]
     name: string
     nameField: keyof T
     focus?: Key
-    resolve?: (item: T) => void
+    resolve?: string | ((item: T) => void)
     focusCondition?: (itemName: string) => boolean
     withFocus?: boolean
     focusTarget?: string
@@ -459,6 +460,10 @@ export const useNavigation = () => {
       first?: string
       second?: string
     }
+    onNavigation?: (
+      nextCursor: string,
+      direction: 'up' | 'down' | 'left' | 'right',
+    ) => void
     styles?:
       | {
           focus?: React.CSSProperties
@@ -485,6 +490,10 @@ export const useNavigation = () => {
           {
             focus,
             resolve: () => {
+              if (typeof resolve === 'string') {
+                return resolve
+              }
+
               resolve?.(item)
             },
             neighbors: {
@@ -500,6 +509,7 @@ export const useNavigation = () => {
             withFocus,
             focusTarget,
             autoFocus: autoFocus ? itemIndex === 0 : false,
+            onNavigation,
           },
           typeof styles === 'function' ? styles(item).focus : styles?.focus,
           typeof styles === 'function' ? styles(item).basic : styles?.basic,

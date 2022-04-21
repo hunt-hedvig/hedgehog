@@ -1,7 +1,7 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import { Flex, useMediaQuery, useTitle } from '@hedvig-ui'
+import { Flex, useMediaQuery, useNavigation, useTitle } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { TaskChat } from '../../features/tasks/TaskChat'
@@ -287,6 +287,25 @@ const TasksPage: Page = () => {
 
   useTitle(title, [fullName])
 
+  const { registerList } = useNavigation()
+
+  const { registerItem } = registerList({
+    list: [...groups],
+    name: 'QuestionsList',
+    nameField: 'id',
+    autoFocus: true,
+    resolve: () => 'TaskChat',
+    onNavigation: (nextCursor) => {
+      const newItem = groups.find(
+        (group) => nextCursor.split(' - ')[1] === group.id,
+      )
+
+      if (newItem) {
+        selectTask(newItem)
+      }
+    },
+  })
+
   return (
     <>
       {isMobile && activeTask && (
@@ -375,6 +394,7 @@ const TasksPage: Page = () => {
                     group={group}
                     onClick={() => selectTask(group)}
                     selected={group.memberId === activeTask?.memberId}
+                    {...registerItem(group)}
                   />
                 ))}
               </ListContainer>
