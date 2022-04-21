@@ -55,12 +55,12 @@ const getKeyHint = (key: Key) => {
 interface HotkeyHintProps extends HTMLMotionProps<'div'> {
   text: string
   keys: Key | Key[]
+  wrapperStyles?: React.CSSProperties
 }
 
 export const HotkeyHint: React.FC<HotkeyHintProps> = ({
-  text,
-  keys,
   children,
+  wrapperStyles,
   ...props
 }) => {
   const [showHint, setShowHint] = useState(false)
@@ -69,31 +69,30 @@ export const HotkeyHint: React.FC<HotkeyHintProps> = ({
     <Wrapper
       onMouseEnter={() => setShowHint(true)}
       onMouseLeave={() => setShowHint(false)}
+      style={wrapperStyles}
     >
       {children}
-      <AnimatePresence>
-        {showHint && (
-          <HintContainer
-            key="hint"
-            initial={{ y: 15, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 15, opacity: 0 }}
-            {...props}
-          >
-            <p>{text}</p>
-            <HintKeys>
-              {!Array.isArray(keys)
-                ? keys.hint
-                : keys.map(
-                    (key, index) =>
-                      `${getKeyHint(key)}${
-                        index !== keys.length - 1 ? ' + ' : ''
-                      }`,
-                  )}
-            </HintKeys>
-          </HintContainer>
-        )}
-      </AnimatePresence>
+      <AnimatePresence>{showHint && <Hint {...props} />}</AnimatePresence>
     </Wrapper>
   )
 }
+
+export const Hint: React.FC<HotkeyHintProps> = ({ text, keys, ...props }) => (
+  <HintContainer
+    key="hint"
+    initial={{ y: 15, opacity: 0 }}
+    animate={{ y: 0, opacity: 1 }}
+    exit={{ y: 15, opacity: 0 }}
+    {...props}
+  >
+    <p>{text}</p>
+    <HintKeys>
+      {!Array.isArray(keys)
+        ? keys.hint
+        : keys.map(
+            (key, index) =>
+              `${getKeyHint(key)}${index !== keys.length - 1 ? ' + ' : ''}`,
+          )}
+    </HintKeys>
+  </HintContainer>
+)

@@ -4,6 +4,7 @@ import {
   Button,
   FadeIn,
   Flex,
+  HotkeyHint,
   isPressing,
   Keys,
   Paragraph,
@@ -267,15 +268,17 @@ export const TaskChatInput: React.FC<{
         {!slim && (
           <TextAreaFooter onClick={show}>
             <div className="divider" />
-            <TemplatesButton
-              size="small"
-              variant="tertiary"
-              icon={
-                <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
-              }
-            >
-              templates
-            </TemplatesButton>
+            <HotkeyHint text="browse template" keys={[Keys.Option, Keys.W]}>
+              <TemplatesButton
+                size="small"
+                variant="tertiary"
+                icon={
+                  <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
+                }
+              >
+                templates
+              </TemplatesButton>
+            </HotkeyHint>
           </TextAreaFooter>
         )}
       </Container>
