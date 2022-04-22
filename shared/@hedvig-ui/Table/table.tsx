@@ -148,6 +148,7 @@ export const TableRow: React.FC<TableRowProps> = ({
       ? register(
           `Table Row ${id ?? index}`,
           {
+            withFocus: true,
             autoFocus: index === 0,
             resolve: () => {
               if (!onResolve) {

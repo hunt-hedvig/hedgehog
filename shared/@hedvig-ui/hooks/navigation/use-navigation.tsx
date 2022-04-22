@@ -95,16 +95,13 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
         isPressing(e, options.focus) &&
         (options.focusCondition ? options.focusCondition(name) : true)
       ) {
-        setCursor(name)
-        cursorRef.current = name
-        if (
-          cursorRef.current &&
-          (registry.current[cursorRef.current].withFocus ||
-            registry.current[cursorRef.current].focusTarget) &&
-          'activeElement' in document
-        ) {
+        if ('activeElement' in document) {
           ;(document.activeElement as HTMLElement)?.blur()
         }
+
+        setCursor(name)
+        cursorRef.current = name
+
         return true
       }
 
