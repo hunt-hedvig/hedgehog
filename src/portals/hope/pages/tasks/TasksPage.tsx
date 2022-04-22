@@ -303,7 +303,7 @@ const TasksPage: Page = () => {
     name: 'QuestionsList',
     nameField: 'id',
     autoFocus: true,
-    resolve: () => 'TaskChat',
+    resolve: 'TasksChatInput',
     onNavigation: (nextCursor) => {
       const newItem = groups.find(
         (group) => nextCursor.split(' - ')[1] === group.id,

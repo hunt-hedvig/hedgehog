@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Question, QuestionGroup } from 'types/generated/graphql'
 import { useMemberHasOpenClaim } from 'portals/hope/common/hooks/use-member-has-open-claim'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
@@ -7,7 +7,7 @@ import {
   getMemberIdColor,
 } from 'portals/hope/features/member/utils'
 import { PickedLocale } from 'portals/hope/features/config/constants'
-import { Placeholder } from '@hedvig-ui'
+import { Keys, Placeholder, useKeyIsPressed } from '@hedvig-ui'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import styled from '@emotion/styled'
 import { motion, HTMLMotionProps } from 'framer-motion'
@@ -158,6 +158,33 @@ export const TaskListItem: React.FC<
       )
     : '🏳'
 
+  const onMemberClickHandler = () => {
+    if (disabled) return
+    if (openClaim) {
+      navigate({
+        memberId: group.memberId,
+        tab: 'claims',
+        claimIds: openClaim.id,
+        active: openClaim.id,
+      })
+    } else {
+      navigate({
+        memberId: group.memberId,
+        active: group.memberId,
+      })
+    }
+    onClick()
+  }
+
+  const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isMPressed = useKeyIsPressed(Keys.M)
+
+  useEffect(() => {
+    if (isOptionPressed && isMPressed && selected) {
+      onMemberClickHandler()
+    }
+  }, [isOptionPressed, isMPressed])
+
   return (
     <ListItem
       whileHover={{ scale: 1.02 }}
@@ -174,27 +201,7 @@ export const TaskListItem: React.FC<
       <div className="name-preview-container">
         <span className="name">
           {getMemberName(group) ? (
-            <div
-              onClick={() => {
-                if (disabled) return
-                if (openClaim) {
-                  navigate({
-                    memberId: group.memberId,
-                    tab: 'claims',
-                    claimIds: openClaim.id,
-                    active: openClaim.id,
-                  })
-                } else {
-                  navigate({
-                    memberId: group.memberId,
-                    active: group.memberId,
-                  })
-                }
-                onClick()
-              }}
-            >
-              {getMemberName(group)}
-            </div>
+            <div onClick={onMemberClickHandler}>{getMemberName(group)}</div>
           ) : (
             <Placeholder>Name not available</Placeholder>
           )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import {
   Button,
@@ -10,6 +10,7 @@ import {
   Shadowed,
   TextArea,
   useDraft,
+  useKeyIsPressed,
   useNavigation,
   usePlatform,
 } from '@hedvig-ui'
@@ -224,6 +225,10 @@ export const TaskChatInput: React.FC<{
   }
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (isPressing(e, Keys.Escape)) {
+      e.currentTarget.blur()
+    }
+
     onKeyDown(e)
 
     if (isMetaKey(e) && isPressing(e, Keys.Enter) && !hinting) {
@@ -233,6 +238,16 @@ export const TaskChatInput: React.FC<{
   }
 
   const { register } = useNavigation()
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    if (isEnterPressed) {
+      textAreaRef.current?.focus()
+    }
+  }, [isEnterPressed])
+
+  const textAreaNavigation = register('TasksChatInput', {}, {}, {})
 
   return (
     <>
@@ -247,6 +262,7 @@ export const TaskChatInput: React.FC<{
         </HintContainer>
 
         <TaskTextArea
+          ref={textAreaRef}
           onFocus={() => {
             setInputFocused(true)
             onFocus()
@@ -265,8 +281,7 @@ export const TaskChatInput: React.FC<{
           value={message}
           onChange={onChangeHandler}
           onKeyDown={(e) => handleOnKeyDown(e)}
-          {...register('TaskChat', {}, { border: 'none' }, { border: 'none' })}
-          style={{ height: isLarge ? '20rem' : '8rem' }}
+          style={{ height: isLarge ? '20rem' : '8rem', ...textAreaNavigation }}
         />
         {!slim && (
           <TextAreaFooter onClick={show}>

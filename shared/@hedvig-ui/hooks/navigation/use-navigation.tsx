@@ -55,9 +55,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
         setCursor(name)
         cursorRef.current = name
 
-        if (registry.current[name].onNavigation) {
-          registry.current[name].onNavigation?.(name)
-        }
+        registry.current[name].onNavigation?.(name)
       }
     })
   }, [pathname])
@@ -349,6 +347,8 @@ export const useNavigation = () => {
     assignRef,
   } = useContext(NavigationContext)
 
+  console.log(cursor)
+
   const localItems = useRef<Record<string, UseNavigationRegisterOptions>>({})
 
   const registerItem = (
@@ -370,6 +370,7 @@ export const useNavigation = () => {
     Object.keys(localItems.current).forEach((name) => {
       if (localItems.current[name].autoFocus) {
         setCursor(name)
+        localItems.current[name].onNavigation?.(name)
       }
     })
   }, [cursor, localItems.current])
