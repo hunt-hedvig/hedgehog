@@ -1,7 +1,14 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
-import { Flex, useMediaQuery, useNavigation, useTitle } from '@hedvig-ui'
+import React, { useEffect, useState } from 'react'
+import {
+  Flex,
+  Keys,
+  useKeyIsPressed,
+  useMediaQuery,
+  useNavigation,
+  useTitle,
+} from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { TaskChat } from '../../features/tasks/TaskChat'
@@ -242,6 +249,8 @@ const TasksPage: Page = () => {
   const { setLocale, setMemberId, changeLocaleDisplayed } =
     useTemplateMessages()
 
+  const isFPressed = useKeyIsPressed(Keys.F)
+
   const {
     navigate,
     params: { memberId },
@@ -305,6 +314,12 @@ const TasksPage: Page = () => {
       }
     },
   })
+
+  useEffect(() => {
+    if (isFPressed) {
+      setShowFilters((prev) => !prev)
+    }
+  }, [isFPressed])
 
   return (
     <>
