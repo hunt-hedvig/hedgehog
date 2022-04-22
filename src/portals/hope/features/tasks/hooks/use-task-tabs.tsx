@@ -44,7 +44,7 @@ export const useTaskTabs = (): UseTaskTabsResult => {
             title=""
             onChangeTab={(newTab) =>
               navigate(
-                { memberId, tab: newTab, active: memberId, claimIds },
+                { memberId, tab: newTab, active: memberId, claimIds, taskId },
                 { replace: true },
               )
             }
