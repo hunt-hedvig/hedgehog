@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react'
-import { useTaskNavigation } from 'portals/hope/features/tasks/hooks/use-tasks'
 import { MemberContainer } from 'portals/hope/features/tasks/components/MemberContainer'
 import { ClaimContainer } from 'portals/hope/features/tasks/components/ClaimContainer'
 import formatDate from 'date-fns/format'
 import { parseISO } from 'date-fns'
+import { useTaskNavigation } from 'portals/hope/features/tasks/hooks/use-task-navigation'
 
 interface TaskTab {
   title: string
@@ -28,7 +28,7 @@ export const useTaskTabs = (): UseTaskTabsResult => {
 
   const {
     navigate,
-    params: { memberId, claimIds, tab, active },
+    params: { memberId, claimIds, tab, active, taskId },
   } = useTaskNavigation()
 
   const tabs = useMemo(() => {
@@ -57,6 +57,7 @@ export const useTaskTabs = (): UseTaskTabsResult => {
                   newClaimId,
                 ],
                 active: newClaimId,
+                taskId,
               })
             }
           />
@@ -103,7 +104,7 @@ export const useTaskTabs = (): UseTaskTabsResult => {
 
   const selectTabHandler = (resourceId: string) => {
     if (getTab(resourceId)) {
-      navigate({ memberId, tab, claimIds, active: resourceId })
+      navigate({ memberId, tab, claimIds, active: resourceId, taskId })
     }
   }
 
@@ -114,6 +115,7 @@ export const useTaskTabs = (): UseTaskTabsResult => {
         tab,
         active: memberId,
         claimIds: claimIds.filter((id) => id !== resourceId),
+        taskId,
       })
     }
   }

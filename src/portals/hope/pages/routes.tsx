@@ -23,6 +23,7 @@ import CampaignCodesPage from 'portals/hope/pages/tools/CampaignCodesPage'
 import UnsignMemberPage from 'portals/hope/pages/tools/UnsignMemberPage'
 import TemplateMessagesPage from 'portals/hope/pages/tools/TemplateMessagesPage'
 import AuthAdminPage from 'portals/hope/pages/tools/AuthAdminPage'
+import { TasksToolPage } from 'portals/hope/pages/tools/TasksToolPage'
 
 export type Page<T = void> = React.FC<T>
 
@@ -101,6 +102,7 @@ export const Routes: React.FC = () => {
         <Route path="/tools/employees" component={EmployeesPage} />
         <Route path="/tools/campaign-codes" component={CampaignCodesPage} />
         <Route path="/tools/unsign-member" component={UnsignMemberPage} />
+        <Route path="/tools/tasks" component={TasksToolPage} />
         <Route
           path="/tools/template-messages"
           component={TemplateMessagesPage}
