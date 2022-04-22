@@ -268,7 +268,7 @@ export const TaskChatInput: React.FC<{
         {!slim && (
           <TextAreaFooter onClick={show}>
             <div className="divider" />
-            <HotkeyHint text="browse template" keys={[Keys.Option, Keys.W]}>
+            <HotkeyHint text="Browse template" keys={[Keys.Option, Keys.W]}>
               <TemplatesButton
                 size="small"
                 variant="tertiary"
@@ -299,12 +299,6 @@ export const TaskChatInput: React.FC<{
           justify={'space-between'}
           style={{ padding: '0 1.25rem', marginTop: '1rem' }}
         >
-          <FadeIn duration={200}>
-            <Tip>
-              <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
-              <Shadowed>Enter</Shadowed> to mark as resolved
-            </Tip>
-          </FadeIn>
           {inputFocused && (
             <FadeIn duration={200}>
               <Tip>

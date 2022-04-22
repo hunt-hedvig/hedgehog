@@ -354,7 +354,7 @@ const TasksPage: Page = () => {
               </TabContainer>
               {!memberId && (
                 <HotkeyHint
-                  text="open filters modal"
+                  text="Open filters modal"
                   keys={Keys.F}
                   position="bottom"
                   wrapperStyles={{
@@ -380,7 +380,7 @@ const TasksPage: Page = () => {
               <ListContainer>
                 {groups.map((group) => (
                   <HotkeyHint
-                    text="open member profile"
+                    text="Open member profile"
                     keys={[Keys.Option, Keys.M]}
                     position="bottom"
                     wrapperStyles={{ width: '100%' }}

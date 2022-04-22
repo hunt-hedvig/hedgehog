@@ -277,7 +277,7 @@ export const TemplateMessagesModal: React.FC<{
           autoFocus
         />
         <HotkeyHint
-          text="create template"
+          text="Create template"
           keys={[Keys.Option, Keys.N]}
           position="bottom"
         >

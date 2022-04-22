@@ -83,7 +83,7 @@ export const TaskChat: React.FC<{
         </Flex>
         {resolvable && (
           <HotkeyHint
-            text="mark as resolved"
+            text="Mark as resolved"
             keys={[Keys.Command, Keys.Shift, Keys.Enter]}
             position="bottom"
           >
