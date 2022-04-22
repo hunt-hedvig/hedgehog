@@ -50,14 +50,16 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
   const { pathname } = useLocation()
 
   useEffect(() => {
-    const autoFocusItem = Object.keys(registry.current).find(
-      (name) => registry.current[name].autoFocus,
-    )
+    Object.keys(registry.current).forEach((name) => {
+      if (registry.current[name].autoFocus) {
+        setCursor(name)
+        cursorRef.current = name
 
-    if (autoFocusItem) {
-      setCursor(autoFocusItem)
-      cursorRef.current = autoFocusItem
-    }
+        if (registry.current[name].onNavigation) {
+          registry.current[name].onNavigation?.(name)
+        }
+      }
+    })
   }, [pathname])
 
   const handleKeydown = (e: KeyboardEvent) => {
@@ -323,7 +325,7 @@ interface UseNavigationRegisterOptions {
   autoFocus?: boolean
   onNavigation?: (
     nextCursor: string,
-    direction: 'up' | 'down' | 'left' | 'right',
+    direction?: 'up' | 'down' | 'left' | 'right',
   ) => void
   focus?: Key
   metaKey?: 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey'
@@ -459,7 +461,7 @@ export const useNavigation = () => {
     }
     onNavigation?: (
       nextCursor: string,
-      direction: 'up' | 'down' | 'left' | 'right',
+      direction?: 'up' | 'down' | 'left' | 'right',
     ) => void
     styles?:
       | {

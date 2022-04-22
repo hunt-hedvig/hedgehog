@@ -265,16 +265,8 @@ export const TaskChatInput: React.FC<{
           value={message}
           onChange={onChangeHandler}
           onKeyDown={(e) => handleOnKeyDown(e)}
-          {...register(
-            'TaskChat',
-            {},
-            {
-              height: isLarge ? '20rem' : '8rem',
-            },
-            {
-              height: isLarge ? '20rem' : '8rem',
-            },
-          )}
+          {...register('TaskChat', {}, { border: 'none' }, { border: 'none' })}
+          style={{ height: isLarge ? '20rem' : '8rem' }}
         />
         {!slim && (
           <TextAreaFooter onClick={show}>
