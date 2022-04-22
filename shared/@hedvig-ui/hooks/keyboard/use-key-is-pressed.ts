@@ -361,6 +361,14 @@ export const useKeyIsPressed = (
   const [keyPressed, setKeyPressed] = useState(false)
 
   const handleKeydown = (e: KeyboardEvent) => {
+    if (
+      'activeElement' in document &&
+      ((document.activeElement as HTMLElement).nodeName === 'INPUT' ||
+        (document.activeElement as HTMLElement).nodeName === 'TEXTAREA')
+    ) {
+      return
+    }
+
     if (isPressing(e, key)) {
       callback?.(e)
       setKeyPressed(true)
