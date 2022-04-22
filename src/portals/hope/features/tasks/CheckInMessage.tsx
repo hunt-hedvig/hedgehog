@@ -60,7 +60,11 @@ export const CheckInMessage: React.FC = () => {
         </Paragraph>
         <Spacing top="small" />
         <Flex align="center">
-          <HotkeyHint text="Check in" keys={[Keys.Option, Keys.Enter]}>
+          <HotkeyHint
+            text="Check in"
+            keys={[Keys.Option, Keys.Enter]}
+            disabled={!hasPermission}
+          >
             <Button
               size="medium"
               onClick={() => {

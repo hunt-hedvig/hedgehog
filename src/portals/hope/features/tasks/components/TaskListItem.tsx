@@ -7,7 +7,7 @@ import {
   getMemberIdColor,
 } from 'portals/hope/features/member/utils'
 import { PickedLocale } from 'portals/hope/features/config/constants'
-import { Placeholder } from '@hedvig-ui'
+import { HotkeyHint, Keys, Placeholder } from '@hedvig-ui'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import styled from '@emotion/styled'
 import { motion } from 'framer-motion'
@@ -75,10 +75,6 @@ const ListItem = styled(motion.li)<{ selected?: boolean }>`
     }
     padding-right: 2rem;
 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
     div {
       color: ${({ theme }) => theme.accent};
       transition: color 200ms;
@@ -101,9 +97,11 @@ const ListItem = styled(motion.li)<{ selected?: boolean }>`
 
   .name-preview-container {
     display: flex;
+    align-items: center;
     width: 100%;
 
     @media (max-width: 800px) {
+      align-items: flex-start;
       flex-direction: column;
       max-width: 60%;
     }
@@ -170,31 +168,38 @@ export const TaskListItem: React.FC<{
       <div className="flag">{flag}</div>
       <div className="name-preview-container">
         <span className="name">
-          {getMemberName(group) ? (
-            <div
-              onClick={() => {
-                if (disabled) return
-                if (openClaim) {
-                  navigate({
-                    memberId: group.memberId,
-                    tab: 'claims',
-                    claimIds: openClaim.id,
-                    active: openClaim.id,
-                  })
-                } else {
-                  navigate({
-                    memberId: group.memberId,
-                    active: group.memberId,
-                  })
-                }
-                onClick()
-              }}
-            >
-              {getMemberName(group)}
-            </div>
-          ) : (
-            <Placeholder>Name not available</Placeholder>
-          )}
+          <HotkeyHint
+            text="Open member profile"
+            keys={[Keys.Option, Keys.M]}
+            position="bottom"
+            side="left"
+          >
+            {getMemberName(group) ? (
+              <div
+                onClick={() => {
+                  if (disabled) return
+                  if (openClaim) {
+                    navigate({
+                      memberId: group.memberId,
+                      tab: 'claims',
+                      claimIds: openClaim.id,
+                      active: openClaim.id,
+                    })
+                  } else {
+                    navigate({
+                      memberId: group.memberId,
+                      active: group.memberId,
+                    })
+                  }
+                  onClick()
+                }}
+              >
+                {getMemberName(group)}
+              </div>
+            ) : (
+              <Placeholder>Name not available</Placeholder>
+            )}
+          </HotkeyHint>
         </span>
         <span className="preview">{preview.text}</span>
       </div>

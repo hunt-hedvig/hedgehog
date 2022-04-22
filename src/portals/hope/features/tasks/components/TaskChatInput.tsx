@@ -268,7 +268,7 @@ export const TaskChatInput: React.FC<{
         {!slim && (
           <TextAreaFooter onClick={show}>
             <div className="divider" />
-            <HotkeyHint text="Browse template" keys={[Keys.Option, Keys.W]}>
+            <HotkeyHint text="Browse templates" keys={[Keys.Option, Keys.W]}>
               <TemplatesButton
                 size="small"
                 variant="tertiary"

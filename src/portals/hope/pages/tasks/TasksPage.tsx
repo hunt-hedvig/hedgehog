@@ -186,7 +186,6 @@ const FilterBarItem = styled(motion.button)`
   border-radius: 0.25rem;
   border: none;
   cursor: pointer;
-  /* margin: 1.8rem 2rem; */
 
   padding: 0.4rem 0.6rem;
 
@@ -379,20 +378,13 @@ const TasksPage: Page = () => {
             {!memberId ? (
               <ListContainer>
                 {groups.map((group) => (
-                  <HotkeyHint
-                    text="Open member profile"
-                    keys={[Keys.Option, Keys.M]}
-                    position="bottom"
-                    wrapperStyles={{ width: '100%' }}
-                  >
-                    <TaskListItem
-                      disabled={!checkedIn}
-                      key={group.id}
-                      group={group}
-                      onClick={() => selectTask(group)}
-                      selected={group.memberId === activeTask?.memberId}
-                    />
-                  </HotkeyHint>
+                  <TaskListItem
+                    disabled={!checkedIn}
+                    key={group.id}
+                    group={group}
+                    onClick={() => selectTask(group)}
+                    selected={group.memberId === activeTask?.memberId}
+                  />
                 ))}
               </ListContainer>
             ) : (

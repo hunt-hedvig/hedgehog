@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { AnimatePresence, motion, HTMLMotionProps } from 'framer-motion'
 import { Key } from '../hooks/keyboard/use-key-is-pressed'
 import chroma from 'chroma-js'
+import toast from 'react-hot-toast'
 
 const Wrapper = styled.div`
   position: relative;
@@ -54,25 +55,51 @@ const getKeyHint = (key: Key) => {
   return keyHintSplitted.length > 1 ? keyHintSplitted[1] : keyHintSplitted[0]
 }
 
+const getFormattedKeysText = (keys: Key | Key[]) =>
+  Array.isArray(keys)
+    ? keys.map(
+        (key, index) =>
+          `${getKeyHint(key)}${index !== keys.length - 1 ? ' + ' : ''}`,
+      )
+    : keys.hint
+
 interface HotkeyHintProps extends HTMLMotionProps<'div'> {
   text: string
   keys: Key | Key[]
   wrapperStyles?: React.CSSProperties
   position?: 'top' | 'bottom'
+  side?: 'left' | 'right'
+  disabled?: boolean
 }
 
 export const HotkeyHint: React.FC<HotkeyHintProps> = ({
   children,
   wrapperStyles,
+  disabled,
   ...props
 }) => {
   const [showHint, setShowHint] = useState(false)
 
   return (
     <Wrapper
-      onMouseEnter={() => setShowHint(true)}
-      onMouseLeave={() => setShowHint(false)}
+      onMouseEnter={() => {
+        if (!disabled) {
+          setShowHint(true)
+        }
+      }}
+      onMouseLeave={() => {
+        if (!disabled) {
+          setShowHint(false)
+        }
+      }}
       style={wrapperStyles}
+      onClick={() => {
+        const toastText = `Next time use ${getFormattedKeysText(
+          props.keys,
+        )} to ${props.text}`
+
+        toast(toastText)
+      }}
     >
       {children}
       <AnimatePresence>{showHint && <Hint {...props} />}</AnimatePresence>
@@ -84,28 +111,27 @@ export const Hint: React.FC<HotkeyHintProps> = ({
   text,
   keys,
   position,
+  side,
   ...props
-}) => (
-  <HintContainer
-    key="hint"
-    initial={{ y: 15, opacity: 0 }}
-    animate={{ y: 0, opacity: 1 }}
-    exit={{ y: 15, opacity: 0 }}
-    style={
-      position === 'bottom'
-        ? { top: 'calc(100% + 5px)' }
-        : { bottom: 'calc(100% + 5px)' }
-    }
-    {...props}
-  >
-    <p>{text}</p>
-    <HintKeys>
-      {!Array.isArray(keys)
-        ? keys.hint
-        : keys.map(
-            (key, index) =>
-              `${getKeyHint(key)}${index !== keys.length - 1 ? ' + ' : ''}`,
-          )}
-    </HintKeys>
-  </HintContainer>
-)
+}) => {
+  const positionStyles: React.CSSProperties =
+    position === 'bottom'
+      ? { top: 'calc(100% + 5px)' }
+      : { bottom: 'calc(100% + 5px)' }
+
+  const sideStyles: React.CSSProperties = side ? { [side]: 0 } : {}
+
+  return (
+    <HintContainer
+      key="hint"
+      initial={{ y: 15, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: 15, opacity: 0 }}
+      style={{ ...positionStyles, ...sideStyles }}
+      {...props}
+    >
+      <p>{text}</p>
+      <HintKeys>{getFormattedKeysText(keys)}</HintKeys>
+    </HintContainer>
+  )
+}
