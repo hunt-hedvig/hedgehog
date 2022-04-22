@@ -5,11 +5,13 @@ import { UpdateUserMarketModal } from 'portals/hope/features/tasks/components/Up
 import {
   Button,
   Flex,
+  Keys,
   Paragraph,
   SecondLevelHeadline,
   Spacing,
+  useKeyIsPressed,
 } from '@hedvig-ui'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
@@ -38,15 +40,26 @@ export const CheckInMessage: React.FC = () => {
   const { checkIn } = useCheckInOut()
   const { markets } = useMyMarkets()
 
+  const isEnterPressed = useKeyIsPressed(Keys.Enter)
+  const isCommandPressed = useKeyIsPressed(Keys.Command)
+
+  const checkInHandler = () => {
+    toast.success('You are now checked-in')
+    checkIn()
+  }
+
+  useEffect(() => {
+    if (isEnterPressed && isCommandPressed) {
+      checkInHandler()
+    }
+  }, [isEnterPressed, isCommandPressed])
+
   return (
     <>
       <UpdateUserMarketModal
         visible={showModal}
         onClose={() => setShowModal(false)}
-        onSubmit={() => {
-          toast.success('You are now checked-in')
-          checkIn()
-        }}
+        onSubmit={checkInHandler}
       />
       <MessageCard>
         <SecondLevelHeadline>
@@ -66,8 +79,7 @@ export const CheckInMessage: React.FC = () => {
                 return
               }
 
-              toast.success('You are now checked-in')
-              checkIn()
+              checkInHandler()
             }}
             style={{ minWidth: '10rem' }}
             disabled={!hasPermission}
