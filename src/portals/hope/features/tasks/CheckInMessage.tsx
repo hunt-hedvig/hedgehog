@@ -5,6 +5,8 @@ import { UpdateUserMarketModal } from 'portals/hope/features/tasks/components/Up
 import {
   Button,
   Flex,
+  HotkeyHint,
+  Keys,
   Paragraph,
   SecondLevelHeadline,
   Spacing,
@@ -58,22 +60,25 @@ export const CheckInMessage: React.FC = () => {
         </Paragraph>
         <Spacing top="small" />
         <Flex align="center">
-          <Button
-            size="medium"
-            onClick={() => {
-              if (markets.length === 0) {
-                setShowModal(true)
-                return
-              }
+          <HotkeyHint text="check in" keys={[Keys.Option, Keys.Enter]}>
+            <Button
+              size="medium"
+              onClick={() => {
+                if (markets.length === 0) {
+                  setShowModal(true)
+                  return
+                }
 
-              toast.success('You are now checked-in')
-              checkIn()
-            }}
-            style={{ minWidth: '10rem' }}
-            disabled={!hasPermission}
-          >
-            Check in
-          </Button>
+                toast.success('You are now checked-in')
+                checkIn()
+              }}
+              style={{ minWidth: '10rem' }}
+              disabled={!hasPermission}
+            >
+              Check in
+            </Button>
+          </HotkeyHint>
+
           {!hasPermission && (
             <div className="restricted-label">Only available for IEX</div>
           )}

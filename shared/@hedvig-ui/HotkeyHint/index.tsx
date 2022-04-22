@@ -8,6 +8,7 @@ const Wrapper = styled.div`
   position: relative;
 
   width: fit-content;
+  height: fit-content;
 `
 
 const HintContainer = styled(motion.div)`

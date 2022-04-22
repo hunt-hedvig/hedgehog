@@ -1,7 +1,7 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import { Flex, useMediaQuery, useTitle } from '@hedvig-ui'
+import { Flex, HotkeyHint, Keys, useMediaQuery, useTitle } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { TaskChat } from '../../features/tasks/TaskChat'
@@ -62,6 +62,7 @@ const TaskChatWrapper = styled.div`
 const TopBar = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid
     ${({ theme }) => chroma(theme.semiStrongForeground).brighten(3.25).hex()};
 `
@@ -185,7 +186,7 @@ const FilterBarItem = styled(motion.button)`
   border-radius: 0.25rem;
   border: none;
   cursor: pointer;
-  margin: 1.8rem 2rem;
+  /* margin: 1.8rem 2rem; */
 
   padding: 0.4rem 0.6rem;
 
@@ -352,13 +353,22 @@ const TasksPage: Page = () => {
                 ))}
               </TabContainer>
               {!memberId && (
-                <FilterBarItem
-                  onClick={() => setShowFilters(true)}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
+                <HotkeyHint
+                  text="open filters modal"
+                  keys={Keys.F}
+                  position="bottom"
+                  wrapperStyles={{
+                    marginRight: '2rem',
+                  }}
                 >
-                  Filters
-                </FilterBarItem>
+                  <FilterBarItem
+                    onClick={() => setShowFilters(true)}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Filters
+                  </FilterBarItem>
+                </HotkeyHint>
               )}
             </TopBar>
             {!(loading || checkedIn) && !memberId && (
