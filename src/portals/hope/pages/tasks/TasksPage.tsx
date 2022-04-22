@@ -379,13 +379,20 @@ const TasksPage: Page = () => {
             {!memberId ? (
               <ListContainer>
                 {groups.map((group) => (
-                  <TaskListItem
-                    disabled={!checkedIn}
-                    key={group.id}
-                    group={group}
-                    onClick={() => selectTask(group)}
-                    selected={group.memberId === activeTask?.memberId}
-                  />
+                  <HotkeyHint
+                    text="open member profile"
+                    keys={[Keys.Option, Keys.M]}
+                    position="bottom"
+                    wrapperStyles={{ width: '100%' }}
+                  >
+                    <TaskListItem
+                      disabled={!checkedIn}
+                      key={group.id}
+                      group={group}
+                      onClick={() => selectTask(group)}
+                      selected={group.memberId === activeTask?.memberId}
+                    />
+                  </HotkeyHint>
                 ))}
               </ListContainer>
             ) : (
