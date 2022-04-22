@@ -23,7 +23,7 @@ const ListItem = styled(motion.li)<{ selected?: boolean }>`
     selected ? chroma(theme.accent).alpha(0.2).brighten(1).hex() : undefined};
 
   .name {
-    width: 30%;
+    min-width: 15rem;
 
     @media (max-width: 800px) {
       width: 100%;
@@ -33,6 +33,8 @@ const ListItem = styled(motion.li)<{ selected?: boolean }>`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    max-width: 15rem;
 
     div {
       color: ${({ theme }) => theme.accent};
@@ -45,18 +47,19 @@ const ListItem = styled(motion.li)<{ selected?: boolean }>`
   }
 
   .preview {
-    width: 90%;
     color: ${({ theme }) =>
       chroma(theme.semiStrongForeground).brighten(1).hex()};
 
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    width: 100%;
   }
 
   .name-preview-container {
     display: flex;
-    width: 100%;
+
+    width: 75%;
 
     @media (max-width: 800px) {
       flex-direction: column;
@@ -68,7 +71,11 @@ const ListItem = styled(motion.li)<{ selected?: boolean }>`
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    width: 10rem;
+    width: 100%;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
     @media (max-width: 800px) {
       width: 20%;
       min-width: 5rem;

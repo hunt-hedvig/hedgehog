@@ -1,12 +1,12 @@
-import { ChatFill } from 'react-bootstrap-icons'
-import { Button, Flex, Placeholder } from '@hedvig-ui'
-import { MessagesList } from 'portals/hope/features/member/messages/MessagesList'
-import { TaskChatInput } from 'portals/hope/features/tasks/components/TaskChatInput'
-import React, { useState } from 'react'
+import {ChatFill} from 'react-bootstrap-icons'
+import {Button, Flex, Placeholder} from '@hedvig-ui'
+import {MessagesList} from 'portals/hope/features/member/messages/MessagesList'
+import {TaskChatInput} from 'portals/hope/features/tasks/components/TaskChatInput'
+import React, {useState} from 'react'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
-import { useMemberHasOpenClaim } from 'portals/hope/common/hooks/use-member-has-open-claim'
-import { Task } from 'types/generated/graphql'
+import {useMemberHasOpenClaim} from 'portals/hope/common/hooks/use-member-has-open-claim'
+import {Task} from 'types/generated/graphql'
 
 const InChatTopNav = styled.div`
   cursor: pointer;
@@ -132,7 +132,6 @@ export const TaskChat: React.FC<{
                 memberId={memberId}
                 onBlur={() => void 0}
                 onFocus={() => void 0}
-                onResolve={onResolve}
                 slim={slim}
               />
             )}
