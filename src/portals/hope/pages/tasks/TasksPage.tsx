@@ -3,23 +3,22 @@ import styled from '@emotion/styled'
 import React, { useState } from 'react'
 import { Flex, HotkeyHint, Keys, useMediaQuery, useTitle } from '@hedvig-ui'
 import chroma from 'chroma-js'
-import { PickedLocale } from 'portals/hope/features/config/constants'
 import { TaskChat } from '../../features/tasks/TaskChat'
 import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
 import { useHistory } from 'react-router'
 import { motion } from 'framer-motion'
-import {
-  formatLocale,
-  useTemplateMessages,
-} from '../../features/template-messages/use-template-messages'
-import { TaskListItem } from 'portals/hope/features/tasks/components/TaskListItem'
-import {
-  useTaskNavigation,
-  useTasks,
-} from 'portals/hope/features/tasks/hooks/use-tasks'
+import { useTasks } from 'portals/hope/features/tasks/hooks/use-tasks'
 import { ChevronLeft, X } from 'react-bootstrap-icons'
 import { useCheckInOut } from 'portals/hope/features/tasks/hooks/use-check-in-out'
 import { CheckInMessage } from 'portals/hope/features/tasks/CheckInMessage'
+import { useTaskNavigation } from 'portals/hope/features/tasks/hooks/use-task-navigation'
+import { QuestionGroup } from 'types/generated/graphql'
+import { QuestionTaskListItem } from 'portals/hope/features/tasks/list-items/QuestionTaskListItem'
+import {
+  TaskListItem,
+  TaskWithoutResource,
+  TaskWithResource,
+} from 'portals/hope/features/tasks/list-items/TaskListItem'
 
 const TaskNavigationWrapper = styled.div<{ fullWidth: boolean }>`
   height: 100%;
@@ -239,60 +238,36 @@ const TasksPage: Page = () => {
   const history = useHistory()
   const { loading, checkedIn } = useCheckInOut()
   const [showFilters, setShowFilters] = useState(false)
-  const { setLocale, setMemberId, changeLocaleDisplayed } =
-    useTemplateMessages()
 
   const {
     navigate,
-    params: { memberId },
+    params: { memberId, taskId },
   } = useTaskNavigation()
 
   const {
-    incomingTasks: groups,
+    incomingTasks,
     activeTask,
-    activeTaskMeta: { fullName },
-    selectTask,
     resolveTask,
     render,
     tabs,
     selectTab,
     closeTab,
   } = useTasks({
-    params: { memberId },
-    onResolve: () => {
-      if (isMobile) selectTask(null)
-
-      history.replace(`/questions`)
-    },
-    onSelect: (task) => {
-      if (!task) return
-
-      setMemberId(task.memberId)
-
-      if (
-        task.pickedLocale &&
-        formatLocale(task.pickedLocale as PickedLocale, true) ===
-          formatLocale(PickedLocale.EnSe, true)
-      ) {
-        changeLocaleDisplayed(task.memberId, true)
-      }
-
-      setLocale((task.pickedLocale || PickedLocale.SvSe) as PickedLocale)
-    },
+    params: { taskId },
+    onResolve: () => history.replace(`/questions`),
   })
 
-  const title = memberId
-    ? `Questions | ${fullName}`
-    : `Questions ${groups.length ? '(' + groups.length + ')' : ''}`
+  const title = `Questions ${
+    incomingTasks.length ? '(' + incomingTasks.length + ')' : ''
+  }`
 
-  useTitle(title, [fullName])
+  useTitle(title, [incomingTasks.length])
 
   return (
     <>
       {isMobile && activeTask && (
         <BackButtonContainer
           onClick={() => {
-            selectTask(null)
             history.push('/questions')
           }}
         >
@@ -300,7 +275,7 @@ const TasksPage: Page = () => {
         </BackButtonContainer>
       )}
       <Container>
-        <TaskNavigationWrapper fullWidth={!(activeTask || memberId)}>
+        <TaskNavigationWrapper fullWidth={!activeTask}>
           <>
             <TopBar>
               {!tabs.length ? (
@@ -311,7 +286,7 @@ const TasksPage: Page = () => {
                     style={{ minWidth: '16rem', paddingRight: '1rem' }}
                   >
                     Incoming questions
-                    <div className="count">{groups.length}</div>
+                    <div className="count">{incomingTasks.length}</div>
                   </TopBarItem>
                 </>
               ) : (
@@ -377,47 +352,63 @@ const TasksPage: Page = () => {
             )}
             {!memberId ? (
               <ListContainer>
-                {groups.map((group) => (
-                  <TaskListItem
-                    disabled={!checkedIn}
-                    key={group.id}
-                    group={group}
-                    onClick={() => selectTask(group)}
-                    selected={group.memberId === activeTask?.memberId}
-                  />
-                ))}
+                {incomingTasks.map((task) => {
+                  switch (task.resource?.__typename) {
+                    case 'QuestionGroup':
+                      return (
+                        <QuestionTaskListItem
+                          disabled={!checkedIn}
+                          key={task.id}
+                          task={task as TaskWithResource<QuestionGroup>}
+                          onClick={() => navigate({ taskId: task.id })}
+                          selected={task.id === activeTask?.id}
+                        />
+                      )
+                    default:
+                      return (
+                        <TaskListItem
+                          disabled={!checkedIn}
+                          key={task.id}
+                          task={task as TaskWithoutResource}
+                          onClick={() => navigate({ taskId: task.id })}
+                          selected={task.id === activeTask?.id}
+                        />
+                      )
+                  }
+                })}
               </ListContainer>
             ) : (
               <ListContainer>{render()}</ListContainer>
             )}
           </>
         </TaskNavigationWrapper>
-        {(activeTask || memberId) && (
+        {activeTask && (
           <TaskChatWrapper>
             <TaskChat
               slim={isMobile}
               resolvable={!!activeTask && checkedIn}
-              memberId={activeTask?.memberId || memberId || ''}
-              fullName={fullName}
+              task={activeTask}
               onResolve={() => {
                 if (!activeTask) return
 
-                resolveTask(activeTask.memberId, !isMobile)
+                resolveTask(activeTask.id, !isMobile)
               }}
-              onSelectMember={(openClaimId) => {
+              onSelectMember={(memberId, openClaimId) => {
                 if (!activeTask) return
 
                 if (!openClaimId) {
                   navigate({
-                    memberId: activeTask.memberId,
-                    active: activeTask.memberId,
+                    memberId,
+                    active: memberId,
+                    taskId,
                   })
                 } else {
                   navigate({
-                    memberId: activeTask.memberId,
+                    memberId: memberId,
                     tab: 'claims',
                     active: openClaimId,
                     claimIds: openClaimId,
+                    taskId,
                   })
                 }
               }}

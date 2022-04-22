@@ -19,7 +19,7 @@ import { useTemplateMessages } from 'portals/hope/features/template-messages/use
 import { toast } from 'react-hot-toast'
 import { FileText, TextareaResize } from 'react-bootstrap-icons'
 import chroma from 'chroma-js'
-import { useResolveQuestion } from 'portals/hope/features/filters/hooks/use-resolve-question'
+import { useResolveTask } from 'portals/hope/features/tasks/hooks/use-resolve-task'
 import { useCommandLine } from '../../commands/use-command-line'
 
 const Container = styled.div`
@@ -161,7 +161,7 @@ export const TaskChatInput: React.FC<{
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()
   const { isMetaKey, metaKey } = usePlatform()
-  const { resolve, loading } = useResolveQuestion()
+  const { loading } = useResolveTask()
 
   const { hinting, templateHint, onChange, onKeyDown, clearHinting } =
     useTemplatesHinting(message, setMessage, isMetaKey)
@@ -173,16 +173,7 @@ export const TaskChatInput: React.FC<{
     {
       label: `Resolve question`,
       keys: [Keys.Command, Keys.Shift, Keys.Enter],
-      onResolve: () => {
-        toast.promise(resolve(memberId), {
-          loading: 'Marking as resolved',
-          success: () => {
-            onResolve()
-            return 'Marked as resolved'
-          },
-          error: 'Could not mark as resolved',
-        })
-      },
+      onResolve,
     },
   ])
 

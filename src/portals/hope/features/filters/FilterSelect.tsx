@@ -1,7 +1,12 @@
 import styled from '@emotion/styled'
-import { ButtonsGroup, FadeIn } from '@hedvig-ui'
-import { range } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui'
+import {
+  ButtonsGroup,
+  convertEnumToTitle,
+  FadeIn,
+  Keys,
+  range,
+  useNavigation,
+} from '@hedvig-ui'
 import {
   Market,
   MarketFlags,
@@ -10,14 +15,12 @@ import {
   PickedLocale,
   PickedLocaleMarket,
 } from 'portals/hope/features/config/constants'
-import { useQuestionGroups } from 'portals/hope/features/filters/hooks/use-question-groups'
 import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
 import React from 'react'
-import { useNavigation } from '@hedvig-ui'
 import { QuestionGroup, UserSettings } from 'types/generated/graphql'
-import { Keys } from '@hedvig-ui'
 import { useMyMarkets } from 'portals/hope/common/hooks/use-my-markets'
 import { motion } from 'framer-motion'
+import { useIncomingTasks } from 'portals/hope/features/tasks/hooks/use-incoming-tasks'
 
 const getGroupNumberForMember = (
   memberId: string,
@@ -145,7 +148,7 @@ export const FilterSelect: React.FC<{
   small,
 }) => {
   const { markets: userMarkets } = useMyMarkets()
-  const [questionGroups] = useQuestionGroups()
+  const { tasks } = useIncomingTasks({ filter: false })
 
   const getCountByFilter = (
     filter: FilterStateType,
@@ -153,11 +156,16 @@ export const FilterSelect: React.FC<{
       selectedFilters: FilterStateType[],
     ) => (questionGroup: QuestionGroup) => boolean,
   ) => {
-    return questionGroups.filter(filterer([filter])).length
+    if (!tasks?.length) return 0
+
+    const groups = (tasks as { resource: QuestionGroup }[]).map(
+      (task) => task.resource,
+    )
+
+    return groups.filter(filterer([filter])).length
   }
 
   const { numberMemberGroups } = useNumberMemberGroups()
-
   const { register } = useNavigation()
 
   return (
