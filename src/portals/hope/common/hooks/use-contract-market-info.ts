@@ -25,6 +25,7 @@ export const useContractMarketInfo = (
   const { data } = useContractMarketInfoQuery({
     variables: { memberId },
     fetchPolicy: 'cache-first',
+    skip: !memberId,
   })
 
   return {

@@ -62,6 +62,8 @@ type QueryType {
 }
 
 type MutationType {
+  resolveTask(taskId: ID!): Task!
+  purgeTasks: Boolean!
   chargeMember(
     id: ID!
     amount: MonetaryAmount!
@@ -307,7 +309,11 @@ type SearchResultHighlight {
   values: [String!]!
 }
 
-union SearchHit = MemberSearchHit | NoteSearchHit | QuoteSearchHit | QuoteCartSearchHit
+union SearchHit =
+    MemberSearchHit
+  | NoteSearchHit
+  | QuoteSearchHit
+  | QuoteCartSearchHit
 
 type SearchResult {
   hit: SearchHit!
@@ -373,6 +379,8 @@ union TaskResource = QuestionGroup | Claim
 
 type Task {
   id: ID!
+  title: String
+  description: String
   resource: TaskResource
   createdAt: Instant!
 }
@@ -394,20 +402,20 @@ type UserNotification {
 }
 
 type UserSettings {
-    darkMode: Boolean
-    featureFlags: [String!]
-    numberOfMemberGroups: Int
-    claimComplexityFilterClaims: [ClaimComplexity!]
-    claimStatesFilterClaims: [ClaimState!]
-    claimStatesFilterQuestions: [Int!]
-    memberGroupsFilterClaims: [Int!]
-    memberGroupsFilterQuestions: [Int!]
-    marketFilterClaims: [String!]
-    marketFilterQuestions: [Int!]
-    numberOfClaimsFilter: Int
-    outcomeFilterClaims: [String!]
-    focusMarkets: [String!]
-    languages: [String!]
+  darkMode: Boolean
+  featureFlags: [String!]
+  numberOfMemberGroups: Int
+  claimComplexityFilterClaims: [ClaimComplexity!]
+  claimStatesFilterClaims: [ClaimState!]
+  claimStatesFilterQuestions: [Int!]
+  memberGroupsFilterClaims: [Int!]
+  memberGroupsFilterQuestions: [Int!]
+  marketFilterClaims: [String!]
+  marketFilterQuestions: [Int!]
+  numberOfClaimsFilter: Int
+  outcomeFilterClaims: [String!]
+  focusMarkets: [String!]
+  languages: [String!]
 }
 
 enum GrantHolderType {
@@ -755,7 +763,7 @@ type UnknownIncentive {
 }
 
 union Incentive =
-  MonthlyPercentageDiscountFixedPeriod
+    MonthlyPercentageDiscountFixedPeriod
   | FreeMonths
   | CostDeduction
   | NoDiscount

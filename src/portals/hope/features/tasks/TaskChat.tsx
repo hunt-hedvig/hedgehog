@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
 import { useMemberHasOpenClaim } from 'portals/hope/common/hooks/use-member-has-open-claim'
-import { useMemberName } from 'portals/hope/common/hooks/use-member-name'
+import { Task } from 'types/generated/graphql'
 
 const InChatTopNav = styled.div`
   cursor: pointer;
@@ -56,28 +56,36 @@ const InChatTopNav = styled.div`
 
 export const TaskChat: React.FC<{
   resolvable: boolean
-  memberId: string
+  task: Task
   onResolve: () => void
   fullName?: string | null
-  onSelectMember: (openClaimId: string | null) => void
+  onSelectMember: (memberId: string, openClaimId: string | null) => void
   slim?: boolean
-}> = ({ resolvable, memberId, onResolve, onSelectMember, fullName, slim }) => {
-  const { fullName: fullNameByQuery } = useMemberName(memberId)
+}> = ({ resolvable, task, onResolve, onSelectMember, slim }) => {
+  const memberId = (task as { resource?: { memberId?: string } })?.resource
+    ?.memberId
+
   const openClaim = useMemberHasOpenClaim(memberId)
   const [isLarge, setIsLarge] = useState(false)
 
   return (
     <>
-      <InChatTopNav onClick={() => onSelectMember(openClaim?.id ?? null)}>
+      <InChatTopNav
+        onClick={() =>
+          memberId && onSelectMember(memberId, openClaim?.id ?? null)
+        }
+      >
         <Flex align="center">
           <div className="icon">
             <ChatFill />
           </div>
           <div>
-            <a onClick={() => onSelectMember(openClaim?.id ?? null)}>
-              {fullName ?? fullNameByQuery ?? (
-                <Placeholder>Name not available</Placeholder>
-              )}
+            <a
+              onClick={() =>
+                memberId && onSelectMember(memberId, openClaim?.id ?? null)
+              }
+            >
+              {task.title ?? <Placeholder>Not available</Placeholder>}
             </a>
           </div>
         </Flex>
@@ -94,37 +102,42 @@ export const TaskChat: React.FC<{
           </Button>
         )}
       </InChatTopNav>
-      <div
-        style={{
-          height: isLarge ? 'calc(100% - 27rem)' : 'calc(100% - 15rem)',
-          transition: 'height 200ms',
-        }}
-      >
-        <MessagesList
-          memberId={memberId}
-          style={{
-            padding: '2rem',
-            marginBottom: '6rem',
-            paddingBottom: '0',
-          }}
-        />
-      </div>
-      <div
-        style={{
-          padding: '1rem',
-          overflow: 'hidden',
-        }}
-      >
-        <TaskChatInput
-          onResize={() => setIsLarge(!isLarge)}
-          isLarge={isLarge}
-          memberId={memberId}
-          onBlur={() => void 0}
-          onFocus={() => void 0}
-          onResolve={onResolve}
-          slim={slim}
-        />
-      </div>
+      {memberId && (
+        <>
+          <div
+            style={{
+              height: isLarge ? 'calc(100% - 27rem)' : 'calc(100% - 15rem)',
+              transition: 'height 200ms',
+            }}
+          >
+            <MessagesList
+              memberId={memberId}
+              style={{
+                padding: '2rem',
+                marginBottom: '6rem',
+                paddingBottom: '0',
+              }}
+            />
+          </div>
+          <div
+            style={{
+              padding: '1rem',
+              overflow: 'hidden',
+            }}
+          >
+            {memberId && (
+              <TaskChatInput
+                onResize={() => setIsLarge(!isLarge)}
+                isLarge={isLarge}
+                memberId={memberId}
+                onBlur={() => void 0}
+                onFocus={() => void 0}
+                slim={slim}
+              />
+            )}
+          </div>
+        </>
+      )}
     </>
   )
 }

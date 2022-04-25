@@ -1,13 +1,12 @@
 import styled from '@emotion/styled'
-import { Label, Spacing } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui'
+import { convertEnumToTitle, Label, Spacing } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React, { HTMLAttributes } from 'react'
 import { Link } from 'react-router-dom'
-import { useTaskNavigation } from 'portals/hope/features/tasks/hooks/use-tasks'
 import { Claim, ClaimState, GetMemberInfoQuery } from 'types/generated/graphql'
+import { useTaskNavigation } from 'portals/hope/features/tasks/hooks/use-task-navigation'
 
 const ClaimItemWrapper = styled.div<{ claimType: boolean; outcome: boolean }>`
   display: flex;
