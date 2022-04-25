@@ -103,6 +103,7 @@ const TabContainer = styled.div`
 const TopBarItem = styled.button<{ selected?: boolean }>`
   display: flex;
   align-items: center;
+  height: 100%;
 
   .title {
     transition: color 200ms;
