@@ -20,7 +20,6 @@ import { toast } from 'react-hot-toast'
 import { FileText, TextareaResize } from 'react-bootstrap-icons'
 import chroma from 'chroma-js'
 import { useResolveTask } from 'portals/hope/features/tasks/hooks/use-resolve-task'
-import { useCommandLine } from '../../commands/use-command-line'
 
 const Container = styled.div`
   width: 100%;
@@ -152,11 +151,10 @@ export const TaskChatInput: React.FC<{
   memberId: string
   onFocus: () => void
   onBlur: () => void
-  onResolve: () => void
   onResize: () => void
   isLarge: boolean
   slim?: boolean
-}> = ({ memberId, onFocus, onBlur, onResolve, isLarge, onResize, slim }) => {
+}> = ({ memberId, onFocus, onBlur, isLarge, onResize, slim }) => {
   const [message, setMessage] = useDraft(memberId)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()
@@ -166,16 +164,6 @@ export const TaskChatInput: React.FC<{
   const { hinting, templateHint, onChange, onKeyDown, clearHinting } =
     useTemplatesHinting(message, setMessage, isMetaKey)
   const { show, selected } = useTemplateMessages()
-
-  const { registerActions } = useCommandLine()
-
-  registerActions([
-    {
-      label: `Resolve question`,
-      keys: [Keys.Command, Keys.Shift, Keys.Enter],
-      onResolve,
-    },
-  ])
 
   useEffect(() => {
     if (selected) {
@@ -290,6 +278,14 @@ export const TaskChatInput: React.FC<{
           justify={'space-between'}
           style={{ padding: '0 1.25rem', marginTop: '1rem' }}
         >
+          {/* TODO: Fix command line to not resolve wrong members
+          <FadeIn duration={200}>
+            <Tip>
+              <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
+              <Shadowed>Enter</Shadowed> to mark as resolved
+            </Tip>
+          </FadeIn>
+          */}
           {inputFocused && (
             <FadeIn duration={200}>
               <Tip>

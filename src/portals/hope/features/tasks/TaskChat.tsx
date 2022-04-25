@@ -138,7 +138,6 @@ export const TaskChat: React.FC<{
                 memberId={memberId}
                 onBlur={() => void 0}
                 onFocus={() => void 0}
-                onResolve={onResolve}
                 slim={slim}
               />
             )}
