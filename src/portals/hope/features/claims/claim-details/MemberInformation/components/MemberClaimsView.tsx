@@ -56,7 +56,7 @@ const ClaimItem: React.FC<
 > = ({ claim, slim, ...props }) => {
   const {
     navigate,
-    params: { memberId, claimIds, tab },
+    params: { memberId, claimIds, tab, taskId },
   } = useTaskNavigation()
 
   if (slim) {
@@ -70,6 +70,7 @@ const ClaimItem: React.FC<
             tab,
             claimIds: [...claimIds.filter((id) => id !== claim.id), claim.id],
             active: claim.id,
+            taskId,
           })
         }}
       >
