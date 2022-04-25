@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { Dropdown, DropdownOption } from '@hedvig-ui'
-import { DropdownProps } from '@hedvig-ui/Dropdown/dropdown'
+import { DropdownProps } from '@hedvig-ui'
 import React from 'react'
 import {
   TypeOfContract,
   TypeOfContractType,
 } from 'portals/hope/features/config/constants'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { useClaimContracts } from 'portals/hope/common/hooks/use-claim-contracts'
 
 const ContractItemTypeName = styled.div`

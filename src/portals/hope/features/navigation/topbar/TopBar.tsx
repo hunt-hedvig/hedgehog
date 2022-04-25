@@ -1,11 +1,7 @@
 import styled from '@emotion/styled'
 import { Flex } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys, useKeyIsPressed } from '@hedvig-ui'
 import { UsersOnPath } from 'portals/hope/features/navigation/topbar/components/UsersOnPath'
-import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { NotificationsModal } from 'portals/hope/features/user/notifications/NotificationsModal'
 import { ShareIcon } from 'portals/hope/features/user/share/components/ShareIcon'
 import { ShareModal } from 'portals/hope/features/user/share/ShareModal'
@@ -14,9 +10,10 @@ import { UserPanel } from 'portals/hope/features/user/UserPanel'
 import React, { useEffect, useState } from 'react'
 import { BellFill, PeopleFill } from 'react-bootstrap-icons'
 import UserMenu from './UserMenu'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { useNavigation } from '@hedvig-ui'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
-import { motion, HTMLMotionProps } from 'framer-motion'
+import { HTMLMotionProps, motion } from 'framer-motion'
+import { useNotifications } from 'portals/hope/features/user/notifications/hooks/use-notifications'
 
 const Wrapper = styled.div`
   z-index: 1000;
@@ -48,9 +45,9 @@ export const CircleButtonStyles = styled(motion.button)`
     background-color: ${({ theme }) => theme.accentLight};
   }
 
-  & svg {
-    height: 16px;
-    width: 16px;
+  & > svg {
+    width: 100%;
+
     pointer-events: none;
   }
 
@@ -89,7 +86,7 @@ const NewNotificationsOrb = styled.div`
 const NotificationsButton: React.FC<{ onClick: () => void }> = ({
   onClick,
 }) => {
-  const { me } = useMe()
+  const { notifications } = useNotifications()
   const { register } = useNavigation()
 
   return (
@@ -106,7 +103,7 @@ const NotificationsButton: React.FC<{ onClick: () => void }> = ({
       })}
     >
       <BellFill />
-      {me.notifications.some((notification) => !notification.read) && (
+      {notifications.some((notification) => !notification.read) && (
         <NewNotificationsOrb />
       )}
     </CircleButton>
@@ -190,7 +187,6 @@ export const TopBar = () => {
 
         <div style={{ marginLeft: '1rem' }} />
         <CircleButton
-          id="show_users_online"
           onClick={() => {
             PushUserAction('user_panel', 'open', null, null)
             setShowUsers(true)

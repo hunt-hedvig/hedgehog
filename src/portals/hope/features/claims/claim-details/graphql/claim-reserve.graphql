@@ -1,6 +1,0 @@
-query ClaimReserve($claimId: ID!) {
-  claim(id: $claimId) {
-    id
-    reserves
-  }
-}

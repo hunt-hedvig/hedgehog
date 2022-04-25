@@ -1,5 +1,5 @@
 import { CardContent, CardTitle, Flex, SearchableDropdown } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { ClaimPropertyForm } from 'portals/hope/features/claims/claim-details/ClaimType/components/ClaimPropertyForm'
 import React from 'react'
 import { BugFill } from 'react-bootstrap-icons'
@@ -132,6 +132,7 @@ export const ClaimType: React.FC<{
                 label: convertEnumToTitle(claimType),
                 searchTerms: claimType,
               }))}
+              inputId="claim-type-dropdown"
             />
             {!!selectedClaimType && (
               <ClaimPropertyForm

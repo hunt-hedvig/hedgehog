@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import { CreateFilterModal } from 'portals/hope/features/claims/claim-templates/CreateFilterModal'
 import { ClaimFilterTemplate } from 'portals/hope/features/claims/claim-templates/hooks/use-template-claims'
 import { useListClaims } from 'portals/hope/features/claims/claims-list/graphql/use-list-claims'
@@ -11,7 +11,7 @@ import {
   MetricName,
   MetricNumber,
   metricStyles,
-} from 'portals/hope/pages/DashboardPage'
+} from 'portals/hope/features/dashboard/MetricList'
 
 const IconsWrapper = styled.div`
   position: absolute;

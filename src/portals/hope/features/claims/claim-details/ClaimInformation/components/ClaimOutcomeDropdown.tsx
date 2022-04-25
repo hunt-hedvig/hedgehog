@@ -1,5 +1,5 @@
 import { Dropdown, DropdownOption } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import {

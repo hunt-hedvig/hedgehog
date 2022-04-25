@@ -1,13 +1,10 @@
 import React from 'react'
 import { Flex, Label, Modal } from '@hedvig-ui'
-import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/questions/number-member-groups-radio-buttons'
-import {
-  FilterSelect,
-  FilterStateType,
-} from 'portals/hope/features/questions/FilterSelect'
+import { NumberMemberGroupsRadioButtons } from 'portals/hope/features/filters/NumberMemberGroupsRadioButtons'
+import { FilterSelect } from 'portals/hope/features/filters/FilterSelect'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
-import { UserSettingKey } from 'types/generated/graphql'
+import { useSelectedFilters } from 'portals/hope/features/filters/hooks/use-selected-filters'
 
 const Container = styled(Modal)`
   width: 60rem;
@@ -35,43 +32,45 @@ const Container = styled(Modal)`
 
 export const FilterModal: React.FC<{
   onClose: () => void
-  onToggle: (filter: FilterStateType, settingField?: UserSettingKey) => void
-  filters: number[]
   visible: boolean
-}> = ({ onClose, onToggle, filters, visible }) => (
-  <Container onClose={onClose} visible={visible}>
-    <Flex
-      style={{ height: '100%', width: '100%' }}
-      direction="column"
-      justify="space-between"
-    >
-      <div>
-        <h4>Select Filters</h4>
+}> = ({ onClose, visible }) => {
+  const { selectedFilters, toggleFilter } = useSelectedFilters()
 
-        <Flex
-          style={{
-            flexWrap: 'wrap',
-            marginTop: '3rem',
-          }}
-          justify="space-between"
-        >
+  return (
+    <Container onClose={onClose} visible={visible}>
+      <Flex
+        style={{ height: '100%', width: '100%' }}
+        direction="column"
+        justify="space-between"
+      >
+        <div>
+          <h4>Select Filters</h4>
+
           <Flex
-            direction="column"
-            align="center"
-            fullWidth
-            style={{ marginBottom: '2rem' }}
+            style={{
+              flexWrap: 'wrap',
+              marginTop: '3rem',
+            }}
+            justify="space-between"
           >
-            <Label>Number of member groups</Label>
-            <NumberMemberGroupsRadioButtons />
+            <Flex
+              direction="column"
+              align="center"
+              fullWidth
+              style={{ marginBottom: '2rem' }}
+            >
+              <Label>Number of member groups</Label>
+              <NumberMemberGroupsRadioButtons />
+            </Flex>
+            <FilterSelect
+              filters={selectedFilters}
+              onToggle={toggleFilter}
+              animationDelay={0}
+              animationItemDelay={20}
+            />
           </Flex>
-          <FilterSelect
-            filters={filters}
-            onToggle={onToggle}
-            animationDelay={0}
-            animationItemDelay={20}
-          />
-        </Flex>
-      </div>
-    </Flex>
-  </Container>
-)
+        </div>
+      </Flex>
+    </Container>
+  )
+}

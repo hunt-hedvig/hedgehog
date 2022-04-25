@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { FadeIn } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
-import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
-import { useDarkmode } from '@hedvig-ui/hooks/use-darkmode'
+import { Keys } from '@hedvig-ui'
+import { useNavigation } from '@hedvig-ui'
+import { useClickOutside } from '@hedvig-ui'
+import { useDarkmode } from '@hedvig-ui'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import React, { useRef } from 'react'
 import {

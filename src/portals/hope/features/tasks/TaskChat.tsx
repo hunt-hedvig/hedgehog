@@ -5,6 +5,8 @@ import { TaskChatInput } from 'portals/hope/features/tasks/components/TaskChatIn
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
+import { useMemberHasOpenClaim } from 'portals/hope/common/hooks/use-member-has-open-claim'
+import { Task } from 'types/generated/graphql'
 
 const InChatTopNav = styled.div`
   cursor: pointer;
@@ -53,66 +55,89 @@ const InChatTopNav = styled.div`
 `
 
 export const TaskChat: React.FC<{
-  memberId: string
-  fullName?: string
+  resolvable: boolean
+  task: Task
   onResolve: () => void
-  onSelectMember: () => void
-}> = ({ memberId, onResolve, fullName, onSelectMember }) => {
+  fullName?: string | null
+  onSelectMember: (memberId: string, openClaimId: string | null) => void
+  slim?: boolean
+}> = ({ resolvable, task, onResolve, onSelectMember, slim }) => {
+  const memberId = (task as { resource?: { memberId?: string } })?.resource
+    ?.memberId
+
+  const openClaim = useMemberHasOpenClaim(memberId)
   const [isLarge, setIsLarge] = useState(false)
 
   return (
     <>
-      <InChatTopNav onClick={onSelectMember}>
+      <InChatTopNav
+        onClick={() =>
+          memberId && onSelectMember(memberId, openClaim?.id ?? null)
+        }
+      >
         <Flex align="center">
           <div className="icon">
             <ChatFill />
           </div>
           <div>
-            <a onClick={onSelectMember}>
-              {fullName ?? <Placeholder>Name not available</Placeholder>}
+            <a
+              onClick={() =>
+                memberId && onSelectMember(memberId, openClaim?.id ?? null)
+              }
+            >
+              {task.title ?? <Placeholder>Not available</Placeholder>}
             </a>
           </div>
         </Flex>
-        <Button
-          variant="secondary"
-          onClick={(e) => {
-            e.stopPropagation()
-            onResolve()
-          }}
-        >
-          Mark as resolved
-        </Button>
+        {resolvable && (
+          <Button
+            disabled={!resolvable}
+            variant="secondary"
+            onClick={(e) => {
+              e.stopPropagation()
+              onResolve()
+            }}
+          >
+            Mark as resolved
+          </Button>
+        )}
       </InChatTopNav>
-      <div
-        style={{
-          height: isLarge ? 'calc(100% - 27rem)' : 'calc(100% - 15rem)',
-          transition: 'height 200ms',
-        }}
-      >
-        <MessagesList
-          memberId={memberId}
-          style={{
-            padding: '2rem',
-            marginBottom: '6rem',
-            paddingBottom: '0',
-          }}
-        />
-      </div>
-      <div
-        style={{
-          padding: '1rem',
-          overflow: 'hidden',
-        }}
-      >
-        <TaskChatInput
-          onResize={() => setIsLarge(!isLarge)}
-          isLarge={isLarge}
-          memberId={memberId}
-          onBlur={() => void 0}
-          onFocus={() => void 0}
-          onResolve={onResolve}
-        />
-      </div>
+      {memberId && (
+        <>
+          <div
+            style={{
+              height: isLarge ? 'calc(100% - 27rem)' : 'calc(100% - 15rem)',
+              transition: 'height 200ms',
+            }}
+          >
+            <MessagesList
+              memberId={memberId}
+              style={{
+                padding: '2rem',
+                marginBottom: '6rem',
+                paddingBottom: '0',
+              }}
+            />
+          </div>
+          <div
+            style={{
+              padding: '1rem',
+              overflow: 'hidden',
+            }}
+          >
+            {memberId && (
+              <TaskChatInput
+                onResize={() => setIsLarge(!isLarge)}
+                isLarge={isLarge}
+                memberId={memberId}
+                onBlur={() => void 0}
+                onFocus={() => void 0}
+                slim={slim}
+              />
+            )}
+          </div>
+        </>
+      )}
     </>
   )
 }

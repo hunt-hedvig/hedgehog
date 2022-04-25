@@ -31,9 +31,6 @@ export const cache = new InMemoryCache({
         employees: {
           merge: false,
         },
-        questionGroups: {
-          merge: false,
-        },
       },
     },
   },

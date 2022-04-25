@@ -1,18 +1,20 @@
-import React from 'react'
-import {
-  QuoteCartSearchHit,
-  QuoteSearchHit,
-  useQuoteSearchQuoteQuery,
-} from 'types/generated/graphql'
 import styled from '@emotion/styled'
 import { Button, Flex, Loadable, Placeholder } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui'
+import { convertEnumOrSentenceToTitle, convertEnumToTitle } from '@hedvig-ui'
 import chroma from 'chroma-js'
-import gql from 'graphql-tag'
-import {
-  convertEnumOrSentenceToTitle,
-  convertEnumToTitle,
-} from '@hedvig-ui/utils/text'
+import copy from 'copy-to-clipboard'
 import formatDate from 'date-fns/format'
+import gql from 'graphql-tag'
+import { Market, MarketLanguage } from 'portals/hope/features/config/constants'
+import React from 'react'
+import { toast } from 'react-hot-toast'
+import {
+  QuoteCartSearchHit,
+  QuoteCartSearchQuotesQuery,
+  useBypassUnderwritingGuidelinesMutation,
+  useQuoteCartSearchQuotesQuery,
+} from 'types/generated/graphql'
 
 const Wrapper = styled.div`
   margin-bottom: 1rem;
@@ -78,29 +80,35 @@ const BreachedGuidelineTag = styled.div`
 `
 
 gql`
-  query QuoteCartSearchQuote($id: String!) {
-    quote(id: $id) {
+  query QuoteCartSearchQuotes($quoteIds: [String!]!) {
+    quotes(ids: $quoteIds) {
       id
+      market
       price
       currency
       createdAt
       state
       productType
       breachedUnderwritingGuidelines
+      underwritingGuidelinesBypassed
+    }
+  }
+
+  mutation BypassUnderwritingGuidelines($quoteIds: [ID!]!) {
+    bypassUnderwritingGuidelines(quoteIds: $quoteIds) {
+      id
+      underwritingGuidelinesBypassed
     }
   }
 `
 
-const QuoteResultRow: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
-  const { data, loading } = useQuoteSearchQuoteQuery({
-    variables: { id: quote.id ?? '' },
-    fetchPolicy: 'cache-first',
-  })
-
-  const price = data?.quote?.price
-  const currency = data?.quote?.currency
-  const productType = data?.quote?.productType
-  const breachedGuidelines = data?.quote?.breachedUnderwritingGuidelines ?? []
+const QuoteResultRow: React.FC<{
+  quote: QuoteCartSearchQuotesQuery['quotes'][0]
+}> = ({ quote }) => {
+  const price = quote?.price
+  const currency = quote?.currency
+  const productType = quote?.productType
+  const breachedGuidelines = quote?.breachedUnderwritingGuidelines ?? []
 
   return (
     <>
@@ -132,7 +140,7 @@ const QuoteResultRow: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
         <Flex direction="column" align="flex-end">
           <SmallLabel>Price</SmallLabel>
           <Flex justify="flex-end">
-            <Loadable loading={loading || !price || !currency}>
+            <Loadable loading={!price || !currency}>
               {price ?? '123'} {currency ?? 'ABC'}
             </Loadable>
           </Flex>
@@ -142,29 +150,37 @@ const QuoteResultRow: React.FC<{ quote: QuoteSearchHit }> = ({ quote }) => {
   )
 }
 
+const getOnboardingUrl = () => {
+  return (window as Window & typeof global & { HEDVIG_ONBOARDING_URL: string })
+    .HEDVIG_ONBOARDING_URL
+}
+
 export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
-  quoteCart: { quotes },
+  quoteCart: { id, quotes },
 }) => {
-  const firstQuote = () => {
-    if (quotes.length === 0) {
-      return null
-    }
-
-    return quotes[0]
-  }
-
-  const { data } = useQuoteSearchQuoteQuery({
-    variables: { id: firstQuote()?.id ?? '' },
+  const { data } = useQuoteCartSearchQuotesQuery({
+    variables: { quoteIds: quotes.map((quote) => quote.id) },
+    fetchPolicy: 'cache-first',
   })
 
-  const fullName = firstQuote()?.fullName
-  const createdAt = data?.quote?.createdAt
-  const state = data?.quote?.state
+  const [bypassQuotes] = useBypassUnderwritingGuidelinesMutation()
+  const { confirm } = useConfirmDialog()
+
+  const firstQuotePreview = quotes[0]
+  const firstQuote = data?.quotes?.at(0)
+
+  const fullName = firstQuotePreview?.fullName
+  const createdAt = firstQuote?.createdAt
+  const state = firstQuote?.state
+
+  const hasBypassedUwgl = data?.quotes?.every(
+    (quote) => quote.underwritingGuidelinesBypassed,
+  )
 
   const geoInfo = [
-    firstQuote()?.street,
-    firstQuote()?.city,
-    firstQuote()?.postalCode,
+    firstQuotePreview?.street,
+    firstQuotePreview?.city,
+    firstQuotePreview?.postalCode,
   ].filter((q) => !!q)
 
   return (
@@ -175,14 +191,56 @@ export const QuoteCartResult: React.FC<{ quoteCart: QuoteCartSearchHit }> = ({
             {fullName ?? <Placeholder>Name not available</Placeholder>}
           </div>
           <div className="ssn">
-            {firstQuote()?.ssn ?? <Placeholder>SSN not available</Placeholder>}
+            {firstQuotePreview?.ssn ?? (
+              <Placeholder>SSN not available</Placeholder>
+            )}
           </div>
         </Flex>
-        <Button disabled={true}>Sign</Button>
+        <Button
+          disabled={!firstQuote}
+          variant={hasBypassedUwgl ? 'tertiary' : 'secondary'}
+          onClick={() => {
+            if (hasBypassedUwgl && firstQuote) {
+              copy(
+                `${getOnboardingUrl()}/${
+                  MarketLanguage[firstQuote.market as Market]
+                }/new-member/offer/${id}`,
+              )
+              toast.success('Copied offer page link')
+              return
+            }
+            confirm(
+              'Are you sure you want to allow the member to sign this cart?',
+            ).then(() => {
+              toast.promise(
+                bypassQuotes({
+                  variables: {
+                    quoteIds: quotes.map((quote) => quote.id),
+                  },
+                  optimisticResponse: {
+                    bypassUnderwritingGuidelines: quotes.map((quote) => ({
+                      id: quote.id,
+                      underwritingGuidelinesBypassed: true,
+                      __typename: 'Quote',
+                    })),
+                  },
+                }),
+                {
+                  success:
+                    'Quote cart signable, please send the link to the member',
+                  loading: 'Making quote cart signable',
+                  error: 'Unable to make quote cart signable',
+                },
+              )
+            })
+          }}
+        >
+          {hasBypassedUwgl ? 'Copy offer link' : 'Exempt cart from guidelines'}
+        </Button>
       </Flex>
       <Flex className="quotes" direction="column" fullWidth>
-        {quotes.map((quote) => (
-          <QuoteResultRow quote={quote} />
+        {data?.quotes.map((quote) => (
+          <QuoteResultRow key={quote.id} quote={quote} />
         ))}
       </Flex>
       <Flex

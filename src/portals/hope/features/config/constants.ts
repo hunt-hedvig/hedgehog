@@ -39,6 +39,12 @@ export const PickedLocaleMarket: Record<PickedLocale, Market> = {
   [PickedLocale.SvSe]: Market.Sweden,
 }
 
+export const MarketLanguage: Record<Market, string> = {
+  [Market.Sweden]: 'se',
+  [Market.Norway]: 'no',
+  [Market.Denmark]: 'dk',
+}
+
 export const MemberGroups: Record<string, number> = {
   First: 1,
   Second: 2,
@@ -57,6 +63,8 @@ export enum InsuranceType {
   SwedishApartment = 'SWEDISH_APARTMENT',
   SwedishHouse = 'SWEDISH_HOUSE',
   SwedishAccident = 'SWEDISH_ACCIDENT',
+  SwedishCar = 'SWEDISH_CAR',
+  SwedishQasaRental = 'SWEDISH_QASA_RENTAL',
   NorwegianHomeContent = 'NORWEGIAN_HOME_CONTENT',
   NorwegianTravel = 'NORWEGIAN_TRAVEL',
   NorwegianAccident = 'NORWEGIAN_ACCIDENT',
@@ -73,6 +81,7 @@ export enum QuoteProductType {
   HomeContent = 'HOME_CONTENT',
   Travel = 'TRAVEL',
   Accident = 'ACCIDENT',
+  Car = 'CAR',
 }
 
 export const QuoteProductTypeContractMap: Record<
@@ -83,7 +92,10 @@ export const QuoteProductTypeContractMap: Record<
     InsuranceType.NorwegianHomeContent,
     InsuranceType.DanishHomeContent,
   ],
-  [QuoteProductType.Apartment]: [InsuranceType.SwedishApartment],
+  [QuoteProductType.Apartment]: [
+    InsuranceType.SwedishApartment,
+    InsuranceType.SwedishQasaRental,
+  ],
   [QuoteProductType.Accident]: [
     InsuranceType.DanishAccident,
     InsuranceType.SwedishAccident,
@@ -98,6 +110,7 @@ export const QuoteProductTypeContractMap: Record<
     InsuranceType.NorwegianTravel,
     InsuranceType.DanishTravel,
   ],
+  [QuoteProductType.Car]: [InsuranceType.SwedishCar],
 }
 
 export const ContractMarketTypes: Record<Market, InsuranceType[]> = {
@@ -105,6 +118,8 @@ export const ContractMarketTypes: Record<Market, InsuranceType[]> = {
     InsuranceType.SwedishHouse,
     InsuranceType.SwedishApartment,
     InsuranceType.SwedishAccident,
+    InsuranceType.SwedishCar,
+    InsuranceType.SwedishQasaRental,
   ],
   NORWAY: [
     InsuranceType.NorwegianHomeContent,
@@ -127,6 +142,11 @@ export enum TypeOfContract {
   SeApartmentStudentRent = 'SE_APARTMENT_STUDENT_RENT',
   SeAccident = 'SE_ACCIDENT',
   SeAccidentStudent = 'SE_ACCIDENT_STUDENT',
+  SeCarFull = 'SE_CAR_FULL',
+  SeCarHalf = 'SE_CAR_HALF',
+  SeCarTraffic = 'SE_CAR_TRAFFIC',
+  SeQasaShortTermRental = 'SE_QASA_SHORT_TERM_RENTAL',
+  SeQasaLongTermRental = 'SE_QASA_LONG_TERM_RENTAL',
   NoHomeContentOwn = 'NO_HOME_CONTENT_OWN',
   NoHomeContentRent = 'NO_HOME_CONTENT_RENT',
   NoHomeContentYouthOwn = 'NO_HOME_CONTENT_YOUTH_OWN',
@@ -153,6 +173,11 @@ export const TypeOfContractType: Record<TypeOfContract, InsuranceType> = {
   [TypeOfContract.SeApartmentStudentRent]: InsuranceType.SwedishApartment,
   [TypeOfContract.SeAccident]: InsuranceType.SwedishAccident,
   [TypeOfContract.SeAccidentStudent]: InsuranceType.SwedishAccident,
+  [TypeOfContract.SeCarFull]: InsuranceType.SwedishCar,
+  [TypeOfContract.SeCarHalf]: InsuranceType.SwedishCar,
+  [TypeOfContract.SeCarTraffic]: InsuranceType.SwedishCar,
+  [TypeOfContract.SeQasaLongTermRental]: InsuranceType.SwedishQasaRental,
+  [TypeOfContract.SeQasaShortTermRental]: InsuranceType.SwedishQasaRental,
   [TypeOfContract.NoHomeContentOwn]: InsuranceType.NorwegianHomeContent,
   [TypeOfContract.NoHomeContentRent]: InsuranceType.NorwegianHomeContent,
   [TypeOfContract.NoHomeContentYouthOwn]: InsuranceType.NorwegianHomeContent,

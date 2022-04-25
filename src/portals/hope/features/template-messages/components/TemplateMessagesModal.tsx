@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
-import { useClickOutside } from '@hedvig-ui/hooks/use-click-outside'
+import {
+  Keys,
+  useClickOutside,
+  useKeyIsPressed,
+  useNavigation,
+} from '@hedvig-ui'
 import { keyframes } from '@emotion/react'
 import { TemplateForm } from './TemplateForm'
 import { SearchIcon } from '../../members-search/styles'
@@ -13,13 +18,11 @@ import {
 } from 'react-bootstrap-icons'
 import { formatLocale, useTemplateMessages } from '../use-template-messages'
 import { Template, UpsertTemplateInput } from 'types/generated/graphql'
-import { PickedLocale, PickedLocaleMarket } from '../../config/constants'
 import {
-  isPressing,
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+  MarketFlags,
+  PickedLocale,
+  PickedLocaleMarket,
+} from '../../config/constants'
 
 const show = keyframes`
   from {
@@ -117,16 +120,14 @@ export const TemplateMessagesModal: React.FC<{
   const [isCreating, setIsCreating] = useState(false)
   const [closing, setClosing] = useState(false)
 
-  const searchRef = useRef<HTMLInputElement>(null)
-
-  const isEscapePressed = useKeyIsPressed(Keys.Escape)
-  const isEnterPressed = useKeyIsPressed(Keys.Enter)
   const isOptionPressed = useKeyIsPressed(Keys.Option)
-  const isWPressed = useKeyIsPressed(Keys.W)
-  const isDPressed = useKeyIsPressed(Keys.D)
-  const isPPressed = useKeyIsPressed(Keys.P)
-  const isEPressed = useKeyIsPressed(Keys.E)
   const isNPressed = useKeyIsPressed(Keys.N)
+
+  useEffect(() => {
+    if (isOptionPressed && isNPressed) {
+      setIsCreating(true)
+    }
+  }, [isOptionPressed, isNPressed])
 
   const {
     select,
@@ -140,6 +141,8 @@ export const TemplateMessagesModal: React.FC<{
     currentLocaleDisplayed,
     changeLocaleDisplayed,
   } = useTemplateMessages()
+
+  const { register } = useNavigation()
 
   const templatesRef = useRef<HTMLDivElement>(null)
 
@@ -368,13 +371,6 @@ export const TemplateMessagesModal: React.FC<{
     <Container ref={templatesRef} closing={closing}>
       <Header>
         <Input
-          {...register('Template Search', {
-            autoFocus: true,
-            neighbors: {
-              down: 'Template Message 0',
-            },
-          })}
-          style={{ borderRadius: 'unset' }}
           onChange={({ target: { value } }) => {
             setQuery(value)
           }}
@@ -386,7 +382,6 @@ export const TemplateMessagesModal: React.FC<{
           }
           autoComplete="off"
           placeholder="Search Template"
-          id="query"
           value={query}
           type="search"
           ref={searchRef}
@@ -403,6 +398,20 @@ export const TemplateMessagesModal: React.FC<{
             }
           }}
           autoFocus
+          {...register(
+            'Templates Search',
+            {
+              autoFocus: true,
+              withFocus: true,
+              neighbors: {
+                down: 'TemplatesList - Row 0',
+              },
+            },
+            {},
+            {
+              borderRadius: 'unset',
+            },
+          )}
         />
         <Button
           variant="tertiary"
@@ -420,23 +429,41 @@ export const TemplateMessagesModal: React.FC<{
               {getFilteredTemplates(true)?.length} Pinned
             </TemplatesListTitle>
             {getFilteredTemplates(true).map((template, index) => {
-              const navigation = register(`Template Message ${index}`, {
+              const navigation = register(`TemplatesList - Row ${index}`, {
+                resolve: () => {
+                  selectHandler(template.id)
+                },
                 neighbors: {
                   up: index
-                    ? `Template Message ${index - 1}`
-                    : 'Template Search',
+                    ? `TemplatesList - Row ${index - 1}`
+                    : 'Templates Search',
                   down:
                     index < getFilteredTemplates(true)?.length - 1 ||
                     getFilteredTemplates(false)?.length
-                      ? `Template Message ${index + 1}`
+                      ? `TemplatesList - Row ${index + 1}`
                       : undefined,
                 },
+                metaKey: 'altKey',
+                focusedActions: [
+                  {
+                    key: Keys.P,
+                    action: () => {
+                      pinHandler(template.id)
+                    },
+                  },
+                  {
+                    key: Keys.E,
+                    action: () => {
+                      setEditingTemplate(template)
+                    },
+                  },
+                ],
               })
 
               return (
                 <TemplateItem
                   key={template.id}
-                  id={template.id}
+                  templateId={template.id}
                   name={template.title}
                   text={
                     currentLocaleDisplayed?.isEnglishLocale
@@ -463,29 +490,48 @@ export const TemplateMessagesModal: React.FC<{
         {getFilteredTemplates(false)?.length ? (
           <div>
             <TemplatesListTitle>
-              {getFilteredTemplates(false)?.length} Templates
+              {getFilteredTemplates(false)?.length} Templates{' '}
+              {MarketFlags[PickedLocaleMarket[currentLocale]]}
             </TemplatesListTitle>
             {getFilteredTemplates(false).map((template, idx) => {
               const index = getFilteredTemplates(true).length + idx
 
-              const navigation = register(`Template Message ${index}`, {
+              const navigation = register(`TemplatesList - Row ${index}`, {
+                resolve: () => {
+                  selectHandler(template.id)
+                },
                 neighbors: {
                   up: index
-                    ? `Template Message ${index - 1}`
+                    ? `TemplatesList - Row ${index - 1}`
                     : 'Template Search',
                   down:
                     index <
                     getFilteredTemplates(true).length +
                       getFilteredTemplates(false).length
-                      ? `Template Message ${index + 1}`
+                      ? `TemplatesList - Row ${index + 1}`
                       : undefined,
                 },
+                metaKey: 'altKey',
+                focusedActions: [
+                  {
+                    key: Keys.P,
+                    action: () => {
+                      pinHandler(template.id)
+                    },
+                  },
+                  {
+                    key: Keys.E,
+                    action: () => {
+                      setEditingTemplate(template)
+                    },
+                  },
+                ],
               })
 
               return (
                 <TemplateItem
                   key={template.id}
-                  id={template.id}
+                  templateId={template.id}
                   name={template.title}
                   text={
                     currentLocaleDisplayed?.isEnglishLocale
@@ -604,8 +650,8 @@ const TemplateTitle = styled.div`
 `
 
 interface TemplateItemProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id' | 'onSelect'> {
-  id: string
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
+  templateId: string
   name: string
   text: string
   pinned: boolean
@@ -616,7 +662,7 @@ interface TemplateItemProps
 }
 
 const TemplateItem = ({
-  id,
+  templateId,
   name,
   text,
   pinned,
@@ -635,18 +681,18 @@ const TemplateItem = ({
       {...props}
     >
       <TemplateTop>
-        <TemplateTitle onClick={() => onSelect(id)}>
-          {pinned && <PinAngleFill onClick={() => onPin(id)} />}
+        <TemplateTitle onClick={() => onSelect(templateId)}>
+          {pinned && <PinAngleFill onClick={() => onPin(templateId)} />}
           <h3>{name}</h3>
         </TemplateTitle>
         <TemplateActions>
           {isHover && (
             <>
-              <EditIcon onClick={() => onEdit(id)} />
+              <EditIcon onClick={() => onEdit(templateId)} />
               {pinned ? (
-                <PinAngleFill onClick={() => onPin(id)} />
+                <PinAngleFill onClick={() => onPin(templateId)} />
               ) : (
-                <PinAngle onClick={() => onPin(id)} />
+                <PinAngle onClick={() => onPin(templateId)} />
               )}
               <Trash
                 onClick={() => {
@@ -656,7 +702,7 @@ const TemplateItem = ({
                       'Are you sure you want to delete this message template?',
                     )
                   ) {
-                    onDelete(id)
+                    onDelete(templateId)
                   }
                 }}
               />
@@ -664,7 +710,7 @@ const TemplateItem = ({
           )}
         </TemplateActions>
       </TemplateTop>
-      <TemplateContent onClick={() => onSelect(id)}>
+      <TemplateContent onClick={() => onSelect(templateId)}>
         {text || (
           <EmptyContainer style={{ textAlign: 'start', fontSize: '1rem' }}>
             (no one has written for this language yet..)

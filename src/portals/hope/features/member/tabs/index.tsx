@@ -1,15 +1,4 @@
-import { ContractTab } from 'portals/hope/features/member/tabs/contracts-tab'
-import { MemberFile } from 'portals/hope/features/member/tabs/files-tab/FileTab'
-import { MemberTab } from 'portals/hope/features/member/tabs/member-tab/MemberTab'
-import { PaymentsTab } from 'portals/hope/features/member/tabs/payments-tab/PaymentsTab'
-import { Quotes } from 'portals/hope/features/member/tabs/quote-tab/Quotes'
-
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import React from 'react'
-import { ClaimsTab } from 'portals/hope/features/member/tabs/claims-tab/ClaimsTab'
-import { AccountTab } from './account-tab'
-import { CampaignsTab } from './campaigns-tab'
-import { DebtTab } from './debt-tab'
+import { Keys } from '@hedvig-ui'
 
 export const memberPagePanes = (memberId: string) => [
   {
@@ -20,7 +9,6 @@ export const memberPagePanes = (memberId: string) => [
       key: Keys.One,
     },
     path: `members/${memberId}/claims`,
-    component: () => <ClaimsTab memberId={memberId} />,
   },
   {
     tabTitle: 'Files',
@@ -30,7 +18,6 @@ export const memberPagePanes = (memberId: string) => [
       key: Keys.Two,
     },
     path: `members/${memberId}/files`,
-    component: () => <MemberFile memberId={memberId} />,
   },
   {
     tabTitle: 'Contracts',
@@ -40,7 +27,6 @@ export const memberPagePanes = (memberId: string) => [
       key: Keys.Three,
     },
     path: `members/${memberId}/contracts`,
-    component: () => <ContractTab memberId={memberId} />,
   },
   {
     tabTitle: 'Quotes',
@@ -50,7 +36,6 @@ export const memberPagePanes = (memberId: string) => [
       key: Keys.Four,
     },
     path: `members/${memberId}/quotes`,
-    component: () => <Quotes memberId={memberId} />,
   },
   {
     tabTitle: 'Payments',
@@ -60,7 +45,6 @@ export const memberPagePanes = (memberId: string) => [
       key: Keys.Five,
     },
     path: `members/${memberId}/payments`,
-    component: () => <PaymentsTab memberId={memberId} />,
   },
   {
     tabTitle: 'Account',
@@ -70,7 +54,6 @@ export const memberPagePanes = (memberId: string) => [
       key: Keys.Six,
     },
     path: `members/${memberId}/account`,
-    component: () => <AccountTab memberId={memberId} />,
   },
   {
     tabTitle: 'Member',
@@ -80,7 +63,6 @@ export const memberPagePanes = (memberId: string) => [
       key: Keys.Seven,
     },
     path: `members/${memberId}/member`,
-    component: () => <MemberTab memberId={memberId} />,
   },
   {
     tabTitle: 'Debt',
@@ -90,7 +72,6 @@ export const memberPagePanes = (memberId: string) => [
       key: Keys.Eight,
     },
     path: `members/${memberId}/debt`,
-    component: () => <DebtTab memberId={memberId} />,
   },
   {
     tabTitle: 'Campaigns',
@@ -100,6 +81,5 @@ export const memberPagePanes = (memberId: string) => [
       key: Keys.Nine,
     },
     path: `members/${memberId}/campaigns`,
-    component: () => <CampaignsTab memberId={memberId} />,
   },
 ]

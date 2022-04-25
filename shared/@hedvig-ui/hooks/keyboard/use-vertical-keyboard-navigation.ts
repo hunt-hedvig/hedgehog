@@ -1,8 +1,8 @@
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui'
 import {
   useKeyboardListener,
   UseVerticalKeyboardNavigationProps,
-} from '@hedvig-ui/hooks/keyboard/use-keyboard-listener'
+} from '@hedvig-ui'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 const handleStepChange = (

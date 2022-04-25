@@ -1,6 +1,6 @@
-import { convertCamelcaseToTitle } from '@hedvig-ui/utils/text'
+import { convertCamelcaseToTitle, Keys, useKeyIsPressed } from '@hedvig-ui'
 import React from 'react'
-import { ArrayElement } from '@hedvig-ui/utils/array-element'
+import { ArrayElement } from '@hedvig-ui'
 import {
   ContractStatus,
   MemberSearchHit,
@@ -17,6 +17,7 @@ import {
 import styled from '@emotion/styled'
 import chroma from 'chroma-js'
 import { useMemberSearchContracts } from 'portals/hope/features/search/members/hooks/use-member-search-contracts'
+import { useHistory } from 'react-router'
 
 type CircleVariation =
   | 'success'
@@ -88,9 +89,15 @@ const SearchHitTag: React.FC<{
   return <Tag>{convertTagText(highlight.field).replaceAll('.', ', ')}</Tag>
 }
 
-export const MemberHitRow: React.FC<{
-  result: ArrayElement<SearchQuery['search']>
-}> = ({ result }) => {
+export const MemberHitRow: React.FC<
+  {
+    result: ArrayElement<SearchQuery['search']>
+  } & React.HTMLAttributes<HTMLTableRowElement>
+> = ({ result, ...props }) => {
+  const isCommandPressed = useKeyIsPressed(Keys.Command)
+
+  const history = useHistory()
+
   const hit = result.hit as MemberSearchHit
 
   const { member, loading, groupBy, contracts } = useMemberSearchContracts(
@@ -103,12 +110,22 @@ export const MemberHitRow: React.FC<{
     (highlight) => !highlight.field.includes('keyword'),
   )
 
+  const redirectMemberHandler = (id: string) => {
+    const link = `/members/${id}/contracts`
+
+    if (isCommandPressed) {
+      window.open(link, '_blank')
+      return
+    }
+
+    history.push(link)
+  }
+
   return (
     <TableRow
       tabIndex={0}
-      onClick={() =>
-        hit.memberId && window.open(`/members/${hit.memberId}/contracts`)
-      }
+      onClick={() => hit.memberId && redirectMemberHandler(hit.memberId)}
+      {...props}
     >
       <TableColumn style={{ verticalAlign: 'top' }}>
         <Flex direction="column">

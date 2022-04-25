@@ -12,7 +12,7 @@ import {
   Loadable,
   Paragraph,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import { format, parseISO } from 'date-fns'
 import { ClaimContractDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimContractDropdown'
 import { ClaimOutcomeDropdown } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
@@ -36,6 +36,7 @@ import {
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { toast } from 'react-hot-toast'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useNavigation } from '@hedvig-ui'
 
 const SelectWrapper = styled.div`
   margin-top: 1em;
@@ -252,6 +253,8 @@ export const ClaimInformation: React.FC<{
 
   const { registrationDate, recordingUrl, agreement, trial } = data?.claim ?? {}
 
+  const { register } = useNavigation()
+
   const coInsureHandler = async (value: string) => {
     setCreatingCoInsured(value === 'True')
     if (coInsured && value === 'False') {
@@ -301,7 +304,10 @@ export const ClaimInformation: React.FC<{
         {recordingUrl && <ClaimAudio recordingUrl={recordingUrl} />}
         <SelectWrapper>
           <Label>Status</Label>
-          <ClaimStatusDropdown claimId={claimId} />
+          <ClaimStatusDropdown
+            claimId={claimId}
+            {...register('Claim Status')}
+          />
         </SelectWrapper>
         <SelectWrapper>
           <Label>Claim outcome</Label>
@@ -322,9 +328,6 @@ export const ClaimInformation: React.FC<{
               href={agreement.termsAndConditions?.url}
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                fontSize: '0.9rem',
-              }}
             >
               Terms and Conditions
             </a>

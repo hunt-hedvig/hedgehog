@@ -6,7 +6,7 @@ import {
   Spacing,
   TextDatePicker,
 } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import { DateRangeWrapper } from 'portals/hope/features/tools/campaign-codes/forms/FreeMonthsForm'
 import { PartnerDropdown } from 'portals/hope/features/tools/campaign-codes/forms/PartnerDropdown'
 import { getCodeTypeOptions } from 'portals/hope/features/tools/campaign-codes/utils'

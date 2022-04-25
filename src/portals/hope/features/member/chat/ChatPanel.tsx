@@ -8,20 +8,17 @@ import {
   Spinner,
   TextArea,
 } from '@hedvig-ui'
-import {
-  isPressing,
-  Keys,
-  shouldIgnoreInput,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { usePlatform } from '@hedvig-ui/hooks/use-platform'
+import { isPressing, Keys, shouldIgnoreInput } from '@hedvig-ui'
+import { usePlatform } from '@hedvig-ui'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
   GetMessageHistoryDocument,
   useSendMessageMutation,
 } from 'types/generated/graphql'
-import { useDraft } from '@hedvig-ui/hooks/use-draft'
+import { useDraft } from '@hedvig-ui'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import gql from 'graphql-tag'
 
 const MessagesPanelContainer = styled.div`
   display: flex;
@@ -97,6 +94,21 @@ const ChatTip = styled.div`
 
   @media (max-width: 768px) {
     display: none;
+  }
+`
+
+gql`
+  mutation SendMessage($input: SendMessageInput!) {
+    sendMessage(input: $input) {
+      ... on SendMessageFailed {
+        memberId
+        errorCode
+        errorMessage
+      }
+      ... on SendMessageSuccessful {
+        memberId
+      }
+    }
   }
 `
 

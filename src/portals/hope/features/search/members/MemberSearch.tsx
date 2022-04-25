@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useSearch } from 'portals/hope/common/hooks/use-search'
-import { useMemberHistory } from 'portals/hope/features/user/hooks/use-member-history'
+import { useMemberHistory } from 'portals/hope/common/hooks/use-member-history'
 import { SearchInput } from 'portals/hope/features/search/components/SearchInput'
 import {
   Button,
   fadeIn,
   Flex,
+  lightTheme,
   MainHeadline,
   Spacing,
   StandaloneMessage,
@@ -13,6 +14,7 @@ import {
   TableBody,
   TableHeader,
   TableHeaderColumn,
+  useNavigation,
 } from '@hedvig-ui'
 import { ExtraInstruction } from 'portals/hope/features/members-search/styles'
 import { MemberSuggestions } from 'portals/hope/features/members-search/components/MemberSuggestions'
@@ -50,6 +52,29 @@ export const MemberSearch: React.FC<{ query: string | null }> = ({
     if (query !== '') search()
   }, [defaultQuery])
 
+  const { registerList } = useNavigation()
+
+  const { registerItem } = registerList({
+    list: hits.map((item, index) => ({ ...item, name: `Table Row ${index}` })),
+    name: 'MembersList',
+    nameField: 'name',
+    resolve: (item) => window.open(`/members/${item.hit.id}/contracts`),
+    styles: {
+      basic: {
+        border: 'none',
+        borderBottom: `1px solid ${lightTheme.border}`,
+      },
+      focus: {
+        border: 'none',
+        borderLeft: `2px solid ${lightTheme.accent}`,
+        borderBottom: `1px solid ${lightTheme.border}`,
+      },
+    },
+    edges: {
+      first: 'Member Search Form',
+    },
+  })
+
   return (
     <>
       <SearchInput
@@ -82,8 +107,15 @@ export const MemberSearch: React.FC<{ query: string | null }> = ({
             <TableHeaderColumn>Contracts</TableHeaderColumn>
           </TableHeader>
           <TableBody>
-            {hits.map((member) => (
-              <MemberHitRow key={member.hit.memberId} result={member} />
+            {hits.map((member, index) => (
+              <MemberHitRow
+                key={member.hit.memberId}
+                result={member}
+                {...registerItem({
+                  ...member,
+                  name: `Table Row ${index}`,
+                })}
+              />
             ))}
           </TableBody>
         </Table>

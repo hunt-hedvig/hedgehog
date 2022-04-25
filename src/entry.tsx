@@ -1,21 +1,18 @@
 import { ApolloProvider } from '@apollo/client'
-import { createBrowserHistory, createMemoryHistory } from 'history'
 import React from 'react'
 import { CookiesProvider } from 'react-cookie'
 import ReactDOM from 'react-dom'
 import { client } from 'apollo/client'
 import { app } from 'portals'
 import { Global } from '@emotion/react'
-import { DarkmodeProvider } from '@hedvig-ui/hooks/use-darkmode'
-import { GlobalStyles } from '@hedvig-ui/themes'
+import { DarkmodeProvider } from '@hedvig-ui'
 import { useAuthenticate } from 'auth/use-authenticate'
-import { Route, Router, Switch } from 'react-router'
+import { Route, Switch } from 'react-router'
 import { PortalsPage } from 'auth/PortalsPage'
-import { Spinner, StandaloneMessage } from '@hedvig-ui'
+import { Spinner, StandaloneMessage, GlobalStyles } from '@hedvig-ui'
 import { RenewTokenLock } from 'apollo/lock'
-
-export const history =
-  typeof window !== 'undefined' ? createBrowserHistory() : createMemoryHistory()
+import { TriagingPage } from 'demo/TriagingPage'
+import { BrowserRouter } from 'react-router-dom'
 
 const App: React.FC = () => {
   const { portal, error } = useAuthenticate()
@@ -41,12 +38,13 @@ const App: React.FC = () => {
 
 ReactDOM.render(
   <CookiesProvider>
-    <Router history={history}>
+    <BrowserRouter>
       <RenewTokenLock />
       <ApolloProvider client={client}>
         <DarkmodeProvider>
           <Global styles={GlobalStyles} />
           <Switch>
+            <Route exact path="/demo/triaging" component={TriagingPage} />
             <Route exact path="/portals" component={PortalsPage} />
             <Route
               exact
@@ -63,7 +61,7 @@ ReactDOM.render(
           </Switch>
         </DarkmodeProvider>
       </ApolloProvider>
-    </Router>
+    </BrowserRouter>
   </CookiesProvider>,
   document.getElementById('react-root'),
 )

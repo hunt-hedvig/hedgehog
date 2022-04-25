@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { CardContent, Loadable, Spacing, Tabs } from '@hedvig-ui'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import copy from 'copy-to-clipboard'
 import { MemberClaimsView } from 'portals/hope/features/claims/claim-details/MemberInformation/components/MemberClaimsView'
@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom'
 import { useGetMemberInfoQuery } from 'types/generated/graphql'
 import { PickedLocale } from 'portals/hope/features/config/constants'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useNavigation } from '@hedvig-ui'
 
 const MemberCard = styled.div`
   display: flex;
@@ -44,7 +45,8 @@ const MemberCard = styled.div`
 export const MemberInformation: React.FC<{
   claimId: string
   memberId: string
-}> = ({ claimId, memberId }) => {
+  slim?: boolean
+}> = ({ claimId, memberId, slim = false }) => {
   const [tab, setTab] = useState<'general' | 'claims'>('general')
   const { data, loading } = useGetMemberInfoQuery({ variables: { memberId } })
   const { registerActions } = useCommandLine()
@@ -57,6 +59,7 @@ export const MemberInformation: React.FC<{
       label: `Go to member`,
       keys: [Keys.Option, Keys.M],
       onResolve: () => {
+        if (slim) return
         history.push(`/members/${memberId}`)
       },
     },
@@ -91,6 +94,8 @@ export const MemberInformation: React.FC<{
       )
     : ''
 
+  const { register } = useNavigation()
+
   return (
     <CardContent>
       <Loadable loading={loading}>
@@ -99,7 +104,26 @@ export const MemberInformation: React.FC<{
             <h3>
               {(member?.firstName ?? '') + ' ' + (member?.lastName ?? '')}
             </h3>
-            <Link to={`/members/${memberId}`}>{memberId}</Link>{' '}
+            {slim ? (
+              <a
+                href="#"
+                onClick={() => {
+                  copy(memberId || '', {
+                    format: 'text/plain',
+                  })
+                  toast.success('Member ID copied to clipboard')
+                }}
+              >
+                {memberId}
+              </a>
+            ) : (
+              <Link
+                to={`/members/${memberId}`}
+                {...register('Claim Details - MemberId')}
+              >
+                {memberId}
+              </Link>
+            )}
           </div>
           <div>{flag}</div>
         </MemberCard>
@@ -124,12 +148,14 @@ export const MemberInformation: React.FC<{
             },
           ]}
         />
-        <Spacing top="small" />
         {tab === 'general' && (
-          <MemberGeneralView memberId={memberId} claimId={claimId} />
+          <>
+            <Spacing top="small" />
+            <MemberGeneralView memberId={memberId} claimId={claimId} />
+          </>
         )}
         {tab === 'claims' && (
-          <MemberClaimsView member={member} claimId={claimId} />
+          <MemberClaimsView member={member} claimId={claimId} slim={slim} />
         )}
       </Loadable>
     </CardContent>

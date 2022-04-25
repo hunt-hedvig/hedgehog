@@ -6,15 +6,14 @@ import {
   TextDatePicker,
   Button,
   ButtonsGroup,
-  Form,
-  FormTextArea,
-  FormInput,
+  TextArea,
+  Input,
 } from '@hedvig-ui'
 import { formatLocale, uniquePickedLocales } from '../use-template-messages'
-import { FieldValues, FormProvider, useForm } from 'react-hook-form'
+import { FieldValues, useForm } from 'react-hook-form'
 import formatDate from 'date-fns/format'
 import { PickedLocale } from '../../config/constants'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { useConfirmDialog } from '@hedvig-ui'
 import {
   Template,
   TemplateMessage,
@@ -23,14 +22,17 @@ import {
 
 const Field = styled.div`
   margin-bottom: 1.25rem;
+  margin-top: 1rem;
   max-width: 20rem;
 `
 
-const MessageField = styled(FormTextArea)`
+const MessageField = styled(TextArea)`
   height: 10rem;
 
   display: flex;
   flex-direction: column;
+
+  margin-bottom: 1rem;
 
   & textarea {
     margin-top: 0.5rem;
@@ -75,7 +77,13 @@ export const TemplateForm: React.FC<
 
   const { confirm } = useConfirmDialog()
 
-  const form = useForm()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    reset,
+    unregister,
+  } = useForm()
 
   useEffect(() => {
     const resetObject: { [key: string]: string } = {}
@@ -87,7 +95,7 @@ export const TemplateForm: React.FC<
         )?.message || ''
     })
 
-    form.reset({
+    reset({
       id: template?.id,
       title: template?.title || '',
       pinned: template?.pinned || false,
@@ -163,175 +171,172 @@ export const TemplateForm: React.FC<
   }
 
   return (
-    <FormProvider {...form}>
-      <Form
-        onSubmit={isCreating ? createHandler : editHandler}
-        style={{ height: '100%' }}
-        {...props}
-      >
-        <FormInput
-          autoFocus
-          label="Template Name"
-          placeholder="Write template name here..."
-          name="title"
-          defaultValue={template?.title || ''}
-          style={{ marginTop: '0.5rem' }}
-          rules={{
-            required: 'Name is required',
-            pattern: {
-              value: /[^\s]/,
-              message: 'Name cannot be an empty string',
-            },
+    <form
+      onSubmit={handleSubmit(isCreating ? createHandler : editHandler)}
+      style={{ height: '100%' }}
+      {...props}
+    >
+      <Input
+        {...register('title', {
+          required: 'Name is required',
+          pattern: {
+            value: /[^\s]/,
+            message: 'Name cannot be an empty string',
+          },
+        })}
+        errors={errors}
+        autoFocus
+        label="Template Name"
+        placeholder="Write template name here..."
+        defaultValue={template?.title || ''}
+        style={{ marginTop: '0.5rem' }}
+      />
+      <Field>
+        <Label>Apply to Market</Label>
+        <Checkbox
+          style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}
+          name="market"
+          label={<span>Sweden 🇸🇪</span>}
+          checked={locales.includes(formatLocale(PickedLocale.SvSe))}
+          onChange={({ currentTarget: { checked } }) => {
+            if (checked) {
+              setLocales((prev) => [...prev, formatLocale(PickedLocale.SvSe)])
+            } else {
+              setLocales((prev) =>
+                prev.filter(
+                  (market) => market !== formatLocale(PickedLocale.SvSe),
+                ),
+              )
+              unregister(`message-${PickedLocale.SvSe}`)
+            }
           }}
         />
-        <Field>
-          <Label>Apply to Market</Label>
-          <Checkbox
-            style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}
-            name="market"
-            label={<span>Sweden 🇸🇪</span>}
-            checked={locales.includes(formatLocale(PickedLocale.SvSe))}
-            onChange={({ currentTarget: { checked } }) => {
-              if (checked) {
-                setLocales((prev) => [...prev, formatLocale(PickedLocale.SvSe)])
-              } else {
-                setLocales((prev) =>
-                  prev.filter(
-                    (market) => market !== formatLocale(PickedLocale.SvSe),
-                  ),
-                )
-                form.unregister(`message-${PickedLocale.SvSe}`)
-              }
-            }}
-          />
-          <Checkbox
-            style={{ marginBottom: '0.5rem' }}
-            name="market"
-            label={<span>Norway 🇳🇴</span>}
-            checked={locales.includes(formatLocale(PickedLocale.NbNo))}
-            onChange={({ currentTarget: { checked } }) => {
-              if (checked) {
-                setLocales((prev) => [...prev, formatLocale(PickedLocale.NbNo)])
-              } else {
-                setLocales((prev) =>
-                  prev.filter(
-                    (market) => market !== formatLocale(PickedLocale.NbNo),
-                  ),
-                )
-                form.unregister(`message-${PickedLocale.NbNo}`)
-              }
-            }}
-          />
-          <Checkbox
-            name="market"
-            label={<span>Denmark 🇩🇰</span>}
-            checked={locales.includes(formatLocale(PickedLocale.DaDk))}
-            onChange={({ currentTarget: { checked } }) => {
-              if (checked) {
-                setLocales((prev) => [...prev, formatLocale(PickedLocale.DaDk)])
-              } else {
-                setLocales((prev) =>
-                  prev.filter(
-                    (market) => market !== formatLocale(PickedLocale.DaDk),
-                  ),
-                )
-                form.unregister(`message-${PickedLocale.DaDk}`)
-              }
-            }}
-          />
-        </Field>
-
-        {locales.map((locale) => (
-          <MessageField
-            key={locale}
-            label={`Message (${locale})`}
-            name={`message-${locale}`}
-            placeholder="Message goes here"
-            style={{ marginTop: '0.5rem' }}
-            defaultValue={
-              template?.messages.find((msg) => msg.language === locale)
-                ?.message || ''
+        <Checkbox
+          style={{ marginBottom: '0.5rem' }}
+          name="market"
+          label={<span>Norway 🇳🇴</span>}
+          checked={locales.includes(formatLocale(PickedLocale.NbNo))}
+          onChange={({ currentTarget: { checked } }) => {
+            if (checked) {
+              setLocales((prev) => [...prev, formatLocale(PickedLocale.NbNo)])
+            } else {
+              setLocales((prev) =>
+                prev.filter(
+                  (market) => market !== formatLocale(PickedLocale.NbNo),
+                ),
+              )
+              unregister(`message-${PickedLocale.NbNo}`)
             }
-            rules={{
-              required: false,
-              pattern: {
-                value: /[^\s]/,
-                message: 'Cannot send a message without text',
-              },
-            }}
-          />
-        ))}
+          }}
+        />
+        <Checkbox
+          name="market"
+          label={<span>Denmark 🇩🇰</span>}
+          checked={locales.includes(formatLocale(PickedLocale.DaDk))}
+          onChange={({ currentTarget: { checked } }) => {
+            if (checked) {
+              setLocales((prev) => [...prev, formatLocale(PickedLocale.DaDk)])
+            } else {
+              setLocales((prev) =>
+                prev.filter(
+                  (market) => market !== formatLocale(PickedLocale.DaDk),
+                ),
+              )
+              unregister(`message-${PickedLocale.DaDk}`)
+            }
+          }}
+        />
+      </Field>
 
+      {locales.map((locale) => (
         <MessageField
-          label="Message (EN)"
-          name="messageEn"
-          placeholder="Message goes here"
-          style={{ marginTop: '0.5rem' }}
-          defaultValue={
-            template?.messages.find(
-              (msg) => msg.language === formatLocale(PickedLocale.EnSe, true),
-            )?.message || ''
-          }
-          rules={{
+          {...register(`message-${locale}`, {
             required: false,
             pattern: {
               value: /[^\s]/,
               message: 'Cannot send a message without text',
             },
+          })}
+          errors={errors}
+          key={locale}
+          label={`Message (${locale})`}
+          placeholder="Message goes here"
+          style={{ marginTop: '0.5rem' }}
+          defaultValue={
+            template?.messages.find((msg) => msg.language === locale)
+              ?.message || ''
+          }
+        />
+      ))}
+
+      <MessageField
+        {...register('messageEn', {
+          required: false,
+          pattern: {
+            value: /[^\s]/,
+            message: 'Cannot send a message without text',
+          },
+        })}
+        errors={errors}
+        label="Message (EN)"
+        name="messageEn"
+        placeholder="Message goes here"
+        style={{ marginTop: '0.5rem' }}
+        defaultValue={
+          template?.messages.find(
+            (msg) => msg.language === formatLocale(PickedLocale.EnSe, true),
+          )?.message || ''
+        }
+      />
+
+      <Field>
+        <Checkbox
+          label={<span>Set Expiry Date</span>}
+          checked={!!expirationDate}
+          onChange={({ currentTarget: { checked } }) => {
+            setExpirationDate(
+              checked ? formatDate(new Date(), 'yyyy-MM-dd') : null,
+            )
           }}
         />
+      </Field>
 
+      {!!expirationDate && (
         <Field>
-          <Checkbox
-            label={<span>Set Expiry Date</span>}
-            checked={!!expirationDate}
-            onChange={({ currentTarget: { checked } }) => {
-              setExpirationDate(
-                checked ? formatDate(new Date(), 'yyyy-MM-dd') : null,
-              )
+          <Label>This template will be deleted after</Label>
+          <TextDatePicker
+            position="top"
+            minDate={new Date()}
+            value={formatDate(new Date(expirationDate), 'yyyy-MM-dd')}
+            onChange={(value) => {
+              if (!value) {
+                setExpirationDate(null)
+                return
+              }
+
+              setExpirationDate(value)
             }}
+            style={{ marginTop: '0.5rem' }}
           />
         </Field>
+      )}
 
-        {!!expirationDate && (
-          <Field>
-            <Label>This template will be deleted after</Label>
-            <TextDatePicker
-              position="top"
-              minDate={new Date()}
-              value={formatDate(new Date(expirationDate), 'yyyy-MM-dd')}
-              onChange={(value) => {
-                if (!value) {
-                  setExpirationDate(null)
-                  return
-                }
-
-                setExpirationDate(value)
-              }}
-              style={{ marginTop: '0.5rem' }}
-            />
-          </Field>
-        )}
-
-        <ButtonsGroup style={{ marginTop: isModal ? 15 : 'auto' }}>
-          <Button type="submit">
-            {isCreating ? 'Create' : 'Save Changes'}
+      <ButtonsGroup style={{ marginTop: isModal ? 15 : 'auto' }}>
+        <Button type="submit">{isCreating ? 'Create' : 'Save Changes'}</Button>
+        {onClose && (
+          <Button
+            variant="secondary"
+            type="button"
+            onClick={() => {
+              confirm('Confirm leaving without saving?').then(() => {
+                onClose()
+              })
+            }}
+          >
+            Discard
           </Button>
-          {onClose && (
-            <Button
-              variant="secondary"
-              type="button"
-              onClick={() => {
-                confirm('Confirm leaving without saving?').then(() => {
-                  onClose()
-                })
-              }}
-            >
-              Discard
-            </Button>
-          )}
-        </ButtonsGroup>
-      </Form>
-    </FormProvider>
+        )}
+      </ButtonsGroup>
+    </form>
   )
 }

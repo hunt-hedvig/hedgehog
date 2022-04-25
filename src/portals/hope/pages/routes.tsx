@@ -4,11 +4,9 @@ import TagManager from 'react-gtm-module'
 import { Redirect, Route, Switch, useLocation } from 'react-router'
 import ImpersonateMemberPage from './tools/ImpersonateMemberPage'
 import { useFeatureFlag } from 'portals/hope/common/hooks/use-feature-flag'
-import QuestionsPage from 'portals/hope/pages/QuestionsPage'
 import DashboardPage from './DashboardPage'
 import ProfilePage from './settings/ProfilePage'
 import TasksPage from 'portals/hope/pages/tasks/TasksPage'
-import CheckInPage from 'portals/hope/pages/tasks/CheckInPage'
 import NotificationsPage from 'portals/hope/pages/NotificationsPage'
 import SearchPage from 'portals/hope/pages/search/SearchPage'
 import ClaimsListPage from 'portals/hope/pages/claims/list/ClaimsListPage'
@@ -24,6 +22,8 @@ import EmployeesPage from 'portals/hope/pages/tools/EmployeesPage'
 import CampaignCodesPage from 'portals/hope/pages/tools/CampaignCodesPage'
 import UnsignMemberPage from 'portals/hope/pages/tools/UnsignMemberPage'
 import TemplateMessagesPage from 'portals/hope/pages/tools/TemplateMessagesPage'
+import AuthAdminPage from 'portals/hope/pages/tools/AuthAdminPage'
+import { TasksToolPage } from 'portals/hope/pages/tools/TasksToolPage'
 
 export type Page<T = void> = React.FC<T>
 
@@ -75,9 +75,7 @@ export const Routes: React.FC = () => {
         <Route path="/" exact component={DashboardPage} />
         <Route path="/profile" component={ProfilePage} />
         <Route path="/dashborad" component={DashboardPage} />
-        <Route path="/questions/:memberId?/:tab?" component={TasksPage} />
-        <Route path="/tasks" exact component={QuestionsPage} />
-        <Route path="/tasks/check-in" exact component={CheckInPage} />
+        <Route path="/questions" component={TasksPage} />
         <Route path="/notifications" component={NotificationsPage} />
         <Route path="/search/:category" component={SearchPage} />
         <Route path="/claims/list/:page?" exact component={ClaimsListPage} />
@@ -104,14 +102,17 @@ export const Routes: React.FC = () => {
         <Route path="/tools/employees" component={EmployeesPage} />
         <Route path="/tools/campaign-codes" component={CampaignCodesPage} />
         <Route path="/tools/unsign-member" component={UnsignMemberPage} />
+        <Route path="/tools/tasks" component={TasksToolPage} />
         <Route
           path="/tools/template-messages"
           component={TemplateMessagesPage}
         />
+        <Route path="/tools/auth-admin" component={AuthAdminPage} />
         <Route
           path="/tools/impersonate-member"
           component={ImpersonateMemberPage}
         />
+
         <Route
           component={() => (
             <StandaloneMessage paddingTop="25vh">

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { InfoTag, InfoTagStatus, ThirdLevelHeadline } from '@hedvig-ui'
 import { colorsV3 } from '@hedviginsurance/brand'
-import React from 'react'
+import React, { useRef } from 'react'
 import { LockFill } from 'react-bootstrap-icons'
 import { Link } from 'react-router-dom'
 
@@ -35,7 +35,7 @@ export const paddingMap: Record<PaddingSize, string> = {
   medium: '2rem',
   large: '3rem',
 }
-export interface CardProps {
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   span?: number
   padding?: PaddingSize
   locked?: boolean
@@ -59,16 +59,24 @@ const CardContainer = styled.div<CardProps>`
 
 export const CardLink = CardContainer.withComponent(Link)
 
-export const Card = ({ children, locked, ...cardProps }: CardProps) => (
-  <CardContainer {...cardProps}>
-    {children}
-    {locked && (
-      <LockedOverlay>
-        Locked
-        <LockFill />
-      </LockedOverlay>
-    )}
-  </CardContainer>
+export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ children, locked, ...cardProps }, forwardRef) => {
+    const internalRef = useRef<HTMLInputElement>(null)
+
+    const ref = forwardRef ?? internalRef
+
+    return (
+      <CardContainer ref={ref} {...cardProps}>
+        {children}
+        {locked && (
+          <LockedOverlay>
+            Locked
+            <LockFill />
+          </LockedOverlay>
+        )}
+      </CardContainer>
+    )
+  },
 )
 
 export const DangerCard = styled(Card)<CardProps>`

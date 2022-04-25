@@ -8,7 +8,7 @@ import { Dropdown, DropdownOption } from '@hedvig-ui'
 import gql from 'graphql-tag'
 import { ClaimOutcomes } from 'portals/hope/features/claims/claim-details/ClaimInformation/components/ClaimOutcomeDropdown'
 import { toast } from 'react-hot-toast'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
 
 gql`
@@ -117,12 +117,13 @@ export const useClaimStatus = (claimId: string): UseClamStatusResult => {
 
 export const ClaimStatusDropdown: React.FC<{ claimId: string }> = ({
   claimId,
+  ...props
 }) => {
   const { status, setStatus } = useClaimStatus(claimId)
 
   const options = Object.values(ClaimState)
   return (
-    <Dropdown placeholder="State">
+    <Dropdown placeholder="State" {...props}>
       {options.map((state) => (
         <DropdownOption
           key={state}

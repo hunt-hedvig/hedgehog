@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Template } from 'types/generated/graphql'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui'
 import {
   formatLocale,
   useTemplateMessages,

@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { Button, FadeIn, Flex, Paragraph, Shadowed, TextArea } from '@hedvig-ui'
-import { useDraft } from '@hedvig-ui/hooks/use-draft'
 import {
-  GetQuestionsGroupsDocument,
-  useMarkQuestionAsResolvedMutation,
-  useSendMessageMutation,
-} from 'types/generated/graphql'
-import { usePlatform } from '@hedvig-ui/hooks/use-platform'
-import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
-import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
-import {
+  Button,
+  FadeIn,
+  Flex,
   isPressing,
   Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+  Paragraph,
+  Shadowed,
+  TextArea,
+  useDraft,
+  usePlatform,
+} from '@hedvig-ui'
+import { useSendMessageMutation } from 'types/generated/graphql'
+import { useTemplatesHinting } from 'portals/hope/features/template-messages/use-templates-hinting'
+import { useTemplateMessages } from 'portals/hope/features/template-messages/use-template-messages'
 import { toast } from 'react-hot-toast'
 import { FileText, TextareaResize } from 'react-bootstrap-icons'
 import chroma from 'chroma-js'
+import { useResolveTask } from 'portals/hope/features/tasks/hooks/use-resolve-task'
 
 const Container = styled.div`
   width: 100%;
@@ -149,21 +150,15 @@ export const TaskChatInput: React.FC<{
   memberId: string
   onFocus: () => void
   onBlur: () => void
-  onResolve: () => void
   onResize: () => void
   isLarge: boolean
-}> = ({ memberId, onFocus, onBlur, onResolve, isLarge, onResize }) => {
+  slim?: boolean
+}> = ({ memberId, onFocus, onBlur, isLarge, onResize, slim }) => {
   const [message, setMessage] = useDraft(memberId)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()
   const { isMetaKey, metaKey } = usePlatform()
-  const [markAsResolved, { loading }] = useMarkQuestionAsResolvedMutation({
-    refetchQueries: [
-      {
-        query: GetQuestionsGroupsDocument,
-      },
-    ],
-  })
+  const { loading } = useResolveTask()
 
   const { hinting, templateHint, onChange, onKeyDown, clearHinting } =
     useTemplatesHinting(message, setMessage, isMetaKey)
@@ -184,61 +179,36 @@ export const TaskChatInput: React.FC<{
     setMessage(e.currentTarget.value)
   }
 
+  const handleSendMessage = () => {
+    if (loading || !message) return
+
+    toast.promise(
+      sendMessage({
+        variables: {
+          input: {
+            memberId,
+            message,
+            forceSendMessage: false,
+          },
+        },
+      }),
+      {
+        loading: 'Sending message',
+        success: () => {
+          setMessage('')
+          return 'Message sent'
+        },
+        error: 'Could not send message',
+      },
+    )
+  }
+
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     onKeyDown(e)
 
-    if (
-      isMetaKey(e) &&
-      isPressing(e, Keys.Enter) &&
-      !loading &&
-      message &&
-      !hinting
-    ) {
-      toast.promise(
-        sendMessage({
-          variables: {
-            input: {
-              memberId,
-              message,
-              forceSendMessage: false,
-            },
-          },
-        }),
-        {
-          loading: 'Sending message',
-          success: () => {
-            setMessage('')
-            return 'Message sent'
-          },
-          error: 'Could not send message',
-        },
-      )
+    if (isMetaKey(e) && isPressing(e, Keys.Enter) && !hinting) {
+      handleSendMessage()
       return
-    }
-
-    if (
-      isMetaKey(e) &&
-      isPressing(e, Keys.Enter) &&
-      e.shiftKey &&
-      !loading &&
-      !message
-    ) {
-      toast.promise(
-        markAsResolved({
-          variables: { memberId },
-          optimisticResponse: {
-            markQuestionAsResolved: true,
-          },
-        }),
-        {
-          loading: 'Marking as resolved',
-          success: () => {
-            onResolve()
-            return 'Marked as resolved'
-          },
-          error: 'Could not mark as resolved',
-        },
-      )
     }
   }
 
@@ -265,7 +235,11 @@ export const TaskChatInput: React.FC<{
             onBlur()
           }}
           placeholder={
-            !hinting ? `Message goes here or type '/' for templates` : ''
+            !hinting
+              ? slim
+                ? 'Message goes here '
+                : `Message goes here or type '/' for templates`
+              : ''
           }
           value={message}
           onChange={onChangeHandler}
@@ -280,39 +254,56 @@ export const TaskChatInput: React.FC<{
             handleOnKeyDown(e)
           }}
         />
-        <TextAreaFooter onClick={show}>
-          <div className="divider" />
-          <TemplatesButton
-            size="small"
-            variant="tertiary"
-            icon={
-              <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
-            }
-          >
-            templates
-          </TemplatesButton>
-        </TextAreaFooter>
+        {!slim && (
+          <TextAreaFooter onClick={show}>
+            <div className="divider" />
+            <TemplatesButton
+              size="small"
+              variant="tertiary"
+              icon={
+                <FileText style={{ width: 12, height: 12, marginRight: 4 }} />
+              }
+            >
+              templates
+            </TemplatesButton>
+          </TextAreaFooter>
+        )}
       </Container>
-      <Flex
-        fullWidth
-        justify={'space-between'}
-        style={{ padding: '0 1.25rem', marginTop: '1rem' }}
-      >
-        <FadeIn duration={200}>
-          <Tip>
-            <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
-            <Shadowed>Enter</Shadowed> to mark as resolved
-          </Tip>
-        </FadeIn>
-        {inputFocused && (
+      {slim && (
+        <Flex justify="flex-end">
+          <Button
+            style={{ marginTop: '1rem', minWidth: '7.5rem' }}
+            disabled={loading || !message}
+            onClick={() => handleSendMessage()}
+          >
+            Send
+          </Button>
+        </Flex>
+      )}
+      {!slim && (
+        <Flex
+          fullWidth
+          justify={'space-between'}
+          style={{ padding: '0 1.25rem', marginTop: '1rem' }}
+        >
+          {/* TODO: Fix command line to not resolve wrong members
           <FadeIn duration={200}>
             <Tip>
-              <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Enter</Shadowed>{' '}
-              to send
+              <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Shift</Shadowed> +{' '}
+              <Shadowed>Enter</Shadowed> to mark as resolved
             </Tip>
           </FadeIn>
-        )}
-      </Flex>
+          */}
+          {inputFocused && (
+            <FadeIn duration={200}>
+              <Tip>
+                <Shadowed>{metaKey.hint}</Shadowed> + <Shadowed>Enter</Shadowed>{' '}
+                to send
+              </Tip>
+            </FadeIn>
+          )}
+        </Flex>
+      )}
     </>
   )
 }

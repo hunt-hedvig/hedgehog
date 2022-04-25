@@ -17,8 +17,8 @@ import MediaQuery from 'react-media'
 import { useHistory, useLocation } from 'react-router'
 import { Logo, LogoIcon } from './elements'
 import { ExternalMenuItem, MenuItem } from './MenuItem'
-import { Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
-import { useNavigation } from '@hedvig-ui/hooks/navigation/use-navigation'
+import { Keys } from '@hedvig-ui'
+import { useNavigation } from '@hedvig-ui'
 import { CheckedInCard } from 'portals/hope/features/navigation/sidebar/CheckedInCard'
 
 const Wrapper = styled.div<{ collapsed: boolean }>`
@@ -131,7 +131,7 @@ const Menu = styled.div`
 const routes = {
   dashborad: '/dashborad',
   claims: '/claims/list/1',
-  questions: '/tasks/check-in',
+  questions: '/questions',
   search: '/members',
   tools: '/tools',
   trustly: 'https://backoffice.trustly.com/?Locale=en_GB#/tab_orders',
@@ -148,7 +148,7 @@ export const VerticalMenu: React.FC = () => {
   )
   const [locations, setLocations] = useState<string[]>([])
 
-  const { register } = useNavigation()
+  const { registerList } = useNavigation()
 
   useEffect(() => {
     const latestLocations = [pathname, ...locations].filter(
@@ -246,6 +246,38 @@ export const VerticalMenu: React.FC = () => {
     },
   ]
 
+  const { registerItem } = registerList({
+    list: MenuItemsList,
+    name: 'VerticalMenu',
+    nameField: 'title',
+    focus: Keys.S,
+    resolve: (item) => item.hotkeyHandler(),
+    focusCondition: (name) => {
+      const itemTitle = name.split(' - ')[1]
+
+      const route = MenuItemsList.find(
+        (menuItem) => menuItem.title === itemTitle,
+      )?.route
+
+      if (
+        (history.location.pathname === '/' ||
+          history.location.pathname === '/profile') &&
+        route === routes.dashborad
+      ) {
+        return true
+      }
+
+      if (
+        history.location.pathname.includes('/claims') &&
+        route === routes.claims
+      ) {
+        return true
+      }
+
+      return route ? history.location.pathname.includes(route) : false
+    },
+  })
+
   return (
     <MediaQuery query="(max-width: 1300px)">
       {(shouldAlwaysCollapse) => (
@@ -264,27 +296,13 @@ export const VerticalMenu: React.FC = () => {
             </Header>
 
             <Menu className="menu">
-              {MenuItemsList.map(({ external, single, ...item }, index) => {
-                const navigation = register(item.title, {
-                  focus: index === 0 ? Keys.S : undefined,
-                  resolve: () => {
-                    item.hotkeyHandler()
-                  },
-                  neighbors: {
-                    up: index ? MenuItemsList[index - 1].title : undefined,
-                    down:
-                      index < MenuItemsList.length - 1
-                        ? MenuItemsList[index + 1].title
-                        : undefined,
-                  },
-                })
-
-                return !external ? (
+              {MenuItemsList.map((item) =>
+                !item.external ? (
                   <MenuItem
                     key={item.route}
                     style={{
-                      marginBottom: single ? '4rem' : 0,
-                      ...navigation.style,
+                      ...registerItem(item).style,
+                      marginBottom: item.single ? '4rem' : 0,
                     }}
                     isActive={(_match, location) => {
                       if (
@@ -295,10 +313,18 @@ export const VerticalMenu: React.FC = () => {
                       }
 
                       if (
-                        location.pathname.startsWith('/questions') &&
-                        item.route === '/tasks/check-in'
-                      )
+                        location.pathname === '/' &&
+                        item.route === routes.dashborad
+                      ) {
                         return true
+                      }
+
+                      if (
+                        location.pathname.startsWith('/claims') &&
+                        item.route === '/claims/list/1'
+                      ) {
+                        return true
+                      }
 
                       return location.pathname.startsWith(item.route)
                     }}
@@ -313,19 +339,18 @@ export const VerticalMenu: React.FC = () => {
                   />
                 ) : (
                   <ExternalMenuItem
-                    {...navigation}
                     key={item.route}
                     style={{
-                      marginBottom: single ? '4rem' : 0,
-                      ...navigation.style,
+                      ...registerItem(item).style,
+                      marginBottom: item.single ? '4rem' : 0,
                     }}
                     href={item.route}
                     shouldAlwaysCollapse={shouldAlwaysCollapse}
                     isCollapsed={isCollapsed}
                     {...item}
                   />
-                )
-              })}
+                ),
+              )}
               {!isCollapsed && !shouldAlwaysCollapse && <CheckedInCard />}
             </Menu>
           </InnerWrapper>

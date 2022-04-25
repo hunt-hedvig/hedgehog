@@ -7,7 +7,7 @@ const fadeInKeyframes = (maxOpacity: number, translateTo: string) =>
     to: { opacity: maxOpacity, transform: 'translateY(0)' },
   })
 
-interface FadeInProps {
+export interface FadeInProps {
   delay?: string
   duration?: number
   translateTo?: string

@@ -9,10 +9,7 @@ import {
   TableHeaderColumn,
   TableRow,
 } from '@hedvig-ui'
-import {
-  Keys,
-  useKeyIsPressed,
-} from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { Keys, useKeyIsPressed } from '@hedvig-ui'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import {

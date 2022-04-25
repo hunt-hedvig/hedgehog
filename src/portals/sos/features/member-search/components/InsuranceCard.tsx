@@ -6,7 +6,7 @@ import {
   TypeOfContract,
   TypeOfContractType,
 } from 'portals/hope/features/config/constants'
-import { convertEnumToTitle } from '@hedvig-ui/utils/text'
+import { convertEnumToTitle } from '@hedvig-ui'
 import { SimpleMemberLookupContract } from 'types/generated/graphql'
 
 const Card = styled.div`

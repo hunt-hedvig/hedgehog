@@ -1,4 +1,4 @@
-import { usePlatform } from '@hedvig-ui/hooks/use-platform'
+import { usePlatform } from '@hedvig-ui'
 import { addSeconds, format, parseISO } from 'date-fns'
 import React, { useState } from 'react'
 import {
@@ -20,13 +20,14 @@ import {
   Spacing,
   TextArea,
 } from '@hedvig-ui'
-import { isPressing, Keys } from '@hedvig-ui/hooks/keyboard/use-key-is-pressed'
+import { isPressing, Keys } from '@hedvig-ui'
 import { useMe } from 'portals/hope/features/user/hooks/use-me'
 import { toast } from 'react-hot-toast'
 import formatDate from 'date-fns/format'
-import { useDraft } from '@hedvig-ui/hooks/use-draft'
+import { useDraft } from '@hedvig-ui'
 import gql from 'graphql-tag'
 import { PushUserAction } from 'portals/hope/features/tracking/utils/tags'
+import { useNavigation } from '@hedvig-ui'
 
 const ClaimNoteWrapper = styled.div`
   display: flex;
@@ -144,6 +145,8 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
 
   const [textFieldFocused, setTextFieldFocused] = useState(false)
 
+  const { register } = useNavigation()
+
   return (
     <CardContent>
       <CardTitle title="Notes" />
@@ -178,6 +181,7 @@ const ClaimNotes: React.FC<{ claimId: string }> = ({ claimId }) => {
             setNote('')
           }
         }}
+        {...register('Claim Notes Textarea')}
       />
       <Spacing top="small" />
       <SubNoteWrapper>

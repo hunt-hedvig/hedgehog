@@ -1,19 +1,26 @@
 import { InsuranceType } from 'portals/hope/features/config/constants'
 import { JSONSchema7 } from 'json-schema'
 import {
-  GetSchemaForInsuranceTypeQueryHookResult,
-  useGetSchemaForInsuranceTypeQuery,
+  QuoteSchemaForInsuranceTypeQueryHookResult,
+  useQuoteSchemaForInsuranceTypeQuery,
 } from 'types/generated/graphql'
+import gql from 'graphql-tag'
 
 type GetSchemaForInsuranceTypeReturnTuple = [
   JSONSchema7,
-  GetSchemaForInsuranceTypeQueryHookResult,
+  QuoteSchemaForInsuranceTypeQueryHookResult,
 ]
+
+gql`
+  query QuoteSchemaForInsuranceType($insuranceType: String!) {
+    quoteSchemaForInsuranceType(insuranceType: $insuranceType)
+  }
+`
 
 export const useSchemaForInsuranceType = (
   insuranceType: InsuranceType,
 ): GetSchemaForInsuranceTypeReturnTuple => {
-  const queryResult = useGetSchemaForInsuranceTypeQuery({
+  const queryResult = useQuoteSchemaForInsuranceTypeQuery({
     variables: {
       insuranceType,
     },

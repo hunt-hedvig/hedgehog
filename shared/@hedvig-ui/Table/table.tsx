@@ -1,8 +1,10 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
+import chroma from 'chroma-js'
 import React from 'react'
 import { CaretUpFill } from 'react-bootstrap-icons'
 import { useNavigation } from '../hooks/navigation/use-navigation'
+import { lightTheme } from '../themes'
 
 const range = (start: number, end: number) =>
   start >= 0 && end >= start
@@ -143,23 +145,33 @@ export const TableRow: React.FC<TableRowProps> = ({
 
   const rowNavigation =
     typeof index === 'number' && typeof length === 'number' && onResolve
-      ? register(`Table Row ${id ?? index}`, {
-          autoFocus: index === 0,
-          resolve: () => {
-            if (!onResolve || !index) {
-              return
-            }
+      ? register(
+          `Table Row ${id ?? index}`,
+          {
+            autoFocus: index === 0,
+            resolve: () => {
+              if (!onResolve) {
+                return
+              }
 
-            onResolve(index)
+              onResolve(index)
+            },
+            neighbors: {
+              up: index > 0 ? `Table Row ${index - 1}` : topElement,
+              down:
+                index < length - 1
+                  ? `Table Row ${index + 1}`
+                  : 'Table Pagination 0',
+            },
           },
-          neighbors: {
-            up: index > 0 ? `Table Row ${index - 1}` : topElement,
-            down:
-              index < length - 1
-                ? `Table Row ${index + 1}`
-                : 'Table Pagination 0',
+          {
+            background: `${chroma(lightTheme.accent).brighten(1).hex()}`,
+            border: 'none',
           },
-        })
+          {
+            border: 'none',
+          },
+        )
       : null
 
   return <TableRowStyled {...rowNavigation} {...props} />

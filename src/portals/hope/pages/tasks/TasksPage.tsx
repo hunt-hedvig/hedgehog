@@ -1,44 +1,38 @@
 import { Page } from 'portals/hope/pages/routes'
 import styled from '@emotion/styled'
-import React, { useEffect, useState } from 'react'
-import { Flex, Placeholder } from '@hedvig-ui'
+import React, { useState } from 'react'
+import { Flex, useMediaQuery, useTitle } from '@hedvig-ui'
 import chroma from 'chroma-js'
-import { useQuestionGroups } from 'portals/hope/features/questions/hooks/use-question-groups'
-import { Question, QuestionGroup } from 'types/generated/graphql'
-import { formatDistanceToNowStrict, parseISO } from 'date-fns'
-import {
-  doMarketFilter,
-  doMemberGroupFilter,
-} from 'portals/hope/features/questions/utils'
-import { useNumberMemberGroups } from 'portals/hope/features/user/hooks/use-number-member-groups'
-import {
-  getMemberFlag,
-  getMemberIdColor,
-} from 'portals/hope/features/member/utils'
-import { PickedLocale } from 'portals/hope/features/config/constants'
-import { useTitle } from '@hedvig-ui/hooks/use-title'
-import { MemberContainer } from '../../features/tasks/components/MemberContainer'
 import { TaskChat } from '../../features/tasks/TaskChat'
 import { FilterModal } from 'portals/hope/features/tasks/components/FilterModal'
-import { useSelectedFilters } from 'portals/hope/features/questions/hooks/use-selected-filters'
-import { useResolveQuestion } from 'portals/hope/features/questions/hooks/use-resolve-question'
-import { RouteComponentProps, useHistory } from 'react-router'
+import { useHistory } from 'react-router'
 import { motion } from 'framer-motion'
+import { useTasks } from 'portals/hope/features/tasks/hooks/use-tasks'
+import { ChevronLeft, X } from 'react-bootstrap-icons'
+import { useCheckInOut } from 'portals/hope/features/tasks/hooks/use-check-in-out'
+import { CheckInMessage } from 'portals/hope/features/tasks/CheckInMessage'
+import { useTaskNavigation } from 'portals/hope/features/tasks/hooks/use-task-navigation'
+import { QuestionGroup } from 'types/generated/graphql'
+import { QuestionTaskListItem } from 'portals/hope/features/tasks/list-items/QuestionTaskListItem'
 import {
-  formatLocale,
-  useTemplateMessages,
-} from '../../features/template-messages/use-template-messages'
+  TaskListItem,
+  TaskWithoutResource,
+  TaskWithResource,
+} from 'portals/hope/features/tasks/list-items/TaskListItem'
 
-const TaskNavigationWrapper = styled.div`
+const TaskNavigationWrapper = styled.div<{ fullWidth: boolean }>`
   height: 100%;
   box-shadow: 0 0 2rem rgba(0, 0, 0, 0.2);
   clip-path: inset(0px -10rem 0px 0px);
   background-color: white;
 
-  min-width: 70%;
+  min-width: ${({ fullWidth }) => (fullWidth ? 'calc(100% + 4rem)' : '70%')};
+  overflow: hidden;
 
   margin-left: -4rem;
-  overflow-y: hidden;
+
+  display: flex;
+  flex-direction: column;
 `
 
 const TaskChatWrapper = styled.div`
@@ -52,6 +46,16 @@ const TaskChatWrapper = styled.div`
     width: 0;
     display: none;
   }
+
+  @media (max-width: 800px) {
+    position: absolute;
+    top: 4.5rem;
+    left: 0;
+
+    height: calc(100vh - 4.5rem);
+    overflow-y: scroll;
+    background-color: ${({ theme }) => theme.background};
+  }
 `
 
 const TopBar = styled.div`
@@ -59,20 +63,55 @@ const TopBar = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid
     ${({ theme }) => chroma(theme.semiStrongForeground).brighten(3.25).hex()};
+`
+
+const CheckInBar = styled.div`
+  padding: 2rem 2rem 2rem 4rem;
+
+  @media (max-width: 800px) {
+    padding: 2rem;
+  }
+
+  background-color: ${({ theme }) =>
+    chroma(theme.semiStrongForeground).brighten(3.5).hex()};
+`
+
+// noinspection CssInvalidPropertyValue
+const TabContainer = styled.div`
+  display: flex;
   width: 100%;
+
+  overflow-x: overlay;
+
+  ::-webkit-scrollbar {
+    height: 0.5rem;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) =>
+      chroma(theme.semiStrongForeground).alpha(0.2).hex()};
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 `
 
 const TopBarItem = styled.button<{ selected?: boolean }>`
-  background-color: ${({ theme, selected }) =>
-    selected
-      ? 'transparent'
-      : chroma(theme.semiStrongForeground).alpha(0.05).hex()};
+  display: flex;
+  align-items: center;
+
+  .title {
+    transition: color 200ms;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  background-color: transparent;
   border: none;
   cursor: pointer;
   padding: 2rem 2rem;
-
-  display: flex;
-  align-items: center;
 
   color: ${({ theme, selected }) =>
     selected
@@ -80,8 +119,49 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
       : chroma(theme.semiStrongForeground).brighten(2).hex()};
 
   transition: color 200ms;
+
+  .back-button {
+    display: flex;
+    align-items: center;
+    color: ${({ theme }) => theme.accent};
+
+    svg {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .close-button {
+    color: ${({ theme }) => theme.accent};
+    transition: background-color 200ms;
+    opacity: 0;
+
+    background-color: ${({ theme }) => chroma(theme.accent).alpha(0.1).hex()};
+
+    border-radius: 50%;
+    width: 1.4rem;
+    height: 1.4rem;
+    margin-left: 1rem;
+    margin-right: -2.4rem;
+  }
+
   :hover {
-    color: ${({ theme }) => chroma(theme.semiStrongForeground).alpha(4).hex()};
+    .title {
+      color: ${({ theme }) =>
+        chroma(theme.semiStrongForeground).alpha(4).hex()};
+    }
+
+    .close-button {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-button {
+      color: ${({ theme }) => chroma(theme.accent).brighten(2).hex()};
+
+      svg {
+        fill: ${({ theme }) => chroma(theme.accent).brighten(2).hex()};
+      }
+    }
   }
 
   .count {
@@ -119,91 +199,30 @@ const FilterBarItem = styled(motion.button)`
 `
 
 const ListContainer = styled(motion.ul)`
+  flex: 1;
   width: 100%;
-  height: 100%;
   overflow-y: scroll;
+  overflow-x: hidden;
+
   ::-webkit-scrollbar-track {
     background: transparent;
   }
-
-  padding-bottom: 10rem;
 
   & {
     margin: 0;
     padding: 0;
   }
 `
-
-const ListItem = styled(motion.li)<{ selected?: boolean }>`
+const BackButtonContainer = styled.div`
   display: flex;
-  font-size: 1.1rem;
-  padding: 1.75rem 2.05rem;
-  cursor: pointer;
-
-  transition: background-color 200ms;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-  :hover {
-    background-color: ${({ theme }) =>
-      chroma(theme.accent).alpha(0.2).brighten(2).hex()};
-  }
-
-  background-color: ${({ selected, theme }) =>
-    selected ? chroma(theme.accent).alpha(0.2).brighten(1).hex() : undefined};
-
-  .orb {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 3rem;
-
-    div {
-      width: 1rem;
-      height: 1rem;
-      border-radius: 50%;
-
-      background-color: transparent;
-    }
-  }
-
-  .flag {
-    padding: 0 2rem;
-  }
-
-  .name {
-    width: 30%;
-    padding-right: 2rem;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    div {
-      color: ${({ theme }) => theme.accent};
-      transition: color 200ms;
-
-      :hover {
-        color: ${({ theme }) => theme.accentLight};
-      }
-    }
-  }
-
-  .preview {
-    width: 70%;
-    color: ${({ theme }) =>
-      chroma(theme.semiStrongForeground).brighten(1).hex()};
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .options {
-    width: 10rem;
-    color: ${({ theme }) =>
-      chroma(theme.semiStrongForeground).brighten(1).hex()};
-
-    text-align: right;
-  }
+  justify-content: center;
+  align-items: center;
+  z-index: 1002;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4.5rem;
+  padding: 1.5rem;
 `
 
 const Container = styled(Flex)`
@@ -214,224 +233,184 @@ const Container = styled(Flex)`
   margin-left: -4rem;
 `
 
-const getQuestionBody = (question: Question) => {
-  try {
-    return JSON.parse(question.messageJsonString).body
-  } catch (e) {
-    return ''
-  }
-}
-
-const getMemberName = (group: QuestionGroup) => {
-  return group.firstName && group.lastName
-    ? `${group.firstName} ${group.lastName}`
-    : undefined
-}
-
-const TasksPage: Page<
-  RouteComponentProps<{
-    memberId?: string
-    tab?: string
-  }>
-> = ({ match }) => {
+const TasksPage: Page = () => {
+  const isMobile = useMediaQuery('(max-width: 800px)')
   const history = useHistory()
-  const memberId = match.params.memberId
-  const tab = match.params.tab
-
-  const { resolve } = useResolveQuestion()
-  const { numberMemberGroups } = useNumberMemberGroups()
-  const [questionGroups, { loading }] = useQuestionGroups()
-  const { selectedFilters: filters, toggleFilter } = useSelectedFilters()
-
+  const { loading, checkedIn } = useCheckInOut()
   const [showFilters, setShowFilters] = useState(false)
 
-  const [selectedQuestionGroup, setSelectedQuestionGroup] =
-    useState<QuestionGroup | null>(null)
-  const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null)
+  const {
+    navigate,
+    params: { memberId, taskId },
+  } = useTaskNavigation()
 
-  const { setLocale, setMemberId, changeLocaleDisplayed } =
-    useTemplateMessages()
+  const {
+    incomingTasks,
+    activeTask,
+    resolveTask,
+    render,
+    tabs,
+    selectTab,
+    closeTab,
+  } = useTasks({
+    params: { taskId },
+    onResolve: () => history.replace(`/questions`),
+  })
 
-  const groups =
-    filters.length > 0
-      ? questionGroups
-          .filter(doMemberGroupFilter(numberMemberGroups)(filters))
-          .filter(doMarketFilter(filters))
-      : questionGroups
+  const title = `Questions ${
+    incomingTasks.length ? '(' + incomingTasks.length + ')' : ''
+  }`
 
-  const groupByRoute = groups.find((group) => group.memberId === memberId)
-
-  useEffect(() => {
-    if (loading) return
-
-    if (groupByRoute) {
-      setSelectedMemberId(groupByRoute.memberId)
-      setSelectedQuestionGroup(groupByRoute)
-
-      return
-    }
-
-    history.replace('/questions')
-    setSelectedQuestionGroup(null)
-    setSelectedMemberId(null)
-  }, [groupByRoute])
-
-  const selectQuestionGroupHandler = (group: QuestionGroup | null) => {
-    setSelectedQuestionGroup(group)
-
-    if (!group) {
-      return
-    }
-
-    setMemberId(group.memberId)
-
-    if (
-      group.pickedLocale &&
-      formatLocale(group.pickedLocale as PickedLocale, true) ===
-        formatLocale(PickedLocale.EnSe, true)
-    ) {
-      changeLocaleDisplayed(group.memberId, true)
-    }
-
-    setLocale((group.pickedLocale || PickedLocale.SvSe) as PickedLocale)
-  }
-
-  const fullName = selectedQuestionGroup
-    ? `${selectedQuestionGroup.firstName} ${selectedQuestionGroup.lastName}`
-    : ''
-
-  const title = memberId
-    ? `Questions | ${fullName}`
-    : `Questions ${groups.length ? '(' + groups.length + ')' : ''}`
-
-  useTitle(title, [fullName])
+  useTitle(title, [incomingTasks.length])
 
   return (
     <>
+      {isMobile && activeTask && (
+        <BackButtonContainer
+          onClick={() => {
+            history.push('/questions')
+          }}
+        >
+          <ChevronLeft />
+        </BackButtonContainer>
+      )}
       <Container>
-        <TaskNavigationWrapper>
+        <TaskNavigationWrapper fullWidth={!activeTask}>
           <>
             <TopBar>
-              <Flex>
-                <TopBarItem
-                  selected={!selectedMemberId}
-                  onClick={() => history.replace(`/questions`)}
-                >
-                  Incoming questions
-                  <div className="count">{groups.length}</div>
-                </TopBarItem>
-                {selectedQuestionGroup && selectedMemberId && (
-                  <TopBarItem selected={true}>
-                    {getMemberName(selectedQuestionGroup) ?? 'Member'}
+              {!tabs.length ? (
+                <>
+                  <TopBarItem
+                    selected={!memberId}
+                    onClick={() => history.push(`/questions`)}
+                    style={{ minWidth: '16rem', paddingRight: '1rem' }}
+                  >
+                    Incoming questions
+                    <div className="count">{incomingTasks.length}</div>
                   </TopBarItem>
-                )}
-              </Flex>
-              <FilterBarItem
-                onClick={() => setShowFilters(true)}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Filters
-              </FilterBarItem>
-            </TopBar>
-            {selectedMemberId && (
-              <ListContainer>
-                <MemberContainer
-                  memberId={selectedMemberId}
-                  tab={tab ?? 'contracts'}
-                  title={title}
-                  onChangeTab={(newTab) =>
-                    history.replace(`/questions/${selectedMemberId}/${newTab}`)
-                  }
-                />
-              </ListContainer>
-            )}
-            {!selectedMemberId && (
-              <ListContainer>
-                {groups.map((group) => {
-                  const previewQuestion = group?.questions?.slice(-1)[0] ?? ''
-                  const preview = getQuestionBody(previewQuestion)
-
-                  const orbColor = getMemberIdColor(
-                    group.memberId,
-                    numberMemberGroups,
-                  )
-
-                  const flag = group.market
-                    ? getMemberFlag(
-                        {
-                          market: group.market ?? '',
-                        },
-                        group.pickedLocale as PickedLocale,
-                      )
-                    : '🏳'
-
-                  return (
-                    <ListItem
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      key={group.id}
-                      onClick={() => selectQuestionGroupHandler(group)}
-                      selected={
-                        group.memberId === selectedQuestionGroup?.memberId
-                      }
+                </>
+              ) : (
+                <TopBarItem
+                  selected={!memberId}
+                  onClick={() => history.push(`/questions`)}
+                >
+                  <div className="back-button">
+                    <ChevronLeft />
+                    Back
+                  </div>
+                </TopBarItem>
+              )}
+              <TabContainer>
+                {tabs.map(({ selected, title, resourceId, type }, index) => (
+                  <div key={title + index}>
+                    <TopBarItem
+                      selected={selected}
+                      onClick={() => selectTab(resourceId)}
                     >
-                      <div className="orb">
-                        <div style={{ backgroundColor: orbColor }} />
-                      </div>
-                      <div className="flag">{flag}</div>
-                      <span className="name">
-                        {getMemberName(group) ? (
-                          <div
-                            onClick={() => {
-                              history.replace(`/questions/${group.memberId}`)
-                              setSelectedQuestionGroup(group)
+                      <div className="title">{title}</div>
+                      {type === 'claim' && (
+                        <motion.div
+                          whileHover={{ scale: 1.15 }}
+                          style={{ display: 'flex', alignItems: 'center' }}
+                        >
+                          <X
+                            onClick={(e) => {
+                              closeTab(resourceId)
+                              e.stopPropagation()
                             }}
-                          >
-                            {getMemberName(group)}
-                          </div>
-                        ) : (
-                          <Placeholder>Name not available</Placeholder>
-                        )}
-                      </span>
-                      <span className="preview">{preview.text}</span>
-                      <div className="options">
-                        {formatDistanceToNowStrict(
-                          parseISO(previewQuestion.timestamp),
-                          {
-                            addSuffix: true,
-                          },
-                        )}
-                      </div>
-                    </ListItem>
-                  )
+                            className="close-button"
+                          />
+                        </motion.div>
+                      )}
+                    </TopBarItem>
+                  </div>
+                ))}
+              </TabContainer>
+              {!memberId && (
+                <FilterBarItem
+                  onClick={() => setShowFilters(true)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Filters
+                </FilterBarItem>
+              )}
+            </TopBar>
+            {!(loading || checkedIn) && !memberId && (
+              <CheckInBar>
+                <CheckInMessage />
+              </CheckInBar>
+            )}
+            {!memberId ? (
+              <ListContainer>
+                {incomingTasks.map((task) => {
+                  switch (task.resource?.__typename) {
+                    case 'QuestionGroup':
+                      return (
+                        <QuestionTaskListItem
+                          disabled={!checkedIn}
+                          key={task.id}
+                          task={task as TaskWithResource<QuestionGroup>}
+                          onClick={() => navigate({ taskId: task.id })}
+                          selected={task.id === activeTask?.id}
+                        />
+                      )
+                    default:
+                      return (
+                        <TaskListItem
+                          disabled={!checkedIn}
+                          key={task.id}
+                          task={task as TaskWithoutResource}
+                          onClick={() => navigate({ taskId: task.id })}
+                          selected={task.id === activeTask?.id}
+                        />
+                      )
+                  }
                 })}
               </ListContainer>
+            ) : (
+              <ListContainer>{render()}</ListContainer>
             )}
           </>
         </TaskNavigationWrapper>
-        <TaskChatWrapper>
-          {selectedQuestionGroup && (
+        {activeTask && (
+          <TaskChatWrapper>
             <TaskChat
-              memberId={selectedQuestionGroup.memberId}
-              fullName={getMemberName(selectedQuestionGroup)}
+              slim={isMobile}
+              resolvable={!!activeTask && checkedIn}
+              task={activeTask}
               onResolve={() => {
-                resolve(selectedQuestionGroup.memberId)
-                history.replace(`/questions`)
+                if (!activeTask) return
+
+                resolveTask(activeTask.id, !isMobile)
               }}
-              onSelectMember={() => {
-                history.replace(`/questions/${selectedQuestionGroup.memberId}`)
+              onSelectMember={(memberId, openClaimId) => {
+                if (!activeTask) return
+
+                if (!openClaimId) {
+                  navigate({
+                    memberId,
+                    active: memberId,
+                    taskId,
+                  })
+                } else {
+                  navigate({
+                    memberId: memberId,
+                    tab: 'claims',
+                    active: openClaimId,
+                    claimIds: openClaimId,
+                    taskId,
+                  })
+                }
               }}
             />
-          )}
-        </TaskChatWrapper>
+          </TaskChatWrapper>
+        )}
       </Container>
 
       <FilterModal
         visible={showFilters}
         onClose={() => setShowFilters(false)}
-        filters={filters}
-        onToggle={toggleFilter}
       />
     </>
   )

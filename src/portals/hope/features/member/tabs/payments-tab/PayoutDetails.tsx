@@ -1,8 +1,8 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
-import { Form, FormDropdown, FormInput, SubmitButton } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
+import { Select, Input, Button } from '@hedvig-ui'
+import { useConfirmDialog } from '@hedvig-ui'
 import React from 'react'
-import { FieldValues, FormProvider, useForm } from 'react-hook-form'
+import { FieldValues, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import {
   GetMemberTransactionsDocument,
@@ -11,6 +11,14 @@ import {
   usePayoutMemberMutation,
 } from 'types/generated/graphql'
 import { useContractMarketInfo } from 'portals/hope/common/hooks/use-contract-market-info'
+import styled from '@emotion/styled'
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+`
 
 const entryTypeOptions = [
   {
@@ -31,7 +39,12 @@ const entryTypeOptions = [
 ]
 
 export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
-  const form = useForm()
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
   const [payoutMember] = usePayoutMemberMutation()
 
   const { preferredCurrency = 'SEK' } = useContractMarketInfo(memberId)
@@ -93,7 +106,7 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
         {
           loading: 'Creating payout...',
           success: () => {
-            form.reset()
+            reset()
             return 'Payout created'
           },
           error: (e) => {
@@ -109,49 +122,49 @@ export const PayoutDetails: React.FC<{ memberId: string }> = ({ memberId }) => {
   }
 
   return (
-    <FormProvider {...form}>
-      <Form onSubmit={onSubmitHandler}>
-        <FormDropdown
-          label="Category"
-          options={entryTypeOptions}
-          name="category"
-          defaultValue=""
-          rules={{
-            required: 'Category is required',
-          }}
-        />
-        <FormInput
-          label="Payout amount"
-          name="amount"
-          defaultValue=""
-          type="number"
-          affix={{
-            content: preferredCurrency,
-          }}
-          rules={{
-            required: 'Amount is required',
-            pattern: {
-              value: /[^0]/,
-              message: 'Amount cannot be zero',
-            },
-          }}
-        />
-        <FormInput
-          label="Reference Id"
-          name="referenceId"
-          defaultValue=""
-          rules={{
-            required: 'Reference Id is required',
-            maxLength: {
-              value: 50,
-              message: 'The reference is too long (max 50 characters)',
-            },
-          }}
-        />
-        <FormInput label="Note" name="note" defaultValue="" />
+    <Form onSubmit={handleSubmit(onSubmitHandler)}>
+      <Select
+        {...register('category', {
+          required: 'Category is required',
+        })}
+        label="Category"
+        options={entryTypeOptions}
+        defaultValue=""
+        errors={errors}
+      />
+      <Input
+        {...register('amount', {
+          required: 'Amount is required',
+          pattern: {
+            value: /[^0]/,
+            message: 'Amount cannot be zero',
+          },
+        })}
+        label="Payout amount"
+        defaultValue=""
+        type="number"
+        affix={{
+          content: preferredCurrency,
+        }}
+        errors={errors}
+      />
+      <Input
+        {...register('referenceId', {
+          required: 'Reference Id is required',
+          maxLength: {
+            value: 50,
+            message: 'The reference is too long (max 50 characters)',
+          },
+        })}
+        label="Reference Id"
+        defaultValue=""
+        errors={errors}
+      />
+      <Input {...register('note')} label="Note" defaultValue="" />
 
-        <SubmitButton>Create payout</SubmitButton>
-      </Form>
-    </FormProvider>
+      <Button style={{ marginTop: '1rem' }} type="submit">
+        Create payout
+      </Button>
+    </Form>
   )
 }

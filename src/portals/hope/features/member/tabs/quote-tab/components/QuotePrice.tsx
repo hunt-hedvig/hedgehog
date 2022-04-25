@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { Button, Input } from '@hedvig-ui'
-import { useConfirmDialog } from '@hedvig-ui/Modal/use-confirm-dialog'
-import { formatMoney } from '@hedvig-ui/utils/money'
+import { useConfirmDialog } from '@hedvig-ui'
+import { formatMoney } from '@hedvig-ui'
 import React, { useState } from 'react'
 import { CheckCircleFill, PencilFill, XCircleFill } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 import {
-  GetQuotesDocument,
+  MemberQuotesDocument,
   Quote,
   useOverrideQuotePriceMutation,
 } from 'types/generated/graphql'
@@ -71,7 +71,7 @@ export const QuotePrice = ({ quote }: Props) => {
         },
         refetchQueries: [
           {
-            query: GetQuotesDocument,
+            query: MemberQuotesDocument,
             variables: { memberId: quote.memberId },
           },
         ],

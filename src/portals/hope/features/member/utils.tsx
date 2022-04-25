@@ -1,4 +1,4 @@
-import { getBirthdayInfo, getBirthDayText } from '@hedvig-ui/utils/date'
+import { getBirthdayInfo, getBirthDayText } from '@hedvig-ui'
 import { differenceInYears, parse } from 'date-fns'
 import {
   Market,
@@ -7,7 +7,7 @@ import {
   PickedLocale,
   PickedLocaleMarket,
 } from 'portals/hope/features/config/constants'
-import { FilterState } from 'portals/hope/features/questions/FilterSelect'
+import { FilterState } from 'portals/hope/features/filters/FilterSelect'
 import React from 'react'
 import { ContractMarketInfo } from 'types/generated/graphql'
 
