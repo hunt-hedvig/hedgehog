@@ -61,8 +61,6 @@ const TaskChatWrapper = styled.div`
 const TopBar = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid
-    ${({ theme }) => chroma(theme.semiStrongForeground).brighten(3.25).hex()};
   background-color: ${({ theme }) => theme.background};
 `
 
@@ -209,6 +207,9 @@ const ListContainer = styled(motion.ul)`
   width: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
+
+  border-top: 1px solid
+    ${({ theme }) => chroma(theme.semiStrongForeground).brighten(3.25).hex()};
 
   ::-webkit-scrollbar-track {
     background: transparent;
