@@ -154,8 +154,9 @@ export const TaskChatInput: React.FC<{
   onBlur: () => void
   onResize: () => void
   isLarge: boolean
+  activeTaskId: string
   slim?: boolean
-}> = ({ memberId, onFocus, onBlur, isLarge, onResize, slim }) => {
+}> = ({ memberId, onFocus, onBlur, isLarge, onResize, slim, activeTaskId }) => {
   const [message, setMessage] = useDraft(memberId)
   const [inputFocused, setInputFocused] = useState(false)
   const [sendMessage] = useSendMessageMutation()
@@ -226,7 +227,12 @@ export const TaskChatInput: React.FC<{
     }
   }, [isEnterPressed])
 
-  const textAreaNavigation = register('TasksChatInput', {}, {}, {})
+  const textAreaNavigation = register(
+    'TasksChatInput',
+    { parent: `QuestionsList - ${activeTaskId}` },
+    {},
+    {},
+  )
 
   return (
     <>

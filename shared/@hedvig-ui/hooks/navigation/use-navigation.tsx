@@ -347,8 +347,6 @@ export const useNavigation = () => {
     assignRef,
   } = useContext(NavigationContext)
 
-  console.log(cursor)
-
   const localItems = useRef<Record<string, UseNavigationRegisterOptions>>({})
 
   const registerItem = (

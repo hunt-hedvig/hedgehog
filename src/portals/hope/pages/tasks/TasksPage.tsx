@@ -289,6 +289,13 @@ const TasksPage: Page = () => {
         navigate({ taskId: newTask.id })
       }
     },
+    focusCondition: (name) => {
+      const taskId = incomingTasks.find(
+        (task) => task.title === name.split(' - ')[1],
+      )?.id
+
+      return taskId === activeTask?.id
+    },
   })
 
   useEffect(() => {
@@ -326,7 +333,9 @@ const TasksPage: Page = () => {
               ) : (
                 <TopBarItem
                   selected={!memberId}
-                  onClick={() => history.push(`/questions`)}
+                  onClick={() =>
+                    history.push(`/questions/?taskId=${activeTask?.id}`)
+                  }
                 >
                   <div className="back-button">
                     <ChevronLeft />
@@ -415,6 +424,7 @@ const TasksPage: Page = () => {
               slim={isMobile}
               resolvable={!!activeTask && checkedIn}
               task={activeTask}
+              activeTaskId={activeTask.id}
               onResolve={() => {
                 if (!activeTask) return
 

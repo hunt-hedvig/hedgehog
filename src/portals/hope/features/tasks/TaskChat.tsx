@@ -60,8 +60,9 @@ export const TaskChat: React.FC<{
   onResolve: () => void
   fullName?: string | null
   onSelectMember: (memberId: string, openClaimId: string | null) => void
+  activeTaskId: string
   slim?: boolean
-}> = ({ resolvable, task, onResolve, onSelectMember, slim }) => {
+}> = ({ resolvable, task, onResolve, onSelectMember, slim, activeTaskId }) => {
   const memberId = (task as { resource?: { memberId?: string } })?.resource
     ?.memberId
 
@@ -133,6 +134,7 @@ export const TaskChat: React.FC<{
                 onBlur={() => void 0}
                 onFocus={() => void 0}
                 slim={slim}
+                activeTaskId={activeTaskId}
               />
             )}
           </div>

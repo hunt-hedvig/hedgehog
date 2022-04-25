@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Task, TaskResource } from 'types/generated/graphql'
-import { Placeholder } from '@hedvig-ui'
+import { Keys, Placeholder, useKeyIsPressed } from '@hedvig-ui'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import styled from '@emotion/styled'
 import { motion } from 'framer-motion'
@@ -114,6 +114,15 @@ export const TaskListItem: React.FC<TaskListItemProps<TaskResource>> = ({
   onClickTitle,
   decorators,
 }) => {
+  const isOptionPressed = useKeyIsPressed(Keys.Option)
+  const isMPressed = useKeyIsPressed(Keys.M)
+
+  useEffect(() => {
+    if (isOptionPressed && isMPressed && !disabled && selected) {
+      onClickTitle?.()
+    }
+  }, [isOptionPressed, isMPressed])
+
   return (
     <ListItem
       whileHover={{ scale: 1.02 }}
