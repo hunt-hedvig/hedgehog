@@ -30,9 +30,9 @@ const ListItem = styled(motion.li)<{ selected?: boolean }>`
     }
     padding-right: 2rem;
 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    /* white-space: nowrap; */
+    /* overflow: hidden; */
+    /* text-overflow: ellipsis; */
 
     max-width: 15rem;
 

@@ -38,11 +38,14 @@ const HintContainer = styled(motion.div)`
   }
 `
 
-const HintKeys = styled.div`
+const HintKeys = styled.div<{ dark?: boolean }>`
+  width: fit-content;
   padding: 0.2rem 0.5rem;
   border-radius: 0.25rem;
-  background-color: ${({ theme }) =>
-    chroma(theme.placeholderColor).alpha(0.6).hex()};
+  background-color: ${({ theme, dark }) =>
+    chroma(dark ? theme.foreground : theme.placeholderColor)
+      .alpha(0.6)
+      .hex()};
 
   font-size: 12px;
   white-space: nowrap;
@@ -94,11 +97,19 @@ export const HotkeyHint: React.FC<HotkeyHintProps> = ({
       }}
       style={wrapperStyles}
       onClick={() => {
-        const toastText = `Next time use ${getFormattedKeysText(
-          props.keys,
-        )} to ${props.text}`
-
-        toast(toastText)
+        toast(
+          () => (
+            <div>
+              Next time to <b>{props.text}</b> use:
+              <HintKeys dark>{getFormattedKeysText(props.keys)}</HintKeys>
+            </div>
+          ),
+          {
+            style: {
+              width: 'fit-content',
+            },
+          },
+        )
       }}
     >
       {children}
