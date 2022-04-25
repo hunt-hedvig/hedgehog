@@ -63,6 +63,7 @@ const TopBar = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid
     ${({ theme }) => chroma(theme.semiStrongForeground).brighten(3.25).hex()};
+  background-color: ${({ theme }) => theme.background};
 `
 
 const CheckInBar = styled.div`
@@ -80,6 +81,8 @@ const CheckInBar = styled.div`
 const TabContainer = styled.div`
   display: flex;
   width: 100%;
+
+  background-color: transparent;
 
   overflow-x: overlay;
 
@@ -108,10 +111,14 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
     overflow: hidden;
   }
 
-  background-color: transparent;
+  background-color: ${({ theme, selected }) =>
+    selected ? theme.backgroundLight : 'transparent'};
   border: none;
+  border-left: 1px solid
+    ${({ theme }) => chroma(theme.semiStrongForeground).brighten(3.25).hex()};
   cursor: pointer;
-  padding: 2rem 2rem;
+
+  padding: 1.7rem 2rem 1.4rem 2rem;
 
   color: ${({ theme, selected }) =>
     selected
@@ -131,17 +138,15 @@ const TopBarItem = styled.button<{ selected?: boolean }>`
   }
 
   .close-button {
-    color: ${({ theme }) => theme.accent};
+    color: ${({ theme }) => chroma(theme.accent).brighten(1).hex()};
     transition: background-color 200ms;
     opacity: 0;
 
-    background-color: ${({ theme }) => chroma(theme.accent).alpha(0.1).hex()};
+    width: 1.5rem;
+    height: 1.5rem;
 
-    border-radius: 50%;
-    width: 1.4rem;
-    height: 1.4rem;
-    margin-left: 1rem;
-    margin-right: -2.4rem;
+    margin-left: 0.3rem;
+    margin-right: -1.3rem;
   }
 
   :hover {
