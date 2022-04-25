@@ -13,7 +13,7 @@ gql`
   }
 `
 
-export const useMemberHasOpenClaim = (memberId: string | null) => {
+export const useMemberHasOpenClaim = (memberId?: string | null) => {
   const { data } = useMemberHasOpenClaimQuery({
     variables: { memberId: memberId ?? '' },
     fetchPolicy: 'cache-first',
