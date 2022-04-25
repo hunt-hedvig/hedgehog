@@ -1,14 +1,14 @@
 import styled from '@emotion/styled'
-import { Label, Spacing } from '@hedvig-ui'
-import { convertEnumToTitle } from '@hedvig-ui'
+import { convertEnumToTitle, Label, Spacing } from '@hedvig-ui'
 import chroma from 'chroma-js'
 import { parseISO } from 'date-fns'
 import formatDate from 'date-fns/format'
 import React, { HTMLAttributes } from 'react'
 import { Link } from 'react-router-dom'
 import { Claim, ClaimState, GetMemberInfoQuery } from 'types/generated/graphql'
+import { useTaskNavigation } from 'portals/hope/features/tasks/hooks/use-task-navigation'
 
-const ClaimItemWrapper = styled(Link)<{ claimType: boolean; outcome: boolean }>`
+const ClaimItemWrapper = styled.div<{ claimType: boolean; outcome: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -52,8 +52,42 @@ const ClaimItemWrapper = styled(Link)<{ claimType: boolean; outcome: boolean }>`
 `
 
 const ClaimItem: React.FC<
-  { claim: Claim } & HTMLAttributes<HTMLAnchorElement>
-> = ({ claim, ...props }) => {
+  { claim: Claim; slim?: boolean } & HTMLAttributes<HTMLAnchorElement>
+> = ({ claim, slim, ...props }) => {
+  const {
+    navigate,
+    params: { memberId, claimIds, tab },
+  } = useTaskNavigation()
+
+  if (slim) {
+    return (
+      <ClaimItemWrapper
+        outcome={!!claim.outcome}
+        claimType={!!claim.claimType}
+        onClick={() => {
+          navigate({
+            memberId,
+            tab,
+            claimIds: [...claimIds.filter((id) => id !== claim.id), claim.id],
+            active: claim.id,
+          })
+        }}
+      >
+        <ClaimItemContent claim={claim} />
+      </ClaimItemWrapper>
+    )
+  }
+
+  return (
+    <Link to={`/claims/${claim.id}`} {...props}>
+      <ClaimItemWrapper outcome={!!claim.outcome} claimType={!!claim.claimType}>
+        <ClaimItemContent claim={claim} />
+      </ClaimItemWrapper>
+    </Link>
+  )
+}
+
+const ClaimItemContent: React.FC<{ claim: Claim }> = ({ claim }) => {
   const registrationDateString = formatDate(
     parseISO(claim.registrationDate),
     'dd MMMM, yyyy',
@@ -64,12 +98,7 @@ const ClaimItem: React.FC<
   )
 
   return (
-    <ClaimItemWrapper
-      outcome={!!claim.outcome}
-      claimType={!!claim.claimType}
-      to={`/claims/${claim.id}`}
-      {...props}
-    >
+    <>
       <div>
         <h5>
           {claim.claimType ? convertEnumToTitle(claim.claimType) : 'No type'}
@@ -82,14 +111,15 @@ const ClaimItem: React.FC<
         <h5>{registrationDateString}</h5>
         <span>{registrationDateTimeString}</span>
       </div>
-    </ClaimItemWrapper>
+    </>
   )
 }
 
 export const MemberClaimsView: React.FC<{
   member: GetMemberInfoQuery['member']
   claimId: string
-}> = ({ member, claimId }) => {
+  slim?: boolean
+}> = ({ member, claimId, slim }) => {
   const currentClaim = (member?.claims ?? []).find(
     (claim) => claim.id === claimId,
   )
@@ -113,7 +143,11 @@ export const MemberClaimsView: React.FC<{
         <div>
           <Label>This claim</Label>
           <div style={{ marginBottom: '0.25rem' }} />
-          <ClaimItem key={currentClaim?.id} claim={currentClaim as Claim} />
+          <ClaimItem
+            slim={slim}
+            key={currentClaim?.id}
+            claim={currentClaim as Claim}
+          />
 
           <Spacing top="small" />
         </div>
@@ -124,7 +158,7 @@ export const MemberClaimsView: React.FC<{
           <Label>Open</Label>
           <div style={{ marginBottom: '0.25rem' }} />
           {openClaims.map((claim) => (
-            <ClaimItem key={claim.id} claim={claim as Claim} />
+            <ClaimItem slim={slim} key={claim.id} claim={claim as Claim} />
           ))}
         </div>
       )}
@@ -136,7 +170,7 @@ export const MemberClaimsView: React.FC<{
           <Label>Closed</Label>
           <div style={{ marginBottom: '0.25rem' }} />
           {closedClaims.map((claim) => (
-            <ClaimItem key={claim.id} claim={claim as Claim} />
+            <ClaimItem slim={slim} key={claim.id} claim={claim as Claim} />
           ))}
         </div>
       )}

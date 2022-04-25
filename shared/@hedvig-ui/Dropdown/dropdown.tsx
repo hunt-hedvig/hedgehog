@@ -158,17 +158,18 @@ export const Dropdown = React.forwardRef(
     const [selectedIdx, setSelectedIdx] = React.useState(0)
     const [active, setActive] = React.useState(false)
 
+    const closeDropdown = async () => {
+      setActive(false)
+    }
+
     const [navigationStep] = useVerticalKeyboardNavigation({
       maxStep: numberOfOptions - 1,
       onPerformNavigation: (index) => {
         arrayChildren[index].props.onClick()
+        closeDropdown()
       },
       isActive: active,
     })
-
-    const closeDropdown = async () => {
-      setActive(false)
-    }
 
     const toggleDropdown = async () => {
       if (active) {
@@ -180,6 +181,14 @@ export const Dropdown = React.forwardRef(
     }
 
     useClickOutside(ref, closeDropdown)
+
+    useEffect(() => {
+      if (active) {
+        ref.current?.blur()
+      } else {
+        ref.current?.focus
+      }
+    }, [active])
 
     useEffect(() => {
       const hasSelected = !!arrayChildren.find(
@@ -252,7 +261,7 @@ export const Dropdown = React.forwardRef(
                 tabIndex: -1,
                 onClick: () => {
                   element.props.onClick()
-                  toggleDropdown()
+                  closeDropdown()
                 },
               },
             }))}

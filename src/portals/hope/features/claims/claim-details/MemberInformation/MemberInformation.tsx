@@ -128,38 +128,35 @@ export const MemberInformation: React.FC<{
           <div>{flag}</div>
         </MemberCard>
         <Spacing top="small" />
-        {!slim && (
-          <Tabs
-            list={[
-              {
-                active: tab === 'general',
-                title: 'General',
-                action: () => {
-                  PushUserAction('claim', 'view', 'member_overview_tab', null)
-                  setTab('general')
-                },
+        <Tabs
+          list={[
+            {
+              active: tab === 'general',
+              title: 'General',
+              action: () => {
+                PushUserAction('claim', 'view', 'member_overview_tab', null)
+                setTab('general')
               },
-              {
-                active: tab === 'claims',
-                title: `Claims (${totalClaimsWithoutDuplicates})`,
-                action: () => {
-                  PushUserAction('claim', 'view', 'member_claims_tab', null)
-                  setTab('claims')
-                },
+            },
+            {
+              active: tab === 'claims',
+              title: `Claims (${totalClaimsWithoutDuplicates})`,
+              action: () => {
+                PushUserAction('claim', 'view', 'member_claims_tab', null)
+                setTab('claims')
               },
-            ]}
-          />
-        )}
-        {tab === 'general' && !slim && (
+            },
+          ]}
+        />
+        {tab === 'general' && (
           <>
             <Spacing top="small" />
             <MemberGeneralView memberId={memberId} claimId={claimId} />
           </>
         )}
-        {tab === 'claims' && !slim && (
-          <MemberClaimsView member={member} claimId={claimId} />
+        {tab === 'claims' && (
+          <MemberClaimsView member={member} claimId={claimId} slim={slim} />
         )}
-        <MemberGeneralView memberId={memberId} claimId={claimId} />
       </Loadable>
     </CardContent>
   )
